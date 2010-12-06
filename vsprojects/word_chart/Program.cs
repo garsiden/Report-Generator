@@ -21,12 +21,14 @@ namespace RSMTenon.ReportGenerator
         static void Main(string[] args)
         {
             Program This = new Program();
-            var myData = new Dictionary<string, int>();
-            myData.Add("col1", 8);
-            myData.Add("col2", 4);
-            myData.Add("col3", 5);
-            myData.Add("col4", 2);
-            myData.Add("col5", 10);
+            var myData = new Dictionary<string, decimal>();
+            myData.Add("Cash", 0.015M);
+            myData.Add("Fixed Interest", 0.452M);
+            myData.Add("Hedge", 0.14M);
+            myData.Add("Real Estate", 0.15M);
+            myData.Add("Long Short Equities", 0.12M);
+            myData.Add("Long Equities", 0.09M);
+            myData.Add("Commodities", 0.033M);
 
             string template = path + "PieChart.docx";
             string generated = path + "PieChartWord.docx";
@@ -38,12 +40,12 @@ namespace RSMTenon.ReportGenerator
             WordprocessingDocument myWordDoc = WordprocessingDocument.Open(generated, true);
             MainDocumentPart mainPart = myWordDoc.MainDocumentPart;
 
-            This.InsertChartIntoWord(mainPart, "Word Chart", myData);
+            This.InsertChartIntoWord(mainPart, "Defensive Allocation", myData);
 
             myWordDoc.Close();
         }
 
-        public void InsertChartIntoWord(MainDocumentPart mainPart, string title, Dictionary<string,int>data)
+        public void InsertChartIntoWord(MainDocumentPart mainPart, string title, Dictionary<string,decimal>data)
         {
             // open Word documant and remove existing content from control
             Paragraph para = findAndRemoveContent(mainPart, "Chart1");
@@ -55,7 +57,7 @@ namespace RSMTenon.ReportGenerator
 
             // generate Pie Chart and add to ChartSpace
             PieGraph pie = new PieGraph();
-            C.Chart chart = pie.GenerateChart(title);
+            C.Chart chart = pie.GenerateChart(title, data);
             chartSpace.Append(chart);
 
             // set ChartPart ChartSpace
@@ -77,7 +79,7 @@ namespace RSMTenon.ReportGenerator
             Drawing drawing1 = new Drawing();
 
             Wp.Inline inline1 = new Wp.Inline();
-            Wp.Extent extent1 = new Wp.Extent() { Cx = 5486400L, Cy = 3200400L };
+            Wp.Extent extent1 = new Wp.Extent() { Cx = Graph.Graph.SMALL_GRAPH_X, Cy = Graph.Graph.SMALL_GRAPH_Y };
             Wp.DocProperties docProperties1 = new Wp.DocProperties() { Id = (UInt32Value)2U, Name = "Chart 1" };
 
             A.Graphic graphic1 = new A.Graphic();

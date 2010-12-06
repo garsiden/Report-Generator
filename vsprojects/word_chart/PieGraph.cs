@@ -11,12 +11,10 @@ namespace RSMTenon.ReportGenerator.Graph
     class PieGraph : Graph
     {
         // Creates an Chart instance and adds its children.
-        public Chart GenerateChart(string title)
+        public Chart GenerateChart(string title, Dictionary<string, decimal> data)
         {
             Chart chart1 = new Chart();
-
             Title title1 = new Title();
-
             ChartText chartText1 = new ChartText();
 
             RichText richText1 = new RichText();
@@ -26,12 +24,12 @@ namespace RSMTenon.ReportGenerator.Graph
             A.Paragraph paragraph1 = new A.Paragraph();
 
             A.ParagraphProperties paragraphProperties1 = new A.ParagraphProperties();
-            A.DefaultRunProperties defaultRunProperties1 = new A.DefaultRunProperties() { FontSize = 1100 };
+            A.DefaultRunProperties defaultRunProperties1 = new A.DefaultRunProperties() { FontSize = PieGraph.DEFAULT_FONT_SIZE };
 
             paragraphProperties1.Append(defaultRunProperties1);
 
             A.Run run1 = new A.Run();
-            A.RunProperties runProperties1 = new A.RunProperties() { Language = "en-US", FontSize = 1100 };
+            A.RunProperties runProperties1 = new A.RunProperties() { Language = "en-GB", FontSize = PieGraph.TITLE_FONT_SIZE };
             A.Text text1 = new A.Text();
             text1.Text = title;
 
@@ -70,99 +68,36 @@ namespace RSMTenon.ReportGenerator.Graph
 
             SeriesText seriesText1 = new SeriesText();
             NumericValue numericValue1 = new NumericValue();
-            numericValue1.Text = "Series1";
+            numericValue1.Text = title + "Series";
 
             seriesText1.Append(numericValue1);
 
             CategoryAxisData categoryAxisData1 = new CategoryAxisData();
 
             StringLiteral stringLiteral1 = new StringLiteral();
-            PointCount pointCount1 = new PointCount() { Val = (UInt32Value)5U };
+            NumberLiteral numberLiteral1 = new NumberLiteral();
 
-            StringPoint stringPoint1 = new StringPoint() { Index = (UInt32Value)0U };
-            NumericValue numericValue2 = new NumericValue();
-            numericValue2.Text = "One";
-
-            stringPoint1.Append(numericValue2);
-
-            StringPoint stringPoint2 = new StringPoint() { Index = (UInt32Value)1U };
-            NumericValue numericValue3 = new NumericValue();
-            numericValue3.Text = "Two";
-
-            stringPoint2.Append(numericValue3);
-
-            StringPoint stringPoint3 = new StringPoint() { Index = (UInt32Value)2U };
-            NumericValue numericValue4 = new NumericValue();
-            numericValue4.Text = "Three";
-
-            stringPoint3.Append(numericValue4);
-
-            StringPoint stringPoint4 = new StringPoint() { Index = (UInt32Value)3U };
-            NumericValue numericValue5 = new NumericValue();
-            numericValue5.Text = "Four";
-
-            stringPoint4.Append(numericValue5);
-
-            StringPoint stringPoint5 = new StringPoint() { Index = (UInt32Value)4U };
-            NumericValue numericValue6 = new NumericValue();
-            numericValue6.Text = "Five";
-
-            stringPoint5.Append(numericValue6);
-
+            UInt32 numPoints = (UInt32)data.Count();
+            PointCount pointCount1 = new PointCount() { Val = (UInt32Value) numPoints };
             stringLiteral1.Append(pointCount1);
-            stringLiteral1.Append(stringPoint1);
-            stringLiteral1.Append(stringPoint2);
-            stringLiteral1.Append(stringPoint3);
-            stringLiteral1.Append(stringPoint4);
-            stringLiteral1.Append(stringPoint5);
+
+            PointCount pointCount2 = new PointCount() { Val = (UInt32Value) numPoints };
+            numberLiteral1.Append(pointCount2);
+
+            UInt32 i = 0U;
+            foreach (var key in data.Keys) {
+                StringPoint stringPoint1 = generateStringPoint(i, key);
+                stringLiteral1.Append(stringPoint1);
+                NumericPoint numericPoint1 = generateNumericPoint(i++, data[key].ToString());
+                numberLiteral1.Append(numericPoint1);
+            }
 
             categoryAxisData1.Append(stringLiteral1);
 
             Values values1 = new Values();
-
-            NumberLiteral numberLiteral1 = new NumberLiteral();
             FormatCode formatCode1 = new FormatCode();
             formatCode1.Text = "General";
-            PointCount pointCount2 = new PointCount() { Val = (UInt32Value)5U };
-
-            NumericPoint numericPoint1 = new NumericPoint() { Index = (UInt32Value)0U };
-            NumericValue numericValue7 = new NumericValue();
-            numericValue7.Text = "1";
-
-            numericPoint1.Append(numericValue7);
-
-            NumericPoint numericPoint2 = new NumericPoint() { Index = (UInt32Value)1U };
-            NumericValue numericValue8 = new NumericValue();
-            numericValue8.Text = "4";
-
-            numericPoint2.Append(numericValue8);
-
-            NumericPoint numericPoint3 = new NumericPoint() { Index = (UInt32Value)2U };
-            NumericValue numericValue9 = new NumericValue();
-            numericValue9.Text = "7";
-
-            numericPoint3.Append(numericValue9);
-
-            NumericPoint numericPoint4 = new NumericPoint() { Index = (UInt32Value)3U };
-            NumericValue numericValue10 = new NumericValue();
-            numericValue10.Text = "8";
-
-            numericPoint4.Append(numericValue10);
-
-            NumericPoint numericPoint5 = new NumericPoint() { Index = (UInt32Value)4U };
-            NumericValue numericValue11 = new NumericValue();
-            numericValue11.Text = "4";
-
-            numericPoint5.Append(numericValue11);
-
             numberLiteral1.Append(formatCode1);
-            numberLiteral1.Append(pointCount2);
-            numberLiteral1.Append(numericPoint1);
-            numberLiteral1.Append(numericPoint2);
-            numberLiteral1.Append(numericPoint3);
-            numberLiteral1.Append(numericPoint4);
-            numberLiteral1.Append(numericPoint5);
-
             values1.Append(numberLiteral1);
 
             pieChartSeries1.Append(index1);
@@ -212,6 +147,26 @@ namespace RSMTenon.ReportGenerator.Graph
             chart1.Append(plotVisibleOnly1);
             return chart1;
         
+        }
+
+        private StringPoint generateStringPoint(UInt32Value idx, string text)
+        {
+            StringPoint stringPoint1 = new StringPoint() { Index = idx };
+            NumericValue numericValue1 = new NumericValue();
+            numericValue1.Text = text;
+            stringPoint1.Append(numericValue1);
+
+            return stringPoint1;
+        }
+
+        private NumericPoint generateNumericPoint(UInt32Value idx, string text)
+        {
+            NumericPoint numericPoint1 = new NumericPoint() { Index = idx };
+            NumericValue numericValue1 = new NumericValue();
+            numericValue1.Text = text;
+            numericPoint1.Append(numericValue1);
+
+            return numericPoint1;
         }
     }
 }
