@@ -1,0 +1,83 @@
+<repgen xmlns="http://rmtenon.com/2010/wealth-management-report">
+  <client>
+    <!-- Vrcs1 to 7 -->
+    <name/>
+    <meeting-date/>
+    <time-horizon/>
+    <transfer/>
+    <transfer-many/>
+    <reporting-frequency/>
+    <initial-fee/>
+  </client>
+  <report-type>
+    <!-- Vrrs1 and 2 -->
+    <suitable/>
+    <investment-strategy/>
+    <!-- Vrrs6 -->
+    <investment-type/>
+    <!-- Vrrs16 -->
+    <existing-assets/>
+  </report-type>
+  <strategy>
+    <!-- Vrrs3 to 7 -->
+    <objective>We will aim to deliver a better return than the Bank of England Base Rate without significantly compromising the security of your capital.
+    </objective>
+    <objectiveError>To achieve this objective, the minimum suggested investment period is two years.
+    </objectiveError>
+    <description>The Defensive Strategy invests in a wide range of asset classes such as equities, bonds, commodities, hedge funds, managed futures, currencies, private equity and real estate to help deliver a more steady, less volatile return.
+    </description>
+    <investorRequirement>The Defensive Strategy has been designed for investors solely focused on minimising capital losses and not prepared to take any significant investment risks.
+    </investorRequirement>
+    <chart>
+      <!-- Vrrrs5 -->
+      <rollingReturnText>of the FTSE World Index, UK Government Gilts and the mix of asset classes which comprise the Vantis Defensive Strategy over the last ten years.
+      </rollingReturnText>
+      <!-- Vrrrs13 -->
+      <graphText>the average Defensive Managed Fund, UK Government Gilts and cash.
+      </graphText>
+    </chart>
+    <!-- Vrrrs12 -->
+    <timeHorizon>2</timeHorizon>
+    <!-- Vrrrs14 -->
+    <expReturn>53.10</expReturn>
+    <!-- Vrrrs15 -->
+    <return>0</return>
+    <!-- Vrrrs8 -->
+    <flipped>Defensive Income</flipped>
+    <!-- Vrrrs01 -->
+    <cost>840</cost>
+    <income>
+      <!-- Vrrs8 to 10 -->
+      <balanced>5</balanced>
+      <growth>7</growth>
+      <opportunistic>10</opportunistic>
+      <chartHeader>The following chart shows how your portfolio is allocated across the major asset classes
+      </chartHeader>
+    </income>
+    <growth>
+      <!-- Vrrs16 -->
+      <chartHeader>The following chart shows the current asset allocation mix of our Defensive Model
+      </chartHeader>
+    <!-- Vrrs17 -->
+    <pieExplanation>How does this compare to our recommendations and what are the main differences?  The following chart shows where your current portfolio is over or under weight in each asset class compared to that which we would recommend for a Defensive investor. 
+    </pieExplanation>
+    <!-- Vrrs 18 -->
+    <pieExplanation2>The following chart compares the return that would have been delivered by the mix of assets which represents our Defensive Strategy and compares it to the returns of UK Government Bonds and Global Equities during a number of these market downturns.
+    </pieExplanation2>
+    <!-- Vrrs19 -->
+    <overweightExplanation1>The main issues are your significant overweight position in UK &amp; Global equities and your underweight position in the more cautious asset classes of bonds, hedge funds and commercial property.
+    </overweightExplanation1>
+    <!-- Vrrrs1 to 7 -->
+    <overweightExplanation2>Vary text to highlight where the current portfolio is over or under weight compared to that which we suggest &#045; just pick the two or three biggest positions to comment on
+    </overweightExplanation2>
+    <riskTitle>How does the risk compare?</riskTitle>
+    <riskCommon>How does this risk impact on a portfolio?  Well, one way of looking at risk is what happens if markets suffer a shock or go through a prolonged downturn. 
+    </riskCommon>
+    <riskSpecific>The following chart shows how the mix of assets you currently have would have performed during a number of these market downturns compared to our Defensive Strategy, Global Equity Markets and Government Bonds. </riskSpecific>
+    <performance>The following chart shows how the mix of assets you currently have would have performed during the 2003-06 markets.
+    </performance>
+    <assetWeighting>The main issues are your significant overweight position in UK &amp; Global equities and your underweight position in the more cautious asset classes of bonds, hedge funds and commercial property. 
+    </assetWeighting>
+    </growth>
+  </strategy>
+</repgen>
