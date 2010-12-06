@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Database Name="birdtrack" EntityNamespace="RSMTenon.ReportGenerator" ContextNamespace="RSMTenon.ReportGenerator" Class="BirdTrackDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="AppSettings" ConnectionString="Data Source=.\SQLEXPRESS;AttachDbFilename=&quot;C:\Program Files\Microsoft SQL Server\MSSQL10.SQLEXPRESS\MSSQL\DATA\birdtrack.mdf&quot;;Integrated Security=True;Connect Timeout=30;User Instance=True" SettingsObjectName="RSMTenon.ReportGenerator.Properties.Settings" SettingsPropertyName="birdtrackConnectionString" Provider="System.Data.SqlClient" />
+  <Table Name="dbo.bto" Member="btos">
+    <Type Name="bto">
+      <Column Name="bto_code" Type="System.String" DbType="VarChar(2) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="species_name" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="scientific_name" Type="System.String" DbType="VarChar(75) NOT NULL" CanBeNull="false" />
+      <Column Name="migrant_list" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+    </Type>
+  </Table>
+</Database>
