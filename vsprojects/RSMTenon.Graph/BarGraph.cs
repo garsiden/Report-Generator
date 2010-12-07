@@ -11,7 +11,7 @@ using DocumentFormat.OpenXml.Drawing.Wordprocessing;
 
 
 
-namespace RSMTenon.ReportGenerator.Graph
+namespace RSMTenon.Graph
 {
     class BarGraph : Graph
     {

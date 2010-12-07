@@ -6,10 +6,13 @@ using DocumentFormat.OpenXml.Drawing.Charts;
 using DocumentFormat.OpenXml;
 using A = DocumentFormat.OpenXml.Drawing;
 
-namespace RSMTenon.ReportGenerator.Graph
+namespace RSMTenon.Graph
 {
-    class PieGraph : Graph
+    public class AllocationPieChart : Graph
     {
+        public const Int64 CX = Graph.DEFAULT_GRAPH_X;
+        public const Int64 CY = Graph.DEFAULT_GRAPH_Y;
+
         // Creates an Chart instance and adds its children.
         public Chart GenerateChart(string title, Dictionary<string, decimal> data)
         {
@@ -24,12 +27,12 @@ namespace RSMTenon.ReportGenerator.Graph
             A.Paragraph paragraph1 = new A.Paragraph();
 
             A.ParagraphProperties paragraphProperties1 = new A.ParagraphProperties();
-            A.DefaultRunProperties defaultRunProperties1 = new A.DefaultRunProperties() { FontSize = PieGraph.DEFAULT_FONT_SIZE };
+            A.DefaultRunProperties defaultRunProperties1 = new A.DefaultRunProperties() { FontSize = AllocationPieChart.DEFAULT_FONT_SIZE };
 
             paragraphProperties1.Append(defaultRunProperties1);
 
             A.Run run1 = new A.Run();
-            A.RunProperties runProperties1 = new A.RunProperties() { Language = "en-GB", FontSize = PieGraph.TITLE_FONT_SIZE };
+            A.RunProperties runProperties1 = new A.RunProperties() { Language = "en-GB", FontSize = AllocationPieChart.TITLE_FONT_SIZE };
             A.Text text1 = new A.Text();
             text1.Text = title;
 
