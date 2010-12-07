@@ -9,7 +9,7 @@ using DocumentFormat.OpenXml.Wordprocessing;
 using Wp = DocumentFormat.OpenXml.Drawing.Wordprocessing;
 using A = DocumentFormat.OpenXml.Drawing;
 using C = DocumentFormat.OpenXml.Drawing.Charts;
-using RSMTenon.ReportGenerator.Graph;
+using RSMTenon.Graph;
 
 namespace RSMTenon.ReportGenerator
 {
@@ -31,7 +31,7 @@ namespace RSMTenon.ReportGenerator
             myData.Add("Commodities", 0.033M);
 
             string template = path + "PieChart.docx";
-            string generated = path + "PieChartWord.docx";
+            string generated = path + "LineChartWord.docx";
 
             // copy template to generated
             File.Copy(template, generated, true);
@@ -40,7 +40,7 @@ namespace RSMTenon.ReportGenerator
             WordprocessingDocument myWordDoc = WordprocessingDocument.Open(generated, true);
             MainDocumentPart mainPart = myWordDoc.MainDocumentPart;
 
-            This.InsertChartIntoWord(mainPart, "Defensive Allocation", myData);
+            This.InsertLineChartIntoWord(mainPart, "1yr Rolling return", myData);
 
             myWordDoc.Close();
         }
@@ -53,11 +53,40 @@ namespace RSMTenon.ReportGenerator
             // generate new ChartPart and ChartSpace
             ChartPart chartPart = mainPart.AddNewPart<ChartPart>();
             string relId = mainPart.GetIdOfPart(chartPart);
-            C.ChartSpace chartSpace = GeneratePartContent(chartPart);
+            C.ChartSpace chartSpace = GenerateChartSpace(chartPart);
 
             // generate Pie Chart and add to ChartSpace
-            PieGraph pie = new PieGraph();
+            AllocationPieChart pie = new AllocationPieChart();
             C.Chart chart = pie.GenerateChart(title, data);
+            chartSpace.Append(chart);
+
+            // set ChartPart ChartSpace
+            chartPart.ChartSpace = chartSpace;
+
+            // generate a new Wordprocessing Drawing, add to a new Run,
+            // and relate to new ChartPart
+            Run run = new Run();
+            Drawing drawing = GenerateDrawing(relId);
+            para.Append(run);
+            run.Append(drawing);
+
+            // save and close document
+            mainPart.Document.Save();
+        }
+
+        public void InsertLineChartIntoWord(MainDocumentPart mainPart, string title, Dictionary<string, decimal> data)
+        {
+            // open Word documant and remove existing content from control
+            Paragraph para = findAndRemoveContent(mainPart, "Chart1");
+
+            // generate new ChartPart and ChartSpace
+            ChartPart chartPart = mainPart.AddNewPart<ChartPart>();
+            string relId = mainPart.GetIdOfPart(chartPart);
+            C.ChartSpace chartSpace = GenerateChartSpace(chartPart);
+
+            // generate Line Chart and add to ChartSpace
+            RollingReturnLineChart rrlc = new RollingReturnLineChart();
+            C.Chart chart = rrlc.GenerateChart(title, data);
             chartSpace.Append(chart);
 
             // set ChartPart ChartSpace
@@ -79,7 +108,7 @@ namespace RSMTenon.ReportGenerator
             Drawing drawing1 = new Drawing();
 
             Wp.Inline inline1 = new Wp.Inline();
-            Wp.Extent extent1 = new Wp.Extent() { Cx = Graph.Graph.SMALL_GRAPH_X, Cy = Graph.Graph.SMALL_GRAPH_Y };
+            Wp.Extent extent1 = new Wp.Extent() { Cx = AllocationPieChart.Cx, Cy = AllocationPieChart.Cy };
             Wp.DocProperties docProperties1 = new Wp.DocProperties() { Id = (UInt32Value)2U, Name = "Chart 1" };
 
             A.Graphic graphic1 = new A.Graphic();
@@ -103,16 +132,21 @@ namespace RSMTenon.ReportGenerator
             return drawing1;
         }
 
-        private C.ChartSpace GeneratePartContent(ChartPart part)
+        private C.ChartSpace GenerateChartSpace(ChartPart part)
         {
+            // c:chartSpace (ChartSpace)            
             C.ChartSpace chartSpace1 = new C.ChartSpace();
             chartSpace1.AddNamespaceDeclaration("c", "http://schemas.openxmlformats.org/drawingml/2006/chart");
             chartSpace1.AddNamespaceDeclaration("a", "http://schemas.openxmlformats.org/drawingml/2006/main");
             chartSpace1.AddNamespaceDeclaration("r", "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
+
+            // c:lang (EditingLanguage)
             C.EditingLanguage editingLanguage1 = new C.EditingLanguage() { Val = "en-GB" };
+
+            // c:printSettings (PrintSettings)
             C.PrintSettings printSettings1 = new C.PrintSettings();
             C.HeaderFooter headerFooter1 = new C.HeaderFooter();
-            C.PageMargins pageMargins1 = new C.PageMargins() { Left = 0.70000000000000007D, Right = 0.70000000000000007D, Top = 0.75000000000000011D, Bottom = 0.75000000000000011D, Header = 0.30000000000000004D, Footer = 0.30000000000000004D };
+            C.PageMargins pageMargins1 = new C.PageMargins() { Left = 0.70D, Right = 0.70D, Top = 0.75D, Bottom = 0.75D, Header = 0.30D, Footer = 0.30D };
             C.PageSetup pageSetup1 = new C.PageSetup();
 
             printSettings1.Append(headerFooter1);
