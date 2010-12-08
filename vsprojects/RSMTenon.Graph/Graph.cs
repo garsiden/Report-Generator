@@ -15,11 +15,11 @@ namespace RSMTenon.Graph
         public const Int64 LARGE_GRAPH_X = 5486400L;
         public const Int64 LARGE_GRAPH_Y = 3200400L;
 
-        public const Int64 SMALL_GRAPH_X = (Int64)14.85 * EMUS_PER_CENTIMETRE;
-        public const Int64 SMALL_GRAPH_Y = (Int64)6.71 * EMUS_PER_CENTIMETRE;
+        public const Int64 SMALL_GRAPH_X = (Int64)(14.85 * EMUS_PER_CENTIMETRE);
+        public const Int64 SMALL_GRAPH_Y = (Int64) (6.71 * EMUS_PER_CENTIMETRE);
 
-        public const Int64 DEFAULT_GRAPH_X = (Int64)14.90 * EMUS_PER_CENTIMETRE;
-        public const Int64 DEFAULT_GRAPH_Y = (Int64)6.80 * EMUS_PER_CENTIMETRE;
+        public const Int64 DEFAULT_GRAPH_X = (Int64)(14.90 * EMUS_PER_CENTIMETRE);
+        public const Int64 DEFAULT_GRAPH_Y = (Int64)(6.80 * EMUS_PER_CENTIMETRE);
 
         protected const int TITLE_FONT_SIZE = 1100;
         protected const int DEFAULT_FONT_SIZE = 1100;
