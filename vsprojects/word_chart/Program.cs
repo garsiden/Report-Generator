@@ -108,7 +108,7 @@ namespace RSMTenon.ReportGenerator
             Drawing drawing1 = new Drawing();
 
             Wp.Inline inline1 = new Wp.Inline();
-            Wp.Extent extent1 = new Wp.Extent() { Cx = AllocationPieChart.Cx, Cy = AllocationPieChart.Cy };
+            Wp.Extent extent1 = new Wp.Extent() { Cx = RollingReturnLineChart.Cx, Cy = RollingReturnLineChart.Cy };
             Wp.DocProperties docProperties1 = new Wp.DocProperties() { Id = (UInt32Value)2U, Name = "Chart 1" };
 
             A.Graphic graphic1 = new A.Graphic();

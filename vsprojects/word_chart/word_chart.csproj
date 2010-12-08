@@ -49,11 +49,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BarGraph.cs" />
-    <Compile Include="Graph.cs" />
-    <Compile Include="PieGraph.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\RSMTenon.Graph\RSMTenon.Graph.csproj">
+      <Project>{EC757636-7624-4BB4-993E-422A593D73F0}</Project>
+      <Name>RSMTenon.Graph</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
