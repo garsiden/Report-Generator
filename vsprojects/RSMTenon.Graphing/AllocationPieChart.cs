@@ -91,6 +91,5 @@ namespace RSMTenon.Graphing
             return chart1;
         
         }
-
     }
 }

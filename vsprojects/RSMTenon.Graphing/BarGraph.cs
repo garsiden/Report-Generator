@@ -13,7 +13,7 @@ using DocumentFormat.OpenXml.Drawing.Wordprocessing;
 
 namespace RSMTenon.Graphing
 {
-    class BarGraph : Graph
+    public class BarGraph : Graph
     {
 
 
