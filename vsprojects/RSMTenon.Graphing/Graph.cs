@@ -78,7 +78,7 @@ namespace RSMTenon.Graphing
         }
 
         // Creates an Legend instance and adds its children.
-        public Legend GenerateLegend(LegendPositionValues position)
+        public virtual Legend GenerateLegend (LegendPositionValues position)
         {
             Legend legend1 = new Legend();
             LegendPosition legendPosition1 = new LegendPosition() { Val = position };
@@ -129,6 +129,65 @@ namespace RSMTenon.Graphing
             numericPoint1.Append(numericValue1);
 
             return numericPoint1;
+        }
+        public Values GenerateValues(string formatCode, float[] data)
+        {
+            Values values1 = new Values();
+
+            uint numPoints = (uint)data.Length;
+
+            // c:numRef (NumberingReference)
+            NumberReference numberReference2 = new NumberReference();
+            NumberingCache numberingCache2 = GenerateNumberingCache(formatCode, numPoints);
+
+            for (UInt32 i = 0; i < numPoints; i++) {
+                NumericPoint numericPoint = GenerateNumericPoint(i, data[i].ToString());
+                numberingCache2.Append(numericPoint);
+            }
+
+            numberReference2.Append(numberingCache2);
+            values1.Append(numberReference2);
+
+            return values1;
+        }
+
+        public NumberingCache GenerateNumberingCache(string formatCode, uint numPoints)
+        {
+            // c:numCache (NumberingCache)
+            NumberReference numberReference2 = new NumberReference();
+            NumberingCache numberingCache2 = new NumberingCache();
+            FormatCode formatCode2 = new FormatCode();
+            formatCode2.Text = formatCode;
+            PointCount pointCount3 = new PointCount() { Val = (UInt32Value)numPoints };
+            numberingCache2.Append(formatCode2);
+            numberingCache2.Append(pointCount3);
+
+            return numberingCache2;
+        }
+        public SeriesText GenerateSeriesText(string seriesName)
+        {
+            // c:tx (SeriesText)
+            SeriesText seriesText1 = new SeriesText();
+
+            StringReference stringReference1 = new StringReference();
+
+            StringCache stringCache1 = new StringCache();
+            PointCount pointCount1 = new PointCount() { Val = (UInt32Value)1U };
+
+            StringPoint stringPoint1 = new StringPoint() { Index = (UInt32Value)0U };
+            NumericValue numericValue1 = new NumericValue();
+            numericValue1.Text = seriesName;
+
+            stringPoint1.Append(numericValue1);
+
+            stringCache1.Append(pointCount1);
+            stringCache1.Append(stringPoint1);
+
+            stringReference1.Append(stringCache1);
+
+            seriesText1.Append(stringReference1);
+
+            return seriesText1;
         }
 
 
