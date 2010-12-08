@@ -15,8 +15,8 @@ namespace RSMTenon.ReportGenerator
 {
     class Program
     {
-        static string path = @"C:\Documents and Settings\garsiden\My Documents\Projects\RepGen\test\";
-        static string generated = path + "TableTest3.docx";
+        static string path = @"C:\Documents and Settings\garsiden\My Documents\Projects\RepGen\test\chart\";
+        static string generated = path + "ChartDoc.docx";
 
         static void Main(string[] args)
         {
@@ -30,8 +30,8 @@ namespace RSMTenon.ReportGenerator
             myData.Add("Long Equities", 0.09M);
             myData.Add("Commodities", 0.033M);
 
-            string template = path + "PieChart.docx";
-            string generated = path + "LineChartWord.docx";
+            string template = path + "chart_template.docx";
+            string generated = path + "BarChartWord.docx";
 
             // copy template to generated
             File.Copy(template, generated, true);
@@ -40,9 +40,40 @@ namespace RSMTenon.ReportGenerator
             WordprocessingDocument myWordDoc = WordprocessingDocument.Open(generated, true);
             MainDocumentPart mainPart = myWordDoc.MainDocumentPart;
 
-            This.InsertLineChartIntoWord(mainPart, "1yr Rolling return", myData);
+            //This.InsertLineChartIntoWord(mainPart, "1yr Rolling return", myData);
+            This.InsertBarChartIntoWord(mainPart, "Stress Test -Market Crashes");
 
             myWordDoc.Close();
+        }
+
+        public void InsertBarChartIntoWord(MainDocumentPart mainPart, string title)
+        {
+            // open Word documant and remove existing content from control
+            Paragraph para = findAndRemoveContent(mainPart, "Chart1");
+
+            // generate new ChartPart and ChartSpace
+            ChartPart chartPart = mainPart.AddNewPart<ChartPart>();
+            string relId = mainPart.GetIdOfPart(chartPart);
+            C.ChartSpace chartSpace = GraphSpace.GenerateChartSpace(chartPart);
+
+            // generate Pie Chart and add to ChartSpace
+            StressBarChart sbc = new StressBarChart();
+            C.Chart chart = sbc.GenerateChart(title);
+            chartSpace.Append(chart);
+
+            // set ChartPart ChartSpace
+            chartPart.ChartSpace = chartSpace;
+
+            // generate a new Wordprocessing Drawing, add to a new Run,
+            // and relate to new ChartPart
+            Run run = new Run();
+            Drawing drawing = GraphDrawing.GenerateDrawing(relId, "Chart 1", 2U, Graph.Cx, Graph.Cy);
+            para.Append(run);
+            run.Append(drawing);
+
+            // save and close document
+            mainPart.Document.Save();
+
         }
 
         public void InsertChartIntoWord(MainDocumentPart mainPart, string title, Dictionary<string,decimal>data)
