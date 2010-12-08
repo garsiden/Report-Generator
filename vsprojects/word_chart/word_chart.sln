@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual C# Express 2008
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "word_chart", "word_chart.csproj", "{B4FB84FF-D050-4362-9C4C-E20D281AECD0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RSMTenon.Graph", "..\RSMTenon.Graph\RSMTenon.Graph.csproj", "{EC757636-7624-4BB4-993E-422A593D73F0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RSMTenon.Graphing", "..\RSMTenon.Graphing\RSMTenon.Graphing.csproj", "{EC757636-7624-4BB4-993E-422A593D73F0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

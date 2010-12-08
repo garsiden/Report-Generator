@@ -9,7 +9,7 @@ using DocumentFormat.OpenXml.Wordprocessing;
 using Wp = DocumentFormat.OpenXml.Drawing.Wordprocessing;
 using A = DocumentFormat.OpenXml.Drawing;
 using C = DocumentFormat.OpenXml.Drawing.Charts;
-using RSMTenon.Graph;
+using RSMTenon.Graphing;
 
 namespace RSMTenon.ReportGenerator
 {

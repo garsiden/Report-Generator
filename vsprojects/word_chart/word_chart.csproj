@@ -53,9 +53,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\RSMTenon.Graph\RSMTenon.Graph.csproj">
+    <ProjectReference Include="..\RSMTenon.Graphing\RSMTenon.Graphing.csproj">
       <Project>{EC757636-7624-4BB4-993E-422A593D73F0}</Project>
-      <Name>RSMTenon.Graph</Name>
+      <Name>RSMTenon.Graphing</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
