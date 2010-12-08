@@ -35,9 +35,9 @@ namespace RSMTenon.Graphing
             Grouping grouping1 = new Grouping() { Val = GroupingValues.Standard };
 
             // c:ser (LineChartSeries)
-            LineChartSeries lineChartSeries1 = GenerateLineChartSeries("UK Gov Bonds", 1U, 0U, dates, vals1, "C0C0C0");
-            LineChartSeries lineChartSeries2 = GenerateLineChartSeries("Global Equity", 2U, 1U, dates, vals2, "808080");
-            LineChartSeries lineChartSeries3 = GenerateLineChartSeries("Defensive Strategy", 3U, 2U, dates, vals3, "0066CC");
+            LineChartSeries lineChartSeries1 = GenerateLineChartSeries("UK Gov Bonds", 1U, 0U, dates, vals1, "C0C0C0", "mmm\\-yy", "0.0%");
+            LineChartSeries lineChartSeries2 = GenerateLineChartSeries("Global Equity", 2U, 1U, dates, vals2, "808080", "mmm\\-yy", "0.0%");
+            LineChartSeries lineChartSeries3 = GenerateLineChartSeries("Defensive Strategy", 3U, 2U, dates, vals3, "0066CC", "mmm\\-yy", "0.0%");
 
             // c:marker (Marker)
             ShowMarker showMarker1 = new ShowMarker() { Val = true };
@@ -79,9 +79,8 @@ namespace RSMTenon.Graphing
             return chart1;
         }
 
-        public LineChartSeries GenerateLineChartSeries(string seriesName, uint index, uint order, int[] dates, float[] vals, string colourHex)
+        public LineChartSeries GenerateLineChartSeries(string seriesName, uint index, uint order, int[] dates, float[] vals, string colourHex, string axisFormat, string valueFormat)
         {
-            // First series UK Gov Bonds
             uint numPoints = (uint)dates.Length;
 
             // c:ser (LineChartSeries)
@@ -101,10 +100,10 @@ namespace RSMTenon.Graphing
             marker1.Append(symbol1);
 
             // c:cat (CategoryAxisData)
-            CategoryAxisData categoryAxisData1 = GenerateCategoryAxisData("mmm\\-yy", dates);
+            CategoryAxisData categoryAxisData1 = GenerateCategoryAxisData(axisFormat, dates);
 
             // c:val (Values)
-            Values values1 = GenerateValues("0.0%", vals);
+            Values values1 = GenerateValues(valueFormat, vals);
 
             lineChartSeries1.Append(index1);
             lineChartSeries1.Append(order1);
@@ -117,32 +116,7 @@ namespace RSMTenon.Graphing
             return lineChartSeries1;
         }
 
-        public SeriesText GenerateSeriesText(string seriesName)
-        {
-            // c:tx (SeriesText)
-            SeriesText seriesText1 = new SeriesText();
-
-            StringReference stringReference1 = new StringReference();
-
-            StringCache stringCache1 = new StringCache();
-            PointCount pointCount1 = new PointCount() { Val = (UInt32Value)1U };
-
-            StringPoint stringPoint1 = new StringPoint() { Index = (UInt32Value)0U };
-            NumericValue numericValue1 = new NumericValue();
-            numericValue1.Text = seriesName;
-
-            stringPoint1.Append(numericValue1);
-
-            stringCache1.Append(pointCount1);
-            stringCache1.Append(stringPoint1);
-
-            stringReference1.Append(stringCache1);
-
-            seriesText1.Append(stringReference1);
-
-            return seriesText1;
-        }
-
+ 
         public ChartShapeProperties GenerateChartShapeProperties(string colourHex)
         {
             ChartShapeProperties chartShapeProperties1 = new ChartShapeProperties();
@@ -166,10 +140,7 @@ namespace RSMTenon.Graphing
             NumberingCache numberingCache1 = GenerateNumberingCache(formatCode, numPoints);
 
             for (UInt32 i = 0; i < numPoints; i++) {
-                NumericPoint numericPoint = new NumericPoint() { Index = (UInt32Value)i };
-                NumericValue numericValue = new NumericValue();
-                numericValue.Text = data[i].ToString();
-                numericPoint.Append(numericValue);
+                NumericPoint numericPoint = GenerateNumericPoint(i, data[i].ToString());
                 numberingCache1.Append(numericPoint);
             }
 
@@ -179,40 +150,6 @@ namespace RSMTenon.Graphing
             return categoryAxisData1;
         }
 
-        public Values GenerateValues(string formatCode, float[] data)
-        {
-            Values values1 = new Values();
-
-            uint numPoints = (uint)data.Length;
-
-            // c:numRef (NumberingReference)
-            NumberReference numberReference2 = new NumberReference();
-            NumberingCache numberingCache2 = GenerateNumberingCache(formatCode, numPoints);
-
-            for (UInt32 i = 0; i < numPoints; i++) {
-                NumericPoint numericPoint = GenerateNumericPoint(i, data[i].ToString());
-                numberingCache2.Append(numericPoint);
-            }
-
-            numberReference2.Append(numberingCache2);
-            values1.Append(numberReference2);
-
-            return values1;
-        }
-
-        public NumberingCache GenerateNumberingCache(string formatCode, uint numPoints)
-        {
-            // c:numCache (NumberingCache)
-            NumberReference numberReference2 = new NumberReference();
-            NumberingCache numberingCache2 = new NumberingCache();
-            FormatCode formatCode2 = new FormatCode();
-            formatCode2.Text = formatCode;
-            PointCount pointCount3 = new PointCount() { Val = (UInt32Value)numPoints };
-            numberingCache2.Append(formatCode2);
-            numberingCache2.Append(pointCount3);
-
-            return numberingCache2;
-        }
 
         public DateAxis GenerateDateAxis(AxisId axisId, AxisPositionValues axisPosition, string formatCode, AxisId crossingAxisId)
         {
