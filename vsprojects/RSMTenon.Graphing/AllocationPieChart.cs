@@ -15,40 +15,7 @@ namespace RSMTenon.Graphing
         public Chart GenerateChart(string title, Dictionary<string, decimal> data)
         {
             Chart chart1 = new Chart();
-            Title title1 = new Title();
-            ChartText chartText1 = new ChartText();
-
-            RichText richText1 = new RichText();
-            A.BodyProperties bodyProperties1 = new A.BodyProperties();
-            A.ListStyle listStyle1 = new A.ListStyle();
-
-            A.Paragraph paragraph1 = new A.Paragraph();
-
-            A.ParagraphProperties paragraphProperties1 = new A.ParagraphProperties();
-            A.DefaultRunProperties defaultRunProperties1 = new A.DefaultRunProperties() { FontSize = DEFAULT_FONT_SIZE };
-
-            paragraphProperties1.Append(defaultRunProperties1);
-
-            A.Run run1 = new A.Run();
-            A.RunProperties runProperties1 = new A.RunProperties() { Language = "en-GB", FontSize = TITLE_FONT_SIZE };
-            A.Text text1 = new A.Text();
-            text1.Text = title;
-
-            run1.Append(runProperties1);
-            run1.Append(text1);
-
-            paragraph1.Append(paragraphProperties1);
-            paragraph1.Append(run1);
-
-            richText1.Append(bodyProperties1);
-            richText1.Append(listStyle1);
-            richText1.Append(paragraph1);
-
-            chartText1.Append(richText1);
-            Layout layout1 = new Layout();
-
-            title1.Append(chartText1);
-            title1.Append(layout1);
+            Title title1 = GenerateTitle(title);
 
             View3D view3D1 = new View3D();
             RotateX rotateX1 = new RotateX() { Val = 30 };
@@ -87,9 +54,9 @@ namespace RSMTenon.Graphing
 
             UInt32 i = 0U;
             foreach (var key in data.Keys) {
-                StringPoint stringPoint1 = generateStringPoint(i, key);
+                StringPoint stringPoint1 = GenerateStringPoint(i, key);
                 stringLiteral1.Append(stringPoint1);
-                NumericPoint numericPoint1 = generateNumericPoint(i++, data[key].ToString());
+                NumericPoint numericPoint1 = GenerateNumericPoint(i++, data[key].ToString());
                 numberLiteral1.Append(numericPoint1);
             }
 
@@ -113,32 +80,7 @@ namespace RSMTenon.Graphing
             plotArea1.Append(layout2);
             plotArea1.Append(pie3DChart1);
 
-            Legend legend1 = new Legend();
-            LegendPosition legendPosition1 = new LegendPosition() { Val = LegendPositionValues.Right };
-            Layout layout3 = new Layout();
-
-            TextProperties textProperties1 = new TextProperties();
-            A.BodyProperties bodyProperties2 = new A.BodyProperties();
-            A.ListStyle listStyle2 = new A.ListStyle();
-
-            A.Paragraph paragraph2 = new A.Paragraph();
-
-            A.ParagraphProperties paragraphProperties2 = new A.ParagraphProperties() { RightToLeft = false };
-            A.DefaultRunProperties defaultRunProperties2 = new A.DefaultRunProperties();
-
-            paragraphProperties2.Append(defaultRunProperties2);
-            A.EndParagraphRunProperties endParagraphRunProperties1 = new A.EndParagraphRunProperties() { Language = "en-GB" };
-
-            paragraph2.Append(paragraphProperties2);
-            paragraph2.Append(endParagraphRunProperties1);
-
-            textProperties1.Append(bodyProperties2);
-            textProperties1.Append(listStyle2);
-            textProperties1.Append(paragraph2);
-
-            legend1.Append(legendPosition1);
-            legend1.Append(layout3);
-            legend1.Append(textProperties1);
+            Legend legend1 = GenerateLegend(LegendPositionValues.Right);
             PlotVisibleOnly plotVisibleOnly1 = new PlotVisibleOnly() { Val = true };
 
             chart1.Append(title1);
@@ -150,24 +92,5 @@ namespace RSMTenon.Graphing
         
         }
 
-        private StringPoint generateStringPoint(UInt32Value idx, string text)
-        {
-            StringPoint stringPoint1 = new StringPoint() { Index = idx };
-            NumericValue numericValue1 = new NumericValue();
-            numericValue1.Text = text;
-            stringPoint1.Append(numericValue1);
-
-            return stringPoint1;
-        }
-
-        private NumericPoint generateNumericPoint(UInt32Value idx, string text)
-        {
-            NumericPoint numericPoint1 = new NumericPoint() { Index = idx };
-            NumericValue numericValue1 = new NumericValue();
-            numericValue1.Text = text;
-            numericPoint1.Append(numericValue1);
-
-            return numericPoint1;
-        }
     }
 }

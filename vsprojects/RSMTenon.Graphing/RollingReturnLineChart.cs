@@ -190,10 +190,7 @@ namespace RSMTenon.Graphing
             NumberingCache numberingCache2 = GenerateNumberingCache(formatCode, numPoints);
 
             for (UInt32 i = 0; i < numPoints; i++) {
-                NumericPoint numericPoint = new NumericPoint() { Index = (UInt32Value)i };
-                NumericValue numericValue = new NumericValue();
-                numericValue.Text = data[i].ToString();
-                numericPoint.Append(numericValue);
+                NumericPoint numericPoint = GenerateNumericPoint(i, data[i].ToString());
                 numberingCache2.Append(numericPoint);
             }
 

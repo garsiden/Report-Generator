@@ -109,6 +109,29 @@ namespace RSMTenon.Graphing
             return legend1;
         }
 
+        protected StringPoint GenerateStringPoint(UInt32Value idx, string text)
+        {
+            StringPoint stringPoint1 = new StringPoint() { Index = idx };
+            NumericValue numericValue1 = new NumericValue();
+            numericValue1.Text = text;
+            stringPoint1.Append(numericValue1);
+
+            return stringPoint1;
+        }
+
+        protected NumericPoint GenerateNumericPoint(UInt32Value idx, string text)
+        {
+            // c:pt (NumericPoint)
+            NumericPoint numericPoint1 = new NumericPoint() { Index = idx };
+            // c:v (NumericValue)
+            NumericValue numericValue1 = new NumericValue();
+            numericValue1.Text = text;
+            numericPoint1.Append(numericValue1);
+
+            return numericPoint1;
+        }
+
+
     }
 
 }
