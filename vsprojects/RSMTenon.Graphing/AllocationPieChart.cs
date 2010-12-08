@@ -6,9 +6,9 @@ using DocumentFormat.OpenXml.Drawing.Charts;
 using DocumentFormat.OpenXml;
 using A = DocumentFormat.OpenXml.Drawing;
 
-namespace RSMTenon.Graph
+namespace RSMTenon.Graphing
 {
-    public class AllocationPieChart : Graph
+    public class AllocationPieChart : PieGraph
     {
 
         // Creates an Chart instance and adds its children.

@@ -6,9 +6,9 @@ using DocumentFormat.OpenXml.Drawing.Charts;
 using DocumentFormat.OpenXml;
 using A = DocumentFormat.OpenXml.Drawing;
 
-namespace RSMTenon.Graph
+namespace RSMTenon.Graphing
 {
-    public class RollingReturnLineChart : Graph
+    public class RollingReturnLineChart : LineGraph
     {
         public Chart GenerateChart(string title, Dictionary<string, decimal> data)
         {

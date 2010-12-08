@@ -8,8 +8,8 @@
     <ProjectGuid>{EC757636-7624-4BB4-993E-422A593D73F0}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>RSMTenon.Graph</RootNamespace>
-    <AssemblyName>RSMTenon.Chart</AssemblyName>
+    <RootNamespace>RSMTenon.Graphing</RootNamespace>
+    <AssemblyName>RSMTenon.Graphing</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -52,6 +52,8 @@
     <Compile Include="AllocationPieChart.cs" />
     <Compile Include="BarGraph.cs" />
     <Compile Include="Graph.cs" />
+    <Compile Include="LineGraph.cs" />
+    <Compile Include="PieGraph.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RollingReturnLineChart.cs" />
   </ItemGroup>

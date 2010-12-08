@@ -6,7 +6,7 @@ using DocumentFormat.OpenXml.Drawing.Charts;
 using A = DocumentFormat.OpenXml.Drawing;
 using DocumentFormat.OpenXml;
 
-namespace RSMTenon.Graph
+namespace RSMTenon.Graphing
 {
     public abstract class Graph
     {
