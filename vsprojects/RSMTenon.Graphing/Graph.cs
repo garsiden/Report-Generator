@@ -28,7 +28,7 @@ namespace RSMTenon.Graphing
         public static Int64 Cx { get { return DEFAULT_GRAPH_X; } }
         public static Int64 Cy { get { return DEFAULT_GRAPH_Y; } }
 
-        protected const string DEFAULT_LANG = "en-GB";
+        public const string DEFAULT_LANG = "en-GB";
 
         // c:title (Title)
 

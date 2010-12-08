@@ -53,7 +53,7 @@ namespace RSMTenon.ReportGenerator
             // generate new ChartPart and ChartSpace
             ChartPart chartPart = mainPart.AddNewPart<ChartPart>();
             string relId = mainPart.GetIdOfPart(chartPart);
-            C.ChartSpace chartSpace = GenerateChartSpace(chartPart);
+            C.ChartSpace chartSpace = GraphSpace.GenerateChartSpace(chartPart);
 
             // generate Pie Chart and add to ChartSpace
             AllocationPieChart pie = new AllocationPieChart();
@@ -66,7 +66,7 @@ namespace RSMTenon.ReportGenerator
             // generate a new Wordprocessing Drawing, add to a new Run,
             // and relate to new ChartPart
             Run run = new Run();
-            Drawing drawing = GenerateDrawing(relId);
+            Drawing drawing = GraphDrawing.GenerateDrawing(relId, "Chart 1", 2U, AllocationPieChart.Cx, AllocationPieChart.Cy);
             para.Append(run);
             run.Append(drawing);
 
@@ -82,7 +82,7 @@ namespace RSMTenon.ReportGenerator
             // generate new ChartPart and ChartSpace
             ChartPart chartPart = mainPart.AddNewPart<ChartPart>();
             string relId = mainPart.GetIdOfPart(chartPart);
-            C.ChartSpace chartSpace = GenerateChartSpace(chartPart);
+            C.ChartSpace chartSpace = GraphSpace.GenerateChartSpace(chartPart);
 
             // generate Line Chart and add to ChartSpace
             RollingReturnLineChart rrlc = new RollingReturnLineChart();
@@ -95,7 +95,7 @@ namespace RSMTenon.ReportGenerator
             // generate a new Wordprocessing Drawing, add to a new Run,
             // and relate to new ChartPart
             Run run = new Run();
-            Drawing drawing = GenerateDrawing(relId);
+            Drawing drawing = GraphDrawing.GenerateDrawing(relId, "Chart 2", 3U, RollingReturnLineChart.Cx, RollingReturnLineChart.Cy);
             para.Append(run);
             run.Append(drawing);
 
@@ -103,61 +103,7 @@ namespace RSMTenon.ReportGenerator
             mainPart.Document.Save();
         }
 
-        public Drawing GenerateDrawing(string id)
-        {
-            Drawing drawing1 = new Drawing();
 
-            Wp.Inline inline1 = new Wp.Inline();
-            Wp.Extent extent1 = new Wp.Extent() { Cx = RollingReturnLineChart.Cx, Cy = RollingReturnLineChart.Cy };
-            Wp.DocProperties docProperties1 = new Wp.DocProperties() { Id = (UInt32Value)2U, Name = "Chart 1" };
-
-            A.Graphic graphic1 = new A.Graphic();
-            graphic1.AddNamespaceDeclaration("a", "http://schemas.openxmlformats.org/drawingml/2006/main");
-
-            A.GraphicData graphicData1 = new A.GraphicData() { Uri = "http://schemas.openxmlformats.org/drawingml/2006/chart" };
-
-            C.ChartReference chartReference1 = new C.ChartReference() { Id = id };
-            chartReference1.AddNamespaceDeclaration("c", "http://schemas.openxmlformats.org/drawingml/2006/chart");
-            chartReference1.AddNamespaceDeclaration("r", "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
-
-            graphicData1.Append(chartReference1);
-
-            graphic1.Append(graphicData1);
-
-            inline1.Append(extent1);
-            inline1.Append(docProperties1);
-            inline1.Append(graphic1);
-
-            drawing1.Append(inline1);
-            return drawing1;
-        }
-
-        private C.ChartSpace GenerateChartSpace(ChartPart part)
-        {
-            // c:chartSpace (ChartSpace)            
-            C.ChartSpace chartSpace1 = new C.ChartSpace();
-            chartSpace1.AddNamespaceDeclaration("c", "http://schemas.openxmlformats.org/drawingml/2006/chart");
-            chartSpace1.AddNamespaceDeclaration("a", "http://schemas.openxmlformats.org/drawingml/2006/main");
-            chartSpace1.AddNamespaceDeclaration("r", "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
-
-            // c:lang (EditingLanguage)
-            C.EditingLanguage editingLanguage1 = new C.EditingLanguage() { Val = "en-GB" };
-
-            // c:printSettings (PrintSettings)
-            C.PrintSettings printSettings1 = new C.PrintSettings();
-            C.HeaderFooter headerFooter1 = new C.HeaderFooter();
-            C.PageMargins pageMargins1 = new C.PageMargins() { Left = 0.70D, Right = 0.70D, Top = 0.75D, Bottom = 0.75D, Header = 0.30D, Footer = 0.30D };
-            C.PageSetup pageSetup1 = new C.PageSetup();
-
-            printSettings1.Append(headerFooter1);
-            printSettings1.Append(pageMargins1);
-            printSettings1.Append(pageSetup1);
-
-            chartSpace1.Append(editingLanguage1);
-            chartSpace1.Append(printSettings1);
-
-            return chartSpace1;
-        }
 
         private Paragraph findAndRemoveContent(MainDocumentPart main, string blockName)
         {

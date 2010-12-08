@@ -52,6 +52,8 @@
     <Compile Include="AllocationPieChart.cs" />
     <Compile Include="BarGraph.cs" />
     <Compile Include="Graph.cs" />
+    <Compile Include="GraphDrawing.cs" />
+    <Compile Include="GraphSpace.cs" />
     <Compile Include="LineGraph.cs" />
     <Compile Include="PieGraph.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
