@@ -131,24 +131,6 @@ namespace RSMTenon.Graphing
             return chartShapeProperties1;
         }
 
-        public CategoryAxisData GenerateCategoryAxisData(string formatCode, int[] data)
-        {
-            CategoryAxisData categoryAxisData1 = new CategoryAxisData();
-
-            uint numPoints = (uint)data.Length;
-            NumberReference numberReference1 = new NumberReference();
-            NumberingCache numberingCache1 = GenerateNumberingCache(formatCode, numPoints);
-
-            for (UInt32 i = 0; i < numPoints; i++) {
-                NumericPoint numericPoint = GenerateNumericPoint(i, data[i].ToString());
-                numberingCache1.Append(numericPoint);
-            }
-
-            numberReference1.Append(numberingCache1);
-            categoryAxisData1.Append(numberReference1);
-
-            return categoryAxisData1;
-        }
 
 
         public DateAxis GenerateDateAxis(AxisId axisId, AxisPositionValues axisPosition, string formatCode, AxisId crossingAxisId)

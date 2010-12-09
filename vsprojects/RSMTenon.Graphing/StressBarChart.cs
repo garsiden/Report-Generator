@@ -5,6 +5,7 @@ using System.Text;
 using DocumentFormat.OpenXml.Drawing.Charts;
 using A = DocumentFormat.OpenXml.Drawing;
 using DocumentFormat.OpenXml;
+
 namespace RSMTenon.Graphing
 {
     public class StressBarChart : BarGraph
@@ -76,7 +77,7 @@ namespace RSMTenon.Graphing
             return chart1;
         }
         
-        public Layout GeneratePlotAreaLayout()
+        public override Layout GeneratePlotAreaLayout()
         {
             Layout layout1 = new Layout();
 
@@ -176,74 +177,8 @@ namespace RSMTenon.Graphing
             barChartSeries1.Append(chartShapeProperties1);
             barChartSeries1.Append(categoryAxisData1);
             barChartSeries1.Append(values1);
+
             return barChartSeries1;
-        }
-
-        public ChartShapeProperties GenerateChartShapeProperties(int width)
-        {
-            ChartShapeProperties chartShapeProperties5 = new ChartShapeProperties();
-
-            A.Outline outline5 = new A.Outline() { Width = width };
-
-            A.SolidFill solidFill7 = new A.SolidFill();
-            A.RgbColorModelHex rgbColorModelHex7 = new A.RgbColorModelHex() { Val = "000000" };
-
-            solidFill7.Append(rgbColorModelHex7);
-            A.PresetDash presetDash4 = new A.PresetDash() { Val = A.PresetLineDashValues.Solid };
-
-            outline5.Append(solidFill7);
-            outline5.Append(presetDash4);
-
-            chartShapeProperties5.Append(outline5);
-
-            return chartShapeProperties5;
-        }
-
-        public ChartShapeProperties GenerateChartShapeProperties(string colourHex, int width)
-        {
-            ChartShapeProperties chartShapeProperties2 = new ChartShapeProperties();
-
-            A.SolidFill solidFill1 = new A.SolidFill();
-            A.RgbColorModelHex rgbColorModelHex1 = new A.RgbColorModelHex() { Val = colourHex };
-            solidFill1.Append(rgbColorModelHex1);
-
-            A.Outline outline2 = new A.Outline() { Width = width };
-            A.SolidFill solidFill2 = new A.SolidFill();
-            A.RgbColorModelHex rgbColorModelHex2 = new A.RgbColorModelHex() { Val = "000000" };
-
-            solidFill2.Append(rgbColorModelHex2);
-            A.PresetDash presetDash1 = new A.PresetDash() { Val = A.PresetLineDashValues.Solid };
-
-            outline2.Append(solidFill2);
-            outline2.Append(presetDash1);
-
-            chartShapeProperties2.Append(solidFill1);
-            chartShapeProperties2.Append(outline2);
-
-            return chartShapeProperties2;
-        }
-
-        public CategoryAxisData GenerateCategoryAxisData(string[] pointNames)
-        {
-            uint numPoints = (uint)pointNames.Length;
-            CategoryAxisData categoryAxisData1 = new CategoryAxisData();
-
-            StringReference stringReference2 = new StringReference();
-
-            StringCache stringCache2 = new StringCache();
-            PointCount pointCount2 = new PointCount() { Val = (UInt32Value)numPoints };
-            stringCache2.Append(pointCount2);
-
-            for (uint i = 0; i < numPoints; i++) {
-                StringPoint stringPoint2 = GenerateStringPoint(i, pointNames[i]);
-                stringCache2.Append(stringPoint2);
-            }
-
-            stringReference2.Append(stringCache2);
-
-            categoryAxisData1.Append(stringReference2);
-
-            return categoryAxisData1;
         }
 
         public CategoryAxis GenerateCategoryAxis(AxisId axisId, AxisPositionValues axisPosition, string formatCode, AxisId crossingAxisId)

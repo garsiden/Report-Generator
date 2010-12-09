@@ -49,6 +49,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AllocationBarChart.cs" />
     <Compile Include="AllocationPieChart.cs" />
     <Compile Include="BarGraph.cs" />
     <Compile Include="Graph.cs" />

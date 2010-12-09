@@ -130,7 +130,7 @@ namespace RSMTenon.Graphing
 
             return numericPoint1;
         }
-        public Values GenerateValues(string formatCode, float[] data)
+        public virtual Values GenerateValues(string formatCode, float[] data)
         {
             Values values1 = new Values();
 
@@ -190,6 +190,73 @@ namespace RSMTenon.Graphing
             return seriesText1;
         }
 
+        public virtual Layout GeneratePlotAreaLayout()
+        {
+            Layout layout1 = new Layout();
+
+            return layout1;
+        }
+
+        public CategoryAxisData GenerateCategoryAxisData(string formatCode, int[] data)
+        {
+            CategoryAxisData categoryAxisData1 = new CategoryAxisData();
+
+            uint numPoints = (uint)data.Length;
+            NumberReference numberReference1 = new NumberReference();
+            NumberingCache numberingCache1 = GenerateNumberingCache(formatCode, numPoints);
+
+            for (UInt32 i = 0; i < numPoints; i++) {
+                NumericPoint numericPoint = GenerateNumericPoint(i, data[i].ToString());
+                numberingCache1.Append(numericPoint);
+            }
+
+            numberReference1.Append(numberingCache1);
+            categoryAxisData1.Append(numberReference1);
+
+            return categoryAxisData1;
+        }
+
+        public virtual CategoryAxisData GenerateCategoryAxisData(string[] data)
+        {
+            CategoryAxisData categoryAxisData1 = new CategoryAxisData();
+
+            uint numPoints = (uint)data.Length;
+            StringReference stringReference2 = new StringReference();
+
+            StringCache stringCache2 = new StringCache();
+            PointCount pointCount2 = new PointCount() { Val = (UInt32Value)numPoints };
+            stringCache2.Append(pointCount2);
+
+            for (uint i = 0; i < numPoints; i++) {
+                StringPoint stringPoint2 = GenerateStringPoint(i, data[i]);
+                stringCache2.Append(stringPoint2);
+            }
+
+            stringReference2.Append(stringCache2);
+            categoryAxisData1.Append(stringReference2);
+
+            return categoryAxisData1;
+        }
+
+        public ChartShapeProperties GenerateChartShapeProperties(int width)
+        {
+            ChartShapeProperties chartShapeProperties5 = new ChartShapeProperties();
+
+            A.Outline outline5 = new A.Outline() { Width = width };
+
+            A.SolidFill solidFill7 = new A.SolidFill();
+            A.RgbColorModelHex rgbColorModelHex7 = new A.RgbColorModelHex() { Val = "000000" };
+
+            solidFill7.Append(rgbColorModelHex7);
+            A.PresetDash presetDash4 = new A.PresetDash() { Val = A.PresetLineDashValues.Solid };
+
+            outline5.Append(solidFill7);
+            outline5.Append(presetDash4);
+
+            chartShapeProperties5.Append(outline5);
+
+            return chartShapeProperties5;
+        }
 
     }
 
