@@ -74,10 +74,11 @@ namespace RSMTenon.Graphing
             chart1.Append(legend1);
             chart1.Append(plotVisibleOnly1);
             chart1.Append(displayBlanksAs1);
+
             return chart1;
         }
-        
-        public override Layout GeneratePlotAreaLayout()
+
+        protected override Layout GeneratePlotAreaLayout()
         {
             Layout layout1 = new Layout();
 
@@ -99,10 +100,11 @@ namespace RSMTenon.Graphing
             manualLayout1.Append(height1);
 
             layout1.Append(manualLayout1);
+
             return layout1;
         }
 
-        public Layout GenerateLegendLayout()
+        protected Layout GenerateLegendLayout()
         {
             Layout layout1 = new Layout();
 
@@ -125,7 +127,7 @@ namespace RSMTenon.Graphing
             return layout1;
         }
 
-        public override Legend GenerateLegend(LegendPositionValues position)
+        protected override Legend GenerateLegend(LegendPositionValues position)
         {
             Legend legend1 = new Legend();
             LegendPosition legendPosition1 = new LegendPosition() { Val = position };
@@ -160,28 +162,7 @@ namespace RSMTenon.Graphing
             return legend1;
         }
 
-        public BarChartSeries GenerateBarChartSeries(string seriesName, uint index, uint order, string[] pointNames, float[] vals, string colourHex, string valueFormat)
-        {
-            BarChartSeries barChartSeries1 = new BarChartSeries();
-            Index index1 = new Index() { Val = (UInt32Value)index };
-            Order order1 = new Order() { Val = (UInt32Value)order };
-
-            SeriesText seriesText1 = GenerateSeriesText(seriesName);
-            ChartShapeProperties chartShapeProperties1 = GenerateChartShapeProperties(colourHex, 12700);
-            CategoryAxisData categoryAxisData1 = GenerateCategoryAxisData(pointNames);
-            Values values1 = GenerateValues(valueFormat, vals);
-
-            barChartSeries1.Append(index1);
-            barChartSeries1.Append(order1);
-            barChartSeries1.Append(seriesText1);
-            barChartSeries1.Append(chartShapeProperties1);
-            barChartSeries1.Append(categoryAxisData1);
-            barChartSeries1.Append(values1);
-
-            return barChartSeries1;
-        }
-
-        public CategoryAxis GenerateCategoryAxis(AxisId axisId, AxisPositionValues axisPosition, string formatCode, AxisId crossingAxisId)
+        protected CategoryAxis GenerateCategoryAxis(AxisId axisId, AxisPositionValues axisPosition, string formatCode, AxisId crossingAxisId)
         {
             CategoryAxis categoryAxis1 = new CategoryAxis();
             AxisId axisId3 = new AxisId() { Val = axisId.Val };
@@ -241,64 +222,7 @@ namespace RSMTenon.Graphing
             return categoryAxis1;
         }
 
-        public ValueAxis GenerateValueAxis(AxisId axisId, AxisPositionValues position, string formatCode, AxisId crossingAxisId)
-        {
-            ValueAxis valueAxis1 = new ValueAxis();
-            AxisId axisId4 = new AxisId() { Val = axisId.Val };
-
-            Scaling scaling2 = new Scaling();
-            Orientation orientation2 = new Orientation() { Val = OrientationValues.MinMax };
-
-            scaling2.Append(orientation2);
-            AxisPosition axisPosition2 = new AxisPosition() { Val = position };
-
-            MajorGridlines majorGridlines1 = new MajorGridlines();
-
-            ChartShapeProperties chartShapeProperties6 = GenerateChartShapeProperties(3175);
-
-            majorGridlines1.Append(chartShapeProperties6);
-            NumberingFormat numberingFormat2 = new NumberingFormat() { FormatCode = formatCode, SourceLinked = false };
-            TickLabelPosition tickLabelPosition2 = new TickLabelPosition() { Val = TickLabelPositionValues.NextTo };
-
-            ChartShapeProperties chartShapeProperties7 = GenerateChartShapeProperties(3175);
-
-            TextProperties textProperties2 = new TextProperties();
-            A.BodyProperties bodyProperties3 = new A.BodyProperties() { Rotation = 0, Vertical = A.TextVerticalValues.Horizontal };
-            A.ListStyle listStyle3 = new A.ListStyle();
-
-            A.Paragraph paragraph3 = new A.Paragraph();
-
-            A.ParagraphProperties paragraphProperties3 = new A.ParagraphProperties();
-            A.DefaultRunProperties defaultRunProperties3 = new A.DefaultRunProperties();
-
-            paragraphProperties3.Append(defaultRunProperties3);
-            A.EndParagraphRunProperties endParagraphRunProperties2 = new A.EndParagraphRunProperties() { Language = DEFAULT_LANG };
-
-            paragraph3.Append(paragraphProperties3);
-            paragraph3.Append(endParagraphRunProperties2);
-
-            textProperties2.Append(bodyProperties3);
-            textProperties2.Append(listStyle3);
-            textProperties2.Append(paragraph3);
-            CrossingAxis crossingAxis2 = new CrossingAxis() { Val = crossingAxisId.Val };
-            Crosses crosses2 = new Crosses() { Val = CrossesValues.AutoZero };
-            CrossBetween crossBetween1 = new CrossBetween() { Val = CrossBetweenValues.Between };
-
-            valueAxis1.Append(axisId4);
-            valueAxis1.Append(scaling2);
-            valueAxis1.Append(axisPosition2);
-            valueAxis1.Append(majorGridlines1);
-            valueAxis1.Append(numberingFormat2);
-            valueAxis1.Append(tickLabelPosition2);
-            valueAxis1.Append(chartShapeProperties7);
-            valueAxis1.Append(textProperties2);
-            valueAxis1.Append(crossingAxis2);
-            valueAxis1.Append(crosses2);
-            valueAxis1.Append(crossBetween1);
-
-            return valueAxis1;
-        }
-        public Chart GenerateChart(string title)
+        public override Chart GenerateChart(string title)
         {
             float[] global = { 0.7686F, 0.0555F };
             float[] bonds = { 0.1527F, 0.5255F };
@@ -308,7 +232,7 @@ namespace RSMTenon.Graphing
             string[] pointNames = { "Bull Market Mar 03 - Mar 06", "10 Year Returns Dec 99 - Dec 09" };
 
             Chart chart1 = new Chart();
-            Title title1 = GenerateTitle("Stress Test - Market Rises");
+            Title title1 = GenerateTitle(title);
             PlotArea plotArea1 = new PlotArea();
 
             Layout layout2 = GeneratePlotAreaLayout();
@@ -335,7 +259,6 @@ namespace RSMTenon.Graphing
             barChart1.Append(axisId2);
 
             CategoryAxis categoryAxis1 = GenerateCategoryAxis(axisId1, AxisPositionValues.Bottom, "General", axisId2);
-
             ValueAxis valueAxis1 = GenerateValueAxis(axisId2, AxisPositionValues.Left, "0%", axisId1);
 
             ShapeProperties shapeProperties1 = new ShapeProperties();
@@ -364,8 +287,8 @@ namespace RSMTenon.Graphing
             chart1.Append(legend1);
             chart1.Append(plotVisibleOnly1);
             chart1.Append(displayBlanksAs1);
+
             return chart1;
         }
-
     }
 }

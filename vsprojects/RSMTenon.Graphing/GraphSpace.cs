@@ -22,7 +22,7 @@ namespace RSMTenon.Graphing
             chartSpace1.AddNamespaceDeclaration("a", "http://schemas.openxmlformats.org/drawingml/2006/main");
             chartSpace1.AddNamespaceDeclaration("r", "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
 
-            C.Date1904 date1904 = null;            
+            C.Date1904 date1904 = null;
             if (withDate1904) {
                 date1904 = generateDate1904();
             }
@@ -55,7 +55,5 @@ namespace RSMTenon.Graphing
             C.Date1904 date19041 = new C.Date1904() { Val = true };
             return date19041;
         }
-
-
     }
 }

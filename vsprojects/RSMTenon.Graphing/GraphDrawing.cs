@@ -45,8 +45,8 @@ namespace RSMTenon.Graphing
             inline1.Append(graphic1);
 
             drawing1.Append(inline1);
+
             return drawing1;
         }
-
     }
 }

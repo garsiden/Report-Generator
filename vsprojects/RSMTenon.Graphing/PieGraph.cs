@@ -5,7 +5,5 @@ using System.Text;
 
 namespace RSMTenon.Graphing
 {
-    public class PieGraph : Graph
-    {
-    }
+    public abstract class PieGraph : Graph { }
 }

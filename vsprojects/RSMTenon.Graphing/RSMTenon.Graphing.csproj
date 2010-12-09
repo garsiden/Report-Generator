@@ -52,6 +52,7 @@
     <Compile Include="AllocationBarChart.cs" />
     <Compile Include="AllocationPieChart.cs" />
     <Compile Include="BarGraph.cs" />
+    <Compile Include="DrawdownLineChart.cs" />
     <Compile Include="Graph.cs" />
     <Compile Include="GraphDrawing.cs" />
     <Compile Include="GraphSpace.cs" />

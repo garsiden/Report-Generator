@@ -11,7 +11,11 @@ namespace RSMTenon.Graphing
     public class AllocationPieChart : PieGraph
     {
 
-        // Creates an Chart instance and adds its children.
+        public override Chart GenerateChart(string title)
+        {
+            return null;
+        }
+
         public Chart GenerateChart(string title, Dictionary<string, decimal> data)
         {
             Chart chart1 = new Chart();
@@ -46,10 +50,10 @@ namespace RSMTenon.Graphing
             NumberLiteral numberLiteral1 = new NumberLiteral();
 
             UInt32 numPoints = (UInt32)data.Count();
-            PointCount pointCount1 = new PointCount() { Val = (UInt32Value) numPoints };
+            PointCount pointCount1 = new PointCount() { Val = (UInt32Value)numPoints };
             stringLiteral1.Append(pointCount1);
 
-            PointCount pointCount2 = new PointCount() { Val = (UInt32Value) numPoints };
+            PointCount pointCount2 = new PointCount() { Val = (UInt32Value)numPoints };
             numberLiteral1.Append(pointCount2);
 
             UInt32 i = 0U;
@@ -88,8 +92,8 @@ namespace RSMTenon.Graphing
             chart1.Append(plotArea1);
             chart1.Append(legend1);
             chart1.Append(plotVisibleOnly1);
+
             return chart1;
-        
         }
     }
 }

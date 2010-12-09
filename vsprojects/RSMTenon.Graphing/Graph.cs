@@ -12,32 +12,24 @@ namespace RSMTenon.Graphing
     {
         private const Int64 EMUS_PER_CENTIMETRE = 360000L;
 
-        public const Int64 LARGE_GRAPH_X = 5486400L;
-        public const Int64 LARGE_GRAPH_Y = 3200400L;
-
-        public const Int64 SMALL_GRAPH_X = (Int64)(14.85 * EMUS_PER_CENTIMETRE);
-        public const Int64 SMALL_GRAPH_Y = (Int64) (6.71 * EMUS_PER_CENTIMETRE);
-
         public const Int64 DEFAULT_GRAPH_X = (Int64)(14.90 * EMUS_PER_CENTIMETRE);
         public const Int64 DEFAULT_GRAPH_Y = (Int64)(6.80 * EMUS_PER_CENTIMETRE);
-
-        protected const int TITLE_FONT_SIZE = 1100;
+        public const string DEFAULT_LANG = "en-GB";
+        protected const int TITLE_FONT_SIZE = 1200;
         protected const int DEFAULT_FONT_SIZE = 1100;
 
-        
         public static Int64 Cx { get { return DEFAULT_GRAPH_X; } }
         public static Int64 Cy { get { return DEFAULT_GRAPH_Y; } }
 
-        public const string DEFAULT_LANG = "en-GB";
+        public abstract Chart GenerateChart(string title);
 
         // c:title (Title)
-
-        public Title GenerateTitle(string text)
+        protected Title GenerateTitle(string text)
         {
             return GenerateTitle(text, TITLE_FONT_SIZE);
         }
 
-        public Title GenerateTitle(string text, Int32Value fontSize)
+        protected Title GenerateTitle(string text, Int32Value fontSize)
         {
             Title title1 = new Title();
 
@@ -70,15 +62,17 @@ namespace RSMTenon.Graphing
             richText1.Append(paragraph1);
 
             chartText1.Append(richText1);
+
             Layout layout1 = new Layout();
 
             title1.Append(chartText1);
             title1.Append(layout1);
+
             return title1;
         }
 
-        // Creates an Legend instance and adds its children.
-        public virtual Legend GenerateLegend (LegendPositionValues position)
+        // c:legend (Legend)
+        protected virtual Legend GenerateLegend(LegendPositionValues position)
         {
             Legend legend1 = new Legend();
             LegendPosition legendPosition1 = new LegendPosition() { Val = position };
@@ -106,6 +100,7 @@ namespace RSMTenon.Graphing
             legend1.Append(legendPosition1);
             legend1.Append(layout1);
             legend1.Append(textProperties1);
+
             return legend1;
         }
 
@@ -130,7 +125,8 @@ namespace RSMTenon.Graphing
 
             return numericPoint1;
         }
-        public virtual Values GenerateValues(string formatCode, float[] data)
+
+        protected virtual Values GenerateValues(string formatCode, float[] data)
         {
             Values values1 = new Values();
 
@@ -151,7 +147,7 @@ namespace RSMTenon.Graphing
             return values1;
         }
 
-        public NumberingCache GenerateNumberingCache(string formatCode, uint numPoints)
+        protected NumberingCache GenerateNumberingCache(string formatCode, uint numPoints)
         {
             // c:numCache (NumberingCache)
             NumberReference numberReference2 = new NumberReference();
@@ -164,7 +160,8 @@ namespace RSMTenon.Graphing
 
             return numberingCache2;
         }
-        public SeriesText GenerateSeriesText(string seriesName)
+
+        protected SeriesText GenerateSeriesText(string seriesName)
         {
             // c:tx (SeriesText)
             SeriesText seriesText1 = new SeriesText();
@@ -190,14 +187,14 @@ namespace RSMTenon.Graphing
             return seriesText1;
         }
 
-        public virtual Layout GeneratePlotAreaLayout()
+        protected virtual Layout GeneratePlotAreaLayout()
         {
             Layout layout1 = new Layout();
 
             return layout1;
         }
 
-        public CategoryAxisData GenerateCategoryAxisData(string formatCode, int[] data)
+        protected CategoryAxisData GenerateCategoryAxisData(string formatCode, int[] data)
         {
             CategoryAxisData categoryAxisData1 = new CategoryAxisData();
 
@@ -216,7 +213,7 @@ namespace RSMTenon.Graphing
             return categoryAxisData1;
         }
 
-        public virtual CategoryAxisData GenerateCategoryAxisData(string[] data)
+        protected virtual CategoryAxisData GenerateCategoryAxisData(string[] data)
         {
             CategoryAxisData categoryAxisData1 = new CategoryAxisData();
 
@@ -238,7 +235,7 @@ namespace RSMTenon.Graphing
             return categoryAxisData1;
         }
 
-        public ChartShapeProperties GenerateChartShapeProperties(int width)
+        protected ChartShapeProperties GenerateChartShapeProperties(int width)
         {
             ChartShapeProperties chartShapeProperties5 = new ChartShapeProperties();
 
@@ -258,6 +255,18 @@ namespace RSMTenon.Graphing
             return chartShapeProperties5;
         }
 
-    }
+        protected ChartShapeProperties GenerateChartShapeProperties(string colourHex)
+        {
+            ChartShapeProperties chartShapeProperties1 = new ChartShapeProperties();
 
+            A.Outline outline1 = new A.Outline();
+            A.SolidFill solidFill1 = new A.SolidFill();
+            A.RgbColorModelHex rgbColorModelHex1 = new A.RgbColorModelHex() { Val = colourHex };
+            solidFill1.Append(rgbColorModelHex1);
+            outline1.Append(solidFill1);
+            chartShapeProperties1.Append(outline1);
+
+            return chartShapeProperties1;
+        }
+    }
 }
