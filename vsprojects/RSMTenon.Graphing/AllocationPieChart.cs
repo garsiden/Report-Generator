@@ -5,6 +5,7 @@ using System.Text;
 using DocumentFormat.OpenXml.Drawing.Charts;
 using DocumentFormat.OpenXml;
 using A = DocumentFormat.OpenXml.Drawing;
+using RSMTenon.Data;
 
 namespace RSMTenon.Graphing
 {
@@ -16,7 +17,7 @@ namespace RSMTenon.Graphing
             return null;
         }
 
-        public Chart GenerateChart(string title, Dictionary<string, decimal> data)
+        public Chart GenerateChart(string title, IQueryable<ModelAllocation>model)
         {
             Chart chart1 = new Chart();
             Title title1 = GenerateTitle(title);
@@ -49,7 +50,7 @@ namespace RSMTenon.Graphing
             StringLiteral stringLiteral1 = new StringLiteral();
             NumberLiteral numberLiteral1 = new NumberLiteral();
 
-            UInt32 numPoints = (UInt32)data.Count();
+            UInt32 numPoints = (UInt32)model.Count();
             PointCount pointCount1 = new PointCount() { Val = (UInt32Value)numPoints };
             stringLiteral1.Append(pointCount1);
 
@@ -57,10 +58,11 @@ namespace RSMTenon.Graphing
             numberLiteral1.Append(pointCount2);
 
             UInt32 i = 0U;
-            foreach (var key in data.Keys) {
-                StringPoint stringPoint1 = GenerateStringPoint(i, key);
+
+            foreach (var alloc in model.OrderByDescending(m => m.Allocation)) {
+                StringPoint stringPoint1 = GenerateStringPoint(i, alloc.InvestmentType);
                 stringLiteral1.Append(stringPoint1);
-                NumericPoint numericPoint1 = GenerateNumericPoint(i++, data[key].ToString());
+                NumericPoint numericPoint1 = GenerateNumericPoint(i++, alloc.Allocation.ToString());
                 numberLiteral1.Append(numericPoint1);
             }
 

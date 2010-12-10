@@ -62,6 +62,12 @@
     <Compile Include="RollingReturnLineChart.cs" />
     <Compile Include="StressBarChart.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\RSMTenon.Data\RSMTenon.Data.csproj">
+      <Project>{8112A474-AE76-44F5-9C95-4C28FB2BA082}</Project>
+      <Name>RSMTenon.Data</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
