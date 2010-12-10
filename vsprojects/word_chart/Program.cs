@@ -10,6 +10,7 @@ using Wp = DocumentFormat.OpenXml.Drawing.Wordprocessing;
 using A = DocumentFormat.OpenXml.Drawing;
 using C = DocumentFormat.OpenXml.Drawing.Charts;
 using RSMTenon.Graphing;
+using RSMTenon.Data;
 
 namespace RSMTenon.ReportGenerator
 {
@@ -31,7 +32,7 @@ namespace RSMTenon.ReportGenerator
             myData.Add("Commodities", 0.033M);
 
             string template = path + "chart_template.docx";
-            string generated = path + "BarChartWord.docx";
+            string generated = path + "PieChartWord.docx";
 
             // copy template to generated
             File.Copy(template, generated, true);
@@ -41,7 +42,7 @@ namespace RSMTenon.ReportGenerator
             MainDocumentPart mainPart = myWordDoc.MainDocumentPart;
 
             //This.InsertLineChartIntoWord(mainPart, "1yr Rolling return", myData);
-            This.InsertBarChartIntoWord(mainPart, "Stress Test -Market Crashes");
+            This.InsertAllocationPie(mainPart);
 
             myWordDoc.Close();
         }
@@ -57,8 +58,9 @@ namespace RSMTenon.ReportGenerator
             C.ChartSpace chartSpace = GraphSpace.GenerateChartSpace(chartPart);
 
             // generate Pie Chart and add to ChartSpace
-            StressBarChart sbc = new StressBarChart();
-            C.Chart chart = sbc.GenerateChart(title);
+            //StressBarChart bc = new StressBarChart();
+            AllocationBarChart bc = new AllocationBarChart();
+            C.Chart chart = bc.GenerateChart(title);
             chartSpace.Append(chart);
 
             // set ChartPart ChartSpace
@@ -76,9 +78,8 @@ namespace RSMTenon.ReportGenerator
 
         }
 
-        public void InsertChartIntoWord(MainDocumentPart mainPart, string title, Dictionary<string,decimal>data)
+        public void InsertAllocationPie(MainDocumentPart mainPart)
         {
-            // open Word documant and remove existing content from control
             Paragraph para = findAndRemoveContent(mainPart, "Chart1");
 
             // generate new ChartPart and ChartSpace
@@ -87,8 +88,21 @@ namespace RSMTenon.ReportGenerator
             C.ChartSpace chartSpace = GraphSpace.GenerateChartSpace(chartPart);
 
             // generate Pie Chart and add to ChartSpace
+            string title = "Conservative Allocation";
+
+            // get data
+            var context = new RepGenDataContext();
+            context.Connection.Open();
+            var models = context.StrategyModels;
+
+            var match = from model in models
+                        where model.StrategyID.Equals("CO")
+                        group model by model.InvestmentTypeName into g
+                        select new ModelAllocation{InvestmentType = g.Key, Allocation = g.Sum(model => model.Weighting)};
+
+
             AllocationPieChart pie = new AllocationPieChart();
-            C.Chart chart = pie.GenerateChart(title, data);
+            C.Chart chart = pie.GenerateChart(title, match);
             chartSpace.Append(chart);
 
             // set ChartPart ChartSpace
@@ -105,7 +119,7 @@ namespace RSMTenon.ReportGenerator
             mainPart.Document.Save();
         }
 
-        public void InsertLineChartIntoWord(MainDocumentPart mainPart, string title, Dictionary<string, decimal> data)
+        public void InsertLineChartIntoWord(MainDocumentPart mainPart, string title)
         {
             // open Word documant and remove existing content from control
             Paragraph para = findAndRemoveContent(mainPart, "Chart1");
@@ -116,8 +130,8 @@ namespace RSMTenon.ReportGenerator
             C.ChartSpace chartSpace = GraphSpace.GenerateChartSpace(chartPart);
 
             // generate Line Chart and add to ChartSpace
-            RollingReturnLineChart rrlc = new RollingReturnLineChart();
-            C.Chart chart = rrlc.GenerateChart(title, data);
+            DrawdownLineChart lc = new DrawdownLineChart();
+            C.Chart chart = lc.GenerateChart(title);
             chartSpace.Append(chart);
 
             // set ChartPart ChartSpace

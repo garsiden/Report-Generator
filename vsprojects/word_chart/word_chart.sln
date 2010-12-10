@@ -5,6 +5,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "word_chart", "word_chart.cs
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RSMTenon.Graphing", "..\RSMTenon.Graphing\RSMTenon.Graphing.csproj", "{EC757636-7624-4BB4-993E-422A593D73F0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RSMTenon.Data", "..\RSMTenon.Data\RSMTenon.Data.csproj", "{8112A474-AE76-44F5-9C95-4C28FB2BA082}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,6 +21,10 @@ Global
 		{EC757636-7624-4BB4-993E-422A593D73F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EC757636-7624-4BB4-993E-422A593D73F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EC757636-7624-4BB4-993E-422A593D73F0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8112A474-AE76-44F5-9C95-4C28FB2BA082}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8112A474-AE76-44F5-9C95-4C28FB2BA082}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8112A474-AE76-44F5-9C95-4C28FB2BA082}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8112A474-AE76-44F5-9C95-4C28FB2BA082}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
