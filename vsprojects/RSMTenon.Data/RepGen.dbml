@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Database Name="repgen" EntityNamespace="RSMTenon.Data" ContextNamespace="RSMTenon.Data" Class="RepGenDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="AppSettings" ConnectionString="Data Source=.\SQLEXPRESS;AttachDbFilename=&quot;C:\Documents and Settings\garsiden\My Documents\Projects\RepGen\source\repgen.mdf&quot;;Integrated Security=True;Connect Timeout=30;User Instance=True" SettingsObjectName="RSMTenon.Data.Properties.Settings" SettingsPropertyName="repgenConnectionString" Provider="System.Data.SqlClient" />
+  <Table Name="dbo.tblStrategyModel" Member="StrategyModels">
+    <Type Name="StrategyModel">
+      <Column Name="GUID" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="InvestmentTypeName" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="InvestmentName" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
+      <Column Name="StrategyID" Type="System.String" DbType="NChar(2) NOT NULL" CanBeNull="false" />
+      <Column Name="PurchaseCharge" Type="System.Decimal" DbType="SmallMoney NOT NULL" CanBeNull="false" />
+      <Column Name="Weighting" Type="System.Decimal" DbType="Decimal(5,4) NOT NULL" CanBeNull="false" />
+      <Column Name="ExpectedYield" Type="System.Decimal" DbType="Decimal(5,4) NOT NULL" CanBeNull="false" />
+      <Association Name="Strategy_StrategyModel" Member="Strategy" ThisKey="StrategyID" OtherKey="ID" Type="Strategy" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.tblStrategy" Member="Strategies">
+    <Type Name="Strategy">
+      <Column Name="ID" Type="System.String" DbType="NChar(2) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="Name" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="Cost" Type="System.Decimal" DbType="SmallMoney NOT NULL" CanBeNull="false" />
+      <Association Name="Strategy_StrategyModel" Member="StrategyModels" ThisKey="ID" OtherKey="StrategyID" Type="StrategyModel" />
+    </Type>
+  </Table>
+</Database>
