@@ -34,5 +34,28 @@ namespace RSMTenon.Data.Properties {
                 return ((string)(this["repgenConnectionString"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=.\\SQLEXPRESS;AttachDbFilename=\"C:\\Program Files\\Microsoft SQL Server\\" +
+            "MSSQL.1\\MSSQL\\Data\\RepGen.mdf\";Integrated Security=True;Connect Timeout=30;User " +
+            "Instance=True")]
+        public string RepGenConnectionString1 {
+            get {
+                return ((string)(this["RepGenConnectionString1"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=.\\SQLEXPRESS;AttachDbFilename=|DataDirectory|\\RepGen.mdf;Integrated S" +
+            "ecurity=True;Connect Timeout=30;User Instance=True")]
+        public string RepGenConnectionString2 {
+            get {
+                return ((string)(this["RepGenConnectionString2"]));
+            }
+        }
     }
 }

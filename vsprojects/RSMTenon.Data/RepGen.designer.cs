@@ -22,7 +22,7 @@ namespace RSMTenon.Data
 	using System;
 	
 	
-	[System.Data.Linq.Mapping.DatabaseAttribute(Name="repgen")]
+	[System.Data.Linq.Mapping.DatabaseAttribute(Name="RepGen")]
 	public partial class RepGenDataContext : System.Data.Linq.DataContext
 	{
 		
@@ -30,16 +30,19 @@ namespace RSMTenon.Data
 		
     #region Extensibility Method Definitions
     partial void OnCreated();
-    partial void InsertStrategyModel(StrategyModel instance);
-    partial void UpdateStrategyModel(StrategyModel instance);
-    partial void DeleteStrategyModel(StrategyModel instance);
     partial void InsertStrategy(Strategy instance);
     partial void UpdateStrategy(Strategy instance);
     partial void DeleteStrategy(Strategy instance);
+    partial void InsertAssetClass(AssetClass instance);
+    partial void UpdateAssetClass(AssetClass instance);
+    partial void DeleteAssetClass(AssetClass instance);
+    partial void InsertModel(Model instance);
+    partial void UpdateModel(Model instance);
+    partial void DeleteModel(Model instance);
     #endregion
 		
 		public RepGenDataContext() : 
-				base(global::RSMTenon.Data.Properties.Settings.Default.repgenConnectionString, mappingSource)
+				base(global::RSMTenon.Data.Properties.Settings.Default.RepGenConnectionString2, mappingSource)
 		{
 			OnCreated();
 		}
@@ -68,11 +71,19 @@ namespace RSMTenon.Data
 			OnCreated();
 		}
 		
-		public System.Data.Linq.Table<StrategyModel> StrategyModels
+		public System.Data.Linq.Table<ReturnData> ReturnDatas
 		{
 			get
 			{
-				return this.GetTable<StrategyModel>();
+				return this.GetTable<ReturnData>();
+			}
+		}
+		
+		public System.Data.Linq.Table<Drawdown> Drawdowns
+		{
+			get
+			{
+				return this.GetTable<Drawdown>();
 			}
 		}
 		
@@ -83,27 +94,782 @@ namespace RSMTenon.Data
 				return this.GetTable<Strategy>();
 			}
 		}
+		
+		public System.Data.Linq.Table<AssetClass> AssetClasses
+		{
+			get
+			{
+				return this.GetTable<AssetClass>();
+			}
+		}
+		
+		public System.Data.Linq.Table<Model> Models
+		{
+			get
+			{
+				return this.GetTable<Model>();
+			}
+		}
+		
+		[Function(Name="dbo.spDrawdown")]
+		public ISingleResult<Drawdown> Drawdown([Parameter(DbType="NChar(4)")] string assetClassID)
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), assetClassID);
+			return ((ISingleResult<Drawdown>)(result.ReturnValue));
+		}
+		
+		[Function(Name="dbo.spRollingReturn")]
+		public ISingleResult<ReturnData> RollingReturn([Parameter(DbType="Int")] System.Nullable<int> years, [Parameter(DbType="NChar(4)")] string assetClassID)
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), years, assetClassID);
+			return ((ISingleResult<ReturnData>)(result.ReturnValue));
+		}
+		
+		[Function(Name="dbo.spModelPrice")]
+		public ISingleResult<ReturnData> ModelPrice([Parameter(DbType="Char(2)")] string strategyId)
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), strategyId);
+			return ((ISingleResult<ReturnData>)(result.ReturnValue));
+		}
 	}
 	
-	[Table(Name="dbo.tblStrategyModel")]
-	public partial class StrategyModel : INotifyPropertyChanging, INotifyPropertyChanged
+	[Table(Name="dbo.vwReturnData")]
+	public partial class ReturnData
+	{
+		
+		private int _Date;
+		
+		private double _Value;
+		
+		public ReturnData()
+		{
+		}
+		
+		[Column(Storage="_Date", DbType="Int")]
+		public int Date
+		{
+			get
+			{
+				return this._Date;
+			}
+			set
+			{
+				if ((this._Date != value))
+				{
+					this._Date = value;
+				}
+			}
+		}
+		
+		[Column(Storage="_Value", DbType="Float NOT NULL")]
+		public double Value
+		{
+			get
+			{
+				return this._Value;
+			}
+			set
+			{
+				if ((this._Value != value))
+				{
+					this._Value = value;
+				}
+			}
+		}
+	}
+	
+	[Table(Name="dbo.vwDrawdown")]
+	public partial class Drawdown
+	{
+		
+		private long _RankNumber;
+		
+		private int _Date;
+		
+		private double _PreviousValue;
+		
+		private double _Value;
+		
+		public Drawdown()
+		{
+		}
+		
+		[Column(Storage="_RankNumber", DbType="BigInt")]
+		public long RankNumber
+		{
+			get
+			{
+				return this._RankNumber;
+			}
+			set
+			{
+				if ((this._RankNumber != value))
+				{
+					this._RankNumber = value;
+				}
+			}
+		}
+		
+		[Column(Storage="_Date", DbType="Int")]
+		public int Date
+		{
+			get
+			{
+				return this._Date;
+			}
+			set
+			{
+				if ((this._Date != value))
+				{
+					this._Date = value;
+				}
+			}
+		}
+		
+		[Column(Storage="_PreviousValue", DbType="Float NOT NULL")]
+		public double PreviousValue
+		{
+			get
+			{
+				return this._PreviousValue;
+			}
+			set
+			{
+				if ((this._PreviousValue != value))
+				{
+					this._PreviousValue = value;
+				}
+			}
+		}
+		
+		[Column(Storage="_Value", DbType="Float NOT NULL")]
+		public double Value
+		{
+			get
+			{
+				return this._Value;
+			}
+			set
+			{
+				if ((this._Value != value))
+				{
+					this._Value = value;
+				}
+			}
+		}
+	}
+	
+	[Table(Name="dbo.tblStrategy")]
+	public partial class Strategy : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private string _ID;
+		
+		private string _Name;
+		
+		private string _Aim;
+		
+		private string _TimeHorizonText;
+		
+		private short _TimeHorizon;
+		
+		private short _ReturnOverBase;
+		
+		private decimal _Cost;
+		
+		private double _ReturnIncome;
+		
+		private double _RollingReturn;
+		
+		private string _GraphText;
+		
+		private string _InvestorFocus;
+		
+		private string _AssetClasses;
+		
+		private string _RollingReturnText;
+		
+		private string _ComparisonChartCaption;
+		
+		private System.Data.Linq.Binary _SSMA_TimeStamp;
+		
+		private EntitySet<Model> _Models;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnIDChanging(string value);
+    partial void OnIDChanged();
+    partial void OnNameChanging(string value);
+    partial void OnNameChanged();
+    partial void OnAimChanging(string value);
+    partial void OnAimChanged();
+    partial void OnTimeHorizonTextChanging(string value);
+    partial void OnTimeHorizonTextChanged();
+    partial void OnTimeHorizonChanging(short value);
+    partial void OnTimeHorizonChanged();
+    partial void OnReturnOverBaseChanging(short value);
+    partial void OnReturnOverBaseChanged();
+    partial void OnCostChanging(decimal value);
+    partial void OnCostChanged();
+    partial void OnReturnIncomeChanging(double value);
+    partial void OnReturnIncomeChanged();
+    partial void OnRollingReturnChanging(double value);
+    partial void OnRollingReturnChanged();
+    partial void OnGraphTextChanging(string value);
+    partial void OnGraphTextChanged();
+    partial void OnInvestorFocusChanging(string value);
+    partial void OnInvestorFocusChanged();
+    partial void OnAssetClassesChanging(string value);
+    partial void OnAssetClassesChanged();
+    partial void OnRollingReturnTextChanging(string value);
+    partial void OnRollingReturnTextChanged();
+    partial void OnComparisonChartCaptionChanging(string value);
+    partial void OnComparisonChartCaptionChanged();
+    partial void OnSSMA_TimeStampChanging(System.Data.Linq.Binary value);
+    partial void OnSSMA_TimeStampChanged();
+    #endregion
+		
+		public Strategy()
+		{
+			this._Models = new EntitySet<Model>(new Action<Model>(this.attach_Models), new Action<Model>(this.detach_Models));
+			OnCreated();
+		}
+		
+		[Column(Storage="_ID", DbType="NChar(2) NOT NULL", CanBeNull=false, IsPrimaryKey=true, UpdateCheck=UpdateCheck.Never)]
+		public string ID
+		{
+			get
+			{
+				return this._ID;
+			}
+			set
+			{
+				if ((this._ID != value))
+				{
+					this.OnIDChanging(value);
+					this.SendPropertyChanging();
+					this._ID = value;
+					this.SendPropertyChanged("ID");
+					this.OnIDChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_Name", DbType="NVarChar(50) NOT NULL", CanBeNull=false, UpdateCheck=UpdateCheck.Never)]
+		public string Name
+		{
+			get
+			{
+				return this._Name;
+			}
+			set
+			{
+				if ((this._Name != value))
+				{
+					this.OnNameChanging(value);
+					this.SendPropertyChanging();
+					this._Name = value;
+					this.SendPropertyChanged("Name");
+					this.OnNameChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_Aim", DbType="NVarChar(MAX) NOT NULL", CanBeNull=false, UpdateCheck=UpdateCheck.Never)]
+		public string Aim
+		{
+			get
+			{
+				return this._Aim;
+			}
+			set
+			{
+				if ((this._Aim != value))
+				{
+					this.OnAimChanging(value);
+					this.SendPropertyChanging();
+					this._Aim = value;
+					this.SendPropertyChanged("Aim");
+					this.OnAimChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_TimeHorizonText", DbType="NVarChar(MAX) NOT NULL", CanBeNull=false, UpdateCheck=UpdateCheck.Never)]
+		public string TimeHorizonText
+		{
+			get
+			{
+				return this._TimeHorizonText;
+			}
+			set
+			{
+				if ((this._TimeHorizonText != value))
+				{
+					this.OnTimeHorizonTextChanging(value);
+					this.SendPropertyChanging();
+					this._TimeHorizonText = value;
+					this.SendPropertyChanged("TimeHorizonText");
+					this.OnTimeHorizonTextChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_TimeHorizon", DbType="SmallInt NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		public short TimeHorizon
+		{
+			get
+			{
+				return this._TimeHorizon;
+			}
+			set
+			{
+				if ((this._TimeHorizon != value))
+				{
+					this.OnTimeHorizonChanging(value);
+					this.SendPropertyChanging();
+					this._TimeHorizon = value;
+					this.SendPropertyChanged("TimeHorizon");
+					this.OnTimeHorizonChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_ReturnOverBase", DbType="SmallInt NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		public short ReturnOverBase
+		{
+			get
+			{
+				return this._ReturnOverBase;
+			}
+			set
+			{
+				if ((this._ReturnOverBase != value))
+				{
+					this.OnReturnOverBaseChanging(value);
+					this.SendPropertyChanging();
+					this._ReturnOverBase = value;
+					this.SendPropertyChanged("ReturnOverBase");
+					this.OnReturnOverBaseChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_Cost", DbType="Money NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		public decimal Cost
+		{
+			get
+			{
+				return this._Cost;
+			}
+			set
+			{
+				if ((this._Cost != value))
+				{
+					this.OnCostChanging(value);
+					this.SendPropertyChanging();
+					this._Cost = value;
+					this.SendPropertyChanged("Cost");
+					this.OnCostChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_ReturnIncome", DbType="Float NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		public double ReturnIncome
+		{
+			get
+			{
+				return this._ReturnIncome;
+			}
+			set
+			{
+				if ((this._ReturnIncome != value))
+				{
+					this.OnReturnIncomeChanging(value);
+					this.SendPropertyChanging();
+					this._ReturnIncome = value;
+					this.SendPropertyChanged("ReturnIncome");
+					this.OnReturnIncomeChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_RollingReturn", DbType="Float NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		public double RollingReturn
+		{
+			get
+			{
+				return this._RollingReturn;
+			}
+			set
+			{
+				if ((this._RollingReturn != value))
+				{
+					this.OnRollingReturnChanging(value);
+					this.SendPropertyChanging();
+					this._RollingReturn = value;
+					this.SendPropertyChanged("RollingReturn");
+					this.OnRollingReturnChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_GraphText", DbType="NVarChar(MAX) NOT NULL", CanBeNull=false, UpdateCheck=UpdateCheck.Never)]
+		public string GraphText
+		{
+			get
+			{
+				return this._GraphText;
+			}
+			set
+			{
+				if ((this._GraphText != value))
+				{
+					this.OnGraphTextChanging(value);
+					this.SendPropertyChanging();
+					this._GraphText = value;
+					this.SendPropertyChanged("GraphText");
+					this.OnGraphTextChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_InvestorFocus", DbType="NVarChar(MAX) NOT NULL", CanBeNull=false, UpdateCheck=UpdateCheck.Never)]
+		public string InvestorFocus
+		{
+			get
+			{
+				return this._InvestorFocus;
+			}
+			set
+			{
+				if ((this._InvestorFocus != value))
+				{
+					this.OnInvestorFocusChanging(value);
+					this.SendPropertyChanging();
+					this._InvestorFocus = value;
+					this.SendPropertyChanged("InvestorFocus");
+					this.OnInvestorFocusChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_AssetClasses", DbType="NVarChar(MAX) NOT NULL", CanBeNull=false, UpdateCheck=UpdateCheck.Never)]
+		public string AssetClasses
+		{
+			get
+			{
+				return this._AssetClasses;
+			}
+			set
+			{
+				if ((this._AssetClasses != value))
+				{
+					this.OnAssetClassesChanging(value);
+					this.SendPropertyChanging();
+					this._AssetClasses = value;
+					this.SendPropertyChanged("AssetClasses");
+					this.OnAssetClassesChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_RollingReturnText", DbType="NVarChar(MAX) NOT NULL", CanBeNull=false, UpdateCheck=UpdateCheck.Never)]
+		public string RollingReturnText
+		{
+			get
+			{
+				return this._RollingReturnText;
+			}
+			set
+			{
+				if ((this._RollingReturnText != value))
+				{
+					this.OnRollingReturnTextChanging(value);
+					this.SendPropertyChanging();
+					this._RollingReturnText = value;
+					this.SendPropertyChanged("RollingReturnText");
+					this.OnRollingReturnTextChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_ComparisonChartCaption", DbType="NVarChar(MAX) NOT NULL", CanBeNull=false, UpdateCheck=UpdateCheck.Never)]
+		public string ComparisonChartCaption
+		{
+			get
+			{
+				return this._ComparisonChartCaption;
+			}
+			set
+			{
+				if ((this._ComparisonChartCaption != value))
+				{
+					this.OnComparisonChartCaptionChanging(value);
+					this.SendPropertyChanging();
+					this._ComparisonChartCaption = value;
+					this.SendPropertyChanged("ComparisonChartCaption");
+					this.OnComparisonChartCaptionChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_SSMA_TimeStamp", AutoSync=AutoSync.Always, DbType="rowversion NOT NULL", CanBeNull=false, IsDbGenerated=true, IsVersion=true, UpdateCheck=UpdateCheck.Never)]
+		public System.Data.Linq.Binary SSMA_TimeStamp
+		{
+			get
+			{
+				return this._SSMA_TimeStamp;
+			}
+			set
+			{
+				if ((this._SSMA_TimeStamp != value))
+				{
+					this.OnSSMA_TimeStampChanging(value);
+					this.SendPropertyChanging();
+					this._SSMA_TimeStamp = value;
+					this.SendPropertyChanged("SSMA_TimeStamp");
+					this.OnSSMA_TimeStampChanged();
+				}
+			}
+		}
+		
+		[Association(Name="Strategy_tblModel", Storage="_Models", ThisKey="ID", OtherKey="StrategyID")]
+		public EntitySet<Model> Models
+		{
+			get
+			{
+				return this._Models;
+			}
+			set
+			{
+				this._Models.Assign(value);
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_Models(Model entity)
+		{
+			this.SendPropertyChanging();
+			entity.Strategy = this;
+		}
+		
+		private void detach_Models(Model entity)
+		{
+			this.SendPropertyChanging();
+			entity.Strategy = null;
+		}
+	}
+	
+	[Table(Name="dbo.tblAssetClass")]
+	public partial class AssetClass : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private string _ID;
+		
+		private string _Name;
+		
+		private bool _IsGroup;
+		
+		private System.Data.Linq.Binary _SSMA_TimeStamp;
+		
+		private EntitySet<Model> _Models;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnIDChanging(string value);
+    partial void OnIDChanged();
+    partial void OnNameChanging(string value);
+    partial void OnNameChanged();
+    partial void OnIsGroupChanging(bool value);
+    partial void OnIsGroupChanged();
+    partial void OnSSMA_TimeStampChanging(System.Data.Linq.Binary value);
+    partial void OnSSMA_TimeStampChanged();
+    #endregion
+		
+		public AssetClass()
+		{
+			this._Models = new EntitySet<Model>(new Action<Model>(this.attach_Models), new Action<Model>(this.detach_Models));
+			OnCreated();
+		}
+		
+		[Column(Storage="_ID", DbType="NChar(4) NOT NULL", CanBeNull=false, IsPrimaryKey=true, UpdateCheck=UpdateCheck.Never)]
+		public string ID
+		{
+			get
+			{
+				return this._ID;
+			}
+			set
+			{
+				if ((this._ID != value))
+				{
+					this.OnIDChanging(value);
+					this.SendPropertyChanging();
+					this._ID = value;
+					this.SendPropertyChanged("ID");
+					this.OnIDChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_Name", DbType="NChar(50) NOT NULL", CanBeNull=false, UpdateCheck=UpdateCheck.Never)]
+		public string Name
+		{
+			get
+			{
+				return this._Name;
+			}
+			set
+			{
+				if ((this._Name != value))
+				{
+					this.OnNameChanging(value);
+					this.SendPropertyChanging();
+					this._Name = value;
+					this.SendPropertyChanged("Name");
+					this.OnNameChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_IsGroup", DbType="Bit NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		public bool IsGroup
+		{
+			get
+			{
+				return this._IsGroup;
+			}
+			set
+			{
+				if ((this._IsGroup != value))
+				{
+					this.OnIsGroupChanging(value);
+					this.SendPropertyChanging();
+					this._IsGroup = value;
+					this.SendPropertyChanged("IsGroup");
+					this.OnIsGroupChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_SSMA_TimeStamp", AutoSync=AutoSync.Always, DbType="rowversion NOT NULL", CanBeNull=false, IsDbGenerated=true, IsVersion=true, UpdateCheck=UpdateCheck.Never)]
+		public System.Data.Linq.Binary SSMA_TimeStamp
+		{
+			get
+			{
+				return this._SSMA_TimeStamp;
+			}
+			set
+			{
+				if ((this._SSMA_TimeStamp != value))
+				{
+					this.OnSSMA_TimeStampChanging(value);
+					this.SendPropertyChanging();
+					this._SSMA_TimeStamp = value;
+					this.SendPropertyChanged("SSMA_TimeStamp");
+					this.OnSSMA_TimeStampChanged();
+				}
+			}
+		}
+		
+		[Association(Name="AssetClass_tblModel", Storage="_Models", ThisKey="ID", OtherKey="AssetClassID")]
+		public EntitySet<Model> Models
+		{
+			get
+			{
+				return this._Models;
+			}
+			set
+			{
+				this._Models.Assign(value);
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_Models(Model entity)
+		{
+			this.SendPropertyChanging();
+			entity.AssetClass = this;
+		}
+		
+		private void detach_Models(Model entity)
+		{
+			this.SendPropertyChanging();
+			entity.AssetClass = null;
+		}
+	}
+	
+	[Table(Name="dbo.tblModel")]
+	public partial class Model : INotifyPropertyChanging, INotifyPropertyChanged
 	{
 		
 		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
 		
 		private System.Guid _GUID;
 		
-		private string _InvestmentTypeName;
-		
-		private string _InvestmentName;
-		
 		private string _StrategyID;
 		
-		private decimal _PurchaseCharge;
+		private string _AssetClassID;
+		
+		private string _InvestmentName;
 		
 		private decimal _Weighting;
 		
 		private decimal _ExpectedYield;
+		
+		private decimal _PurchaseCharge;
+		
+		private System.Data.Linq.Binary _SSMA_TimeStamp;
+		
+		private EntityRef<AssetClass> _AssetClass;
 		
 		private EntityRef<Strategy> _Strategy;
 		
@@ -113,27 +879,30 @@ namespace RSMTenon.Data
     partial void OnCreated();
     partial void OnGUIDChanging(System.Guid value);
     partial void OnGUIDChanged();
-    partial void OnInvestmentTypeNameChanging(string value);
-    partial void OnInvestmentTypeNameChanged();
-    partial void OnInvestmentNameChanging(string value);
-    partial void OnInvestmentNameChanged();
     partial void OnStrategyIDChanging(string value);
     partial void OnStrategyIDChanged();
-    partial void OnPurchaseChargeChanging(decimal value);
-    partial void OnPurchaseChargeChanged();
+    partial void OnAssetClassIDChanging(string value);
+    partial void OnAssetClassIDChanged();
+    partial void OnInvestmentNameChanging(string value);
+    partial void OnInvestmentNameChanged();
     partial void OnWeightingChanging(decimal value);
     partial void OnWeightingChanged();
     partial void OnExpectedYieldChanging(decimal value);
     partial void OnExpectedYieldChanged();
+    partial void OnPurchaseChargeChanging(decimal value);
+    partial void OnPurchaseChargeChanged();
+    partial void OnSSMA_TimeStampChanging(System.Data.Linq.Binary value);
+    partial void OnSSMA_TimeStampChanged();
     #endregion
 		
-		public StrategyModel()
+		public Model()
 		{
+			this._AssetClass = default(EntityRef<AssetClass>);
 			this._Strategy = default(EntityRef<Strategy>);
 			OnCreated();
 		}
 		
-		[Column(Storage="_GUID", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true)]
+		[Column(Storage="_GUID", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true, UpdateCheck=UpdateCheck.Never)]
 		public System.Guid GUID
 		{
 			get
@@ -153,47 +922,7 @@ namespace RSMTenon.Data
 			}
 		}
 		
-		[Column(Storage="_InvestmentTypeName", DbType="NVarChar(50) NOT NULL", CanBeNull=false)]
-		public string InvestmentTypeName
-		{
-			get
-			{
-				return this._InvestmentTypeName;
-			}
-			set
-			{
-				if ((this._InvestmentTypeName != value))
-				{
-					this.OnInvestmentTypeNameChanging(value);
-					this.SendPropertyChanging();
-					this._InvestmentTypeName = value;
-					this.SendPropertyChanged("InvestmentTypeName");
-					this.OnInvestmentTypeNameChanged();
-				}
-			}
-		}
-		
-		[Column(Storage="_InvestmentName", DbType="NVarChar(100)")]
-		public string InvestmentName
-		{
-			get
-			{
-				return this._InvestmentName;
-			}
-			set
-			{
-				if ((this._InvestmentName != value))
-				{
-					this.OnInvestmentNameChanging(value);
-					this.SendPropertyChanging();
-					this._InvestmentName = value;
-					this.SendPropertyChanged("InvestmentName");
-					this.OnInvestmentNameChanged();
-				}
-			}
-		}
-		
-		[Column(Storage="_StrategyID", DbType="NChar(2) NOT NULL", CanBeNull=false)]
+		[Column(Storage="_StrategyID", DbType="NChar(2) NOT NULL", CanBeNull=false, UpdateCheck=UpdateCheck.Never)]
 		public string StrategyID
 		{
 			get
@@ -217,27 +946,51 @@ namespace RSMTenon.Data
 			}
 		}
 		
-		[Column(Storage="_PurchaseCharge", DbType="SmallMoney NOT NULL")]
-		public decimal PurchaseCharge
+		[Column(Storage="_AssetClassID", DbType="NChar(4) NOT NULL", CanBeNull=false, UpdateCheck=UpdateCheck.Never)]
+		public string AssetClassID
 		{
 			get
 			{
-				return this._PurchaseCharge;
+				return this._AssetClassID;
 			}
 			set
 			{
-				if ((this._PurchaseCharge != value))
+				if ((this._AssetClassID != value))
 				{
-					this.OnPurchaseChargeChanging(value);
+					if (this._AssetClass.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnAssetClassIDChanging(value);
 					this.SendPropertyChanging();
-					this._PurchaseCharge = value;
-					this.SendPropertyChanged("PurchaseCharge");
-					this.OnPurchaseChargeChanged();
+					this._AssetClassID = value;
+					this.SendPropertyChanged("AssetClassID");
+					this.OnAssetClassIDChanged();
 				}
 			}
 		}
 		
-		[Column(Storage="_Weighting", DbType="Decimal(5,4) NOT NULL")]
+		[Column(Storage="_InvestmentName", DbType="NVarChar(100) NOT NULL", CanBeNull=false, UpdateCheck=UpdateCheck.Never)]
+		public string InvestmentName
+		{
+			get
+			{
+				return this._InvestmentName;
+			}
+			set
+			{
+				if ((this._InvestmentName != value))
+				{
+					this.OnInvestmentNameChanging(value);
+					this.SendPropertyChanging();
+					this._InvestmentName = value;
+					this.SendPropertyChanged("InvestmentName");
+					this.OnInvestmentNameChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_Weighting", DbType="Decimal(5,4) NOT NULL", UpdateCheck=UpdateCheck.Never)]
 		public decimal Weighting
 		{
 			get
@@ -257,7 +1010,7 @@ namespace RSMTenon.Data
 			}
 		}
 		
-		[Column(Storage="_ExpectedYield", DbType="Decimal(5,4) NOT NULL")]
+		[Column(Storage="_ExpectedYield", DbType="Decimal(5,4) NOT NULL", UpdateCheck=UpdateCheck.Never)]
 		public decimal ExpectedYield
 		{
 			get
@@ -277,7 +1030,81 @@ namespace RSMTenon.Data
 			}
 		}
 		
-		[Association(Name="Strategy_StrategyModel", Storage="_Strategy", ThisKey="StrategyID", OtherKey="ID", IsForeignKey=true)]
+		[Column(Storage="_PurchaseCharge", DbType="Money NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		public decimal PurchaseCharge
+		{
+			get
+			{
+				return this._PurchaseCharge;
+			}
+			set
+			{
+				if ((this._PurchaseCharge != value))
+				{
+					this.OnPurchaseChargeChanging(value);
+					this.SendPropertyChanging();
+					this._PurchaseCharge = value;
+					this.SendPropertyChanged("PurchaseCharge");
+					this.OnPurchaseChargeChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_SSMA_TimeStamp", AutoSync=AutoSync.Always, DbType="rowversion NOT NULL", CanBeNull=false, IsDbGenerated=true, IsVersion=true, UpdateCheck=UpdateCheck.Never)]
+		public System.Data.Linq.Binary SSMA_TimeStamp
+		{
+			get
+			{
+				return this._SSMA_TimeStamp;
+			}
+			set
+			{
+				if ((this._SSMA_TimeStamp != value))
+				{
+					this.OnSSMA_TimeStampChanging(value);
+					this.SendPropertyChanging();
+					this._SSMA_TimeStamp = value;
+					this.SendPropertyChanged("SSMA_TimeStamp");
+					this.OnSSMA_TimeStampChanged();
+				}
+			}
+		}
+		
+		[Association(Name="AssetClass_tblModel", Storage="_AssetClass", ThisKey="AssetClassID", OtherKey="ID", IsForeignKey=true)]
+		public AssetClass AssetClass
+		{
+			get
+			{
+				return this._AssetClass.Entity;
+			}
+			set
+			{
+				AssetClass previousValue = this._AssetClass.Entity;
+				if (((previousValue != value) 
+							|| (this._AssetClass.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._AssetClass.Entity = null;
+						previousValue.Models.Remove(this);
+					}
+					this._AssetClass.Entity = value;
+					if ((value != null))
+					{
+						value.Models.Add(this);
+						this._AssetClassID = value.ID;
+					}
+					else
+					{
+						this._AssetClassID = default(string);
+					}
+					this.SendPropertyChanged("AssetClass");
+				}
+			}
+		}
+		
+		[Association(Name="Strategy_tblModel", Storage="_Strategy", ThisKey="StrategyID", OtherKey="ID", IsForeignKey=true, DeleteOnNull=true, DeleteRule="CASCADE")]
 		public Strategy Strategy
 		{
 			get
@@ -294,12 +1121,12 @@ namespace RSMTenon.Data
 					if ((previousValue != null))
 					{
 						this._Strategy.Entity = null;
-						previousValue.StrategyModels.Remove(this);
+						previousValue.Models.Remove(this);
 					}
 					this._Strategy.Entity = value;
 					if ((value != null))
 					{
-						value.StrategyModels.Add(this);
+						value.Models.Add(this);
 						this._StrategyID = value.ID;
 					}
 					else
@@ -329,144 +1156,6 @@ namespace RSMTenon.Data
 			{
 				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
-		}
-	}
-	
-	[Table(Name="dbo.tblStrategy")]
-	public partial class Strategy : INotifyPropertyChanging, INotifyPropertyChanged
-	{
-		
-		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-		
-		private string _ID;
-		
-		private string _Name;
-		
-		private decimal _Cost;
-		
-		private EntitySet<StrategyModel> _StrategyModels;
-		
-    #region Extensibility Method Definitions
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void OnIDChanging(string value);
-    partial void OnIDChanged();
-    partial void OnNameChanging(string value);
-    partial void OnNameChanged();
-    partial void OnCostChanging(decimal value);
-    partial void OnCostChanged();
-    #endregion
-		
-		public Strategy()
-		{
-			this._StrategyModels = new EntitySet<StrategyModel>(new Action<StrategyModel>(this.attach_StrategyModels), new Action<StrategyModel>(this.detach_StrategyModels));
-			OnCreated();
-		}
-		
-		[Column(Storage="_ID", DbType="NChar(2) NOT NULL", CanBeNull=false, IsPrimaryKey=true)]
-		public string ID
-		{
-			get
-			{
-				return this._ID;
-			}
-			set
-			{
-				if ((this._ID != value))
-				{
-					this.OnIDChanging(value);
-					this.SendPropertyChanging();
-					this._ID = value;
-					this.SendPropertyChanged("ID");
-					this.OnIDChanged();
-				}
-			}
-		}
-		
-		[Column(Storage="_Name", DbType="NVarChar(50) NOT NULL", CanBeNull=false)]
-		public string Name
-		{
-			get
-			{
-				return this._Name;
-			}
-			set
-			{
-				if ((this._Name != value))
-				{
-					this.OnNameChanging(value);
-					this.SendPropertyChanging();
-					this._Name = value;
-					this.SendPropertyChanged("Name");
-					this.OnNameChanged();
-				}
-			}
-		}
-		
-		[Column(Storage="_Cost", DbType="SmallMoney NOT NULL")]
-		public decimal Cost
-		{
-			get
-			{
-				return this._Cost;
-			}
-			set
-			{
-				if ((this._Cost != value))
-				{
-					this.OnCostChanging(value);
-					this.SendPropertyChanging();
-					this._Cost = value;
-					this.SendPropertyChanged("Cost");
-					this.OnCostChanged();
-				}
-			}
-		}
-		
-		[Association(Name="Strategy_StrategyModel", Storage="_StrategyModels", ThisKey="ID", OtherKey="StrategyID")]
-		public EntitySet<StrategyModel> StrategyModels
-		{
-			get
-			{
-				return this._StrategyModels;
-			}
-			set
-			{
-				this._StrategyModels.Assign(value);
-			}
-		}
-		
-		public event PropertyChangingEventHandler PropertyChanging;
-		
-		public event PropertyChangedEventHandler PropertyChanged;
-		
-		protected virtual void SendPropertyChanging()
-		{
-			if ((this.PropertyChanging != null))
-			{
-				this.PropertyChanging(this, emptyChangingEventArgs);
-			}
-		}
-		
-		protected virtual void SendPropertyChanged(String propertyName)
-		{
-			if ((this.PropertyChanged != null))
-			{
-				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-			}
-		}
-		
-		private void attach_StrategyModels(StrategyModel entity)
-		{
-			this.SendPropertyChanging();
-			entity.Strategy = this;
-		}
-		
-		private void detach_StrategyModels(StrategyModel entity)
-		{
-			this.SendPropertyChanging();
-			entity.Strategy = null;
 		}
 	}
 }

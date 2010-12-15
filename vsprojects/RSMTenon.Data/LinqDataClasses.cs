@@ -8,7 +8,7 @@ namespace RSMTenon.Data
     // Model allocation weightings
     public class ModelAllocation
     {
-        public string InvestmentType { get; set; }
+        public string AssetClass { get; set; }
         public decimal Allocation { get; set; }
     }
 }
