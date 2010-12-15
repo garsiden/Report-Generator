@@ -10,7 +10,7 @@ namespace RSMTenon.Graphing
 {
     public class DrawdownLineChart : LineGraph
     {
-        public override Chart GenerateChart(string title)
+        public Chart GenerateChart(string title)
         {
             int[] dates = { 35430, 35461, 35489, 35520, 35550, 35580, 35611, 35642, 35671, 35703 };
             float[] vals1 = { 0F, 0F, 0F, -1.4244555409299146E-2F, 0F, 0F, 0F, 0F, 0F, 0F };
@@ -26,24 +26,17 @@ namespace RSMTenon.Graphing
             LineChart lineChart1 = new LineChart();
             Grouping grouping1 = new Grouping() { Val = GroupingValues.Standard };
 
-            LineChartSeries lineChartSeries1 = GenerateLineChartSeries("UK Gov Bonds", 1U, 0U, dates, vals1, "C0C0C0", "mmm\\-yy", "0.00%");
-            LineChartSeries lineChartSeries2 = GenerateLineChartSeries("Global Equity", 2U, 1U, dates, vals2, "808080", "mmm\\-yy", "0.00%");
-            LineChartSeries lineChartSeries3 = GenerateLineChartSeries("Defensive Strategy", 3U, 2U, dates, vals3, "0066CC", "mmm\\-yy", "0.00%");
-
             ShowMarker showMarker1 = new ShowMarker() { Val = true };
             AxisId axisId1 = new AxisId() { Val = (UInt32Value)102222464U };
             AxisId axisId2 = new AxisId() { Val = (UInt32Value)92672384U };
 
             lineChart1.Append(grouping1);
-            lineChart1.Append(lineChartSeries1);
-            lineChart1.Append(lineChartSeries2);
-            lineChart1.Append(lineChartSeries3);
             lineChart1.Append(showMarker1);
             lineChart1.Append(axisId1);
             lineChart1.Append(axisId2);
 
-            DateAxis dateAxis1 = GenerateDateAxis(axisId1, AxisPositionValues.Bottom, "mmm\\-yy", axisId2, TickLabelPositionValues.High);
-            ValueAxis valueAxis1 = GenerateValueAxis(axisId2, AxisPositionValues.Left, "0%", axisId1);
+            DateAxis dateAxis1 = GenerateDateAxis(axisId1, AxisPositionValues.Bottom, axisId2, TickLabelPositionValues.High);
+            ValueAxis valueAxis1 = GenerateValueAxis(axisId2, AxisPositionValues.Left, axisId1);
 
             plotArea1.Append(layout2);
             plotArea1.Append(lineChart1);

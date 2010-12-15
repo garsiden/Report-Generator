@@ -12,12 +12,12 @@ namespace RSMTenon.Graphing
     public class AllocationPieChart : PieGraph
     {
 
-        public override Chart GenerateChart(string title)
+        public  Chart GenerateChart(string title)
         {
             return null;
         }
 
-        public Chart GenerateChart(string title, IQueryable<ModelAllocation>model)
+        public Chart GenerateChart(string title, List<ModelAllocation>model)
         {
             Chart chart1 = new Chart();
             Title title1 = GenerateTitle(title);
@@ -57,10 +57,10 @@ namespace RSMTenon.Graphing
             PointCount pointCount2 = new PointCount() { Val = (UInt32Value)numPoints };
             numberLiteral1.Append(pointCount2);
 
-            UInt32 i = 0U;
+            uint i = 0U;
 
             foreach (var alloc in model.OrderByDescending(m => m.Allocation)) {
-                StringPoint stringPoint1 = GenerateStringPoint(i, alloc.InvestmentType);
+                StringPoint stringPoint1 = GenerateStringPoint(i, alloc.AssetClass);
                 stringLiteral1.Append(stringPoint1);
                 NumericPoint numericPoint1 = GenerateNumericPoint(i++, alloc.Allocation.ToString());
                 numberLiteral1.Append(numericPoint1);

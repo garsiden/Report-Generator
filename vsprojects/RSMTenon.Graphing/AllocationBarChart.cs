@@ -10,7 +10,7 @@ namespace RSMTenon.Graphing
 {
     public class AllocationBarChart : BarGraph
     {
-        public override Chart GenerateChart(string title)
+        public  Chart GenerateChart(string title)
         {
             float[] vals = { 0.11768250185249102F, -6.1324324147486134E-2F, 4.7902237547416453E-2F, 3.846389646333704E-2F, 0.0F, -6.8212317552127408E-2F, -0.2F, -0.15F, 0.27375221930876331F, 1.7357865276057976E-3F, 0.0F, 0.0F };
             string[] pointNames = {"Cash",

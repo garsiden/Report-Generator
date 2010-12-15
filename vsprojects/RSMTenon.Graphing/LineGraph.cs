@@ -5,14 +5,28 @@ using System.Text;
 using DocumentFormat.OpenXml.Drawing.Charts;
 using DocumentFormat.OpenXml;
 using A = DocumentFormat.OpenXml.Drawing;
+using RSMTenon.Data;
 
 namespace RSMTenon.Graphing
 {
     public abstract class LineGraph : Graph
     {
-        protected LineChartSeries GenerateLineChartSeries(string seriesName, uint index, uint order, int[] dates, float[] vals, string colourHex, string axisFormat, string valueFormat)
+        protected string axisFormat;
+        protected string valueFormat;
+        protected string dateAxisFormat;
+        protected string valueAxisFormat;
+        protected string[] colours = { "C0C0C0", "808080", "0066CC", "98CC00" };
+
+        public void AddLineChartSeries(Chart lineChart, List<ReturnData> data, string seriesName)
         {
-            uint numPoints = (uint)dates.Length;
+            LineChartSeries lineChartSeries = GenerateLineChartSeries(seriesName, data);
+            lineChart.PlotArea.ChildElements.First<LineChart>().Append(lineChartSeries);
+        }
+
+        protected LineChartSeries GenerateLineChartSeries(string seriesName, List<ReturnData> data)
+        {
+            uint numPoints = (uint)data.Count();
+            string colourHex = colours[order];
 
             // c:ser (LineChartSeries)
             LineChartSeries lineChartSeries1 = new LineChartSeries();
@@ -31,10 +45,10 @@ namespace RSMTenon.Graphing
             marker1.Append(symbol1);
 
             // c:cat (CategoryAxisData)
-            CategoryAxisData categoryAxisData1 = GenerateCategoryAxisData(axisFormat, dates);
+            CategoryAxisData categoryAxisData1 = GenerateCategoryAxisData(axisFormat, data);
 
             // c:val (Values)
-            Values values1 = GenerateValues(valueFormat, vals);
+            Values values1 = GenerateValues(valueFormat, data);
 
             lineChartSeries1.Append(index1);
             lineChartSeries1.Append(order1);
@@ -44,10 +58,13 @@ namespace RSMTenon.Graphing
             lineChartSeries1.Append(categoryAxisData1);
             lineChartSeries1.Append(values1);
 
+            this.index++;
+            this.order++;
+
             return lineChartSeries1;
         }
 
-        protected DateAxis GenerateDateAxis(AxisId axisId, AxisPositionValues axisPosition, string formatCode, AxisId crossingAxisId, TickLabelPositionValues tickLabelPosition)
+        protected DateAxis GenerateDateAxis(AxisId axisId, AxisPositionValues axisPosition, AxisId crossingAxisId, TickLabelPositionValues tickLabelPosition)
         {
             DateAxis dateAxis1 = new DateAxis();
             AxisId axisId3 = new AxisId() { Val = axisId.Val };
@@ -57,7 +74,7 @@ namespace RSMTenon.Graphing
 
             scaling1.Append(orientation1);
             AxisPosition axisPosition1 = new AxisPosition() { Val = AxisPositionValues.Bottom };
-            NumberingFormat numberingFormat1 = new NumberingFormat() { FormatCode = formatCode, SourceLinked = true };
+            NumberingFormat numberingFormat1 = new NumberingFormat() { FormatCode = dateAxisFormat, SourceLinked = true };
             MajorTickMark majorTickMark1 = new MajorTickMark() { Val = TickMarkValues.None };
             TickLabelPosition tickLabelPosition1 = new TickLabelPosition() { Val = tickLabelPosition };
 
@@ -99,7 +116,7 @@ namespace RSMTenon.Graphing
             return dateAxis1;
         }
 
-        protected ValueAxis GenerateValueAxis(AxisId axisId, AxisPositionValues position, string formatCode, AxisId crossingAxisId)
+        protected ValueAxis GenerateValueAxis(AxisId axisId, AxisPositionValues position, AxisId crossingAxisId)
         {
             ValueAxis valueAxis1 = new ValueAxis();
             AxisId axisId4 = new AxisId() { Val = axisId.Val };
@@ -110,7 +127,7 @@ namespace RSMTenon.Graphing
             scaling2.Append(orientation2);
             AxisPosition axisPosition2 = new AxisPosition() { Val = position };
             MajorGridlines majorGridlines1 = new MajorGridlines();
-            NumberingFormat numberingFormat2 = new NumberingFormat() { FormatCode = formatCode, SourceLinked = false };
+            NumberingFormat numberingFormat2 = new NumberingFormat() { FormatCode = valueAxisFormat, SourceLinked = false };
             MajorTickMark majorTickMark2 = new MajorTickMark() { Val = TickMarkValues.None };
             TickLabelPosition tickLabelPosition2 = new TickLabelPosition() { Val = TickLabelPositionValues.NextTo };
 

@@ -5,13 +5,13 @@ using System.Text;
 using DocumentFormat.OpenXml.Drawing.Charts;
 using A = DocumentFormat.OpenXml.Drawing;
 using DocumentFormat.OpenXml;
+using RSMTenon.Data;
 
 namespace RSMTenon.Graphing
 {
     public abstract class Graph
     {
         private const Int64 EMUS_PER_CENTIMETRE = 360000L;
-
         public const Int64 DEFAULT_GRAPH_X = (Int64)(14.90 * EMUS_PER_CENTIMETRE);
         public const Int64 DEFAULT_GRAPH_Y = (Int64)(6.80 * EMUS_PER_CENTIMETRE);
         public const string DEFAULT_LANG = "en-GB";
@@ -21,7 +21,14 @@ namespace RSMTenon.Graphing
         public static Int64 Cx { get { return DEFAULT_GRAPH_X; } }
         public static Int64 Cy { get { return DEFAULT_GRAPH_Y; } }
 
-        public abstract Chart GenerateChart(string title);
+        protected uint order;
+        protected uint index;
+
+        public Graph()
+        {
+            this.order = 0U;
+            this.index = 1U;
+        }
 
         // c:title (Title)
         protected Title GenerateTitle(string text)
@@ -147,6 +154,28 @@ namespace RSMTenon.Graphing
             return values1;
         }
 
+        protected virtual Values GenerateValues(string formatCode, List<ReturnData>data)
+        {
+            Values values1 = new Values();
+
+            uint numPoints = (uint)data.Count();
+
+            // c:numRef (NumberingReference)
+            NumberReference numberReference2 = new NumberReference();
+            NumberingCache numberingCache2 = GenerateNumberingCache(formatCode, numPoints);
+
+            uint i = 0U;
+            foreach (var r in data) {
+                NumericPoint numericPoint = GenerateNumericPoint(i++, r.Value.ToString());
+                numberingCache2.Append(numericPoint);
+            }
+
+            numberReference2.Append(numberingCache2);
+            values1.Append(numberReference2);
+
+            return values1;
+        }
+
         protected NumberingCache GenerateNumberingCache(string formatCode, uint numPoints)
         {
             // c:numCache (NumberingCache)
@@ -204,6 +233,27 @@ namespace RSMTenon.Graphing
 
             for (UInt32 i = 0; i < numPoints; i++) {
                 NumericPoint numericPoint = GenerateNumericPoint(i, data[i].ToString());
+                numberingCache1.Append(numericPoint);
+            }
+
+            numberReference1.Append(numberingCache1);
+            categoryAxisData1.Append(numberReference1);
+
+            return categoryAxisData1;
+        }
+
+        protected CategoryAxisData GenerateCategoryAxisData(string formatCode, List<ReturnData>data)
+        {
+            CategoryAxisData categoryAxisData1 = new CategoryAxisData();
+
+            uint numPoints = (uint)data.Count();
+            NumberReference numberReference1 = new NumberReference();
+            NumberingCache numberingCache1 = GenerateNumberingCache(formatCode, numPoints);
+
+            uint i = 0U;
+            foreach (var r in data) {
+
+                NumericPoint numericPoint = GenerateNumericPoint(i++, r.Date.ToString());
                 numberingCache1.Append(numericPoint);
             }
 
