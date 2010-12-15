@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<chart-spec>
+  <asset-classes>
+    <asset-class>UKGB</asset-class>
+    <asset-class>GLEQ</asset-class>
+  </asset-classes>
+  <reports>
+    <report id="weight">
+      <control-name>"WeightChart"</control-name>
+      <class>AllocationBarChart"></class>
+      <title>Current Asset Allocation vs. {0} Strategy</title>
+    </report>
+
+    <report id="allocation">
+      <control-name>AllocationChart</control-name>
+      <class>AllocationPieChart</class>
+      <title>
+        <existing-assets>Current Asset Allocation</existing-assets>
+        <cash>{0} Model Allocation</cash>
+      </title>
+    </report>
+
+    <report id="drawdown">
+      <control-name>DrawdownChart</control-name>
+      <class>DrawdownLineChart"></class>
+      <title>Drawdown</title>
+    </report>
+
+    <report id="rolling-return-1yr">
+      <control-name>RollingReturn1YrChart</control-name>
+      <class>=RollingReturnLineChart</class>
+      <title>1yr Rolling return</title>
+    </report>
+
+    <report id="rolling-return-3yr">
+      <control-name>RollingReturn3YrChart</control-name>
+      <class>RollingReturnLineChart</class>
+      <title>3yr Rolling return</title>
+    </report>
+
+    <report id="rolling-return-5yr">
+      <control-name>RollingReturn5YrChart</control-name>
+      <class>RollingReturnLineChart</class>
+      <title>5yr Rolling return"</title>
+    </report>
+  </reports>
+</chart-spec>
