@@ -222,7 +222,7 @@ namespace RSMTenon.Graphing
             return categoryAxis1;
         }
 
-        public override Chart GenerateChart(string title)
+        public  Chart GenerateChart(string title)
         {
             float[] global = { 0.7686F, 0.0555F };
             float[] bonds = { 0.1527F, 0.5255F };
