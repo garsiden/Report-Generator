@@ -6,9 +6,11 @@ using System.Text;
 namespace RSMTenon.Data
 {
     // Model allocation weightings
-    public class ModelAllocation
+    public class AssetWeighting
     {
         public string AssetClass { get; set; }
-        public decimal Allocation { get; set; }
+        public decimal Weighting { get; set; }
     }
+
+    
 }
