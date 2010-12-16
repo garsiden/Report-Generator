@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-//using System.Data.Linq;
+using System.Data.Linq;
 using System.Xml.Linq;
 using System.Xml;
 
@@ -22,33 +22,61 @@ namespace RSMTenon.ReportGenerator
     public class Report
     {
         public Client Client { get; set; }
-        //private string specPath = "chart-spec2";
+        private RepGenDataContext context;
         private XElement specs = null;
-        private static string SPEC_FILE = @"C:\Documents and Settings\garsiden\My Documents\svn\repgen\vsprojects\word_chart\chart-spec2.xml";
+        private static string SPEC_FILE = @"C:\Documents and Settings\garsiden\My Documents\svn\repgen\vsprojects\word_chart\chart-spec.xml";
         private List<AssetClass> assetClasses = null;
+        private string strategyName;
+
+        public ChartItem AllocationPieChart()
+        {
+            XElement rpt = getChartSpec("allocation-pie");
+            string title = null;
+
+            // set title
+            if (Client.ExistingAssets) {
+                title = rpt.Element("title").Element("existing-assets").Value;
+            } else {
+                title = String.Format(rpt.Element("title").Element("cash").Value, StrategyName);
+            }
+
+            IQueryable<AssetWeighting> data;
+
+            if (Client.ExistingAssets) {
+                data = ClientAssetClass.GetClientAssetClass(Client.GUID);
+            } else {
+                data = Model.GetModelAllocation(Client.StrategyID);
+            }
+
+            AllocationPieChart pie = new AllocationPieChart();
+            C.Chart chart = pie.GenerateChart(title, data.ToList());
+
+            string ccn = rpt.Element("control-name").Value;
+            ChartItem chartItem = new ChartItem { Chart = chart, Title = title, CustomControlName = ccn };
+
+            return chartItem;
+        }
 
         public ChartItem RollingReturnChart(int years)
         {
-            // get chart specs
-            XElement sp = getChartSpecs();
             string id = null;
+
             switch (years) {
                 case 1: id = "rolling-return-1yr"; break;
-                case 2: id = "rolling-return-2yr"; break;
                 case 3: id = "rolling-return-3yr"; break;
+                case 5: id = "rolling-return-5yr"; break;
+                default: throw new ArgumentException("Illegal argument: 1, 3 or 5 only are valid");
             }
 
-            var rrc = (from rep in sp.Descendants("report")
-                       where rep.Attribute("id").Value == id
-                       select rep).Single();
+            // get chart specs
+            XElement rpt = getChartSpec(id);
 
             // set title
-            string title = rrc.Element("title").Value;
+            string title = rpt.Element("title").Value;
 
-            // get asset classes to plot (defalult in UKGB and GLEQ)
+            // get asset classes to plot (default is UKGB and GLEQ)
             var assets = getAssetClasses();
-
-            var ctx = new RepGenDataContext();
+            var ctx = DataContext;
 
             // first asset class
             var data1 = ctx.RollingReturn(years, assetClasses[0].ID);
@@ -63,29 +91,28 @@ namespace RSMTenon.ReportGenerator
             string dataKey2 = assetClasses[1].Name;
             lc.AddLineChartSeries(chart, data2.ToList(), dataKey2);
 
-            // add appropriate strategy data if cash
-            ReturnCalculation calc = new ReturnCalculation();
+            // add appropriate strategy data
+            var data3 = ctx.ModelPrice(Client.StrategyID);
+            string dataKey3 = StrategyName + " Strategy";
+            var rr = getRollingReturn(data3, years);
+            lc.AddLineChartSeries(chart, rr, dataKey3);
 
-            if (!Client.ExistingAssets) {
-                var rr = getModelRollingReturn(Client.StrategyId, years);
-                string strategyName = Strategy.GetStrategyNameFromId(Client.StrategyId);
-                lc.AddLineChartSeries(chart, rr, strategyName + " Strategy");
+            if (Client.ExistingAssets) {
+                string dataKey4 = "Current";
+                var data4 = ctx.ClientAssetPrice(Client.GUID);
+                var rrex = getRollingReturn(data4, years);
+                lc.AddLineChartSeries(chart, rrex, dataKey4);
             }
 
-            string ccn = rrc.Element("control-name").Value;
+            string ccn = rpt.Element("control-name").Value;
             ChartItem chartItem = new ChartItem { Chart = chart, Title = title, CustomControlName = ccn };
 
             return chartItem;
         }
 
-        private List<ReturnData> getModelRollingReturn(string strategyId, int years)
+        private List<ReturnData> getRollingReturn(ISingleResult<ReturnData> data, int years)
         {
-            var ctx = new RepGenDataContext();
             ReturnCalculation calc = new ReturnCalculation();
-
-            // model calculate prices
-            ctx.ModelPrice("CO");
-            var data = ctx.ModelPrice(strategyId);
 
             var prices = from d in data
                          select new ReturnData {
@@ -115,21 +142,13 @@ namespace RSMTenon.ReportGenerator
             return rv;
         }
 
-        private XElement getChartSpecs()
-        {
-            if (specs == null) {
-                specs = XElement.Load(SPEC_FILE);
-            }
-
-            return specs;
-        }
 
         private List<AssetClass> getAssetClasses()
         {
             if (assetClasses == null) {
-                var ctx = new RepGenDataContext();
+                var ctx = DataContext;
                 var allClasses = ctx.AssetClasses.ToDictionary(a => a.ID);
-                var assets = from spec in getChartSpecs().Descendants("asset-class")
+                var assets = from spec in ChartSpecs.Descendants("asset-class")
                              select spec;
 
                 var classes = new List<AssetClass>();
@@ -138,8 +157,51 @@ namespace RSMTenon.ReportGenerator
                 }
                 assetClasses = classes;
             }
-            return assetClasses;
 
+            return assetClasses;
+        }
+
+        private XElement getChartSpec(string id)
+        {
+            var spec = (from rep in ChartSpecs.Descendants("report")
+                        where rep.Attribute("id").Value == id
+                        select rep).Single();
+
+            return spec;
+        }
+
+        private RepGenDataContext DataContext
+        {
+            get
+            {
+                if (context == null) {
+                    context = new RepGenDataContext();
+                }
+
+                return context;
+            }
+        }
+
+        private string StrategyName
+        {
+            get
+            {
+                if (strategyName == null) {
+                    strategyName = Strategy.GetStrategyNameFromId(Client.StrategyID);
+                }
+                return strategyName;
+            }
+        }
+
+        private XElement ChartSpecs
+        {
+            get
+            {
+                if (specs == null) {
+                    specs = XElement.Load(SPEC_FILE);
+                }
+                return specs;
+            }
         }
     }
 }
