@@ -16,16 +16,15 @@ namespace RSMTenon.Data
             return context;
         }
 
-        public static IQueryable<ModelAllocation> GetModelAllocation(string strategyId)
+        public static IQueryable<AssetWeighting> GetModelAllocation(string strategyId)
         {
             var context = new RepGenDataContext();
-            //context.Connection.Open();
             var models = context.Models;
 
             var alloction = from model in models
                             where model.StrategyID.Equals(strategyId)
                             group model by model.AssetClass.Name into g
-                            select new ModelAllocation { AssetClass = g.Key, Allocation = g.Sum(model => model.Weighting) };
+                            select new AssetWeighting { AssetClass = g.Key, Weighting = g.Sum(model => model.Weighting) };
 
             return alloction;
         }
