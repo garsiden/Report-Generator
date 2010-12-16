@@ -65,6 +65,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Client.cs" />
+    <Compile Include="ClientAssetClass.cs" />
     <Compile Include="Drawdown.cs" />
     <Compile Include="LinqDataClasses.cs" />
     <Compile Include="Model.cs" />
