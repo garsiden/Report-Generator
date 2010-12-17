@@ -27,6 +27,9 @@ namespace RSMTenon.ReportGenerator
         private static string SPEC_FILE = @"C:\Documents and Settings\garsiden\My Documents\svn\repgen\vsprojects\word_chart\chart-spec.xml";
         private List<AssetClass> assetClasses = null;
         private string strategyName;
+        // "C0C0C0", "808080", "0066CC", "98CC00"
+        private string strategyColourHex = "0066CC";
+        private string clientColourHex = "98CC00";
 
         public ChartItem AllocationPieChart()
         {
@@ -76,33 +79,34 @@ namespace RSMTenon.ReportGenerator
 
             // get asset classes to plot (default is UKGB and GLEQ)
             var assets = getAssetClasses();
-            var ctx = DataContext;
+            var ctx = DataContext;                                            
 
-            // first asset class
-            var data1 = ctx.RollingReturn(years, assetClasses[0].ID);
-            string dataKey1 = assetClasses[0].Name;
-
-            // create chart (requires one intital data series)
+            // create chart
             RollingReturnLineChart lc = new RollingReturnLineChart();
-            C.Chart chart = lc.GenerateChart(title, data1.ToList(), dataKey1);
-
-            // add second data series
-            var data2 = ctx.RollingReturn(years, assetClasses[1].ID);
-            string dataKey2 = assetClasses[1].Name;
-            lc.AddLineChartSeries(chart, data2.ToList(), dataKey2);
-
-            // add appropriate strategy data
-            var data3 = ctx.ModelPrice(Client.StrategyID);
-            string dataKey3 = StrategyName + " Strategy";
-            var rr = getRollingReturn(data3, years);
-            lc.AddLineChartSeries(chart, rr, dataKey3);
+            C.Chart chart = lc.GenerateChart(title);
 
             if (Client.ExistingAssets) {
-                string dataKey4 = "Current";
-                var data4 = ctx.ClientAssetPrice(Client.GUID);
-                var rrex = getRollingReturn(data4, years);
-                lc.AddLineChartSeries(chart, rrex, dataKey4);
+                string dataKey1 = "Current";
+                var data1 = ctx.ClientAssetPrice(Client.GUID);
+                var rrex = getRollingReturn(data1, years);
+                lc.AddLineChartSeries(chart, rrex, dataKey1, clientColourHex);
             }
+
+            // first asset class
+            var data2 = ctx.RollingReturn(years, assetClasses[0].ID);
+            string dataKey2 = assetClasses[0].Name;
+            lc.AddLineChartSeries(chart, data2.ToList(), dataKey2, assetClasses[0].ColourHex);
+
+            // add second data series
+            var data3 = ctx.RollingReturn(years, assetClasses[1].ID);
+            string dataKey3 = assetClasses[1].Name;
+            lc.AddLineChartSeries(chart, data3.ToList(), dataKey3, assetClasses[1].ColourHex);
+
+            // add appropriate strategy data
+            var data4 = ctx.ModelPrice(Client.StrategyID);
+            string dataKey4 = StrategyName + " Strategy";
+            var rr = getRollingReturn(data4, years);
+            lc.AddLineChartSeries(chart, rr, dataKey4, strategyColourHex);
 
             string ccn = rpt.Element("control-name").Value;
             ChartItem chartItem = new ChartItem { Chart = chart, Title = title, CustomControlName = ccn };
@@ -153,7 +157,11 @@ namespace RSMTenon.ReportGenerator
 
                 var classes = new List<AssetClass>();
                 foreach (var a in assets) {
-                    classes.Add(new AssetClass() { ID = a.Value, Name = allClasses[a.Value].Name });
+                    classes.Add(new AssetClass() {
+                        ID = a.Attribute("id").Value,
+                        Name = allClasses[a.Attribute("id").Value].Name,
+                        ColourHex = a.Attribute("colour-hex").Value
+                    });
                 }
                 assetClasses = classes;
             }

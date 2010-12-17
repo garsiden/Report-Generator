@@ -22,13 +22,20 @@ namespace RSMTenon.ReportGenerator
         static string path = @"C:\Documents and Settings\garsiden\My Documents\Projects\RepGen\test\chart\";
         static string generated = path + "ChartDoc.docx";
         private double previousDD = 1;
+        private uint docPrId = 0U;
 
         static void Main(string[] args)
         {
             Program This = new Program();
 
             // create test Client and Report
-            Client client = new Client() { Name = "Joe Mayo", ExistingAssets = false, MeetingDate = new DateTime(2010, 12, 14), StrategyId = "CO", TimeHorizon = 5, Investment = 1000000 };
+            //Client client = new Client() { Name = "Joe Mayo", ExistingAssets = false, MeetingDate = new DateTime(2010, 12, 14), StrategyID = "CO", TimeHorizon = 5, InvestmentAmount = 1000000 };
+            //Guid guid = new Guid("636c8103-e06d-4575-aafc-574474c2d7f8");
+            //Guid guid = new Guid("979de312-8e99-49d3-9d41-54ecae0cad5c");
+            //Guid guid = new Guid("979de312-8e99-49d3-9d41-54ecae0cad5c");
+            Guid guid = new Guid("1426a508-fc66-4e2d-b3cc-b3e1e1240a0e");
+            //client.GUID = guid;
+            Client client = Client.GetClientByGUID(guid);
             Report report = new Report() { Client = client };
 
             //This.PriceTest();
@@ -47,10 +54,42 @@ namespace RSMTenon.ReportGenerator
             WordprocessingDocument myWordDoc = WordprocessingDocument.Open(generated, true);
             MainDocumentPart mainPart = myWordDoc.MainDocumentPart;
 
-            This.InsertAllocationPie(mainPart);
-            This.InsertRRChartIntoWord(mainPart, report);
+            //This.InsertAllocationPie(mainPart);
+            //This.InsertRRChartIntoWord(mainPart, report);
+            This.CreateReport(mainPart, report);
 
             myWordDoc.Close();
+        }
+
+
+        public void CreateReport(MainDocumentPart mainPart, Report report)
+        {
+            ChartItem chartItem = null;
+            string controlName = null;
+
+            // Allocation Pie Chart
+            chartItem = report.AllocationPieChart();
+            controlName = chartItem.CustomControlName;
+            AddChartToDoc(mainPart, chartItem, controlName);
+
+            // Rolling Return 1 yr
+            chartItem = report.RollingReturnChart(1);
+            controlName = chartItem.CustomControlName;
+            AddChartToDoc(mainPart, chartItem, controlName);
+
+            // Rolling Return 3 yr
+            chartItem = report.RollingReturnChart(3);
+            controlName = chartItem.CustomControlName;
+            AddChartToDoc(mainPart, chartItem, controlName);
+
+            // Rolling Return 5 yr
+            chartItem = report.RollingReturnChart(5);
+            controlName = chartItem.CustomControlName;
+            AddChartToDoc(mainPart, chartItem, controlName);
+
+
+            // save and close document
+            mainPart.Document.Save();
         }
 
         private void RollingReturnTest()
@@ -188,7 +227,7 @@ namespace RSMTenon.ReportGenerator
 
             // generate Pie Chart and add to ChartSpace
             string title = strategyName + " Allocation";
-            IQueryable<ModelAllocation> allocation;
+            IQueryable<AssetWeighting> allocation;
 
             if (assets) {
                 allocation = Model.GetModelAllocation("CO");
@@ -260,6 +299,29 @@ namespace RSMTenon.ReportGenerator
                 return para;
             }
             return null;
+        }
+
+        private void AddChartToDoc(MainDocumentPart mainPart, ChartItem chartItem, string controlName)
+        {
+            // open Word documant and remove existing content from control
+            Paragraph para = findAndRemoveContent(mainPart, controlName);
+
+            // generate new ChartPart and ChartSpace
+            ChartPart chartPart = mainPart.AddNewPart<ChartPart>();
+            string relId = mainPart.GetIdOfPart(chartPart);
+            C.ChartSpace chartSpace = GraphSpace.GenerateChartSpace(chartPart);
+            chartSpace.Append(chartItem.Chart);
+
+            // set ChartPart ChartSpace
+            chartPart.ChartSpace = chartSpace;
+
+            // generate a new Wordprocessing Drawing, add to a new Run,
+            // and relate to new ChartPart
+            Run run = new Run();
+            Drawing drawing = GraphDrawing.GenerateDrawing(relId, controlName, docPrId, Graph.Cx, Graph.Cy);
+            docPrId++;
+            para.Append(run);
+            run.Append(drawing);
         }
 
     }

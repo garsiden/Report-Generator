@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <chart-spec>
   <asset-classes>
-    <asset-class>UKGB</asset-class>
-    <asset-class>GLEQ</asset-class>
+    <asset-class id="UKGB" colour-hex="C0C0C0" />
+    <asset-class id="GLEQ" colour-hex="808080" />
   </asset-classes>
   <reports>
     <report id="weight">
@@ -11,8 +11,8 @@
       <title>Current Asset Allocation vs. {0} Strategy</title>
     </report>
 
-    <report id="allocation">
-      <control-name>AllocationChart</control-name>
+    <report id="allocation-pie">
+      <control-name>AllocationPieChart</control-name>
       <class>AllocationPieChart</class>
       <title>
         <existing-assets>Current Asset Allocation</existing-assets>
@@ -41,7 +41,13 @@
     <report id="rolling-return-5yr">
       <control-name>RollingReturn5YrChart</control-name>
       <class>RollingReturnLineChart</class>
-      <title>5yr Rolling return"</title>
+      <title>5yr Rolling return</title>
+    </report>
+
+    <report id="ten-year-return" size-x="15.25" size-y="8.9">
+      <control-name>TenYearReturnChart</control-name>
+      <class>TenYearReturnLineChart</class>
+      <title>Ten Year Return</title>
     </report>
   </reports>
 </chart-spec>
