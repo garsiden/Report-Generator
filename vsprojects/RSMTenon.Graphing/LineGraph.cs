@@ -17,16 +17,16 @@ namespace RSMTenon.Graphing
         protected string valueAxisFormat;
         protected string[] colours = { "C0C0C0", "808080", "0066CC", "98CC00" };
 
-        public void AddLineChartSeries(Chart lineChart, List<ReturnData> data, string seriesName)
+        public void AddLineChartSeries(Chart lineChart, List<ReturnData> data, string seriesName, string colourHex)
         {
-            LineChartSeries lineChartSeries = GenerateLineChartSeries(seriesName, data);
+            LineChartSeries lineChartSeries = GenerateLineChartSeries(seriesName, data, colourHex);
             lineChart.PlotArea.ChildElements.First<LineChart>().Append(lineChartSeries);
         }
 
-        protected LineChartSeries GenerateLineChartSeries(string seriesName, List<ReturnData> data)
+        protected LineChartSeries GenerateLineChartSeries(string seriesName, List<ReturnData> data, string colourHex)
         {
             uint numPoints = (uint)data.Count();
-            string colourHex = colours[order];
+            //string colourHex = colours[order];
 
             // c:ser (LineChartSeries)
             LineChartSeries lineChartSeries1 = new LineChartSeries();

@@ -17,10 +17,9 @@ namespace RSMTenon.Graphing
             this.valueFormat = "0.0%";
             this.dateAxisFormat = "mmm\\-yy";
             this.valueAxisFormat = "0%";
-
         }
 
-        public Chart GenerateChart(string title, List<ReturnData> data, string dataName)
+        public Chart GenerateChart(string title)
         {
             // c:chart (Chart)
             Chart chart1 = new Chart();
@@ -38,9 +37,6 @@ namespace RSMTenon.Graphing
             // c:grouping (Grouping)
             Grouping grouping1 = new Grouping() { Val = GroupingValues.Standard };
 
-            // c:ser (LineChartSeries)
-            LineChartSeries lineChartSeries1 = GenerateLineChartSeries(dataName, data);
-
             // c:marker (Marker)
             ShowMarker showMarker1 = new ShowMarker() { Val = true };
             // c:axId (AxisId)
@@ -48,7 +44,7 @@ namespace RSMTenon.Graphing
             AxisId axisId2 = new AxisId() { Val = (UInt32Value)54657408U };
 
             lineChart1.Append(grouping1);
-            lineChart1.Append(lineChartSeries1);
+            //lineChart1.Append(lineChartSeries1);
             lineChart1.Append(showMarker1);
             lineChart1.Append(axisId1);
             lineChart1.Append(axisId2);

@@ -17,7 +17,7 @@ namespace RSMTenon.Graphing
             return null;
         }
 
-        public Chart GenerateChart(string title, List<ModelAllocation>model)
+        public Chart GenerateChart(string title, List<AssetWeighting>model)
         {
             Chart chart1 = new Chart();
             Title title1 = GenerateTitle(title);
@@ -59,10 +59,10 @@ namespace RSMTenon.Graphing
 
             uint i = 0U;
 
-            foreach (var alloc in model.OrderByDescending(m => m.Allocation)) {
+            foreach (var alloc in model.OrderByDescending(m => m.Weighting)) {
                 StringPoint stringPoint1 = GenerateStringPoint(i, alloc.AssetClass);
                 stringLiteral1.Append(stringPoint1);
-                NumericPoint numericPoint1 = GenerateNumericPoint(i++, alloc.Allocation.ToString());
+                NumericPoint numericPoint1 = GenerateNumericPoint(i++, alloc.Weighting.ToString());
                 numberLiteral1.Append(numericPoint1);
             }
 
