@@ -98,8 +98,8 @@ namespace RSMTenon.ReportGenerator
             ReturnCalculation calc = new ReturnCalculation();
 
             // calculate prices
-            ctx.ModelPrice("CO");
-            var data = ctx.ModelPrice("CO");
+            ctx.ModelReturn("CO");
+            var data = ctx.ModelReturn("CO");
 
             var prices = from d in data
                          select new ReturnData {
@@ -132,8 +132,8 @@ namespace RSMTenon.ReportGenerator
         {
 
             var ctx = new RepGenDataContext();
-            ctx.ModelPrice("CO");
-            var data = ctx.ModelPrice("CO");
+            ctx.ModelReturn("CO");
+            var data = ctx.ModelReturn("CO");
 
             ReturnCalculation calc = new ReturnCalculation();
             var match = from d in data
@@ -168,7 +168,7 @@ namespace RSMTenon.ReportGenerator
 
         }
 
-        private double calculateDrawdown(Drawdown drawdown)
+        private double calculateDrawdown(DrawdownData drawdown)
         {
             if ((drawdown.Value / drawdown.PreviousValue > 1) && previousDD == 1) {
                 return 1D;
@@ -177,9 +177,8 @@ namespace RSMTenon.ReportGenerator
                 this.previousDD = retval;
                 return retval;
             }
-
-
         }
+
         public void InsertBarChartIntoWord(MainDocumentPart mainPart, string title)
         {
             // open Word documant and remove existing content from control
@@ -210,82 +209,6 @@ namespace RSMTenon.ReportGenerator
             mainPart.Document.Save();
 
         }
-
-        public void InsertAllocationPie(MainDocumentPart mainPart)
-        {
-            // variables from client details
-            bool assets = false;
-            string strategyId = "CO";
-            string strategyName = Strategy.GetStrategyNameFromId(strategyId);
-
-            Paragraph para = findAndRemoveContent(mainPart, "AllocationPieChart");
-
-            // generate new ChartPart and ChartSpace
-            ChartPart chartPart = mainPart.AddNewPart<ChartPart>();
-            string relId = mainPart.GetIdOfPart(chartPart);
-            C.ChartSpace chartSpace = GraphSpace.GenerateChartSpace(chartPart);
-
-            // generate Pie Chart and add to ChartSpace
-            string title = strategyName + " Allocation";
-            IQueryable<AssetWeighting> allocation;
-
-            if (assets) {
-                allocation = Model.GetModelAllocation("CO");
-            } else {
-                allocation = Model.GetModelAllocation("CO");
-            }
-            AllocationPieChart pie = new AllocationPieChart();
-            C.Chart chart = pie.GenerateChart(title, allocation.ToList());
-            chartSpace.Append(chart);
-
-            // set ChartPart ChartSpace
-            chartPart.ChartSpace = chartSpace;
-
-            // generate a new Wordprocessing Drawing, add to a new Run,
-            // and relate to new ChartPart
-            Run run = new Run();
-            Drawing drawing = GraphDrawing.GenerateDrawing(relId, title, 2U, AllocationPieChart.Cx, AllocationPieChart.Cy);
-            para.Append(run);
-            run.Append(drawing);
-
-            // save and close document
-            mainPart.Document.Save();
-        }
-
-        public void InsertRRChartIntoWord(MainDocumentPart mainPart, Report report)
-        {
-            // variables from client details
-            //string strategyName = Strategy.GetStrategyNameFromId(report.Client.StrategyId);
-            //string title = "1yr Rolling return";
-            //string contentControlName = "RollingReturnOneYear";
-            ChartItem chartItem = report.RollingReturnChart(3);
-            string ccn = chartItem.CustomControlName;
-
-            // open Word documant and remove existing content from control
-            Paragraph para = findAndRemoveContent(mainPart, ccn);
-
-            // generate new ChartPart and ChartSpace
-            ChartPart chartPart = mainPart.AddNewPart<ChartPart>();
-            string relId = mainPart.GetIdOfPart(chartPart);
-            C.ChartSpace chartSpace = GraphSpace.GenerateChartSpace(chartPart);
-
-
-            chartSpace.Append(chartItem.Chart);
-
-            // set ChartPart ChartSpace
-            chartPart.ChartSpace = chartSpace;
-
-            // generate a new Wordprocessing Drawing, add to a new Run,
-            // and relate to new ChartPart
-            Run run = new Run();
-            Drawing drawing = GraphDrawing.GenerateDrawing(relId, ccn, 3U, RollingReturnLineChart.Cx, RollingReturnLineChart.Cy);
-            para.Append(run);
-            run.Append(drawing);
-
-            // save and close document
-            mainPart.Document.Save();
-        }
-
 
 
         private Paragraph findAndRemoveContent(MainDocumentPart main, string blockName)

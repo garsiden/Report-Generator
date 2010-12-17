@@ -103,7 +103,7 @@ namespace RSMTenon.ReportGenerator
             lc.AddLineChartSeries(chart, data3.ToList(), dataKey3, assetClasses[1].ColourHex);
 
             // add appropriate strategy data
-            var data4 = ctx.ModelPrice(Client.StrategyID);
+            var data4 = ctx.ModelReturn(Client.StrategyID);
             string dataKey4 = StrategyName + " Strategy";
             var rr = getRollingReturn(data4, years);
             lc.AddLineChartSeries(chart, rr, dataKey4, strategyColourHex);
