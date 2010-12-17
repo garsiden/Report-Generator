@@ -38,7 +38,7 @@ namespace RSMTenon.Data
         }
 
 
-        public double calculateDrawdown(Drawdown drawdown)
+        public double calculateDrawdown(DrawdownData drawdown)
         {
             if ((drawdown.Value / drawdown.PreviousValue > 1) && previousDD == 1) {
                 return 1D;
