@@ -14,7 +14,7 @@ namespace RSMTenon.Data
         [Function(Name = "dbo.spModelReturn")]
         public ISingleResult<ReturnData> ModelReturn([Parameter(DbType = "Char(2)")] string strategyId)
         {
-            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), strategyId, null);
+            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), strategyId);
             return ((ISingleResult<ReturnData>)(result.ReturnValue));
         }
 
