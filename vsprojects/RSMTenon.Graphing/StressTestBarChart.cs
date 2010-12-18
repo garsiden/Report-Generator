@@ -8,9 +8,19 @@ using DocumentFormat.OpenXml;
 
 namespace RSMTenon.Graphing
 {
-    public class StressBarChart : BarGraph
+
+
+    public class StressTestBarChart : BarGraph
     {
-        public Chart GenerateChart1(string title)
+        private string pointFormat = "0.00%";
+
+        public void AddBarChartSeries(Chart barChart, BarGraphSeries series)
+        {
+            BarChartSeries barChartSeries = GenerateBarChartSeries(series.Name, series.PointNames, series.Values, series.ColourHex, pointFormat);
+            barChart.PlotArea.ChildElements.First<BarChart>().Append(barChartSeries);
+        }
+
+        public Chart GenerateChartCrash(string title)
         {
             float[] global = { -0.15650000000000006F, -0.28730000000000011F, -0.2782F };
             float[] bonds = { 6.9600000000000023E-2F, 8.2300000000000012E-2F, 9.3000000000000055E-2F };
@@ -29,18 +39,18 @@ namespace RSMTenon.Graphing
             BarDirection barDirection1 = new BarDirection() { Val = BarDirectionValues.Column };
             BarGrouping barGrouping1 = new BarGrouping() { Val = BarGroupingValues.Clustered };
 
-            BarChartSeries barChartSeries1 = GenerateBarChartSeries("Global Equities", 1U, 0U, pointNames, global, "808080", "0.00%");
-            BarChartSeries barChartSeries2 = GenerateBarChartSeries("UK Government Bonds", 2U, 1U, pointNames, bonds, "C0C0C0", "0.00%");
-            BarChartSeries barChartSeries3 = GenerateBarChartSeries("Defensive Strategy", 3U, 2U, pointNames, strategy, "0066CC", "0.00%");
+            //BarChartSeries barChartSeries1 = GenerateBarChartSeries("Global Equities", 1U, 0U, pointNames, global, "808080", "0.00%");
+            //BarChartSeries barChartSeries2 = GenerateBarChartSeries("UK Government Bonds", 2U, 1U, pointNames, bonds, "C0C0C0", "0.00%");
+            //BarChartSeries barChartSeries3 = GenerateBarChartSeries("Defensive Strategy", 3U, 2U, pointNames, strategy, "0066CC", "0.00%");
 
             AxisId axisId1 = new AxisId() { Val = (UInt32Value)92179456U };
             AxisId axisId2 = new AxisId() { Val = (UInt32Value)92463872U };
 
             barChart1.Append(barDirection1);
             barChart1.Append(barGrouping1);
-            barChart1.Append(barChartSeries1);
-            barChart1.Append(barChartSeries2);
-            barChart1.Append(barChartSeries3);
+            //barChart1.Append(barChartSeries1);
+            //barChart1.Append(barChartSeries2);
+            //barChart1.Append(barChartSeries3);
             barChart1.Append(axisId1);
             barChart1.Append(axisId2);
 
@@ -222,14 +232,14 @@ namespace RSMTenon.Graphing
             return categoryAxis1;
         }
 
-        public  Chart GenerateChart(string title)
+        public  Chart GenerateChartRise(string title)
         {
-            float[] global = { 0.7686F, 0.0555F };
-            float[] bonds = { 0.1527F, 0.5255F };
-            float[] strategy = { 0.2898F, 0.5510F };
-            float[] current = { 0.3805F, 0.4397F };
+            //double[] global = { 0.7686D, 0.0555D };
+            //double[] bonds = { 0.1527D, 0.5255D };
+            //double[] strategy = { 0.2898D, 0.5510D };
+            //double[] current = { 0.3805D, 0.4397D };
 
-            string[] pointNames = { "Bull Market Mar 03 - Mar 06", "10 Year Returns Dec 99 - Dec 09" };
+            //string[] pointNames = { "Bull Market Mar 03 - Mar 06", "10 Year Returns Dec 99 - Dec 09" };
 
             Chart chart1 = new Chart();
             Title title1 = GenerateTitle(title);
@@ -241,20 +251,20 @@ namespace RSMTenon.Graphing
             BarDirection barDirection1 = new BarDirection() { Val = BarDirectionValues.Column };
             BarGrouping barGrouping1 = new BarGrouping() { Val = BarGroupingValues.Clustered };
 
-            BarChartSeries barChartSeries1 = GenerateBarChartSeries("Global Equities", 2U, 1U, pointNames, global, "808080", "0.00%");
-            BarChartSeries barChartSeries2 = GenerateBarChartSeries("UK Government Bonds", 3U, 2U, pointNames, bonds, "C0C0C0", "0.00%");
-            BarChartSeries barChartSeries3 = GenerateBarChartSeries("Defensive Strategy", 4U, 3U, pointNames, strategy, "0066CC", "0.00%");
-            BarChartSeries barChartSeries4 = GenerateBarChartSeries("Current Portfolio", 1U, 0U, pointNames, current, "99CC00", "0.00%");
+            //BarChartSeries barChartSeries1 = GenerateBarChartSeries("Global Equities", pointNames, global, "808080", "0.00%");
+            //BarChartSeries barChartSeries2 = GenerateBarChartSeries("UK Government Bonds", pointNames, bonds, "C0C0C0", "0.00%");
+            //BarChartSeries barChartSeries3 = GenerateBarChartSeries("Defensive Strategy", pointNames, strategy, "0066CC", "0.00%");
+            //BarChartSeries barChartSeries4 = GenerateBarChartSeries("Current Portfolio", pointNames, current, "99CC00", "0.00%");
 
             AxisId axisId1 = new AxisId() { Val = (UInt32Value)92179456U };
             AxisId axisId2 = new AxisId() { Val = (UInt32Value)92463872U };
 
             barChart1.Append(barDirection1);
             barChart1.Append(barGrouping1);
-            barChart1.Append(barChartSeries4);
-            barChart1.Append(barChartSeries1);
-            barChart1.Append(barChartSeries2);
-            barChart1.Append(barChartSeries3);
+            //barChart1.Append(barChartSeries4);
+            //barChart1.Append(barChartSeries1);
+            //barChart1.Append(barChartSeries2);
+            //barChart1.Append(barChartSeries3);
             barChart1.Append(axisId1);
             barChart1.Append(axisId2);
 
