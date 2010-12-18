@@ -12,7 +12,7 @@ namespace RSMTenon.Graphing
     {
         public  Chart GenerateChart(string title)
         {
-            float[] vals = { 0.11768250185249102F, -6.1324324147486134E-2F, 4.7902237547416453E-2F, 3.846389646333704E-2F, 0.0F, -6.8212317552127408E-2F, -0.2F, -0.15F, 0.27375221930876331F, 1.7357865276057976E-3F, 0.0F, 0.0F };
+            double[] vals = { 0.11768250185249102D, -6.1324324147486134E-2D, 4.7902237547416453E-2D, 3.846389646333704E-2F, 0.0D, -6.8212317552127408E-2D, -0.2D, -0.15D, 0.27375221930876331D, 1.7357865276057976E-3D, 0.0D, 0.0D };
             string[] pointNames = {"Cash",
             "UK Gov Bonds",
             "UK Corp Bonds",
@@ -35,7 +35,7 @@ namespace RSMTenon.Graphing
             BarChart barChart1 = new BarChart();
             BarDirection barDirection1 = new BarDirection() { Val = BarDirectionValues.Column };
             BarGrouping barGrouping1 = new BarGrouping() { Val = BarGroupingValues.Clustered };
-            BarChartSeries barChartSeries1 = GenerateBarChartSeries(null, 0U, 0U, pointNames, vals, "0066CC", null);
+            BarChartSeries barChartSeries1 = GenerateBarChartSeries(null, pointNames, vals, "0066CC", null);
 
             AxisId axisId1 = new AxisId() { Val = (UInt32Value)97045504U };
             AxisId axisId2 = new AxisId() { Val = (UInt32Value)97055488U };
