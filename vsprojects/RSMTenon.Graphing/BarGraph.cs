@@ -8,6 +8,15 @@ using DocumentFormat.OpenXml;
 
 namespace RSMTenon.Graphing
 {
+    public class BarGraphSeries
+    {
+        public string Name { get; set; }
+        public string[] PointNames { get; set; }
+        public double[] Values { get; set; }
+        public string Format { get;  set; }
+        public string ColourHex { get; set; }
+    }
+
     public abstract class BarGraph : Graph
     {
         protected ChartShapeProperties GenerateChartShapeProperties(string colourHex, int width)
@@ -34,21 +43,26 @@ namespace RSMTenon.Graphing
             return chartShapeProperties2;
         }
 
-        protected BarChartSeries GenerateBarChartSeries(string seriesName, uint index, uint order, string[] pointNames, float[] vals, string colourHex, string valueFormat)
+        protected BarChartSeries GenerateBarChartSeries(string seriesName, string[] pointNames, double[] vals, string colourHex, string valueFormat)
         {
             BarChartSeries barChartSeries1 = new BarChartSeries();
             Index index1 = new Index() { Val = (UInt32Value)index };
             Order order1 = new Order() { Val = (UInt32Value)order };
 
+            SeriesText seriesText = GenerateSeriesText(seriesName);
             ChartShapeProperties chartShapeProperties2 = GenerateChartShapeProperties(colourHex, 12700);
             CategoryAxisData categoryAxisData1 = GenerateCategoryAxisData(pointNames);
             Values values1 = GenerateValues(valueFormat, vals);
 
             barChartSeries1.Append(index1);
             barChartSeries1.Append(order1);
+            barChartSeries1.Append(seriesText);
             barChartSeries1.Append(chartShapeProperties2);
             barChartSeries1.Append(categoryAxisData1);
             barChartSeries1.Append(values1);
+
+            this.index++;
+            this.order++;
 
             return barChartSeries1;
         }
