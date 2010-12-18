@@ -48,6 +48,23 @@
       <control-name>TenYearReturnChart</control-name>
       <class>TenYearReturnLineChart</class>
       <title>Ten Year Return</title>
+      <asset-class id="GLEQ" colour-hex="808080" />
+      <asset-class id="CASH" colour-hex="000000" />
+      <ima id="IMACautious" colour-hex="C0C0C0"/>
+    </report>
+
+    <report id="stress-test-market-rise">
+      <control-name>StressTestMarketRiseChart</control-name>
+      <class>StressBarChart</class>
+      <title>Stress Test - Market Rises</title>
+      <categories>
+        <category id="bull" from="2003-03-31" to="2006-03-31">
+          <point-name>Bull Market {0} - {1}</point-name>
+        </category>
+        <category id="ten-year">
+          <point-name>10 Year Returns {0} - {1}</point-name>
+        </category>
+      </categories>
     </report>
   </reports>
 </chart-spec>
