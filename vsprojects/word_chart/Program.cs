@@ -38,11 +38,13 @@ namespace RSMTenon.ReportGenerator
             Client client = Client.GetClientByGUID(guid);
             Report report = new Report() { Client = client };
 
-            //This.PriceTest();
+            //This.TenYearTest();
             //This.RollingReturnTest();
             //This.DrawdownTest();
-            //Thread.Sleep(500000);
+            //Thread.Sleep(return);
+            //This.StressTest();
             //return;
+            //500000;
 
             string template = path + "chart_template.docx";
             string generated = path + "chart_test.docx";
@@ -66,6 +68,11 @@ namespace RSMTenon.ReportGenerator
         {
             ChartItem chartItem = null;
             string controlName = null;
+            
+            // Stress Test Market Rise Bar Chart
+            chartItem = report.StressTestMarketRise();
+            controlName = chartItem.CustomControlName;
+            AddChartToDoc(mainPart, chartItem, controlName);
 
             // Allocation Pie Chart
             chartItem = report.AllocationPieChart();
@@ -87,11 +94,40 @@ namespace RSMTenon.ReportGenerator
             controlName = chartItem.CustomControlName;
             AddChartToDoc(mainPart, chartItem, controlName);
 
-
+            // Ten Year Return Chart
+            chartItem = report.TenYearReturn();
+            controlName = chartItem.CustomControlName;
+            AddChartToDoc(mainPart, chartItem, controlName);
+            
             // save and close document
             mainPart.Document.Save();
         }
 
+        private void StressTest()
+        {
+            var ctx = new RepGenDataContext();
+
+            var hd = ctx.HistoricPrice("UKGB").ToDictionary(d => d.Date);
+            var last = hd.Last();
+
+            // Ten Year Return
+            var frm = hd.ElementAt(hd.Count() - 121);
+            double retval = Math.Log(last.Value.Value / frm.Value.Value);
+
+            // Bull Run Mar-03 to Mar-06
+
+            int fromDate = (int)(new DateTime(2003, 3, 31).ToOADate());
+            int toDate = (int)(new DateTime(2006, 3, 31).ToOADate());
+
+
+
+            //var start = hd.Single(h => h.  .Date.Equals(fromDate-2));
+            //var end = hd.Single(h => h.Date.Equals(toDate -2));
+            var start = hd[fromDate - 2];
+            var end = hd[toDate - 2];
+            double bull = (end.Value - start.Value) / start.Value;
+
+        }
         private void RollingReturnTest()
         {
             var ctx = new RepGenDataContext();
@@ -124,8 +160,25 @@ namespace RSMTenon.ReportGenerator
             foreach (var item in p3) {
                 Console.WriteLine("{0}\t{1}", item.Date, item.Value);
             }
+        }
 
+        private void TenYearTest()
+        {
+            var ctx = new RepGenDataContext();
+            var data = ctx.ModelReturn( "CO", new DateTime(1999, 9, 30));
+//            var data = ctx.AssetClassReturn(new DateTime(1999, 9, 30), "GLEQ");
 
+            ReturnCalculation calc = new ReturnCalculation();
+            var match = from d in data
+                        select new ReturnData {
+                            Value = calc.rebaseReturn(d),
+                            Date = d.Date
+                        };
+
+            foreach (var item in match) {
+                Console.WriteLine("{0}\t{1}", item.Date, item.Value);
+            }
+            Thread.Sleep(500000);
         }
 
         private void PriceTest()
