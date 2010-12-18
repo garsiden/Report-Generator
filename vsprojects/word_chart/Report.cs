@@ -20,6 +20,44 @@ namespace RSMTenon.ReportGenerator
         public string CustomControlName { get; set; }
     }
 
+    public class StressTest
+    {
+        public string Id;
+        public DateTime FromDate;
+        public DateTime ToDate;
+        private string pointName;
+        private string format = "yyyy-mm-dd";
+        public StressTest(string id, XElement reportSpec)
+        {
+            var test1 = reportSpec.Element("categories").Elements().Single(t => t.Attribute("id").Value.Equals(id));
+            PointName = test1.Element("point-name").Value;
+            var fromAttr = test1.Attribute("from");
+            var toAttr = test1.Attribute("to");
+            if (fromAttr != null) {
+                FromDate = DateTime.ParseExact(fromAttr.Value, format, new DateTimeFormatInfo());
+            }
+            if (toAttr != null) {
+                ToDate = DateTime.ParseExact(toAttr.Value, format, new DateTimeFormatInfo());
+            }
+        }
+
+        public string PointName
+        {
+            get { return String.Format(pointName, FromDate.ToString("MMM yy"), ToDate.ToString("MMM yy")); }
+            set { pointName = value; }
+        }
+            
+        public int FromIntegerDate 
+        {
+            get { return ReturnData.IntegerDate(FromDate); }
+        }
+        public int ToIntegerDate 
+        {
+            get { return ReturnData.IntegerDate(ToDate); }
+        }
+
+    }
+
     public class Report
     {
         public Client Client { get; set; }
@@ -87,9 +125,8 @@ namespace RSMTenon.ReportGenerator
             bc.AddBarChartSeries(chart, series3);
 
             // strategy
-            //var data4 = getModelTenYearReturn(Client.StrategyID, tenYearStart);
-            //string dataKey4 = StrategyName;
-            //lc.AddLineChartSeries(chart, data4, dataKey4, strategyColourHex);
+            var series4 = getModelStressTestReturn(Client.StrategyID, rpt);
+            bc.AddBarChartSeries(chart, series4);
 
             string ccn = rpt.Element("control-name").Value;
             ChartItem chartItem = new ChartItem { Chart = chart, Title = title, CustomControlName = ccn };
@@ -136,6 +173,42 @@ namespace RSMTenon.ReportGenerator
 
         }
 
+        private BarGraphSeries getModelStressTestReturn(string strategyId, XElement rpt)
+        {
+            var test1 = new StressTest("bull", rpt);
+
+            // Model prices
+            var returns = DataContext.ModelReturn(strategyId);
+            var calc = new ReturnCalculation();
+            var prices = from p in returns
+                         select new ReturnData {
+                             Date = p.Date,
+                             Value = calc.calculatePrice(p)
+                         };
+
+            // Bull
+            var pd = prices.ToDictionary(p => p.Date);
+            var start1 = pd[test1.FromIntegerDate];
+            var end1 = pd[test1.ToIntegerDate];
+            double return1 = (end1.Value - start1.Value) / start1.Value;
+
+            // Ten Year Return
+            var test2 = new StressTest("ten-year", rpt);
+            var end2 = pd.Last();
+            var start2 = pd.ElementAt(pd.Count() - 121);
+            double return2 = Math.Log(end2.Value.Value / start2.Value.Value);
+            test2.FromDate = start2.Value.DateFromInteger;
+            test2.ToDate = start2.Value.DateFromInteger;
+
+            var series = new BarGraphSeries {
+                Name = Client.Strategy.Name,
+                ColourHex = strategyColourHex,
+                PointNames = new string[] { test1.PointName, test2.PointName },
+                Values = new double[] {return1, return2 }
+            };
+            
+            return series;
+        }
         private BarGraphSeries getAssetClassStressTestReturn(AssetClass assetClass, XElement rpt)
         {
             // series name
@@ -175,6 +248,7 @@ namespace RSMTenon.ReportGenerator
 
             return series;
         }
+
 
 
         private List<ReturnData> getModelTenYearReturn(string strategId, DateTime tenYearStart)
@@ -234,7 +308,7 @@ namespace RSMTenon.ReportGenerator
             lc.AddLineChartSeries(chart, data3.ToList(), dataKey3, assetClasses[1].ColourHex);
 
             // add appropriate strategy data
-            var data4 = ctx.ModelReturn(Client.StrategyID, null);
+            var data4 = ctx.ModelReturn(Client.StrategyID);
             string dataKey4 = StrategyName + " Strategy";
             var rr = getRollingReturn(data4, years);
             lc.AddLineChartSeries(chart, rr, dataKey4, strategyColourHex);
