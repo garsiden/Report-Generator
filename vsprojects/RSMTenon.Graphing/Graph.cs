@@ -133,7 +133,7 @@ namespace RSMTenon.Graphing
             return numericPoint1;
         }
 
-        protected virtual Values GenerateValues(string formatCode, float[] data)
+        protected virtual Values GenerateValues(string formatCode, double[] data)
         {
             Values values1 = new Values();
 
