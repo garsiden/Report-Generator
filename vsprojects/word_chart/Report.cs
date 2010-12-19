@@ -101,6 +101,26 @@ namespace RSMTenon.ReportGenerator
             return chartItem;
         }
 
+        public ChartItem AllocationComparison()
+        {
+            string title = "My Title";
+            var comp = DataContext.ClientWeightingComparison(Client.GUID, Client.StrategyID);
+
+            //var data1 = comp.ToDictionary(c => c.AssetClassName, c => new {w  =  c.WeightingDifference });
+            //var k = data1.Keys.ToArray();
+            //var v = data1.Values.ToArray();
+            var data = comp.ToList();
+            //var keys = data.Keys;
+            //var vals = data.Values;
+            AllocationComparisonBarChart bc = new AllocationComparisonBarChart();
+            C.Chart chart = bc.GenerateChart(title, data);
+            string ccn = "AllocationComparisonChart";
+
+            ChartItem chartItem = new ChartItem { Chart = chart, Title = title, CustomControlName = ccn };
+
+            return chartItem;
+        }
+
         public ChartItem StressTestMarketRise()
         {
             // get chart specs
@@ -115,7 +135,7 @@ namespace RSMTenon.ReportGenerator
 
             // create chart
             StressTestBarChart bc = new StressTestBarChart();
-            C.Chart chart = bc.GenerateChartRise(title);
+            C.Chart chart = bc.GenerateChart(title);
 
             if (Client.ExistingAssets) {
                 var returns1 = getStressTestClientAssetReturn(Client.GUID);
@@ -159,7 +179,7 @@ namespace RSMTenon.ReportGenerator
 
             // create chart
             StressTestBarChart bc = new StressTestBarChart();
-            C.Chart chart = bc.GenerateChartRise(title);
+            C.Chart chart = bc.GenerateChart(title);
 
             if (Client.ExistingAssets) {
                 var returns1 = getStressTestClientAssetReturn(Client.GUID);
