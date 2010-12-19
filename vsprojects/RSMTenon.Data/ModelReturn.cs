@@ -8,7 +8,7 @@ using System.Reflection;
 
 namespace RSMTenon.Data
 {
-    public partial class RepGenDataContext
+    public partial class RepGenDataContext : System.Data.Linq.DataContext
 
     {
         [Function(Name = "dbo.spModelReturn")]
