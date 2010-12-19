@@ -6,14 +6,16 @@ using DocumentFormat.OpenXml.Drawing.Charts;
 using A = DocumentFormat.OpenXml.Drawing;
 using DocumentFormat.OpenXml;
 
+using RSMTenon.Data;
+
 namespace RSMTenon.Graphing
 {
-    public class AllocationBarChart : BarGraph
+    public class AllocationComparisonBarChart : BarGraph
     {
-        public  Chart GenerateChart(string title)
+        public  Chart GenerateChart(string title, List<ClientWeightingDifference>data)
         {
-            double[] vals = { 0.11768250185249102D, -6.1324324147486134E-2D, 4.7902237547416453E-2D, 3.846389646333704E-2F, 0.0D, -6.8212317552127408E-2D, -0.2D, -0.15D, 0.27375221930876331D, 1.7357865276057976E-3D, 0.0D, 0.0D };
-            string[] pointNames = {"Cash",
+            double[] vals3 = { 0.11768250185249102D, -6.1324324147486134E-2D, 4.7902237547416453E-2D, 3.846389646333704E-2F, 0.0D, -6.8212317552127408E-2D, -0.2D, -0.15D, 0.27375221930876331D, 1.7357865276057976E-3D, 0.0D, 0.0D };
+            string[] pointNames3 = {"Cash",
             "UK Gov Bonds",
             "UK Corp Bonds",
             "UK HY Bonds",
@@ -26,11 +28,52 @@ namespace RSMTenon.Graphing
             "Private Equity",
             "Commodities"};
 
+            string[] pointNames = new string[data.Count];
+            double[] vals = new double[data.Count];
+            int i = 0;
+            foreach (var item in data) {
+                pointNames[i] = item.AssetClassName;
+                vals[i++] = item.WeightingDifference;
+            }
             Chart chart1 = new Chart();
 
             Title title1 = GenerateTitle(title, 1200);
             PlotArea plotArea1 = new PlotArea();
+
+            Layout layout1 = new Layout();
+            ManualLayout manualLayout1 = new ManualLayout();
+            LeftMode leftMode1 = new LeftMode() { Val = LayoutModeValues.Edge };
+            TopMode topMode1 = new TopMode() { Val = LayoutModeValues.Edge };
+            Left left1 = new Left() { Val = 0.21001634106211481D };
+            Top top1 = new Top() { Val = 5.2303080634122836E-3D };
+
+            manualLayout1.Append(leftMode1);
+            manualLayout1.Append(topMode1);
+            manualLayout1.Append(left1);
+            manualLayout1.Append(top1);
+
+            //layout1.Append(manualLayout1);
+            //title1.Append(layout1);
+
+
             Layout layout2 = GeneratePlotAreaLayout();
+            ManualLayout manualLayout2 = new ManualLayout();
+            LayoutTarget layoutTarget1 = new LayoutTarget() { Val = LayoutTargetValues.Inner };
+            LeftMode leftMode2 = new LeftMode() { Val = LayoutModeValues.Edge };
+            TopMode topMode2 = new TopMode() { Val = LayoutModeValues.Edge };
+            Left left2 = new Left() { Val = 0.10397108399455671D };
+            Top top2 = new Top() { Val = 0.13928263342174291D };
+            Width width1 = new Width() { Val = 0.88016518444392156D };
+            Height height1 = new Height() { Val = 0.59349350997070749D };
+
+            manualLayout2.Append(layoutTarget1);
+            manualLayout2.Append(leftMode2);
+            manualLayout2.Append(topMode2);
+            manualLayout2.Append(left2);
+            manualLayout2.Append(top2);
+            manualLayout2.Append(width1);
+            manualLayout2.Append(height1);
+
 
             BarChart barChart1 = new BarChart();
             BarDirection barDirection1 = new BarDirection() { Val = BarDirectionValues.Column };
@@ -52,7 +95,7 @@ namespace RSMTenon.Graphing
             ShapeProperties shapeProperties1 = new ShapeProperties();
             A.NoFill noFill3 = new A.NoFill();
 
-            A.Outline outline6 = new A.Outline();// { Width = 25400 };
+            A.Outline outline6 = new A.Outline() { Width = 25400 };
             A.NoFill noFill4 = new A.NoFill();
 
             outline6.Append(noFill4);
