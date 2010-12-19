@@ -83,5 +83,9 @@
         </category>
       </categories>
     </chart>
+    <chart id="allocation-comparison">
+      <control-name>AllocationComparisonChart</control-name>
+      <title>Current Asset Allocation v. {0} Strategy</title>
+    </chart>
   </charts>
 </chart-spec>
