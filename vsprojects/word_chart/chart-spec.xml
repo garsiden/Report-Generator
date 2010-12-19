@@ -4,58 +4,58 @@
     <asset-class id="UKGB" colour-hex="C0C0C0" />
     <asset-class id="GLEQ" colour-hex="808080" />
   </asset-classes>
-  <reports>
-    <report id="weight">
+  <charts>
+    <chart id="weight">
       <control-name>"WeightChart"</control-name>
       <class>AllocationBarChart"></class>
       <title>Current Asset Allocation vs. {0} Strategy</title>
-    </report>
+    </chart>
 
-    <report id="allocation-pie">
+    <chart id="allocation-pie">
       <control-name>AllocationPieChart</control-name>
       <class>AllocationPieChart</class>
       <title>
         <existing-assets>Current Asset Allocation</existing-assets>
         <cash>{0} Model Allocation</cash>
       </title>
-    </report>
+    </chart>
 
-    <report id="drawdown">
+    <chart id="drawdown">
       <control-name>DrawdownChart</control-name>
       <class>DrawdownLineChart"></class>
       <title>Drawdown</title>
-    </report>
+    </chart>
 
-    <report id="rolling-return-1yr">
+    <chart id="rolling-return-1yr">
       <control-name>RollingReturn1YrChart</control-name>
       <class>=RollingReturnLineChart</class>
       <title>1yr Rolling return</title>
-    </report>
+    </chart>
 
-    <report id="rolling-return-3yr">
+    <chart id="rolling-return-3yr">
       <control-name>RollingReturn3YrChart</control-name>
       <class>RollingReturnLineChart</class>
       <title>3yr Rolling return</title>
-    </report>
+    </chart>
 
-    <report id="rolling-return-5yr">
+    <chart id="rolling-return-5yr">
       <control-name>RollingReturn5YrChart</control-name>
       <class>RollingReturnLineChart</class>
       <title>5yr Rolling return</title>
-    </report>
+    </chart>
 
-    <report id="ten-year-return" size-x="15.25" size-y="8.9">
+    <chart id="ten-year-return" size-x="15.25" size-y="8.9">
       <control-name>TenYearReturnChart</control-name>
       <class>TenYearReturnLineChart</class>
       <title>Ten Year Return</title>
       <asset-class id="GLEQ" colour-hex="808080" />
       <asset-class id="CASH" colour-hex="000000" />
       <ima id="IMACautious" colour-hex="C0C0C0"/>
-    </report>
+    </chart>
 
-    <report id="stress-test-market-rise">
+    <chart id="stress-test-market-rise">
       <control-name>StressTestMarketRiseChart</control-name>
-      <class>StressBarChart</class>
+      <class>StressTestBarChart</class>
       <title>Stress Test - Market Rises</title>
       <categories>
         <category id="bull" from="2003-03-31" to="2006-03-31">
@@ -65,6 +65,23 @@
           <point-name>10 Year Returns {0} - {1}</point-name>
         </category>
       </categories>
-    </report>
-  </reports>
+    </chart>
+
+    <chart id="stress-test-market-crash">
+      <control-name>StressTestMarketCrashChart</control-name>
+      <class>StressTestBarChart</class>
+      <title>Stress Test - Market Crashes</title>
+      <categories>
+        <category id="russian-debt-crisis" from="1998-08-31" to="1998-09-30">
+          <point-name>Russian Debt Crisis &amp; LTCM Collapse {0} - {1}</point-name>
+        </category>
+        <category id="economic-slowdown" from="2002-05-31" to="2002-09-30">
+          <point-name>Economic Slowdown {0} - {1}</point-name>
+        </category>
+        <category id="technology-bubble-burst" from="2000-04-28" to="2001-09-28">
+          <point-name>Technology Bubble Bursting {0} - {1}</point-name>
+        </category>
+      </categories>
+    </chart>
+  </charts>
 </chart-spec>
