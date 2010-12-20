@@ -7,6 +7,7 @@ using System.Xml.Linq;
 using System.Xml;
 using System.Globalization;
 
+using DocumentFormat.OpenXml.Wordprocessing;
 using C = DocumentFormat.OpenXml.Drawing.Charts;
 using RSMTenon.Data;
 using RSMTenon.Graphing;
@@ -72,9 +73,59 @@ namespace RSMTenon.ReportGenerator
         private string clientColourHex = "98CC00";
         private DateTime tenYearStart = new DateTime(1999, 9, 30);
 
-        public ChartItem AllocationPieChart()
+        public Table ModelTable()
         {
-            XElement rpt = getChartSpec("allocation-pie");
+            ModelTable modelTable = new ModelTable();
+            string[] colwidths = { "3700", "980", "1180", "1120", "1480", "1120", "1160" };
+            string[] headerText = {null, null, "Weighting", "Amount", "Expected Yield*", "Projected Income" };
+ 
+            Table table1 = modelTable.GenerateTable(colwidths, headerText);
+
+            //  create an asset class section
+            var cellProps = new CellProps[] {
+            new CellProps() { text = "Cash", align = JustificationValues.Left },
+            new CellProps() { text = "1.5%" },
+            new CellProps(),
+            new CellProps(),
+            new CellProps(),
+            new CellProps()
+
+            };
+            var header = modelTable.GenerateTableHeaderRow(cellProps, 255U);
+            table1.Append(header);
+
+            // create a content row
+            cellProps = new CellProps[] {
+            new CellProps() { span = 2, text = "Aviva Emerging Market Local Currency Bond Fund", align = JustificationValues.Left },
+            new CellProps() { span = 0 },
+            new CellProps() { text = "1.50%" },
+            new CellProps() { text = "£15,000" },
+            new CellProps() { text = "0.10%" },
+            new CellProps() { text = "£15.00" }
+            };
+
+            TableRow row = modelTable.GenerateTableRow(cellProps, 255U);
+            table1.Append(row);
+
+            // create a footer row
+            cellProps = new CellProps[] {
+            new CellProps(),
+            new CellProps() { text= "100.0%" },
+            new CellProps(),
+            new CellProps() { text = "£,1000,000", boxed = true },
+            new CellProps(),
+            new CellProps() { text = "£24,779", boxed = true }
+            };
+
+            TableRow footer = modelTable.GenerateTableFooterRow(cellProps, 255U);
+            table1.Append(footer);
+
+            return table1;
+        }
+
+        public ChartItem Allocation()
+        {
+            XElement rpt = getChartSpec("allocation");
             string title = null;
 
             // set title
@@ -103,22 +154,112 @@ namespace RSMTenon.ReportGenerator
 
         public ChartItem AllocationComparison()
         {
-            string title = "My Title";
-            var comp = DataContext.ClientWeightingComparison(Client.GUID, Client.StrategyID);
+            // get chart specs
+            XElement rpt = getChartSpec("allocation-comparison");
 
-            //var data1 = comp.ToDictionary(c => c.AssetClassName, c => new {w  =  c.WeightingDifference });
-            //var k = data1.Keys.ToArray();
-            //var v = data1.Values.ToArray();
+            // set title
+            string title = String.Format(rpt.Element("title").Value, StrategyName);
+
+            var comp = DataContext.ClientWeightingComparison(Client.GUID, Client.StrategyID);
             var data = comp.ToList();
-            //var keys = data.Keys;
-            //var vals = data.Values;
+
             AllocationComparisonBarChart bc = new AllocationComparisonBarChart();
             C.Chart chart = bc.GenerateChart(title, data);
-            string ccn = "AllocationComparisonChart";
+
+            string ccn = rpt.Element("control-name").Value;
+            ChartItem chartItem = new ChartItem { Chart = chart, Title = title, CustomControlName = ccn };
+
+            return chartItem;
+        }
+
+        public ChartItem Drawdown()
+        {
+            // get chart specs
+            XElement rpt = getChartSpec("drawdown");
+
+            // set title
+            string title = rpt.Element("title").Value;
+
+            // get asset classes to plot (default is UKGB and GLEQ)
+            var assets = getAssetClasses();
+
+            // create chart
+            DrawdownLineChart lc = new DrawdownLineChart();
+            C.Chart chart = lc.GenerateChart(title);
+
+            // client assets
+            if (Client.ExistingAssets) {
+                var data1 = getClientAssetDrawdown(Client.GUID);
+                lc.AddLineChartSeries(chart, data1, "Current", clientColourHex);
+
+            }
+
+            // first asset class
+            var data2 = getAssetClassDrawdown(assets[0].ID);
+            lc.AddLineChartSeries(chart, data2, assets[0].Name, assets[0].ColourHex);
+
+            // second asset class
+            var data3 = getAssetClassDrawdown(assets[1].ID);
+            lc.AddLineChartSeries(chart, data3, assets[1].Name, assets[1].ColourHex);
+
+            // model drawdown
+            var data4 = getModelDrawdown(Client.StrategyID);
+            lc.AddLineChartSeries(chart, data4, StrategyName + " Strategy", strategyColourHex);
+
+            string ccn = rpt.Element("control-name").Value;
 
             ChartItem chartItem = new ChartItem { Chart = chart, Title = title, CustomControlName = ccn };
 
             return chartItem;
+        }
+
+        private List<ReturnData> getAssetClassDrawdown(string assetclassId)
+        {
+            var prices = DataContext.HistoricPrice(assetclassId);
+
+            ReturnCalculation calc = new ReturnCalculation();
+
+            var dd = from p in prices
+                     select new ReturnData {
+                         Value = calc.Drawdown(p) - 1,
+                         Date = p.Date
+                     };
+
+            return dd.ToList();
+        }
+
+        private List<ReturnData> getModelDrawdown(string strategyId)
+        {
+            var returns = DataContext.ModelReturn(strategyId);
+
+            ReturnCalculation cp = new ReturnCalculation();
+            ReturnCalculation cd = new ReturnCalculation();
+
+            var dd = from r in returns
+                        let price = cp.Price(r)
+                        select new ReturnData {
+                            Value = cd.Drawdown(price, r.Value) - 1,
+                            Date = r.Date
+                        };
+
+            return dd.ToList();
+        }
+
+        private List<ReturnData> getClientAssetDrawdown(Guid clientGuid)
+        {
+            var returns = DataContext.ClientAssetReturn(clientGuid);
+
+            ReturnCalculation cp = new ReturnCalculation();
+            ReturnCalculation cd = new ReturnCalculation();
+
+            var dd = from r in returns
+                     let price = cp.Price(r)
+                     select new ReturnData {
+                         Value = cd.Drawdown(price, r.Value) - 1,
+                         Date = r.Date
+                     };
+
+            return dd.ToList();
         }
 
         public ChartItem StressTestMarketRise()
@@ -254,7 +395,7 @@ namespace RSMTenon.ReportGenerator
             var prices = from p in returns
                          select new ReturnData {
                              Date = p.Date,
-                             Value = calc.calculatePrice(p)
+                             Value = calc.Price(p)
                          };
 
             return prices.ToDictionary(p => p.Date);
@@ -272,7 +413,7 @@ namespace RSMTenon.ReportGenerator
             var prices = from p in returns
                          select new ReturnData {
                              Date = p.Date,
-                             Value = calc.calculatePrice(p)
+                             Value = calc.Price(p)
                          };
 
             return prices.ToDictionary(p => p.Date);
@@ -346,7 +487,7 @@ namespace RSMTenon.ReportGenerator
             ReturnCalculation calc = new ReturnCalculation();
             var tyr = from d in data
                       select new ReturnData {
-                          Value = calc.rebaseReturn(d),
+                          Value = calc.RebaseReturn(d),
                           Date = d.Date
                       };
 
@@ -414,7 +555,7 @@ namespace RSMTenon.ReportGenerator
             ReturnCalculation calc = new ReturnCalculation();
             var tyr = from d in data
                       select new ReturnData {
-                          Value = calc.rebaseReturn(d),
+                          Value = calc.RebaseReturn(d),
                           Date = d.Date
                       };
 
@@ -427,7 +568,7 @@ namespace RSMTenon.ReportGenerator
 
             var prices = from d in data
                          select new ReturnData {
-                             Value = calc.calculatePrice(d),
+                             Value = calc.Price(d),
                              Date = d.Date
                          };
 
@@ -444,7 +585,7 @@ namespace RSMTenon.ReportGenerator
 
             foreach (var item in to) {
                 var rd = new ReturnData {
-                    Value = calc.calculateRollingReturn(item, from.ElementAt(i++), years),
+                    Value = calc.RollingReturn(item, from.ElementAt(i++), years),
                     Date = item.Date
                 };
                 rv.Add(rd);

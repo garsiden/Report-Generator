@@ -40,9 +40,11 @@ namespace RSMTenon.ReportGenerator
 
             //This.TenYearTest();
             //This.RollingReturnTest();
-            //This.DrawdownTest();
-            //Thread.Sleep(return);
-            //This.StressTest();
+            //This.DrawdownTest2();
+            //This.DrawdownTest3();
+            This.TableDataTest();
+            Thread.Sleep(500000);
+            This.StressTest();
             //return;
             //500000;
 
@@ -69,13 +71,33 @@ namespace RSMTenon.ReportGenerator
             ChartItem chartItem = null;
             string controlName = null;
             
+            // Model Table
+            Table table = report.ModelTable();
+            controlName = "ModelTable";
+            AddTableToDoc(mainPart, table, controlName);
+
+            // Drawdown
+            chartItem = report.Drawdown();
+            controlName = chartItem.CustomControlName;
+            AddChartToDoc(mainPart, chartItem, controlName);
+
+            // Comparison Chart
+            chartItem = report.AllocationComparison();
+            controlName = chartItem.CustomControlName;
+            AddChartToDoc(mainPart, chartItem, controlName);
+
             // Stress Test Market Rise Bar Chart
             chartItem = report.StressTestMarketRise();
             controlName = chartItem.CustomControlName;
             AddChartToDoc(mainPart, chartItem, controlName);
 
+            // Stress Test Market Crash Bar Chart
+            chartItem = report.StressTestMarketCrash();
+            controlName = chartItem.CustomControlName;
+            AddChartToDoc(mainPart, chartItem, controlName);
+
             // Allocation Pie Chart
-            chartItem = report.AllocationPieChart();
+            chartItem = report.Allocation();
             controlName = chartItem.CustomControlName;
             AddChartToDoc(mainPart, chartItem, controlName);
 
@@ -98,9 +120,21 @@ namespace RSMTenon.ReportGenerator
             chartItem = report.TenYearReturn();
             controlName = chartItem.CustomControlName;
             AddChartToDoc(mainPart, chartItem, controlName);
-            
+
             // save and close document
             mainPart.Document.Save();
+        }
+
+        private void TableDataTest()
+        {
+            var ctx = new RepGenDataContext();
+
+            var models = ctx.Models;
+
+            var model = from m in models
+                        where m.StrategyID = "CO"
+                        select m;
+
         }
 
         private void StressTest()
@@ -119,13 +153,36 @@ namespace RSMTenon.ReportGenerator
             int fromDate = (int)(new DateTime(2003, 3, 31).ToOADate());
             int toDate = (int)(new DateTime(2006, 3, 31).ToOADate());
 
-
-
             //var start = hd.Single(h => h.  .Date.Equals(fromDate-2));
             //var end = hd.Single(h => h.Date.Equals(toDate -2));
             var start = hd[fromDate - 2];
             var end = hd[toDate - 2];
             double bull = (end.Value - start.Value) / start.Value;
+
+            // Model
+            var returns = ctx.ModelReturn("CO");
+            var calc = new ReturnCalculation();
+            int rn = 0;
+            var prices = from p in returns
+                         select new RankedReturnData {
+                             RankNumber = rn++,
+                             Date = p.Date,
+                             Value = calc.Price(p)
+                         };
+
+            // Ten Year Return
+            var pd = prices.ToDictionary(p => p.Date);
+            var lastPrice = pd.Last();
+            var fromMod = pd.ElementAt(pd.Count() - 121);
+            double tyrMod = Math.Log(lastPrice.Value.Value / fromMod.Value.Value);
+
+            // Bull
+            int fromInt = ReturnData.IntegerDate(new DateTime(2003, 3, 31));
+            int toInt = ReturnData.IntegerDate(new DateTime(2006, 3, 31));
+            var startMod = pd[fromInt];
+            var endMod = pd[toInt];
+            double bullMod = (endMod.Value - startMod.Value) / startMod.Value;
+
 
         }
         private void RollingReturnTest()
@@ -139,7 +196,7 @@ namespace RSMTenon.ReportGenerator
 
             var prices = from d in data
                          select new ReturnData {
-                             Value = calc.calculatePrice(d),
+                             Value = calc.Price(d),
                              Date = d.Date
                          };
 
@@ -151,7 +208,7 @@ namespace RSMTenon.ReportGenerator
 
             foreach (var item in p2) {
                 var rd = new ReturnData {
-                    Value = calc.calculateRollingReturn(item, p1.ElementAt(i++)),
+                    Value = calc.RollingReturn(item, p1.ElementAt(i++)),
                     Date = item.Date
                 };
                 p3.Add(rd);
@@ -165,13 +222,13 @@ namespace RSMTenon.ReportGenerator
         private void TenYearTest()
         {
             var ctx = new RepGenDataContext();
-            var data = ctx.ModelReturn( "CO", new DateTime(1999, 9, 30));
-//            var data = ctx.AssetClassReturn(new DateTime(1999, 9, 30), "GLEQ");
+            var data = ctx.ModelReturn("CO", new DateTime(1999, 9, 30));
+            //            var data = ctx.AssetClassReturn(new DateTime(1999, 9, 30), "GLEQ");
 
             ReturnCalculation calc = new ReturnCalculation();
             var match = from d in data
                         select new ReturnData {
-                            Value = calc.rebaseReturn(d),
+                            Value = calc.RebaseReturn(d),
                             Date = d.Date
                         };
 
@@ -191,7 +248,7 @@ namespace RSMTenon.ReportGenerator
             ReturnCalculation calc = new ReturnCalculation();
             var match = from d in data
                         select new ReturnData {
-                            Value = calc.calculatePrice(d),
+                            Value = calc.Price(d),
                             Date = d.Date
                         };
 
@@ -202,11 +259,54 @@ namespace RSMTenon.ReportGenerator
 
         }
 
+        private void DrawdownTest3()
+        {
+
+            var ctx = new RepGenDataContext();
+            var data = ctx.ModelReturn("CO");
+
+            ReturnCalculation calcPrice = new ReturnCalculation();
+            ReturnCalculation calcDrawdown = new ReturnCalculation();
+
+            var match = from d in data
+                        let price = calcPrice.Price(d)
+                        select new ReturnData {
+                            Value = calcDrawdown.Drawdown(price, d.Value) - 1,
+                            Date = d.Date
+                        };
+
+            foreach (var item in match) {
+                Console.WriteLine("{0}\t{1}", item.Date, item.Value);
+            }
+        }
+
+        private void DrawdownTest2()
+        {
+
+            var ctx = new RepGenDataContext();
+            var data = ctx.HistoricPrice("UKGB");
+
+            ReturnCalculation calc = new ReturnCalculation();
+
+            var match = from d in data
+                        select new ReturnData {
+                            Value = calc.Drawdown(d) - 1,
+                            Date = d.Date
+                        };
+
+            foreach (var item in match) {
+                Console.WriteLine("{0}\t{1}", item.Date, item.Value);
+            }
+            //Thread.Sleep(500000);
+
+        }
+
         private void DrawdownTest()
         {
 
             var ctx = new RepGenDataContext();
             var data = ctx.Drawdown("UKGB");
+
 
             var match = from d in data
                         select new ReturnData {
@@ -218,7 +318,6 @@ namespace RSMTenon.ReportGenerator
                 Console.WriteLine("{0}\t{1}", item.Date, item.Value);
             }
             Thread.Sleep(500000);
-
         }
 
         private double calculateDrawdown(DrawdownData drawdown)
@@ -244,8 +343,8 @@ namespace RSMTenon.ReportGenerator
 
             // generate Pie Chart and add to ChartSpace
             //StressBarChart bc = new StressBarChart();
-            AllocationBarChart bc = new AllocationBarChart();
-            C.Chart chart = bc.GenerateChart(title);
+            AllocationComparisonBarChart bc = new AllocationComparisonBarChart();
+            C.Chart chart = bc.GenerateChart(title, null);
             chartSpace.Append(chart);
 
             // set ChartPart ChartSpace
@@ -300,5 +399,30 @@ namespace RSMTenon.ReportGenerator
             run.Append(drawing);
         }
 
+        private void AddTableToDoc(MainDocumentPart mainPart, Table table, string controlName)
+        {
+            // open document and create table
+            //WordprocessingDocument myDoc = WordprocessingDocument.Open(docName, true);
+            //MainDocumentPart mainPart = myDoc.MainDocumentPart;
+            Document doc = mainPart.Document;
+            
+
+            // create table to hold strategy details
+            // add table to doc and save
+            List<SdtBlock> stdList =
+                mainPart.Document.Descendants<SdtBlock>()
+                .Where(s => controlName
+                .Contains
+                (s.SdtProperties.GetFirstChild<SdtAlias>().Val.Value)).ToList();
+
+            if (stdList.Count != 0) {
+                SdtBlock sdt = stdList.First<SdtBlock>();
+                OpenXmlElement parent = sdt.Parent;
+                parent.InsertAfter(table, sdt);
+                //sdt.Remove();
+            }
+
+            doc.Save();
+        }
     }
 }

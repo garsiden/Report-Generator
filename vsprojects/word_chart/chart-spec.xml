@@ -11,8 +11,8 @@
       <title>Current Asset Allocation vs. {0} Strategy</title>
     </chart>
 
-    <chart id="allocation-pie">
-      <control-name>AllocationPieChart</control-name>
+    <chart id="allocation">
+      <control-name>AllocationChart</control-name>
       <class>AllocationPieChart</class>
       <title>
         <existing-assets>Current Asset Allocation</existing-assets>
@@ -85,7 +85,7 @@
     </chart>
     <chart id="allocation-comparison">
       <control-name>AllocationComparisonChart</control-name>
-      <title>Current Asset Allocation v. {0} Strategy</title>
+      <title>Current Asset Allocation vs {0} Strategy</title>
     </chart>
   </charts>
 </chart-spec>
