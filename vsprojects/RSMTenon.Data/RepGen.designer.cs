@@ -51,6 +51,9 @@ namespace RSMTenon.Data
     partial void InsertModel(Model instance);
     partial void UpdateModel(Model instance);
     partial void DeleteModel(Model instance);
+    partial void InsertClientWeightingDifference(ClientWeightingDifference instance);
+    partial void UpdateClientWeightingDifference(ClientWeightingDifference instance);
+    partial void DeleteClientWeightingDifference(ClientWeightingDifference instance);
     #endregion
 		
 		public RepGenDataContext() : 
@@ -155,18 +158,19 @@ namespace RSMTenon.Data
 			}
 		}
 		
+		public System.Data.Linq.Table<ClientWeightingDifference> ClientWeightingDifferences
+		{
+			get
+			{
+				return this.GetTable<ClientWeightingDifference>();
+			}
+		}
+		
 		[Function(Name="dbo.spDrawdown")]
 		public ISingleResult<DrawdownData> Drawdown([Parameter(DbType="NChar(4)")] string assetClassID)
 		{
 			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), assetClassID);
 			return ((ISingleResult<DrawdownData>)(result.ReturnValue));
-		}
-		
-		[Function(Name="dbo.spClientAssetPrice")]
-		public ISingleResult<ReturnData> ClientAssetPrice([Parameter(Name="ClientGUID", DbType="UniqueIdentifier")] System.Nullable<System.Guid> clientGUID)
-		{
-			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), clientGUID);
-			return ((ISingleResult<ReturnData>)(result.ReturnValue));
 		}
 		
 		[Function(Name="dbo.spRollingReturn")]
@@ -176,11 +180,39 @@ namespace RSMTenon.Data
 			return ((ISingleResult<ReturnData>)(result.ReturnValue));
 		}
 		
-		[Function(Name="dbo.spModelReturn")]
-		public ISingleResult<ReturnData> ModelReturn([Parameter(DbType="Char(2)")] string strategyId)
+		[Function(Name="dbo.spAssetClassReturn")]
+		public ISingleResult<ReturnData> AssetClassReturn([Parameter(DbType="DateTime")] System.Nullable<System.DateTime> startDate, [Parameter(DbType="NChar(4)")] string assetClassID)
 		{
-			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), strategyId);
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), startDate, assetClassID);
 			return ((ISingleResult<ReturnData>)(result.ReturnValue));
+		}
+		
+		[Function(Name="dbo.spModelReturn")]
+		public ISingleResult<ReturnData> ModelReturn([Parameter(DbType="Char(2)")] string strategyId, [Parameter(DbType="DateTime")] System.Nullable<System.DateTime> startDate)
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), strategyId, startDate);
+			return ((ISingleResult<ReturnData>)(result.ReturnValue));
+		}
+		
+		[Function(Name="dbo.spHistoricPrice")]
+		public ISingleResult<ReturnData> HistoricPrice([Parameter(DbType="NChar(4)")] string assetClassID)
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), assetClassID);
+			return ((ISingleResult<ReturnData>)(result.ReturnValue));
+		}
+		
+		[Function(Name="dbo.spClientAssetReturn")]
+		public ISingleResult<ReturnData> ClientAssetReturn([Parameter(Name="ClientGUID", DbType="UniqueIdentifier")] System.Nullable<System.Guid> clientGUID)
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), clientGUID);
+			return ((ISingleResult<ReturnData>)(result.ReturnValue));
+		}
+		
+		[Function(Name="dbo.spClientWeightingComparison")]
+		public ISingleResult<ClientWeightingDifference> ClientWeightingComparison([Parameter(DbType="UniqueIdentifier")] System.Nullable<System.Guid> clientGUID, [Parameter(DbType="NChar(2)")] string strategyID)
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), clientGUID, strategyID);
+			return ((ISingleResult<ClientWeightingDifference>)(result.ReturnValue));
 		}
 	}
 	
@@ -390,7 +422,7 @@ namespace RSMTenon.Data
 			}
 		}
 		
-		[Association(Name="tblAssetClass_tblClientAsset", Storage="_ClientAssets", ThisKey="ID", OtherKey="AssetClassID")]
+		[Association(Name="AssetClass_ClientAsset", Storage="_ClientAssets", ThisKey="ID", OtherKey="AssetClassID")]
 		public EntitySet<ClientAsset> ClientAssets
 		{
 			get
@@ -403,7 +435,7 @@ namespace RSMTenon.Data
 			}
 		}
 		
-		[Association(Name="tblAssetClass_tblClientAssetClass", Storage="_ClientAssetClasses", ThisKey="ID", OtherKey="AssetClassID")]
+		[Association(Name="AssetClass_ClientAssetClass", Storage="_ClientAssetClasses", ThisKey="ID", OtherKey="AssetClassID")]
 		public EntitySet<ClientAssetClass> ClientAssetClasses
 		{
 			get
@@ -416,7 +448,7 @@ namespace RSMTenon.Data
 			}
 		}
 		
-		[Association(Name="tblAssetClass_tblModelBreakdown", Storage="_ModelBreakdowns", ThisKey="ID", OtherKey="AssetClassID")]
+		[Association(Name="AssetClass_ModelBreakdown", Storage="_ModelBreakdowns", ThisKey="ID", OtherKey="AssetClassID")]
 		public EntitySet<ModelBreakdown> ModelBreakdowns
 		{
 			get
@@ -429,7 +461,7 @@ namespace RSMTenon.Data
 			}
 		}
 		
-		[Association(Name="tblAssetClass_tblModel", Storage="_Models", ThisKey="ID", OtherKey="AssetClassID")]
+		[Association(Name="AssetClass_Model", Storage="_Models", ThisKey="ID", OtherKey="AssetClassID")]
 		public EntitySet<Model> Models
 		{
 			get
@@ -757,7 +789,7 @@ namespace RSMTenon.Data
 			}
 		}
 		
-		[Association(Name="tblClient_tblClientAsset", Storage="_ClientAssets", ThisKey="GUID", OtherKey="ClientGUID")]
+		[Association(Name="Client_ClientAsset", Storage="_ClientAssets", ThisKey="GUID", OtherKey="ClientGUID")]
 		public EntitySet<ClientAsset> ClientAssets
 		{
 			get
@@ -770,7 +802,7 @@ namespace RSMTenon.Data
 			}
 		}
 		
-		[Association(Name="tblClient_tblClientAssetClass", Storage="_ClientAssetClasses", ThisKey="GUID", OtherKey="ClientGUID")]
+		[Association(Name="Client_ClientAssetClass", Storage="_ClientAssetClasses", ThisKey="GUID", OtherKey="ClientGUID")]
 		public EntitySet<ClientAssetClass> ClientAssetClasses
 		{
 			get
@@ -783,7 +815,7 @@ namespace RSMTenon.Data
 			}
 		}
 		
-		[Association(Name="tblStrategy_tblClient", Storage="_Strategy", ThisKey="StrategyID", OtherKey="ID", IsForeignKey=true)]
+		[Association(Name="Strategy_Client", Storage="_Strategy", ThisKey="StrategyID", OtherKey="ID", IsForeignKey=true)]
 		public Strategy Strategy
 		{
 			get
@@ -1013,7 +1045,7 @@ namespace RSMTenon.Data
 			}
 		}
 		
-		[Association(Name="tblAssetClass_tblClientAsset", Storage="_AssetClass", ThisKey="AssetClassID", OtherKey="ID", IsForeignKey=true)]
+		[Association(Name="AssetClass_ClientAsset", Storage="_AssetClass", ThisKey="AssetClassID", OtherKey="ID", IsForeignKey=true)]
 		public AssetClass AssetClass
 		{
 			get
@@ -1047,7 +1079,7 @@ namespace RSMTenon.Data
 			}
 		}
 		
-		[Association(Name="tblClient_tblClientAsset", Storage="_Client", ThisKey="ClientGUID", OtherKey="GUID", IsForeignKey=true, DeleteOnNull=true, DeleteRule="CASCADE")]
+		[Association(Name="Client_ClientAsset", Storage="_Client", ThisKey="ClientGUID", OtherKey="GUID", IsForeignKey=true, DeleteOnNull=true, DeleteRule="CASCADE")]
 		public Client Client
 		{
 			get
@@ -1253,7 +1285,7 @@ namespace RSMTenon.Data
 			}
 		}
 		
-		[Association(Name="tblAssetClass_tblClientAssetClass", Storage="_AssetClass", ThisKey="AssetClassID", OtherKey="ID", IsForeignKey=true)]
+		[Association(Name="AssetClass_ClientAssetClass", Storage="_AssetClass", ThisKey="AssetClassID", OtherKey="ID", IsForeignKey=true)]
 		public AssetClass AssetClass
 		{
 			get
@@ -1287,7 +1319,7 @@ namespace RSMTenon.Data
 			}
 		}
 		
-		[Association(Name="tblClient_tblClientAssetClass", Storage="_Client", ThisKey="ClientGUID", OtherKey="GUID", IsForeignKey=true, DeleteOnNull=true, DeleteRule="CASCADE")]
+		[Association(Name="Client_ClientAssetClass", Storage="_Client", ThisKey="ClientGUID", OtherKey="GUID", IsForeignKey=true, DeleteOnNull=true, DeleteRule="CASCADE")]
 		public Client Client
 		{
 			get
@@ -1728,7 +1760,7 @@ namespace RSMTenon.Data
 			}
 		}
 		
-		[Association(Name="tblStrategy_tblClient", Storage="_Clients", ThisKey="ID", OtherKey="StrategyID")]
+		[Association(Name="Strategy_Client", Storage="_Clients", ThisKey="ID", OtherKey="StrategyID")]
 		public EntitySet<Client> Clients
 		{
 			get
@@ -1741,7 +1773,7 @@ namespace RSMTenon.Data
 			}
 		}
 		
-		[Association(Name="tblStrategy_tblModelBreakdown", Storage="_ModelBreakdowns", ThisKey="ID", OtherKey="StrategyID")]
+		[Association(Name="Strategy_ModelBreakdown", Storage="_ModelBreakdowns", ThisKey="ID", OtherKey="StrategyID")]
 		public EntitySet<ModelBreakdown> ModelBreakdowns
 		{
 			get
@@ -1754,7 +1786,7 @@ namespace RSMTenon.Data
 			}
 		}
 		
-		[Association(Name="Strategy_tblModel", Storage="_Models", ThisKey="ID", OtherKey="StrategyID")]
+		[Association(Name="Strategy_Model", Storage="_Models", ThisKey="ID", OtherKey="StrategyID")]
 		public EntitySet<Model> Models
 		{
 			get
@@ -1975,7 +2007,7 @@ namespace RSMTenon.Data
 			}
 		}
 		
-		[Association(Name="tblAssetClass_tblModelBreakdown", Storage="_AssetClass", ThisKey="AssetClassID", OtherKey="ID", IsForeignKey=true)]
+		[Association(Name="AssetClass_ModelBreakdown", Storage="_AssetClass", ThisKey="AssetClassID", OtherKey="ID", IsForeignKey=true)]
 		public AssetClass AssetClass
 		{
 			get
@@ -2009,7 +2041,7 @@ namespace RSMTenon.Data
 			}
 		}
 		
-		[Association(Name="tblStrategy_tblModelBreakdown", Storage="_Strategy", ThisKey="StrategyID", OtherKey="ID", IsForeignKey=true)]
+		[Association(Name="Strategy_ModelBreakdown", Storage="_Strategy", ThisKey="StrategyID", OtherKey="ID", IsForeignKey=true)]
 		public Strategy Strategy
 		{
 			get
@@ -2287,7 +2319,7 @@ namespace RSMTenon.Data
 			}
 		}
 		
-		[Association(Name="tblAssetClass_tblModel", Storage="_AssetClass", ThisKey="AssetClassID", OtherKey="ID", IsForeignKey=true)]
+		[Association(Name="AssetClass_Model", Storage="_AssetClass", ThisKey="AssetClassID", OtherKey="ID", IsForeignKey=true)]
 		public AssetClass AssetClass
 		{
 			get
@@ -2321,7 +2353,7 @@ namespace RSMTenon.Data
 			}
 		}
 		
-		[Association(Name="Strategy_tblModel", Storage="_Strategy", ThisKey="StrategyID", OtherKey="ID", IsForeignKey=true, DeleteOnNull=true, DeleteRule="CASCADE")]
+		[Association(Name="Strategy_Model", Storage="_Strategy", ThisKey="StrategyID", OtherKey="ID", IsForeignKey=true, DeleteOnNull=true, DeleteRule="CASCADE")]
 		public Strategy Strategy
 		{
 			get
@@ -2417,6 +2449,116 @@ namespace RSMTenon.Data
 				{
 					this._Value = value;
 				}
+			}
+		}
+	}
+	
+	[Table(Name="")]
+	public partial class ClientWeightingDifference : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private string _AssetClassID;
+		
+		private string _AssetClassName;
+		
+		private double _WeightingDifference;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnAssetClassIDChanging(string value);
+    partial void OnAssetClassIDChanged();
+    partial void OnAssetClassNameChanging(string value);
+    partial void OnAssetClassNameChanged();
+    partial void OnWeightingDifferenceChanging(double value);
+    partial void OnWeightingDifferenceChanged();
+    #endregion
+		
+		public ClientWeightingDifference()
+		{
+			OnCreated();
+		}
+		
+		[Column(Storage="_AssetClassID", DbType="NChar(4) NOT NULL", CanBeNull=false)]
+		public string AssetClassID
+		{
+			get
+			{
+				return this._AssetClassID;
+			}
+			set
+			{
+				if ((this._AssetClassID != value))
+				{
+					this.OnAssetClassIDChanging(value);
+					this.SendPropertyChanging();
+					this._AssetClassID = value;
+					this.SendPropertyChanged("AssetClassID");
+					this.OnAssetClassIDChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_AssetClassName", DbType="NVarChar(50) NOT NULL", CanBeNull=false)]
+		public string AssetClassName
+		{
+			get
+			{
+				return this._AssetClassName;
+			}
+			set
+			{
+				if ((this._AssetClassName != value))
+				{
+					this.OnAssetClassNameChanging(value);
+					this.SendPropertyChanging();
+					this._AssetClassName = value;
+					this.SendPropertyChanged("AssetClassName");
+					this.OnAssetClassNameChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_WeightingDifference", DbType="Float NOT NULL", IsPrimaryKey=true)]
+		public double WeightingDifference
+		{
+			get
+			{
+				return this._WeightingDifference;
+			}
+			set
+			{
+				if ((this._WeightingDifference != value))
+				{
+					this.OnWeightingDifferenceChanging(value);
+					this.SendPropertyChanging();
+					this._WeightingDifference = value;
+					this.SendPropertyChanged("WeightingDifference");
+					this.OnWeightingDifferenceChanged();
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
 		}
 	}
