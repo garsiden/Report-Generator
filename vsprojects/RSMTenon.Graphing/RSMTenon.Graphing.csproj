@@ -47,7 +47,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AllocationBarChart.cs" />
+    <Compile Include="AllocationComparisonBarChart.cs" />
     <Compile Include="AllocationPieChart.cs" />
     <Compile Include="BarGraph.cs" />
     <Compile Include="DrawdownLineChart.cs" />
@@ -58,7 +58,7 @@
     <Compile Include="PieGraph.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RollingReturnLineChart.cs" />
-    <Compile Include="StressBarChart.cs" />
+    <Compile Include="StressTestBarChart.cs" />
     <Compile Include="TenYearLineChart.cs" />
   </ItemGroup>
   <ItemGroup>

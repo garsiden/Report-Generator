@@ -10,6 +10,14 @@ namespace RSMTenon.Graphing
 {
     public class DrawdownLineChart : LineGraph
     {
+        public DrawdownLineChart()
+        {
+            this.axisFormat = "mmm\\-yy";
+            this.valueFormat = "0.0%";
+            this.dateAxisFormat = "mmm\\-yy";
+            this.valueAxisFormat = "0%";
+        }
+
         public Chart GenerateChart(string title)
         {
             int[] dates = { 35430, 35461, 35489, 35520, 35550, 35580, 35611, 35642, 35671, 35703 };
@@ -17,10 +25,15 @@ namespace RSMTenon.Graphing
             float[] vals2 = { 0F, 0F, -5.7615622628477414E-3F, -3.4050797058708955E-2F, 0F, 0F, 0F, 0F, -5.6756873038475431E-2F, -3.7456787148310035E-3F };
             float[] vals3 = { 0F, 0F, 0F, -1.0539275509624078E-2F, 0F, 0F, 0F, 0F, -2.5648874058951119E-3F, 0F };
 
+            // c:chart (Chart)
             Chart chart1 = new Chart();
 
-            Title title1 = GenerateTitle(title, 1200);
+            // c:title (Title)
+            Title title1 = GenerateTitle(title, TITLE_FONT_SIZE);
+
+            // c:plotArea (PlotArea)
             PlotArea plotArea1 = new PlotArea();
+            // c:layout (Layout)
             Layout layout2 = new Layout();
 
             LineChart lineChart1 = new LineChart();
