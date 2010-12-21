@@ -12,5 +12,16 @@ namespace RSMTenon.Data
         public decimal Weighting { get; set; }
     }
 
-    
+    public class RankedReturnData : ReturnData
+    {
+        public int RankNumber;
+    }
+
+    public class ModelTableData
+    {
+        public string AssetClassId;
+        public string AssetClassName;
+        public IGrouping<string, Model> Investments;
+        public decimal Weighting;
+    } 
 }

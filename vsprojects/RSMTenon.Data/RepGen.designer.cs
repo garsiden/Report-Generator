@@ -86,14 +86,6 @@ namespace RSMTenon.Data
 			OnCreated();
 		}
 		
-		public System.Data.Linq.Table<DrawdownData> DrawdownDatas
-		{
-			get
-			{
-				return this.GetTable<DrawdownData>();
-			}
-		}
-		
 		public System.Data.Linq.Table<AssetClass> AssetClasses
 		{
 			get
@@ -166,13 +158,6 @@ namespace RSMTenon.Data
 			}
 		}
 		
-		[Function(Name="dbo.spDrawdown")]
-		public ISingleResult<DrawdownData> Drawdown([Parameter(DbType="NChar(4)")] string assetClassID)
-		{
-			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), assetClassID);
-			return ((ISingleResult<DrawdownData>)(result.ReturnValue));
-		}
-		
 		[Function(Name="dbo.spRollingReturn")]
 		public ISingleResult<ReturnData> RollingReturn([Parameter(DbType="Int")] System.Nullable<int> years, [Parameter(DbType="NChar(4)")] string assetClassID)
 		{
@@ -213,87 +198,6 @@ namespace RSMTenon.Data
 		{
 			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), clientGUID, strategyID);
 			return ((ISingleResult<ClientWeightingDifference>)(result.ReturnValue));
-		}
-	}
-	
-	[Table(Name="dbo.vwDrawdown")]
-	public partial class DrawdownData
-	{
-		
-		private long _RankNumber;
-		
-		private int _Date;
-		
-		private double _PreviousValue;
-		
-		private double _Value;
-		
-		public DrawdownData()
-		{
-		}
-		
-		[Column(Storage="_RankNumber", DbType="BigInt")]
-		public long RankNumber
-		{
-			get
-			{
-				return this._RankNumber;
-			}
-			set
-			{
-				if ((this._RankNumber != value))
-				{
-					this._RankNumber = value;
-				}
-			}
-		}
-		
-		[Column(Storage="_Date", DbType="Int")]
-		public int Date
-		{
-			get
-			{
-				return this._Date;
-			}
-			set
-			{
-				if ((this._Date != value))
-				{
-					this._Date = value;
-				}
-			}
-		}
-		
-		[Column(Storage="_PreviousValue", DbType="Float NOT NULL")]
-		public double PreviousValue
-		{
-			get
-			{
-				return this._PreviousValue;
-			}
-			set
-			{
-				if ((this._PreviousValue != value))
-				{
-					this._PreviousValue = value;
-				}
-			}
-		}
-		
-		[Column(Storage="_Value", DbType="Float NOT NULL")]
-		public double Value
-		{
-			get
-			{
-				return this._Value;
-			}
-			set
-			{
-				if ((this._Value != value))
-				{
-					this._Value = value;
-				}
-			}
 		}
 	}
 	

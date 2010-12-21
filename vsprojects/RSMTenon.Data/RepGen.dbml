@@ -1,14 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Database Name="RepGen" EntityNamespace="RSMTenon.Data" ContextNamespace="RSMTenon.Data" Class="RepGenDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
   <Connection Mode="AppSettings" ConnectionString="Data Source=.\SQLEXPRESS;AttachDbFilename=&quot;C:\Program Files\Microsoft SQL Server\MSSQL.1\MSSQL\Backup\RepGen.mdf&quot;;Integrated Security=True;Connect Timeout=30;User Instance=True" SettingsObjectName="RSMTenon.Data.Properties.Settings" SettingsPropertyName="RepGenConnectionString3" Provider="System.Data.SqlClient" />
-  <Table Name="dbo.vwDrawdown" Member="DrawdownDatas">
-    <Type Name="DrawdownData" Id="ID1">
-      <Column Name="RankNumber" Type="System.Int64" DbType="BigInt" CanBeNull="false" />
-      <Column Name="Date" Type="System.Int32" DbType="Int" CanBeNull="false" />
-      <Column Name="PreviousValue" Type="System.Double" DbType="Float NOT NULL" CanBeNull="false" />
-      <Column Name="Value" Type="System.Double" DbType="Float NOT NULL" CanBeNull="false" />
-    </Type>
-  </Table>
   <Table Name="dbo.tblAssetClass" Member="AssetClasses">
     <Type Name="AssetClass">
       <Column Name="ID" Type="System.String" DbType="NChar(4) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
@@ -107,48 +99,44 @@
     </Type>
   </Table>
   <Table Name="dbo.vwReturnData" Member="ReturnDatas">
-    <Type Name="ReturnData" Id="ID2">
+    <Type Name="ReturnData" Id="ID1">
       <Column Name="Date" Type="System.Int32" DbType="Int" CanBeNull="false" />
       <Column Name="Value" Type="System.Double" DbType="Float NOT NULL" CanBeNull="false" />
     </Type>
   </Table>
   <Table Name="" Member="ClientWeightingDifferences">
-    <Type Name="ClientWeightingDifference" Id="ID3">
+    <Type Name="ClientWeightingDifference" Id="ID2">
       <Column Name="AssetClassID" Type="System.String" DbType="NChar(4) NOT NULL" CanBeNull="false" />
       <Column Name="AssetClassName" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
       <Column Name="WeightingDifference" Type="System.Double" DbType="Float NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
     </Type>
   </Table>
-  <Function Name="dbo.spDrawdown" Method="Drawdown">
-    <Parameter Name="assetClassID" Type="System.String" DbType="NChar(4)" />
-    <ElementType IdRef="ID1" />
-  </Function>
   <Function Name="dbo.spRollingReturn" Method="RollingReturn">
     <Parameter Name="years" Type="System.Int32" DbType="Int" />
     <Parameter Name="assetClassID" Type="System.String" DbType="NChar(4)" />
-    <ElementType IdRef="ID2" />
+    <ElementType IdRef="ID1" />
   </Function>
   <Function Name="dbo.spAssetClassReturn" Method="AssetClassReturn">
     <Parameter Name="startDate" Type="System.DateTime" DbType="DateTime" />
     <Parameter Name="assetClassID" Type="System.String" DbType="NChar(4)" />
-    <ElementType IdRef="ID2" />
+    <ElementType IdRef="ID1" />
   </Function>
   <Function Name="dbo.spModelReturn" Method="ModelReturn">
     <Parameter Name="strategyId" Type="System.String" DbType="Char(2)" />
     <Parameter Name="startDate" Type="System.DateTime" DbType="DateTime" />
-    <ElementType IdRef="ID2" />
+    <ElementType IdRef="ID1" />
   </Function>
   <Function Name="dbo.spHistoricPrice" Method="HistoricPrice">
     <Parameter Name="assetClassID" Type="System.String" DbType="NChar(4)" />
-    <ElementType IdRef="ID2" />
+    <ElementType IdRef="ID1" />
   </Function>
   <Function Name="dbo.spClientAssetReturn" Method="ClientAssetReturn">
     <Parameter Name="ClientGUID" Parameter="clientGUID" Type="System.Guid" DbType="UniqueIdentifier" />
-    <ElementType IdRef="ID2" />
+    <ElementType IdRef="ID1" />
   </Function>
   <Function Name="dbo.spClientWeightingComparison" Method="ClientWeightingComparison">
     <Parameter Name="clientGUID" Type="System.Guid" DbType="UniqueIdentifier" />
     <Parameter Name="strategyID" Type="System.String" DbType="NChar(2)" />
-    <ElementType IdRef="ID3" />
+    <ElementType IdRef="ID2" />
   </Function>
 </Database>
