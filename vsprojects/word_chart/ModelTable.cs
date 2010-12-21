@@ -19,9 +19,9 @@ namespace RSMTenon.ReportGenerator
 
     class ModelTable
     {
-        private string[] colwidths;
+        private List<string> colwidths;
 
-        public Table GenerateTable(string[] colwidths, string[] headers)
+        public Table GenerateTable(List<string> colwidths, List<string> headers)
         {
             this.colwidths = colwidths;
             Table table1 = new Table();
@@ -327,7 +327,7 @@ namespace RSMTenon.ReportGenerator
         }
 
 
-        private TableRow generateHeaderRow(string[] headers)
+        private TableRow generateHeaderRow(List<string> headers)
         {
             // create a header row
             var cellProps = new List<CellProps>();
