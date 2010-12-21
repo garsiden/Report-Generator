@@ -61,7 +61,7 @@ namespace RSMTenon.ReportGenerator
         }
 
 
-        public TableRow GenerateTableHeaderRow( CellProps[] cellProps, UInt32Value height)
+        public TableRow GenerateTableHeaderRow( List<CellProps> cellProps, UInt32Value height)
         {
             TableRow tableRow1 = new TableRow();
             TableRowProperties tableRowProperties1 = generateTableRowProperties(height);
@@ -135,7 +135,7 @@ namespace RSMTenon.ReportGenerator
             return tableRow1;
         }
 
-        public TableRow GenerateTableRow(CellProps[] cellProps, UInt32Value height)
+        public TableRow GenerateTableRow(List<CellProps> cellProps, UInt32Value height)
         {
             TableRow tableRow1 = new TableRow();
             TableRowProperties tableRowProperties1 = generateTableRowProperties(height);
@@ -210,7 +210,7 @@ namespace RSMTenon.ReportGenerator
             return tableRow1;
         }
 
-        public TableRow GenerateTableFooterRow(CellProps[] cellProps, UInt32Value height)
+        public TableRow GenerateTableFooterRow(List<CellProps> cellProps, UInt32Value height)
         {
             // Add table row properties
             TableRow tableRow1 = new TableRow();
@@ -330,14 +330,15 @@ namespace RSMTenon.ReportGenerator
         private TableRow generateHeaderRow(string[] headers)
         {
             // create a header row
-            CellProps[] cellProps = new CellProps[] {
-            new CellProps() { text = headers[0], align = JustificationValues.Left },
-            new CellProps() { text = headers[1] },
-            new CellProps() { text = headers[2] },
-            new CellProps() { text = headers[3] },
-            new CellProps() { text = headers[4] },
-            new CellProps() { text = headers[5] }
-            };
+            var cellProps = new List<CellProps>();
+
+            cellProps.Add(new CellProps() { text = headers[0], align = JustificationValues.Left });
+            cellProps.Add(new CellProps() { text = headers[1] });
+            cellProps.Add(new CellProps() { text = headers[2] });
+            cellProps.Add(new CellProps() { text = headers[3] });
+            cellProps.Add(new CellProps() { text = headers[4] });
+            cellProps.Add(new CellProps() { text = headers[5] });
+
             TableRow header = GenerateTableHeaderRow(cellProps, 465U);
 
             return header;

@@ -21,7 +21,6 @@ namespace RSMTenon.ReportGenerator
     {
         static string path = @"C:\Documents and Settings\garsiden\My Documents\Projects\RepGen\test\chart\";
         static string generated = path + "ChartDoc.docx";
-        private double previousDD = 1;
         private uint docPrId = 0U;
 
         static void Main(string[] args)
@@ -42,9 +41,9 @@ namespace RSMTenon.ReportGenerator
             //This.RollingReturnTest();
             //This.DrawdownTest2();
             //This.DrawdownTest3();
-            This.TableDataTest();
-            Thread.Sleep(500000);
-            This.StressTest();
+            //This.TableDataTest();
+            //Thread.Sleep(500000);
+            //This.StressTest();
             //return;
             //500000;
 
@@ -127,13 +126,30 @@ namespace RSMTenon.ReportGenerator
 
         private void TableDataTest()
         {
-            var ctx = new RepGenDataContext();
 
+            //decimal amount = 0;
+
+            var ctx = new RepGenDataContext();
             var models = ctx.Models;
 
             var model = from m in models
-                        where m.StrategyID = "CO"
-                        select m;
+                        where m.StrategyID == "CO"
+                        group m by m.AssetClassID
+                            into g
+                            select new //ModelTableData
+                            {
+                                AssetClassId = g.Key,
+                                AssetClassName = g.First().AssetClass.Name,
+                                Investments = g,
+                                Weighting = g.Sum(m => m.Weighting)
+                            };
+
+            foreach (var g in model) {
+                Console.WriteLine("{0}\t{1}", g.AssetClassId, g.Weighting);
+                foreach (var m in g.Investments) {
+                    Console.WriteLine("\t{0}\t{1}\t{2}\t{3}", m.AssetClass.Name, m.InvestmentName, m.Weighting, m.ExpectedYield);
+                }
+            }
 
         }
 
@@ -300,37 +316,6 @@ namespace RSMTenon.ReportGenerator
             //Thread.Sleep(500000);
 
         }
-
-        private void DrawdownTest()
-        {
-
-            var ctx = new RepGenDataContext();
-            var data = ctx.Drawdown("UKGB");
-
-
-            var match = from d in data
-                        select new ReturnData {
-                            Value = calculateDrawdown(d),
-                            Date = d.Date
-                        };
-
-            foreach (var item in match) {
-                Console.WriteLine("{0}\t{1}", item.Date, item.Value);
-            }
-            Thread.Sleep(500000);
-        }
-
-        private double calculateDrawdown(DrawdownData drawdown)
-        {
-            if ((drawdown.Value / drawdown.PreviousValue > 1) && previousDD == 1) {
-                return 1D;
-            } else {
-                double retval = Math.Min(1D, previousDD * (1 + Math.Log(drawdown.Value / drawdown.PreviousValue)));
-                this.previousDD = retval;
-                return retval;
-            }
-        }
-
         public void InsertBarChartIntoWord(MainDocumentPart mainPart, string title)
         {
             // open Word documant and remove existing content from control

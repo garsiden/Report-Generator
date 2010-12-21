@@ -78,46 +78,56 @@ namespace RSMTenon.ReportGenerator
             ModelTable modelTable = new ModelTable();
             string[] colwidths = { "3700", "980", "1180", "1120", "1480", "1120", "1160" };
             string[] headerText = {null, null, "Weighting", "Amount", "Expected Yield*", "Projected Income" };
- 
+
+            var model = getModelTableData(Client.StrategyID).ToList();
+
             Table table1 = modelTable.GenerateTable(colwidths, headerText);
 
-            //  create an asset class section
-            var cellProps = new CellProps[] {
-            new CellProps() { text = "Cash", align = JustificationValues.Left },
-            new CellProps() { text = "1.5%" },
-            new CellProps(),
-            new CellProps(),
-            new CellProps(),
-            new CellProps()
+            decimal amount = Client.InvestmentAmount;
+            decimal totalIncome = 0;
+            decimal income = 0;
+            string moneyFormat = "£#,##0";
+            string pcFormat1 = "0.0%";
+            string pcFormat2 = "0.00%";
 
-            };
-            var header = modelTable.GenerateTableHeaderRow(cellProps, 255U);
-            table1.Append(header);
+            foreach (var g in model) {
+                var headerCells = new List<CellProps>();
+                headerCells.Add(new CellProps { text = g.AssetClassName, align = JustificationValues.Left });
+                headerCells.Add(new CellProps { text = Math.Round(g.Weighting, 1).ToString("0.0%") });
+                for (int i = 1; i <= 4; i++) {
+                    headerCells.Add(new CellProps());
+                }
+                var header = modelTable.GenerateTableHeaderRow(headerCells, 255U);
+                table1.Append(header);
 
-            // create a content row
-            cellProps = new CellProps[] {
-            new CellProps() { span = 2, text = "Aviva Emerging Market Local Currency Bond Fund", align = JustificationValues.Left },
-            new CellProps() { span = 0 },
-            new CellProps() { text = "1.50%" },
-            new CellProps() { text = "£15,000" },
-            new CellProps() { text = "0.10%" },
-            new CellProps() { text = "£15.00" }
-            };
-
-            TableRow row = modelTable.GenerateTableRow(cellProps, 255U);
-            table1.Append(row);
+                foreach (var inv in g.Investments) {
+                    income = amount * inv.ExpectedYield;
+                    totalIncome += income;
+                    var contentCells = new List<CellProps>();
+                    contentCells.Add(new CellProps { span = 2, text = inv.InvestmentName, align = JustificationValues.Left });
+                    contentCells.Add(new CellProps() { span = 0 });
+                    contentCells.Add(new CellProps() { text = Math.Round(inv.Weighting, 2).ToString(pcFormat1) });
+                    contentCells.Add(new CellProps() { text = (amount * inv.Weighting).ToString(moneyFormat) });
+                    contentCells.Add(new CellProps() { text = inv.ExpectedYield.ToString(pcFormat2) });
+                    contentCells.Add(new CellProps() { text = income.ToString(moneyFormat) });
+                    TableRow row = modelTable.GenerateTableRow(contentCells, 255U);
+                    table1.Append(row);
+               }
+            }
 
             // create a footer row
-            cellProps = new CellProps[] {
-            new CellProps(),
-            new CellProps() { text= "100.0%" },
-            new CellProps(),
-            new CellProps() { text = "£,1000,000", boxed = true },
-            new CellProps(),
-            new CellProps() { text = "£24,779", boxed = true }
-            };
+            var footerCells = new List<CellProps>();
 
-            TableRow footer = modelTable.GenerateTableFooterRow(cellProps, 255U);
+            footerCells.Add( new CellProps() );
+            footerCells.Add(new CellProps() { text= model.Sum(m => m.Weighting).ToString(pcFormat1) });
+            footerCells.Add(new CellProps());
+            footerCells.Add(new CellProps() { text = amount.ToString(moneyFormat), boxed = true });
+            footerCells.Add(new CellProps());
+            footerCells.Add(new CellProps() { text = totalIncome.ToString(moneyFormat), boxed = true });
+
+            //decimal totalWeighting = model.Aggregate(0M, (accum, each) => accum + each.Weighting);
+            
+            TableRow footer = modelTable.GenerateTableFooterRow(footerCells, 255U);
             table1.Append(footer);
 
             return table1;
@@ -226,6 +236,25 @@ namespace RSMTenon.ReportGenerator
                      };
 
             return dd.ToList();
+        }
+
+        private IQueryable<ModelTableData> getModelTableData(string strategyId)
+        {
+            var models = DataContext.Models;
+
+            var modelData = from m in models
+                        where m.StrategyID == "CO"
+                        group m by m.AssetClassID
+                            into g
+                            select new ModelTableData
+                            {
+                                AssetClassId = g.Key,
+                                AssetClassName = g.First().AssetClass.Name,
+                                Investments = g,
+                                Weighting = g.Sum(m => m.Weighting)
+                            };
+
+            return modelData;
         }
 
         private List<ReturnData> getModelDrawdown(string strategyId)
