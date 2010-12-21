@@ -1,11 +1,10 @@
--- =============================================
 -- Author:		Nigel Garside
 -- Create date: 11/12/2010
 -- Description:	Rolling returns for charts
 -- =============================================
-ALTER PROCEDURE [dbo].[Drawdown] 
+ALTER PROCEDURE [dbo].[spDrawdown] 
 	-- Add the parameters for the stored procedure here
-	@asset_class nchar(4) = 'UKGB'
+	@assetClassID nchar(4) = 'UKGB'
 AS
 BEGIN
 	-- SET NOCOUNT ON added to prevent extra result sets from
@@ -17,14 +16,14 @@ BEGIN
 	(
 		SELECT ROW_NUMBER() OVER (ORDER BY [Date]) + 1 AS rn, [value]
 		FROM tblHistoricData
-		WHERE benchmarkID=@asset_class
+		WHERE assetClassID=@assetClassID
 	)
 
 	SELECT  t.rn - 1 AS RankNumber, CAST(t.Date AS INT) AS [Date], f.value as PreviousValue, t.value As [Value]
 	FROM f,
 		(SELECT ROW_NUMBER() OVER (ORDER BY [date]) as rn, [value], [date]
 			FROM tblHistoricData
-			WHERE benchmarkID=@asset_class) AS t
+			WHERE AssetClassID=@assetClassID) AS t
 	WHERE f.rn=t.rn
 
 /*
