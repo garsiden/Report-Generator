@@ -64,8 +64,8 @@ namespace RSMTenon.ReportGenerator
     {
         public Client Client { get; set; }
         private RepGenDataContext context;
-        private XElement specs = null;
-        private static string SPEC_FILE = @"C:\Documents and Settings\garsiden\My Documents\svn\repgen\vsprojects\word_chart\chart-spec.xml";
+        private XElement reportSpec = null;
+        private static string SPEC_FILE = @"C:\Documents and Settings\garsiden\My Documents\svn\repgen\vsprojects\word_chart\report-spec.xml";
         private List<AssetClass> assetClasses = null;
         private string strategyName;
         // "C0C0C0", "808080", "0066CC", "98CC00"
@@ -76,54 +76,68 @@ namespace RSMTenon.ReportGenerator
         public Table ModelTable()
         {
             ModelTable modelTable = new ModelTable();
-            string[] colwidths = { "3700", "980", "1180", "1120", "1480", "1120", "1160" };
-            string[] headerText = {null, null, "Weighting", "Amount", "Expected Yield*", "Projected Income" };
 
+            // get table specifications
+            var tspec = tableSpec("model");
+            uint rowHeight = UInt32.Parse(tspec.Attribute("row-height").Value);
+            var cols = tspec.Element("columns").Elements("column").ToList();
+            var colwidths =  new List<string>();
+            var formats = new List<string>();
+            var colHeaders = new List<string>();
+
+            foreach (var c in cols) {
+                colwidths.Add(c.Attribute("width").Value);
+                var fmt = c.Attributes("format").SingleOrDefault();
+                formats.Add(fmt == null ? "" : fmt.Value);
+                colHeaders.Add(c.Value);
+            }
+
+            // get model investments, grouped by asset class
             var model = getModelTableData(Client.StrategyID).ToList();
 
-            Table table1 = modelTable.GenerateTable(colwidths, headerText);
+            // build table
+            Table table1 = modelTable.GenerateTable(colwidths, colHeaders);
 
             decimal amount = Client.InvestmentAmount;
             decimal totalIncome = 0;
             decimal income = 0;
-            string moneyFormat = "£#,##0";
-            string pcFormat1 = "0.0%";
-            string pcFormat2 = "0.00%";
 
             foreach (var g in model) {
+                // Asset Class sub-headings
                 var headerCells = new List<CellProps>();
                 headerCells.Add(new CellProps { text = g.AssetClassName, align = JustificationValues.Left });
-                headerCells.Add(new CellProps { text = Math.Round(g.Weighting, 1).ToString("0.0%") });
+                headerCells.Add(new CellProps { text = g.Weighting.ToString(formats[2]) });
                 for (int i = 1; i <= 4; i++) {
                     headerCells.Add(new CellProps());
                 }
-                var header = modelTable.GenerateTableHeaderRow(headerCells, 255U);
+                var header = modelTable.GenerateTableHeaderRow(headerCells, rowHeight);
                 table1.Append(header);
 
+                // investment rows for each asset class
                 foreach (var inv in g.Investments) {
                     income = amount * inv.ExpectedYield;
                     totalIncome += income;
                     var contentCells = new List<CellProps>();
                     contentCells.Add(new CellProps { span = 2, text = inv.InvestmentName, align = JustificationValues.Left });
                     contentCells.Add(new CellProps() { span = 0 });
-                    contentCells.Add(new CellProps() { text = Math.Round(inv.Weighting, 2).ToString(pcFormat1) });
-                    contentCells.Add(new CellProps() { text = (amount * inv.Weighting).ToString(moneyFormat) });
-                    contentCells.Add(new CellProps() { text = inv.ExpectedYield.ToString(pcFormat2) });
-                    contentCells.Add(new CellProps() { text = income.ToString(moneyFormat) });
-                    TableRow row = modelTable.GenerateTableRow(contentCells, 255U);
+                    contentCells.Add(new CellProps() { text = inv.Weighting.ToString(formats[2]) });
+                    contentCells.Add(new CellProps() { text = (amount * inv.Weighting).ToString(formats[3])});
+                    contentCells.Add(new CellProps() { text = inv.ExpectedYield.ToString(formats[4]) });
+                    contentCells.Add(new CellProps() { text = income.ToString(formats[5]) });
+                    TableRow row = modelTable.GenerateTableRow(contentCells, rowHeight);
                     table1.Append(row);
                }
             }
 
-            // create a footer row
+            // create a footer row with totals for asset class weighting, investment amount and total income
             var footerCells = new List<CellProps>();
 
-            footerCells.Add( new CellProps() );
-            footerCells.Add(new CellProps() { text= model.Sum(m => m.Weighting).ToString(pcFormat1) });
+            footerCells.Add(new CellProps() );
+            footerCells.Add(new CellProps() { text= model.Sum(m => m.Weighting).ToString(formats[1]) });
             footerCells.Add(new CellProps());
-            footerCells.Add(new CellProps() { text = amount.ToString(moneyFormat), boxed = true });
+            footerCells.Add(new CellProps() { text = amount.ToString(formats[3]), boxed = true });
             footerCells.Add(new CellProps());
-            footerCells.Add(new CellProps() { text = totalIncome.ToString(moneyFormat), boxed = true });
+            footerCells.Add(new CellProps() { text = totalIncome.ToString(formats[5]), boxed = true });
 
             //decimal totalWeighting = model.Aggregate(0M, (accum, each) => accum + each.Weighting);
             
@@ -135,7 +149,7 @@ namespace RSMTenon.ReportGenerator
 
         public ChartItem Allocation()
         {
-            XElement rpt = getChartSpec("allocation");
+            XElement rpt = chartSpec("allocation");
             string title = null;
 
             // set title
@@ -165,7 +179,7 @@ namespace RSMTenon.ReportGenerator
         public ChartItem AllocationComparison()
         {
             // get chart specs
-            XElement rpt = getChartSpec("allocation-comparison");
+            XElement rpt = chartSpec("allocation-comparison");
 
             // set title
             string title = String.Format(rpt.Element("title").Value, StrategyName);
@@ -185,7 +199,7 @@ namespace RSMTenon.ReportGenerator
         public ChartItem Drawdown()
         {
             // get chart specs
-            XElement rpt = getChartSpec("drawdown");
+            XElement rpt = chartSpec("drawdown");
 
             // set title
             string title = rpt.Element("title").Value;
@@ -294,7 +308,7 @@ namespace RSMTenon.ReportGenerator
         public ChartItem StressTestMarketRise()
         {
             // get chart specs
-            XElement rpt = getChartSpec("stress-test-market-rise");
+            XElement rpt = chartSpec("stress-test-market-rise");
 
             // set title
             string title = rpt.Element("title").Value;
@@ -338,7 +352,7 @@ namespace RSMTenon.ReportGenerator
         public ChartItem StressTestMarketCrash()
         {
             // get chart specs
-            XElement rpt = getChartSpec("stress-test-market-crash");
+            XElement rpt = chartSpec("stress-test-market-crash");
 
             // set title
             string title = rpt.Element("title").Value;
@@ -382,7 +396,7 @@ namespace RSMTenon.ReportGenerator
         public ChartItem TenYearReturn()
         {
             // get chart specs
-            XElement rpt = getChartSpec("ten-year-return");
+            XElement rpt = chartSpec("ten-year-return");
 
             // set title
             string title = rpt.Element("title").Value;
@@ -535,7 +549,7 @@ namespace RSMTenon.ReportGenerator
             }
 
             // get chart specs
-            XElement rpt = getChartSpec(id);
+            XElement rpt = chartSpec(id);
 
             // set title
             string title = rpt.Element("title").Value;
@@ -649,7 +663,7 @@ namespace RSMTenon.ReportGenerator
             if (assetClasses == null) {
                 var ctx = DataContext;
                 var allClasses = ctx.AssetClasses.ToDictionary(a => a.ID);
-                var assets = from spec in ChartSpecs.Descendants("asset-class")
+                var assets = from spec in ReportSpec.Descendants("asset-class")
                              select spec;
 
                 var classes = new List<AssetClass>();
@@ -666,13 +680,24 @@ namespace RSMTenon.ReportGenerator
             return assetClasses;
         }
 
-        private XElement getChartSpec(string id)
+        private XElement tableSpec(string id)
         {
-            var spec = (from rep in ChartSpecs.Descendants("chart")
-                        where rep.Attribute("id").Value == id
-                        select rep).Single();
+            var tspec = (from t in ReportSpec.Descendants("table")
+                         where t.Attribute("id").Value == id
+                         select t).Single();
 
-            return spec;
+
+            return tspec;
+                            
+        }
+
+        private XElement chartSpec(string id)
+        {
+            var cspec = (from c in ReportSpec.Descendants("chart")
+                        where c.Attribute("id").Value == id
+                        select c).Single();
+
+            return cspec;
         }
 
         private RepGenDataContext DataContext
@@ -698,14 +723,14 @@ namespace RSMTenon.ReportGenerator
             }
         }
 
-        private XElement ChartSpecs
+        private XElement ReportSpec
         {
             get
             {
-                if (specs == null) {
-                    specs = XElement.Load(SPEC_FILE);
+                if (reportSpec == null) {
+                    reportSpec = XElement.Load(SPEC_FILE);
                 }
-                return specs;
+                return reportSpec;
             }
         }
     }
