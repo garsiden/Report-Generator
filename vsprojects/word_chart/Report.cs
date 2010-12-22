@@ -71,6 +71,7 @@ namespace RSMTenon.ReportGenerator
         // "C0C0C0", "808080", "0066CC", "98CC00"
         private string strategyColourHex = "0066CC";
         private string clientColourHex = "98CC00";
+        private string benchmarkColourHex = "C0C0C0";
         private DateTime tenYearStart = new DateTime(1999, 9, 30);
 
         public Table ModelTable()
@@ -409,18 +410,29 @@ namespace RSMTenon.ReportGenerator
             TenYearLineChart lc = new TenYearLineChart();
             C.Chart chart = lc.GenerateChart(null);
 
+            if (Client.ExistingAssets) {
+                var data1 = getTenYearClientAssetReturn(Client.GUID, tenYearStart);
+                string dataKey1 = "Current";
+                lc.AddLineChartSeries(chart, data1, dataKey1, clientColourHex);
+            }
+
             // first asset class
-            var data2 = tenYearAssetClassReturn(assetClasses[0].ID, tenYearStart);
+            var data2 = getTenYearAssetClassReturn(assetClasses[0].ID, tenYearStart);
             string dataKey2 = assetClasses[0].Name;
-            lc.AddLineChartSeries(chart, data2.ToList(), dataKey2, assetClasses[0].ColourHex);
+             lc.AddLineChartSeries(chart, data2.ToList(), dataKey2, assetClasses[0].ColourHex);
 
             // second asset class
-            var data3 = tenYearAssetClassReturn(assetClasses[1].ID, tenYearStart);
+            var data3 = getTenYearAssetClassReturn(assetClasses[1].ID, tenYearStart);
             string dataKey3 = assetClasses[1].Name;
             lc.AddLineChartSeries(chart, data3.ToList(), dataKey3, assetClasses[1].ColourHex);
+            
+            // IMA Benchmark
+            var data5 = getTenYearBenchmarkReturn("CAMA", tenYearStart);
+            string dataKey5 = Client.Strategy.Benchmark.Name;
+            lc.AddLineChartSeries(chart, data5, dataKey5, benchmarkColourHex);
 
             // strategy
-            var data4 = tenYearModelReturn(Client.StrategyID, tenYearStart);
+            var data4 = getTenYearModelReturn(Client.StrategyID, tenYearStart);
             string dataKey4 = StrategyName;
             lc.AddLineChartSeries(chart, data4, dataKey4, strategyColourHex);
 
@@ -523,7 +535,7 @@ namespace RSMTenon.ReportGenerator
 
 
 
-        private List<ReturnData> tenYearModelReturn(string strategId, DateTime tenYearStart)
+        private List<ReturnData> getTenYearModelReturn(string strategId, DateTime tenYearStart)
         {
             var data = DataContext.ModelReturn(strategId, tenYearStart);
 
@@ -591,7 +603,40 @@ namespace RSMTenon.ReportGenerator
             return chartItem;
         }
 
-        private List<ReturnData> tenYearAssetClassReturn(string assetClassId, DateTime startDate)
+        private List<ReturnData> getTenYearBenchmarkReturn(string benchmarkId, DateTime startDate)
+        {
+            var prices = DataContext.BenchmarkPrice(startDate, benchmarkId);
+
+            ReturnCalculation cr = new ReturnCalculation();
+            ReturnCalculation cb = new ReturnCalculation();
+
+            var tyr = from p in prices
+                      let rtrn = cr.Return(p)
+                      select new ReturnData {
+                          Value = cb.RebaseTest(rtrn),
+                          Date = p.Date
+                      };
+
+            return tyr.ToList();
+        }
+
+        private List<ReturnData> getTenYearClientAssetReturn(Guid clientGuid, DateTime startDate)
+        {
+            var data = DataContext.ClientAssetReturn(startDate, clientGuid);
+
+            ReturnCalculation rc = new ReturnCalculation();
+
+            var tyr = from d in data
+                      select new ReturnData {
+                          Value = rc.RebaseReturn(d),
+                          Date = d.Date
+                      };
+
+            return tyr.ToList();
+        }
+
+
+        private List<ReturnData> getTenYearAssetClassReturn(string assetClassId, DateTime startDate)
         {
             var data = DataContext.AssetClassReturn(startDate, assetClassId);
 
