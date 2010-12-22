@@ -61,6 +61,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="Report.cs" />
+    <Compile Include="TextContent.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\RSMTenon.Data\RSMTenon.Data.csproj">
@@ -83,6 +84,8 @@
     <Service Include="{3259AA49-8AA1-44D3-9025-A0B520596A8C}" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="content-text.xml" />
+    <Content Include="content.xml" />
     <Content Include="report-spec.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
