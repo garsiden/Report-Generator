@@ -14,6 +14,7 @@ using RSMTenon.Graphing;
 
 namespace RSMTenon.ReportGenerator
 {
+    #region Helper Classes
     public class ChartItem
     {
         public C.Chart Chart { get; set; }
@@ -59,6 +60,7 @@ namespace RSMTenon.ReportGenerator
         }
 
     }
+    #endregion Helper Classes
 
     public class Report
     {
@@ -74,6 +76,7 @@ namespace RSMTenon.ReportGenerator
         private string benchmarkColourHex = "C0C0C0";
         private DateTime tenYearStart = new DateTime(1999, 9, 30);
 
+        # region Model Table
         public Table ModelTable()
         {
             ModelTable modelTable = new ModelTable();
@@ -148,6 +151,9 @@ namespace RSMTenon.ReportGenerator
             return table1;
         }
 
+        #endregion model table
+
+        #region Charts
         public ChartItem Allocation()
         {
             XElement rpt = chartSpec("allocation");
@@ -236,74 +242,6 @@ namespace RSMTenon.ReportGenerator
             ChartItem chartItem = new ChartItem { Chart = chart, Title = title, CustomControlName = ccn };
 
             return chartItem;
-        }
-
-        private List<ReturnData> getAssetClassDrawdown(string assetclassId)
-        {
-            var prices = DataContext.HistoricPrice(assetclassId);
-
-            ReturnCalculation calc = new ReturnCalculation();
-
-            var dd = from p in prices
-                     select new ReturnData {
-                         Value = calc.Drawdown(p) - 1,
-                         Date = p.Date
-                     };
-
-            return dd.ToList();
-        }
-
-        private IQueryable<ModelTableData> getModelTableData(string strategyId)
-        {
-            var models = DataContext.Models;
-
-            var modelData = from m in models
-                        where m.StrategyID == "CO"
-                        group m by m.AssetClassID
-                            into g
-                            select new ModelTableData
-                            {
-                                AssetClassId = g.Key,
-                                AssetClassName = g.First().AssetClass.Name,
-                                Investments = g,
-                                Weighting = g.Sum(m => m.Weighting)
-                            };
-
-            return modelData;
-        }
-
-        private List<ReturnData> getModelDrawdown(string strategyId)
-        {
-            var returns = DataContext.ModelReturn(strategyId);
-
-            ReturnCalculation cp = new ReturnCalculation();
-            ReturnCalculation cd = new ReturnCalculation();
-
-            var dd = from r in returns
-                        let price = cp.Price(r)
-                        select new ReturnData {
-                            Value = cd.Drawdown(price, r.Value) - 1,
-                            Date = r.Date
-                        };
-
-            return dd.ToList();
-        }
-
-        private List<ReturnData> getClientAssetDrawdown(Guid clientGuid)
-        {
-            var returns = DataContext.ClientAssetReturn(clientGuid);
-
-            ReturnCalculation cp = new ReturnCalculation();
-            ReturnCalculation cd = new ReturnCalculation();
-
-            var dd = from r in returns
-                     let price = cp.Price(r)
-                     select new ReturnData {
-                         Value = cd.Drawdown(price, r.Value) - 1,
-                         Date = r.Date
-                     };
-
-            return dd.ToList();
         }
 
         public ChartItem StressTestMarketRise()
@@ -419,13 +357,13 @@ namespace RSMTenon.ReportGenerator
             // first asset class
             var data2 = getTenYearAssetClassReturn(assetClasses[0].ID, tenYearStart);
             string dataKey2 = assetClasses[0].Name;
-             lc.AddLineChartSeries(chart, data2.ToList(), dataKey2, assetClasses[0].ColourHex);
+            lc.AddLineChartSeries(chart, data2.ToList(), dataKey2, assetClasses[0].ColourHex);
 
             // second asset class
             var data3 = getTenYearAssetClassReturn(assetClasses[1].ID, tenYearStart);
             string dataKey3 = assetClasses[1].Name;
             lc.AddLineChartSeries(chart, data3.ToList(), dataKey3, assetClasses[1].ColourHex);
-            
+
             // IMA Benchmark
             var data5 = getTenYearBenchmarkReturn("CAMA", tenYearStart);
             string dataKey5 = Client.Strategy.Benchmark.Name;
@@ -443,18 +381,125 @@ namespace RSMTenon.ReportGenerator
 
         }
 
-        private Dictionary<int, ReturnData> getStressTestClientAssetReturn(Guid clientGuid)
+        public ChartItem RollingReturnChart(int years)
+        {
+            string id = null;
+
+            switch (years) {
+                case 1: id = "rolling-return-1yr"; break;
+                case 3: id = "rolling-return-3yr"; break;
+                case 5: id = "rolling-return-5yr"; break;
+                default: throw new ArgumentException("Illegal argument: 1, 3 or 5 only are valid");
+            }
+
+            // get chart specs
+            XElement rpt = chartSpec(id);
+
+            // set title
+            string title = rpt.Element("title").Value;
+
+            // get asset classes to plot (default is UKGB and GLEQ)
+            var assets = getAssetClasses();
+            var ctx = DataContext;
+
+            // create chart
+            RollingReturnLineChart lc = new RollingReturnLineChart();
+            C.Chart chart = lc.GenerateChart(title);
+
+            if (Client.ExistingAssets) {
+                string dataKey1 = "Current";
+                var data1 = ctx.ClientAssetReturn(Client.GUID);
+                var rrex = getRollingReturn(data1, years);
+                lc.AddLineChartSeries(chart, rrex, dataKey1, clientColourHex);
+            }
+
+            // first asset class
+            var data2 = ctx.RollingReturn(years, assetClasses[0].ID);
+            string dataKey2 = assetClasses[0].Name;
+            lc.AddLineChartSeries(chart, data2.ToList(), dataKey2, assetClasses[0].ColourHex);
+
+            // add second data series
+            var data3 = ctx.RollingReturn(years, assetClasses[1].ID);
+            string dataKey3 = assetClasses[1].Name;
+            lc.AddLineChartSeries(chart, data3.ToList(), dataKey3, assetClasses[1].ColourHex);
+
+            // add appropriate strategy data
+            var data4 = ctx.ModelReturn(Client.StrategyID);
+            string dataKey4 = StrategyName + " Strategy";
+            var rr = getRollingReturn(data4, years);
+            lc.AddLineChartSeries(chart, rr, dataKey4, strategyColourHex);
+
+            string ccn = rpt.Element("control-name").Value;
+            ChartItem chartItem = new ChartItem { Chart = chart, Title = title, CustomControlName = ccn };
+
+            return chartItem;
+        }
+
+        #endregion Charts
+
+        #region Database Access
+
+        private RepGenDataContext DataContext
+        {
+            get
+            {
+                if (context == null) {
+                    context = new RepGenDataContext();
+                }
+
+                return context;
+            }
+        }
+
+        private List<ReturnData> getAssetClassDrawdown(string assetclassId)
+        {
+            var prices = DataContext.HistoricPrice(assetclassId);
+
+            ReturnCalculation calc = new ReturnCalculation();
+
+            var dd = from p in prices
+                     select new ReturnData {
+                         Value = calc.Drawdown(p) - 1,
+                         Date = p.Date
+                     };
+
+            return dd.ToList();
+        }
+
+        private List<ReturnData> getClientAssetDrawdown(Guid clientGuid)
         {
             var returns = DataContext.ClientAssetReturn(clientGuid);
-            var calc = new ReturnCalculation();
-            var prices = from p in returns
-                         select new ReturnData {
-                             Date = p.Date,
-                             Value = calc.Price(p)
-                         };
 
-            return prices.ToDictionary(p => p.Date);
+            ReturnCalculation cp = new ReturnCalculation();
+            ReturnCalculation cd = new ReturnCalculation();
+
+            var dd = from r in returns
+                     let price = cp.Price(r)
+                     select new ReturnData {
+                         Value = cd.Drawdown(price, r.Value) - 1,
+                         Date = r.Date
+                     };
+
+            return dd.ToList();
         }
+
+        private List<ReturnData> getModelDrawdown(string strategyId)
+        {
+            var returns = DataContext.ModelReturn(strategyId);
+
+            ReturnCalculation cp = new ReturnCalculation();
+            ReturnCalculation cd = new ReturnCalculation();
+
+            var dd = from r in returns
+                     let price = cp.Price(r)
+                     select new ReturnData {
+                         Value = cd.Drawdown(price, r.Value) - 1,
+                         Date = r.Date
+                     };
+
+            return dd.ToList();
+        }
+
 
         private Dictionary<int, ReturnData> getStressTestAssetClassReturn(string assetClassId)
         {
@@ -472,6 +517,176 @@ namespace RSMTenon.ReportGenerator
                          };
 
             return prices.ToDictionary(p => p.Date);
+        }
+
+
+        private List<ReturnData> getTenYearModelReturn(string strategId, DateTime tenYearStart)
+        {
+            var data = DataContext.ModelReturn(strategId, tenYearStart);
+
+            ReturnCalculation calc = new ReturnCalculation();
+            var tyr = from d in data
+                      select new ReturnData {
+                          Value = calc.RebaseReturn(d),
+                          Date = d.Date
+                      };
+
+            return tyr.ToList();
+        }
+
+        private IQueryable<ModelTableData> getModelTableData(string strategyId)
+        {
+            var models = DataContext.Models;
+
+            var modelData = from m in models
+                            where m.StrategyID == "CO"
+                            group m by m.AssetClassID
+                                into g
+                                select new ModelTableData {
+                                    AssetClassId = g.Key,
+                                    AssetClassName = g.First().AssetClass.Name,
+                                    Investments = g,
+                                    Weighting = g.Sum(m => m.Weighting)
+                                };
+
+            return modelData;
+        }
+
+        private Dictionary<int, ReturnData> getStressTestClientAssetReturn(Guid clientGuid)
+        {
+            var returns = DataContext.ClientAssetReturn(clientGuid);
+            var calc = new ReturnCalculation();
+            var prices = from p in returns
+                         select new ReturnData {
+                             Date = p.Date,
+                             Value = calc.Price(p)
+                         };
+
+            return prices.ToDictionary(p => p.Date);
+        }
+
+        private List<ReturnData> getTenYearBenchmarkReturn(string benchmarkId, DateTime startDate)
+        {
+            var prices = DataContext.BenchmarkPrice(startDate, benchmarkId);
+
+            ReturnCalculation cr = new ReturnCalculation();
+            ReturnCalculation cb = new ReturnCalculation();
+
+            var tyr = from p in prices
+                      let rtrn = cr.Return(p)
+                      select new ReturnData {
+                          Value = cb.RebaseReturn(rtrn),
+                          Date = p.Date
+                      };
+
+            return tyr.ToList();
+        }
+
+        private List<ReturnData> getTenYearClientAssetReturn(Guid clientGuid, DateTime startDate)
+        {
+            var data = DataContext.ClientAssetReturn(startDate, clientGuid);
+
+            ReturnCalculation rc = new ReturnCalculation();
+
+            var tyr = from d in data
+                      select new ReturnData {
+                          Value = rc.RebaseReturn(d),
+                          Date = d.Date
+                      };
+
+            return tyr.ToList();
+        }
+
+
+        private List<ReturnData> getTenYearAssetClassReturn(string assetClassId, DateTime startDate)
+        {
+            var data = DataContext.AssetClassReturn(startDate, assetClassId);
+
+            ReturnCalculation calc = new ReturnCalculation();
+            var tyr = from d in data
+                      select new ReturnData {
+                          Value = calc.RebaseReturn(d),
+                          Date = d.Date
+                      };
+
+            return tyr.ToList(); ;
+        }
+
+        private List<AssetClass> getAssetClasses(XElement rpt)
+        {
+            var ctx = DataContext;
+            var allClasses = ctx.AssetClasses.ToDictionary(a => a.ID);
+            var assets = from spec in rpt.Descendants("asset-class")
+                         select spec;
+
+            var classes = new List<AssetClass>();
+            foreach (var a in assets) {
+                classes.Add(new AssetClass() {
+                    ID = a.Attribute("id").Value,
+                    Name = allClasses[a.Attribute("id").Value].Name,
+                    ColourHex = a.Attribute("colour-hex").Value
+                });
+            }
+            assetClasses = classes;
+
+            return assetClasses;
+        }
+
+        private List<AssetClass> getAssetClasses()
+        {
+            if (assetClasses == null) {
+                var ctx = DataContext;
+                var allClasses = ctx.AssetClasses.ToDictionary(a => a.ID);
+                var assets = from spec in ReportSpec.Descendants("asset-class")
+                             select spec;
+
+                var classes = new List<AssetClass>();
+                foreach (var a in assets) {
+                    classes.Add(new AssetClass() {
+                        ID = a.Attribute("id").Value,
+                        Name = allClasses[a.Attribute("id").Value].Name,
+                        ColourHex = a.Attribute("colour-hex").Value
+                    });
+                }
+                assetClasses = classes;
+            }
+
+            return assetClasses;
+        }
+
+        #endregion Database Access
+
+        #region Chart Series Calculations
+        private List<ReturnData> getRollingReturn(ISingleResult<ReturnData> data, int years)
+        {
+            ReturnCalculation calc = new ReturnCalculation();
+
+            var prices = from d in data
+                         select new ReturnData {
+                             Value = calc.Price(d),
+                             Date = d.Date
+                         };
+
+            // create the 'From' list, starting with index value of 100
+            var from = prices.ToList();
+            from.Insert(0, new ReturnData() { Value = 100D });
+
+            // create the 'To' list, starting with a years * 12 offset
+            var to = from.Skip(12 * years);
+
+            // new list for return values
+            var rv = new List<ReturnData>();
+            int i = 0;
+
+            foreach (var item in to) {
+                var rd = new ReturnData {
+                    Value = calc.RollingReturn(item, from.ElementAt(i++), years),
+                    Date = item.Date
+                };
+                rv.Add(rd);
+            }
+
+            return rv;
         }
 
         private BarGraphSeries stressTestMarketCrashSeries(Dictionary<int, ReturnData> pd, string seriesName, string colourHex, XElement rpt)
@@ -533,196 +748,19 @@ namespace RSMTenon.ReportGenerator
             return series;
         }
 
+        #endregion Chart Series Calculations
 
+        #region XML File Access
 
-        private List<ReturnData> getTenYearModelReturn(string strategId, DateTime tenYearStart)
+        private XElement ReportSpec
         {
-            var data = DataContext.ModelReturn(strategId, tenYearStart);
-
-            ReturnCalculation calc = new ReturnCalculation();
-            var tyr = from d in data
-                      select new ReturnData {
-                          Value = calc.RebaseReturn(d),
-                          Date = d.Date
-                      };
-
-            return tyr.ToList();
-        }
-
-        public ChartItem RollingReturnChart(int years)
-        {
-            string id = null;
-
-            switch (years) {
-                case 1: id = "rolling-return-1yr"; break;
-                case 3: id = "rolling-return-3yr"; break;
-                case 5: id = "rolling-return-5yr"; break;
-                default: throw new ArgumentException("Illegal argument: 1, 3 or 5 only are valid");
-            }
-
-            // get chart specs
-            XElement rpt = chartSpec(id);
-
-            // set title
-            string title = rpt.Element("title").Value;
-
-            // get asset classes to plot (default is UKGB and GLEQ)
-            var assets = getAssetClasses();
-            var ctx = DataContext;
-
-            // create chart
-            RollingReturnLineChart lc = new RollingReturnLineChart();
-            C.Chart chart = lc.GenerateChart(title);
-
-            if (Client.ExistingAssets) {
-                string dataKey1 = "Current";
-                var data1 = ctx.ClientAssetReturn(Client.GUID);
-                var rrex = getRollingReturn(data1, years);
-                lc.AddLineChartSeries(chart, rrex, dataKey1, clientColourHex);
-            }
-
-            // first asset class
-            var data2 = ctx.RollingReturn(years, assetClasses[0].ID);
-            string dataKey2 = assetClasses[0].Name;
-            lc.AddLineChartSeries(chart, data2.ToList(), dataKey2, assetClasses[0].ColourHex);
-
-            // add second data series
-            var data3 = ctx.RollingReturn(years, assetClasses[1].ID);
-            string dataKey3 = assetClasses[1].Name;
-            lc.AddLineChartSeries(chart, data3.ToList(), dataKey3, assetClasses[1].ColourHex);
-
-            // add appropriate strategy data
-            var data4 = ctx.ModelReturn(Client.StrategyID);
-            string dataKey4 = StrategyName + " Strategy";
-            var rr = getRollingReturn(data4, years);
-            lc.AddLineChartSeries(chart, rr, dataKey4, strategyColourHex);
-
-            string ccn = rpt.Element("control-name").Value;
-            ChartItem chartItem = new ChartItem { Chart = chart, Title = title, CustomControlName = ccn };
-
-            return chartItem;
-        }
-
-        private List<ReturnData> getTenYearBenchmarkReturn(string benchmarkId, DateTime startDate)
-        {
-            var prices = DataContext.BenchmarkPrice(startDate, benchmarkId);
-
-            ReturnCalculation cr = new ReturnCalculation();
-            ReturnCalculation cb = new ReturnCalculation();
-
-            var tyr = from p in prices
-                      let rtrn = cr.Return(p)
-                      select new ReturnData {
-                          Value = cb.RebaseTest(rtrn),
-                          Date = p.Date
-                      };
-
-            return tyr.ToList();
-        }
-
-        private List<ReturnData> getTenYearClientAssetReturn(Guid clientGuid, DateTime startDate)
-        {
-            var data = DataContext.ClientAssetReturn(startDate, clientGuid);
-
-            ReturnCalculation rc = new ReturnCalculation();
-
-            var tyr = from d in data
-                      select new ReturnData {
-                          Value = rc.RebaseReturn(d),
-                          Date = d.Date
-                      };
-
-            return tyr.ToList();
-        }
-
-
-        private List<ReturnData> getTenYearAssetClassReturn(string assetClassId, DateTime startDate)
-        {
-            var data = DataContext.AssetClassReturn(startDate, assetClassId);
-
-            ReturnCalculation calc = new ReturnCalculation();
-            var tyr = from d in data
-                      select new ReturnData {
-                          Value = calc.RebaseReturn(d),
-                          Date = d.Date
-                      };
-
-            return tyr.ToList(); ;
-        }
-
-        private List<ReturnData> getRollingReturn(ISingleResult<ReturnData> data, int years)
-        {
-            ReturnCalculation calc = new ReturnCalculation();
-
-            var prices = from d in data
-                         select new ReturnData {
-                             Value = calc.Price(d),
-                             Date = d.Date
-                         };
-
-            // create the 'From' list, starting with index value of 100
-            var from = prices.ToList();
-            from.Insert(0, new ReturnData() { Value = 100D });
-
-            // create the 'To' list, starting with a years * 12 offset
-            var to = from.Skip(12 * years);
-
-            // new list for return values
-            var rv = new List<ReturnData>();
-            int i = 0;
-
-            foreach (var item in to) {
-                var rd = new ReturnData {
-                    Value = calc.RollingReturn(item, from.ElementAt(i++), years),
-                    Date = item.Date
-                };
-                rv.Add(rd);
-            }
-
-            return rv;
-        }
-
-
-        private List<AssetClass> getAssetClasses(XElement rpt)
-        {
-            var ctx = DataContext;
-            var allClasses = ctx.AssetClasses.ToDictionary(a => a.ID);
-            var assets = from spec in rpt.Descendants("asset-class")
-                         select spec;
-
-            var classes = new List<AssetClass>();
-            foreach (var a in assets) {
-                classes.Add(new AssetClass() {
-                    ID = a.Attribute("id").Value,
-                    Name = allClasses[a.Attribute("id").Value].Name,
-                    ColourHex = a.Attribute("colour-hex").Value
-                });
-            }
-            assetClasses = classes;
-
-            return assetClasses;
-        }
-
-        private List<AssetClass> getAssetClasses()
-        {
-            if (assetClasses == null) {
-                var ctx = DataContext;
-                var allClasses = ctx.AssetClasses.ToDictionary(a => a.ID);
-                var assets = from spec in ReportSpec.Descendants("asset-class")
-                             select spec;
-
-                var classes = new List<AssetClass>();
-                foreach (var a in assets) {
-                    classes.Add(new AssetClass() {
-                        ID = a.Attribute("id").Value,
-                        Name = allClasses[a.Attribute("id").Value].Name,
-                        ColourHex = a.Attribute("colour-hex").Value
-                    });
+            get
+            {
+                if (reportSpec == null) {
+                    reportSpec = XElement.Load(SPEC_FILE);
                 }
-                assetClasses = classes;
+                return reportSpec;
             }
-
-            return assetClasses;
         }
 
         private XElement tableSpec(string id)
@@ -745,17 +783,9 @@ namespace RSMTenon.ReportGenerator
             return cspec;
         }
 
-        private RepGenDataContext DataContext
-        {
-            get
-            {
-                if (context == null) {
-                    context = new RepGenDataContext();
-                }
+        #endregion XML file access
 
-                return context;
-            }
-        }
+        #region Properties
 
         private string StrategyName
         {
@@ -768,15 +798,6 @@ namespace RSMTenon.ReportGenerator
             }
         }
 
-        private XElement ReportSpec
-        {
-            get
-            {
-                if (reportSpec == null) {
-                    reportSpec = XElement.Load(SPEC_FILE);
-                }
-                return reportSpec;
-            }
-        }
+        #endregion Properties
     }
 }
