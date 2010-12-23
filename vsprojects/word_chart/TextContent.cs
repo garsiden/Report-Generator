@@ -39,7 +39,7 @@ namespace RSMTenon.ReportGenerator
             twenty
         }
 
-        public void  GenerateTextContent(Client client)
+        public void GenerateTextContent(Client client)
         {
             string tempDocFile = createTempDocFile();
 
@@ -257,7 +257,7 @@ namespace RSMTenon.ReportGenerator
             string tempDir = Environment.GetEnvironmentVariable("temp");
             string sourceFile = @"../../App_Data/template1.dotx";
             string tempFile = String.Format("{0}\\{1}.dotx", tempDir, Guid.NewGuid().ToString());
-            copyFile(sourceFile, tempFile);
+            copyFile2(sourceFile, tempFile);
 
             return tempFile;
         }
@@ -276,9 +276,22 @@ namespace RSMTenon.ReportGenerator
             fw.Close();
         }
 
+        private void copyFile2(string source, string destination)
+        {
+            using (FileStream input = new FileStream(source, FileMode.Open, FileAccess.Read, FileShare.Read)) {
+                using (FileStream output = new FileStream(destination, FileMode.Create, FileAccess.Write)) {
+                    byte[] buffer = new byte[16384];
+                    int len;
+                    while ((len = input.Read(buffer, 0, buffer.Length)) > 0) {
+                        output.Write(buffer, 0, len);
+                    }
+                }
+            }
+        }
+
         private void createTempXmlFile(string source, string destination)
         {
-            copyFile(source, destination);
+            copyFile2(source, destination);
         }
     }
 }
