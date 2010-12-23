@@ -11,30 +11,55 @@ namespace RSMTenon.ReportGenerator
 {
     class TextContent
     {
+
+        private string sourceXml = @"../../App_Data/content.xml";
+        private string destinationXml = @"../../App_Data/content_temp.xml";
+
+        public enum TimeHorizon
+        {
+            one = 1,
+            two,
+            three,
+            four,
+            five,
+            six,
+            seven,
+            eight,
+            nine,
+            ten,
+            eleven,
+            twelve,
+            thirteen,
+            fourteen,
+            fifteen,
+            sixteen,
+            seventeen,
+            eighteen,
+            nineteen,
+            twenty
+        }
+
         public void  GenerateTextContent(Client client)
         {
-            string strTemp = Environment.GetEnvironmentVariable("temp");
-            string strFileName = String.Format("{0}\\{1}.dotx", strTemp, Guid.NewGuid().ToString());
-            //File.Copy(Server.MapPath(@"App_Data/suitable1.dotx"), strFileName);
+            string tempDocFile = createTempDocFile();
 
             GetContent(client);
-            string customXml = File.ReadAllText(@"App_Data/content_temp.xml");
-            ReplaceCustomXML(strFileName, customXml);
+            string customXml = File.ReadAllText(destinationXml);
+            replaceCustomXML(tempDocFile, customXml);
 
 
             //Delete the temp file
-            File.Delete(strFileName);
-            File.Delete(@"App_Data/content_temp.xml");
+            //File.Delete(tempFile);
+            //File.Delete(destinationXml);
         }
 
         protected void GetContent(Client client)
         {
-
             // create temp content file
-            File.Copy(@"App_Data/content.xml",@"App_Data/content_temp.xml", true);
+            createTempXmlFile(sourceXml, destinationXml);
 
             XmlDocument doc = new XmlDocument();
-            doc.Load(@"App_Data/content_temp.xml");
+            doc.Load(destinationXml);
 
             // Create an XmlNamespaceManager to resolve the default namespace.
             XmlNamespaceManager nsmgr = new XmlNamespaceManager(doc.NameTable);
@@ -118,15 +143,15 @@ namespace RSMTenon.ReportGenerator
             Decimal portReturn = 0.0M;
 
             switch (client.StrategyID) {
-                case "D": portReturn = 53.1M; break;
-                case "C": portReturn = 46.0M; break;
-                case "B": portReturn = 39.1M; break;
-                case "G": portReturn = 31.8M; break;
-                case "O": portReturn = 29.2M; break;
+                case "CA": portReturn = 53.1M; break;
+                case "CO": portReturn = 46.0M; break;
+                case "BA": portReturn = 39.1M; break;
+                case "GR": portReturn = 31.8M; break;
+                case "AC": portReturn = 29.2M; break;
             }
 
             xmlnode = root.SelectSingleNode("/wmr:repgen/wmr:strategy/wmr:performance/wmr:return", nsmgr);
-            xmlnode.InnerText = String.Format("{0.0}", Decimal.Round(portReturn, 1));
+            xmlnode.InnerText = String.Format("{0}", Decimal.Round(portReturn, 1));
 
             // strategy.performance.rolling-return
             xmlnode = root.SelectSingleNode("/wmr:repgen/wmr:strategy/wmr:performance/wmr:rolling-return", nsmgr);
@@ -207,10 +232,10 @@ namespace RSMTenon.ReportGenerator
             }
 
 
-            doc.Save(@"App_Data/content_temp.xml");
+            doc.Save(destinationXml);
 
         }
-        protected void ReplaceCustomXML(string fileName, string customXML)
+        private void replaceCustomXML(string fileName, string customXML)
         {
             using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(fileName, true)) {
                 MainDocumentPart mainPart = wordDoc.MainDocumentPart;
@@ -227,30 +252,33 @@ namespace RSMTenon.ReportGenerator
 
         }
 
-
-        public enum TimeHorizon
+        private string createTempDocFile()
         {
-            one = 1,
-            two,
-            three,
-            four,
-            five,
-            six,
-            seven,
-            eight,
-            nine,
-            ten,
-            eleven,
-            twelve,
-            thirteen,
-            fourteen,
-            fifteen,
-            sixteen,
-            seventeen,
-            eighteen,
-            nineteen,
-            twenty
+            string tempDir = Environment.GetEnvironmentVariable("temp");
+            string sourceFile = @"../../App_Data/template1.dotx";
+            string tempFile = String.Format("{0}\\{1}.dotx", tempDir, Guid.NewGuid().ToString());
+            copyFile(sourceFile, tempFile);
+
+            return tempFile;
         }
 
+        private void copyFile(string source, string destination)
+        {
+            // copy file allowing sharing
+            FileStream fr = new FileStream(source, FileMode.Open, FileAccess.Read, FileShare.Read);
+            int len = (int)fr.Length;
+            byte[] data = new byte[len];
+            fr.Read(data, 0, len);
+            fr.Close();
+
+            FileStream fw = new FileStream(destination, FileMode.Create, FileAccess.Write);
+            fw.Write(data, 0, len);
+            fw.Close();
+        }
+
+        private void createTempXmlFile(string source, string destination)
+        {
+            copyFile(source, destination);
+        }
     }
 }
