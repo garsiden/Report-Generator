@@ -32,12 +32,13 @@ namespace RSMTenon.ReportGenerator
             //Guid guid = new Guid("636c8103-e06d-4575-aafc-574474c2d7f8");
             //Guid guid = new Guid("979de312-8e99-49d3-9d41-54ecae0cad5c");
             //Guid guid = new Guid("979de312-8e99-49d3-9d41-54ecae0cad5c");
-            Guid guid = new Guid("1426a508-fc66-4e2d-b3cc-b3e1e1240a0e");
+            // 979de312-8e99-49d3-9d41-54ecae0cad5c
+            Guid guid = new Guid("636c8103-e06d-4575-aafc-574474c2d7f8");
             //client.GUID = guid;
             Client client = Client.GetClientByGUID(guid);
             Report report = new Report() { Client = client };
 
-            //This.TenYearTest();
+            //This.TenYearBenchTest();
             //This.RollingReturnTest();
             //This.DrawdownTest2();
             //This.DrawdownTest3();
@@ -254,6 +255,26 @@ namespace RSMTenon.ReportGenerator
             Thread.Sleep(500000);
         }
 
+        private void TenYearBenchTest()
+        {
+            var ctx = new RepGenDataContext();
+            var prices = ctx.BenchmarkPrice(new DateTime(1999, 9, 30), "CAMA");
+
+            ReturnCalculation cr = new ReturnCalculation();
+            ReturnCalculation cp = new ReturnCalculation();
+
+            var tyr = from p in prices
+                      let rtrn = cr.Return(p)
+                      select new ReturnData {
+                          Value = cp.RebaseReturn(rtrn),
+                          Date = p.Date
+                      };
+            foreach (var item in tyr) {
+                Console.WriteLine("{0}\t{1}", item.Date, item.Value);
+            }
+
+
+        }
         private void PriceTest()
         {
 
