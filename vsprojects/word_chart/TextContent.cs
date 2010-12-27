@@ -11,9 +11,7 @@ namespace RSMTenon.ReportGenerator
 {
     class TextContent
     {
-
-        private string sourceXml = @"../../App_Data/content.xml";
-        private string destinationXml = @"../../App_Data/content_temp.xml";
+         private string destinationXml = @"../../App_Data/content_temp.xml";
 
         public enum TimeHorizon
         {
@@ -39,21 +37,21 @@ namespace RSMTenon.ReportGenerator
             twenty
         }
 
-        public void GenerateTextContent(Client client)
+        public void GenerateTextContent(MainDocumentPart mainPart,  Client client, string contentFile)
         {
-            string tempDocFile = createTempDocFile();
+            //string tempDocFile = createTempDocFile();
 
-            GetContent(client);
+            GetContent(client, contentFile);
             string customXml = File.ReadAllText(destinationXml);
-            replaceCustomXML(tempDocFile, customXml);
-
+            replaceCustomXML(mainPart, customXml);
+            mainPart.Document.Save();
 
             //Delete the temp file
             //File.Delete(tempFile);
             //File.Delete(destinationXml);
         }
 
-        protected void GetContent(Client client)
+        protected void GetContent(Client client, string sourceXml)
         {
             // create temp content file
             createTempXmlFile(sourceXml, destinationXml);
@@ -97,12 +95,13 @@ namespace RSMTenon.ReportGenerator
 
             // client.initial-fee
             xmlnode = root.SelectSingleNode("/wmr:repgen/wmr:client/wmr:initial-fee", nsmgr);
-            xmlnode.InnerText = client.InitialFee.ToString("£#,##0");
+            xmlnode.InnerText = client.InitialFee.ToString("0.00%");
 
             // Strategy
             // get strategy object
             Strategy strategy = client.Strategy;
 
+            // Strategy properties
             // strategy.name-lower
             xmlnode = root.SelectSingleNode("/wmr:repgen/wmr:strategy/wmr:name-lower", nsmgr);
             xmlnode.InnerText = strategy.Name.ToLower(); ;
@@ -111,6 +110,23 @@ namespace RSMTenon.ReportGenerator
             xmlnode = root.SelectSingleNode("/wmr:repgen/wmr:strategy/wmr:name-proper", nsmgr);
             xmlnode.InnerText = strategy.Name; ;
 
+            // strategy.performance.return-over-base
+            xmlnode = root.SelectSingleNode("/wmr:repgen/wmr:strategy/wmr:performance/wmr:return-over-base", nsmgr);
+            xmlnode.InnerText = ((double)strategy.ReturnOverBase / 100).ToString("0.00%");
+
+            // strategy.time-horizon
+            xmlnode = root.SelectSingleNode("/wmr:repgen/wmr:strategy/wmr:time-horizon", nsmgr);
+            xmlnode.InnerText = Enum.GetName(typeof(TimeHorizon), strategy.TimeHorizon);
+
+            // strategy.performance.rolling-return
+            xmlnode = root.SelectSingleNode("/wmr:repgen/wmr:strategy/wmr:performance/wmr:rolling-return", nsmgr);
+            xmlnode.InnerText = (strategy.RollingReturn / 100).ToString("0.0%");
+
+            // strategy.cost
+            xmlnode = root.SelectSingleNode("/wmr:repgen/wmr:strategy/wmr:cost", nsmgr);
+            xmlnode.InnerText = strategy.Cost.ToString("£#,##0");
+
+            // Look up
             // strategy.aim
             xmlnode = root.SelectSingleNode("/wmr:repgen/wmr:strategy/wmr:aim", nsmgr);
             xmlnode.InnerText = strategy.Aim;
@@ -127,39 +143,26 @@ namespace RSMTenon.ReportGenerator
             xmlnode = root.SelectSingleNode("/wmr:repgen/wmr:strategy/wmr:investor-focus", nsmgr);
             xmlnode.InnerText = strategy.InvestorFocus;
 
-            // strategy.performance.return-over-base
-            xmlnode = root.SelectSingleNode("/wmr:repgen/wmr:strategy/wmr:performance/wmr:return-over-base", nsmgr);
-            //xmlnode.InnerText = strategy.ReturnOverBase;
-
-            // strategy.time-horizon
-            xmlnode = root.SelectSingleNode("/wmr:repgen/wmr:strategy/wmr:time-horizon", nsmgr);
-            xmlnode.InnerText = Enum.GetName(typeof(TimeHorizon), strategy.TimeHorizon);
-
             // strategy.comparison-chart-header
-            xmlnode = root.SelectSingleNode("/wmr:repgen/wmr:strategy/wmr:comparison-chart/wmr:header", nsmgr);
-            //xmlnode.InnerText = strategy.ComparisonChartHeader;
+            xmlnode = root.SelectSingleNode("/wmr:repgen/wmr:charts/wmr:comparison/wmr:header", nsmgr);
+            xmlnode.InnerText = "=== TODO ==="; // strategy.ComparisonChartHeader;
 
+            // Calculation
             // strategy.performance.return -- TO BE CALCULATED FROM DATABASE
-            Decimal portReturn = 0.0M;
+            //Decimal portReturn = 0.0M;
 
-            switch (client.StrategyID) {
-                case "CA": portReturn = 53.1M; break;
-                case "CO": portReturn = 46.0M; break;
-                case "BA": portReturn = 39.1M; break;
-                case "GR": portReturn = 31.8M; break;
-                case "AC": portReturn = 29.2M; break;
-            }
+            //switch (client.StrategyID) {
+            //    case "CA": portReturn = 53.1M; break;
+            //    case "CO": portReturn = 46.0M; break;
+            //    case "BA": portReturn = 39.1M; break;
+            //    case "GR": portReturn = 31.8M; break;
+            //    case "AC": portReturn = 29.2M; break;
+            //}
+
+            double modelReturn = calculateModelReturn(client.Strategy);
 
             xmlnode = root.SelectSingleNode("/wmr:repgen/wmr:strategy/wmr:performance/wmr:return", nsmgr);
-            xmlnode.InnerText = String.Format("{0}", Decimal.Round(portReturn, 1));
-
-            // strategy.performance.rolling-return
-            xmlnode = root.SelectSingleNode("/wmr:repgen/wmr:strategy/wmr:performance/wmr:rolling-return", nsmgr);
-            //xmlnode.InnerText = strategy.RollingReturn;
-
-            // strategy.cost
-            xmlnode = root.SelectSingleNode("/wmr:repgen/wmr:strategy/wmr:cost", nsmgr);
-            //xmlnode.InnerText = strategy.Cost;
+            xmlnode.InnerText = modelReturn.ToString("0.0%");
 
             // for income strategies only -- GET FROM XML FILE?
             // strategy.income-note1
@@ -174,7 +177,6 @@ namespace RSMTenon.ReportGenerator
             // Cash or Assets
             string allocationHeader;
             string allocationCaption;
-            string compareCaption = null;
             string weightingText = null;
             string stressCrashHeader = null;
             string stressCrashText = null;
@@ -183,13 +185,13 @@ namespace RSMTenon.ReportGenerator
             if (client.ExistingAssets) {
                 allocationHeader = "The following chart shows how your portfolio is allocated across the major asset classes";
                 allocationCaption = "How does this compare to our recommendations and what are the main differences?  The following chart shows where your current portfolio is over or under weight in each asset class compared to that which we would recommend for a Defensive investor.";
-                weightingText = "The main issues are your significant overweight position in UK &amp; Global equities and your underweight position in the more cautious asset classes of bonds, hedge funds and commercial property.";
+                weightingText = "The main issues are your significant overweight position in UK & Global equities and your underweight position in the more cautious asset classes of bonds, hedge funds and commercial property.";
                 stressCrashHeader = "How does the risk compare?";
                 stressCrashText = "How does this risk impact on a portfolio?  Well, one way of looking at risk is what happens if markets suffer a shock or go through a prolonged downturn.";
-                stressCrashText += String.Format(" The following chart shows how the mix of assets you currently have would have performed during a number of these market downturns compared to our {0} Strategy, Global Equity Markets and Government Bonds.", strategy.Name);
+                stressCrashText += String.Format("  The following chart shows how the mix of assets you currently have would have performed during a number of these market downturns compared to our {0} Strategy, Global Equity Markets and Government Bonds.", strategy.Name);
                 stressRiseText = "RETRIEVE FROM XML FILE";
             } else {
-                allocationHeader = String.Format("The following chart shows the current asset allocation mix of our {0} Model", strategy.Name);
+                allocationHeader = String.Format(" The following chart shows the current asset allocation mix of our {0} Model", strategy.Name);
                 allocationCaption = "One way of understanding the beneficial impact of good asset allocation is to look at what might happen if markets were to suffer a shock or go through a prolonged downturn.   This can best be undertaken by looking at extreme historic events.";
                 allocationCaption += String.Format(" The following chart compares the return that would have been delivered by the mix of assets which represents our {0} Strategy and compares it to the returns of UK Government Bonds and Global Equities during a number of these market downturns.", strategy.Name);
             }
@@ -201,11 +203,6 @@ namespace RSMTenon.ReportGenerator
             // charts.allocation.caption [BOTH]
             xmlnode = root.SelectSingleNode("/wmr:repgen/wmr:charts/wmr:allocation/wmr:caption", nsmgr);
             xmlnode.InnerText = allocationCaption;
-
-            if (compareCaption != null) {
-                xmlnode = root.SelectSingleNode("/wmr:repgen/wmr:strategy/wmr:compare-chart/wmr:caption", nsmgr);
-                xmlnode.InnerText = compareCaption;
-            }
 
             // charts.allocation.weighting-text [ASSETS]
             if (weightingText != null) {
@@ -235,10 +232,10 @@ namespace RSMTenon.ReportGenerator
             doc.Save(destinationXml);
 
         }
-        private void replaceCustomXML(string fileName, string customXML)
+        private void replaceCustomXML(MainDocumentPart mainPart, string customXML)
         {
-            using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(fileName, true)) {
-                MainDocumentPart mainPart = wordDoc.MainDocumentPart;
+            //using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(fileName, true)) {
+            //    MainDocumentPart mainPart = wordDoc.MainDocumentPart;
 
                 mainPart.DeleteParts<CustomXmlPart>(mainPart.CustomXmlParts);
 
@@ -246,7 +243,7 @@ namespace RSMTenon.ReportGenerator
                 CustomXmlPart customXmlPart = mainPart.AddCustomXmlPart(CustomXmlPartType.CustomXml);
 
                 //copy the XML into the new part...
-                using (StreamWriter ts = new StreamWriter(customXmlPart.GetStream()))
+                using (StreamWriter ts = new StreamWriter(customXmlPart.GetStream())) {
                     ts.Write(customXML);
             }
 
@@ -292,6 +289,18 @@ namespace RSMTenon.ReportGenerator
         private void createTempXmlFile(string source, string destination)
         {
             copyFile2(source, destination);
+        }
+
+        private double calculateModelReturn(Strategy strategy)
+        {
+            var prices = strategy.GetStrategyReturn();
+
+            double endPrice = prices.Last().Value.Value;
+            double startPrice = prices.ElementAt(prices.Count - 121).Value.Value;
+
+            double rtrn = Math.Log(endPrice / startPrice);
+
+            return rtrn;
         }
     }
 }
