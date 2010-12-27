@@ -282,7 +282,7 @@ namespace RSMTenon.ReportGenerator
             bc.AddBarChartSeries(chart, series3);
 
             // strategy
-            var returns4 = getStressTestModelReturn(Client.StrategyID);
+            var returns4 = getStressTestModelReturn(Client);
             var series4 = stressTestMarketRiseSeries(returns4, Client.Strategy.Name, strategyColourHex, rpt);
             bc.AddBarChartSeries(chart, series4);
 
@@ -326,7 +326,7 @@ namespace RSMTenon.ReportGenerator
             bc.AddBarChartSeries(chart, series3);
 
             // strategy
-            var returns4 = getStressTestModelReturn(Client.StrategyID);
+            var returns4 = getStressTestModelReturn(Client);
             var series4 = stressTestMarketCrashSeries(returns4, Client.Strategy.Name, strategyColourHex, rpt);
             bc.AddBarChartSeries(chart, series4);
 
@@ -511,23 +511,14 @@ namespace RSMTenon.ReportGenerator
             return DataContext.HistoricPrice(assetClassId).ToDictionary(d => d.Date);
         }
 
-        private Dictionary<int, ReturnData> getStressTestModelReturn(string strategyId)
+        private Dictionary<int, ReturnData> getStressTestModelReturn(Client client)
         {
-            var returns = DataContext.ModelReturn(strategyId);
-            var calc = new ReturnCalculation();
-            var prices = from p in returns
-                         select new ReturnData {
-                             Date = p.Date,
-                             Value = calc.Price(p)
-                         };
-
-            return prices.ToDictionary(p => p.Date);
+            return client.Strategy.GetStrategyReturn();
         }
 
-
-        private List<ReturnData> getTenYearModelReturn(string strategId, DateTime tenYearStart)
+        private List<ReturnData> getTenYearModelReturn(string strategyId, DateTime tenYearStart)
         {
-            var data = DataContext.ModelReturn(strategId, tenYearStart);
+            var data = DataContext.ModelReturn(strategyId, tenYearStart);
 
             ReturnCalculation calc = new ReturnCalculation();
             var tyr = from d in data
