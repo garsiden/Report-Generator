@@ -11,6 +11,8 @@ namespace RSMTenon.Data
         private double previousDD = 1D;
         private double previousPriceRR = 100D;
         private double previousRebase = 100D;
+        //private double previousReturn = 100D; // 101.4504179D;
+
 
         public double Price(ReturnData returnData)
         {
@@ -72,17 +74,30 @@ namespace RSMTenon.Data
             return retval;
         }
 
-        public double Drawdown(ReturnData priceData)
+        public double Drawdown(ReturnData price)
         {
-            return Drawdown(priceData.Value);
+            return Drawdown(price.Value);
         }
 
-        public double RebaseReturn(ReturnData returnData)
+        public double RebaseReturn(ReturnData rtrn)
         {
-            double rebase = previousRebase * Math.Exp(returnData.Value);
+            return RebaseReturn(rtrn.Value);
+        }
+
+        public double RebaseReturn(double rtrn)
+        {
+            double rebase = previousRebase * Math.Exp(rtrn);
             previousRebase = rebase;
 
             return (rebase - 100) / 100;
+        }
+
+        public double Return(ReturnData price)
+        {
+            double retval = (price.Value - previousPrice) / previousPrice;
+            previousPrice = price.Value;
+
+            return retval;
         }
 
     }
