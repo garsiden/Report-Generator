@@ -37,6 +37,9 @@
       <caption/>
       <weighting-text/>
     </allocation>
+    <comparison>
+      <header/>
+    </comparison>
     <stress-crash>
       <header/>
       <text/>
