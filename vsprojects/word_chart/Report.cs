@@ -67,7 +67,7 @@ namespace RSMTenon.ReportGenerator
         public Client Client { get; set; }
         private RepGenDataContext context;
         private XElement reportSpec = null;
-        private static string SPEC_FILE = @"C:\Documents and Settings\garsiden\My Documents\svn\repgen\vsprojects\word_chart\report-spec.xml";
+        private static string SPEC_FILE = @"C:\Documents and Settings\garsiden\My Documents\svn\repgen\vsprojects\word_chart\App_Data\report-spec.xml";
         private List<AssetClass> assetClasses = null;
         private string strategyName;
         // "C0C0C0", "808080", "0066CC", "98CC00"
@@ -75,6 +75,11 @@ namespace RSMTenon.ReportGenerator
         private string clientColourHex = "98CC00";
         private string benchmarkColourHex = "C0C0C0";
         private DateTime tenYearStart = new DateTime(1999, 9, 30);
+
+        #region Text
+ 
+
+        #endregion
 
         # region Model Table
         public Table ModelTable()
@@ -110,8 +115,8 @@ namespace RSMTenon.ReportGenerator
                 // Asset Class sub-headings
                 var headerCells = new List<CellProps>();
                 headerCells.Add(new CellProps { text = g.AssetClassName, align = JustificationValues.Left });
-                headerCells.Add(new CellProps { text = g.Weighting.ToString(formats[2]) });
-                for (int i = 1; i <= 4; i++) {
+                headerCells.Add(new CellProps { text = g.Weighting.ToString(formats[1]) });
+                for (int i = 2; i < 6; i++) {
                     headerCells.Add(new CellProps());
                 }
                 var header = modelTable.GenerateTableHeaderRow(headerCells, rowHeight);
@@ -119,7 +124,7 @@ namespace RSMTenon.ReportGenerator
 
                 // investment rows for each asset class
                 foreach (var inv in g.Investments) {
-                    income = amount * inv.ExpectedYield;
+                    income = amount * inv.Weighting * inv.ExpectedYield;
                     totalIncome += income;
                     var contentCells = new List<CellProps>();
                     contentCells.Add(new CellProps { span = 2, text = inv.InvestmentName, align = JustificationValues.Left });
