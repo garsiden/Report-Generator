@@ -4,7 +4,7 @@
 -- Description:	
 -- =============================================
 ALTER PROCEDURE [dbo].[spClientAssetClassReturn] 
-
+	@startDate datetime = null,
 	@ClientGUID uniqueidentifier = '979de312-8e99-49d3-9d41-54ecae0cad5c'
 
 AS
@@ -39,7 +39,7 @@ COALESCE((r.UKHY * rr.UKHY), 0) +
 COALESCE((r.WOBO * rr.WOBO), 0)
 AS [Value] FROM
 (SELECT * FROM c) r,
-(SELECT * FROM vwRawReturn) rr
+(SELECT * FROM vwRawReturn WHERE [Date] >= @startDate OR @startDate IS NULL) rr
 
 
 END

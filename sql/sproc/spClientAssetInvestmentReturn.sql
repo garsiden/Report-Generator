@@ -3,23 +3,22 @@
 -- Create date: 15/12/2010
 -- Description:	
 -- =============================================
-ALTER PROCEDURE [dbo].[spClientAssetClassReturn] 
-
+ALTER PROCEDURE [dbo].[spClientAssetInvestmentReturn] 
+	@startDate datetime = null,
 	@ClientGUID uniqueidentifier = '979de312-8e99-49d3-9d41-54ecae0cad5c'
 
 AS
 BEGIN
-	-- SET NOCOUNT ON added to prevent extra result sets from
-	-- interfering with SELECT statements.
-	SET NOCOUNT ON;
+SET NOCOUNT ON;
 
 -- get pivoted client asset weightings
 WITH c AS
 (
 SELECT CASH, COMM, COPR, GLEQ, HEDG, LOSH, PREQ, UKCB, UKEQ, UKGB, UKHY, WOBO
 
-FROM (SELECT AssetClassId, Weighting
-FROM  tblClientAssetClass WHERE ClientGUID=@ClientGUID) piv
+FROM (SELECT AssetClassId, 
+SUM(Amount) / (SELECT SUM(Amount) FROM tblClientAsset WHERE ClientGUID = @ClientGUID) AS [Weighting]
+FROM  tblClientAsset WHERE ClientGUID=@ClientGUID GROUP BY AssetClassId ) piv
  PIVOT ( SUM(Weighting)
 FOR AssetClassID IN (CASH, COMM, COPR, GLEQ, HEDG, LOSH, PREQ, UKCB, UKEQ, UKGB, UKHY, WOBO)) AS chld
 )
@@ -39,7 +38,6 @@ COALESCE((r.UKHY * rr.UKHY), 0) +
 COALESCE((r.WOBO * rr.WOBO), 0)
 AS [Value] FROM
 (SELECT * FROM c) r,
-(SELECT * FROM vwRawReturn) rr
-
+(SELECT * FROM vwRawReturn WHERE [Date] >= @startDate OR @startDate IS NULL) rr
 
 END

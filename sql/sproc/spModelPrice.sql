@@ -1,7 +1,14 @@
-ALTER PROCEDURE dbo.ModelPrice
+-- =============================================
+-- Author:		nigel.garside@gmail.com
+-- Create date: 11/12/2010
+-- Description:	
+-- =============================================
+
+ALTER PROCEDURE [dbo].[spModelReturn]
 
 	(
-	@strategyId char(2) = 'CO'
+	@strategyId nchar(2) = 'CO',
+	@startDate datetime = '1996-12-31'
 	)
 
 AS
@@ -21,7 +28,8 @@ COALESCE((r.UKGB * rr.UKGB), 0) +
 COALESCE((r.UKHY * rr.UKHY), 0) +
 COALESCE((r.WOBO * rr.WOBO), 0)
 AS [Value] FROM
-(SELECT * FROM vwReturn WHERE strategyId=@strategyId) r,
+(SELECT * FROM vwModelAllocation WHERE strategyId=@strategyId) r,
 (SELECT * FROM vwRawReturn) rr
+WHERE rr.Date >= CAST(@startDate AS INT)
 
 	RETURN

@@ -1,10 +1,11 @@
-ALTER PROCEDURE dbo.RawReturns
-	/*
-	(
-	@parameter1 int = 5,
-	@parameter2 datatype OUTPUT
-	)
-	*/
+-- =============================================
+-- Author:		nigel.garside@gmail.com
+-- Create date: 11/12/2010
+-- Description:	
+-- =============================================
+
+ALTER PROCEDURE dbo.spRawReturn
+
 AS
 	/* SET NOCOUNT ON */
 
@@ -12,11 +13,11 @@ WITH f AS (
 SELECT ROW_NUMBER() OVER (ORDER BY[Date]) + 1 as rn, CASH,COMM,COPR,GLEQ,HEDG,LOSH,PREQ,UKCB,UKEQ,UKGB,UKHY,WOBO
 FROM
 (
-SELECT [Date], [Value], BenchmarkID FROM tblHistoricData
+SELECT [Date], [Value], AssetClassID FROM tblHistoricData
 ) piv
 PIVOT
 (
- MAX([Value]) for BenchmarkID in (CASH,COMM,COPR,GLEQ,HEDG,LOSH,PREQ,UKCB,UKEQ,UKGB,UKHY,WOBO)
+ MAX([Value]) for AssetClassID in (CASH,COMM,COPR,GLEQ,HEDG,LOSH,PREQ,UKCB,UKEQ,UKGB,UKHY,WOBO)
 ) as chld)
 
 SELECT t.Date,
@@ -28,14 +29,12 @@ FROM f,
  CASH,COMM,COPR,GLEQ,HEDG,LOSH,PREQ,UKCB,UKEQ,UKGB,UKHY,WOBO
 FROM
 (
-SELECT [Date], [Value], BenchmarkID FROM tblHistoricData
+SELECT [Date], [Value], AssetClassID FROM tblHistoricData
 ) piv
 PIVOT
 (
- MAX([Value]) for BenchmarkID in (CASH,COMM,COPR,GLEQ,HEDG,LOSH,PREQ,UKCB,UKEQ,UKGB,UKHY,WOBO)
+ MAX([Value]) for AssetClassID in (CASH,COMM,COPR,GLEQ,HEDG,LOSH,PREQ,UKCB,UKEQ,UKGB,UKHY,WOBO)
 ) as chld  ) t
 WHERE f.rn = t.rn
 
-
-
-	RETURN
+RETURN
