@@ -39,20 +39,28 @@ namespace RSMTenon.ReportGenerator
 
         public void GenerateTextContent(MainDocumentPart mainPart,  Client client, string contentFile)
         {
-            //string tempDocFile = createTempDocFile();
-
             GetContent(client, contentFile);
             string customXml = File.ReadAllText(destinationXml);
             replaceCustomXML(mainPart, customXml);
             mainPart.Document.Save();
 
-            //Delete the temp file
+            //Delete the temp files
             //File.Delete(tempFile);
             //File.Delete(destinationXml);
         }
 
         protected void GetContent(Client client, string sourceXml)
         {
+            // get content from database
+            string assets = (client.ExistingAssets ? "existing-assets" : "no-existing-assets");
+            var ctx = new RepGenDataContext();
+            var contents = ctx.Contents;
+            var match = from c in contents
+                          where (c.StrategyID.Equals(client.StrategyID) || c.StrategyID.Equals(null)) &&
+                            (c.Category.Equals(assets) || c.Category.Equals(null))
+                          select c;
+            var content = match.ToList();
+
             // create temp content file
             createTempXmlFile(sourceXml, destinationXml);
 
@@ -112,7 +120,7 @@ namespace RSMTenon.ReportGenerator
 
             // strategy.performance.return-over-base
             xmlnode = root.SelectSingleNode("/wmr:repgen/wmr:strategy/wmr:performance/wmr:return-over-base", nsmgr);
-            xmlnode.InnerText = ((double)strategy.ReturnOverBase / 100).ToString("0.00%");
+            xmlnode.InnerText = ((double)strategy.ReturnOverBase / 100).ToString("0%");
 
             // strategy.time-horizon
             xmlnode = root.SelectSingleNode("/wmr:repgen/wmr:strategy/wmr:time-horizon", nsmgr);
@@ -129,50 +137,27 @@ namespace RSMTenon.ReportGenerator
             // Look up
             // strategy.aim
             xmlnode = root.SelectSingleNode("/wmr:repgen/wmr:strategy/wmr:aim", nsmgr);
-            xmlnode.InnerText = strategy.Aim;
-
-            // strategy.time-horizon-text
-            xmlnode = root.SelectSingleNode("/wmr:repgen/wmr:strategy/wmr:time-horizon-text", nsmgr);
-            xmlnode.InnerText = strategy.TimeHorizonText;
+            xmlnode.InnerText = content.Single(c => c.ContentID == "strategy.aim").Text;
 
             // strategy.asset-classes
             xmlnode = root.SelectSingleNode("/wmr:repgen/wmr:strategy/wmr:asset-classes", nsmgr);
-            xmlnode.InnerText = strategy.AssetClasses;
+            xmlnode.InnerText = content.Single(c => c.ContentID == "strategy.asset-classes").Text;
 
             // strategy.investor-focus
             xmlnode = root.SelectSingleNode("/wmr:repgen/wmr:strategy/wmr:investor-focus", nsmgr);
-            xmlnode.InnerText = strategy.InvestorFocus;
+            xmlnode.InnerText = content.Single(c => c.ContentID == "strategy.investor-focus").Text;
 
             // strategy.comparison-chart-header
             xmlnode = root.SelectSingleNode("/wmr:repgen/wmr:charts/wmr:comparison/wmr:header", nsmgr);
-            xmlnode.InnerText = "=== TODO ==="; // strategy.ComparisonChartHeader;
+            xmlnode.InnerText = content.Single(c => c.ContentID == "strategy.comparison-chart-header").Text;
 
-            // Calculation
-            // strategy.performance.return -- TO BE CALCULATED FROM DATABASE
-            //Decimal portReturn = 0.0M;
-
-            //switch (client.StrategyID) {
-            //    case "CA": portReturn = 53.1M; break;
-            //    case "CO": portReturn = 46.0M; break;
-            //    case "BA": portReturn = 39.1M; break;
-            //    case "GR": portReturn = 31.8M; break;
-            //    case "AC": portReturn = 29.2M; break;
-            //}
-
-            double modelReturn = calculateModelReturn(client.Strategy);
-
-            xmlnode = root.SelectSingleNode("/wmr:repgen/wmr:strategy/wmr:performance/wmr:return", nsmgr);
-            xmlnode.InnerText = modelReturn.ToString("0.0%");
-
-            // for income strategies only -- GET FROM XML FILE?
             // strategy.income-note1
             xmlnode = root.SelectSingleNode("/wmr:repgen/wmr:strategy/wmr:income-note1", nsmgr);
-            xmlnode.InnerText = "To ensure that we do not ‘run out’ of cash to make the client’s income payments we will hold one years income requirement as cash either at the wrap provider level (SIPP or OIB) or at James Brearley for non wrap accounts.";
+            xmlnode.InnerText = content.Single(c => c.ContentID == "strategy.income-note1").Text;
 
             // strategy.income-note2
             xmlnode = root.SelectSingleNode("/wmr:repgen/wmr:strategy/wmr:income-note2", nsmgr);
-            xmlnode.InnerText = "YOU MUST EXPLAIN AND DOCUMENT THIS IN THE SUITABILITY LETTER.";
-
+            xmlnode.InnerText = content.Single(c => c.ContentID == "strategy.income-note2").Text;
 
             // Cash or Assets
             string allocationHeader;
@@ -183,17 +168,16 @@ namespace RSMTenon.ReportGenerator
             string stressRiseText = null;
 
             if (client.ExistingAssets) {
-                allocationHeader = "The following chart shows how your portfolio is allocated across the major asset classes";
-                allocationCaption = "How does this compare to our recommendations and what are the main differences?  The following chart shows where your current portfolio is over or under weight in each asset class compared to that which we would recommend for a Defensive investor.";
-                weightingText = "The main issues are your significant overweight position in UK & Global equities and your underweight position in the more cautious asset classes of bonds, hedge funds and commercial property.";
-                stressCrashHeader = "How does the risk compare?";
-                stressCrashText = "How does this risk impact on a portfolio?  Well, one way of looking at risk is what happens if markets suffer a shock or go through a prolonged downturn.";
-                stressCrashText += String.Format("  The following chart shows how the mix of assets you currently have would have performed during a number of these market downturns compared to our {0} Strategy, Global Equity Markets and Government Bonds.", strategy.Name);
-                stressRiseText = "RETRIEVE FROM XML FILE";
+                allocationHeader = content.Single(c => c.ContentID == "charts.allocation.header").Text;
+                allocationCaption = content.Single(c => c.ContentID == "charts.allocation.caption").Text;
+                weightingText = content.Single(c => c.ContentID == "charts.allocation.weighting-text").Text;
+                stressCrashHeader = content.Single(c => c.ContentID == "charts.stress-crash.header").Text;
+                stressCrashText = String.Format(content.Single(c => c.ContentID == "charts.stress-crash.text").Text, strategy.Name);
+                // TODO: add to text database
+                stressRiseText = content.Single(c => c.ContentID == "charts.stress-rise.text").Text;
             } else {
-                allocationHeader = String.Format(" The following chart shows the current asset allocation mix of our {0} Model", strategy.Name);
-                allocationCaption = "One way of understanding the beneficial impact of good asset allocation is to look at what might happen if markets were to suffer a shock or go through a prolonged downturn.   This can best be undertaken by looking at extreme historic events.";
-                allocationCaption += String.Format(" The following chart compares the return that would have been delivered by the mix of assets which represents our {0} Strategy and compares it to the returns of UK Government Bonds and Global Equities during a number of these market downturns.", strategy.Name);
+                allocationHeader = String.Format(content.Single(c => c.ContentID == "charts.allocation.header").Text, strategy.Name);
+                allocationCaption = String.Format(content.Single(c => c.ContentID == "charts.allocation.caption").Text, strategy.Name);
             }
 
             // charts.allocation.header [BOTH]
@@ -228,6 +212,15 @@ namespace RSMTenon.ReportGenerator
                 xmlnode.InnerText = stressRiseText;
             }
 
+            // charts.drawdown.text
+            xmlnode = root.SelectSingleNode("/wmr:repgen/wmr:charts/wmr:drawdown/wmr:text", nsmgr);
+            xmlnode.InnerText = content.Single(c => c.ContentID == "charts.drawdown.text").Text;
+
+            // Calculation
+            // strategy.performance.return
+            double modelReturn = calculateModelReturn(client.Strategy);
+            xmlnode = root.SelectSingleNode("/wmr:repgen/wmr:strategy/wmr:performance/wmr:return", nsmgr);
+            xmlnode.InnerText = modelReturn.ToString("0.0%");
 
             doc.Save(destinationXml);
 

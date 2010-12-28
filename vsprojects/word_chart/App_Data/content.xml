@@ -47,5 +47,8 @@
     <stress-rise>
       <text/>
     </stress-rise>
+    <drawdown>
+      <text/>
+    </drawdown>
   </charts>
 </repgen>

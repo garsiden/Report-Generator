@@ -21,41 +21,29 @@ namespace RSMTenon.ReportGenerator
     {
         static string path = @"C:\Documents and Settings\garsiden\My Documents\Projects\RepGen\test\chart\";
         static string generated = path + "ChartDoc.docx";
+        private static string sourceFile = @"../../App_Data/template1.dotx";
         private uint docPrId = 0U;
+        private string contentSourceXml = @"../../App_Data/content.xml";
+
 
         static void Main(string[] args)
         {
             Program This = new Program();
 
             // create test Client and Report
-            //Client client = new Client() { Name = "Joe Mayo", ExistingAssets = false, MeetingDate = new DateTime(2010, 12, 14), StrategyID = "CO", TimeHorizon = 5, InvestmentAmount = 1000000 };
-            //Guid guid = new Guid("636c8103-e06d-4575-aafc-574474c2d7f8");
-            //Guid guid = new Guid("979de312-8e99-49d3-9d41-54ecae0cad5c");
-            //Guid guid = new Guid("979de312-8e99-49d3-9d41-54ecae0cad5c");
-            // 979de312-8e99-49d3-9d41-54ecae0cad5c
             Guid guid = new Guid("636c8103-e06d-4575-aafc-574474c2d7f8");
-            //client.GUID = guid;
             Client client = Client.GetClientByGUID(guid);
             Report report = new Report() { Client = client };
 
-            //This.TenYearBenchTest();
-            //This.RollingReturnTest();
-            //This.DrawdownTest2();
-            //This.DrawdownTest3();
-            //This.TableDataTest();
-            //Thread.Sleep(500000);
-            //This.StressTest();
-            //return;
-            //500000;
-
-            string template = path + "chart_template.docx";
-            string generated = path + "chart_test.docx";
+            //string template = path + "chart_template.docx";
+            //string generated = path + "chart_test.docx";
 
             // copy template to generated
-            File.Copy(template, generated, true);
+            //File.Copy(template, generated, true);
+            string tempDoc = createTempDocFile(sourceFile);
 
             // open Word document
-            WordprocessingDocument myWordDoc = WordprocessingDocument.Open(generated, true);
+            WordprocessingDocument myWordDoc = WordprocessingDocument.Open(tempDoc, true);
             MainDocumentPart mainPart = myWordDoc.MainDocumentPart;
 
             //This.InsertAllocationPie(mainPart);
@@ -68,6 +56,9 @@ namespace RSMTenon.ReportGenerator
 
         public void CreateReport(MainDocumentPart mainPart, Report report)
         {
+            TextContent tc = new TextContent();
+            tc.GenerateTextContent(mainPart, report.Client, contentSourceXml);
+            
             ChartItem chartItem = null;
             string controlName = null;
             
@@ -82,9 +73,11 @@ namespace RSMTenon.ReportGenerator
             AddChartToDoc(mainPart, chartItem, controlName);
 
             // Comparison Chart
-            chartItem = report.AllocationComparison();
-            controlName = chartItem.CustomControlName;
-            AddChartToDoc(mainPart, chartItem, controlName);
+            if (report.Client.ExistingAssets) {
+                chartItem = report.AllocationComparison();
+                controlName = chartItem.CustomControlName;
+                AddChartToDoc(mainPart, chartItem, controlName);
+            }
 
             // Stress Test Market Rise Bar Chart
             chartItem = report.StressTestMarketRise();
@@ -429,6 +422,29 @@ namespace RSMTenon.ReportGenerator
             }
 
             doc.Save();
+        }
+
+        private static string createTempDocFile(string sourceFile)
+        {
+            string tempDir = Environment.GetEnvironmentVariable("temp");
+
+            string tempFile = String.Format("{0}\\{1}.dotx", tempDir, Guid.NewGuid().ToString());
+            copyFile(sourceFile, tempFile);
+
+            return tempFile;
+        }
+
+        private static void copyFile(string source, string destination)
+        {
+            using (FileStream input = new FileStream(source, FileMode.Open, FileAccess.Read, FileShare.Read)) {
+                using (FileStream output = new FileStream(destination, FileMode.Create, FileAccess.Write)) {
+                    byte[] buffer = new byte[16384];
+                    int len;
+                    while ((len = input.Read(buffer, 0, buffer.Length)) > 0) {
+                        output.Write(buffer, 0, len);
+                    }
+                }
+            }
         }
     }
 }
