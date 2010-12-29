@@ -1,21 +1,158 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Database Name="RepGen" EntityNamespace="RSMTenon.ReportGenerator.DataLayer" ContextNamespace="RSMTenon.ReportGenerator.DataLayer" Class="RepGenDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
-  <Connection Mode="WebSettings" ConnectionString="Data Source=ARTHUR;Initial Catalog=RepGen;Integrated Security=True" SettingsObjectName="System.Configuration.ConfigurationManager.ConnectionStrings" SettingsPropertyName="RepGenConnectionString" Provider="System.Data.SqlClient" />
-  <Table Name="dbo.tblStrategy" Member="Strategies">
-    <Type Name="Strategy">
-      <Column Name="ID" Type="System.String" DbType="NVarChar(2) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+<Database Name="RepGen" EntityNamespace="RSMTenon.Data" ContextNamespace="RSMTenon.Data" Class="RepGenDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="WebSettings" ConnectionString="Data Source=ARTHUR;Initial Catalog=RepGen;Persist Security Info=True;User ID=RepGenASP" SettingsObjectName="System.Configuration.ConfigurationManager.ConnectionStrings" SettingsPropertyName="RepGenConnectionString1" Provider="System.Data.SqlClient" />
+  <Table Name="dbo.tblAssetClass" Member="AssetClasses">
+    <Type Name="AssetClass">
+      <Column Name="ID" Type="System.String" DbType="NChar(4) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
       <Column Name="Name" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
-      <Column Name="Cost" Type="System.Decimal" DbType="Money NOT NULL" CanBeNull="false" />
-      <Column Name="ReturnIncome" Type="System.Double" DbType="Float" CanBeNull="true" />
-      <Column Name="ReturnGrowth" Type="System.Double" DbType="Float NOT NULL" CanBeNull="false" />
-      <Column Name="GraphText" Type="System.String" DbType="NVarChar(255) NOT NULL" CanBeNull="false" />
-      <Column Name="InvestorFocus" Type="System.String" DbType="NVarChar(255) NOT NULL" CanBeNull="false" />
-      <Column Name="Aim" Type="System.String" DbType="NVarChar(255) NOT NULL" CanBeNull="false" />
-      <Column Name="TimeHorizonText" Type="System.String" DbType="NVarChar(255) NOT NULL" CanBeNull="false" />
-      <Column Name="AssetClasses" Type="System.String" DbType="NVarChar(255) NOT NULL" CanBeNull="false" />
-      <Column Name="RollingReturnText" Type="System.String" DbType="NVarChar(255) NOT NULL" CanBeNull="false" />
-      <Column Name="TimeHorizon" Type="System.Int16" DbType="SmallInt NOT NULL" CanBeNull="false" />
+      <Column Name="IsGroup" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
       <Column Name="SSMA_TimeStamp" Type="System.Data.Linq.Binary" DbType="rowversion NOT NULL" CanBeNull="false" IsVersion="true" />
+      <Association Name="AssetClass_ClientAsset" Member="ClientAssets" ThisKey="ID" OtherKey="AssetClassID" Type="ClientAsset" />
+      <Association Name="AssetClass_ClientAssetClass" Member="ClientAssetClasses" ThisKey="ID" OtherKey="AssetClassID" Type="ClientAssetClass" />
+      <Association Name="AssetClass_ModelBreakdown" Member="ModelBreakdowns" ThisKey="ID" OtherKey="AssetClassID" Type="ModelBreakdown" />
+      <Association Name="AssetClass_Model" Member="Models" ThisKey="ID" OtherKey="AssetClassID" Type="Model" />
     </Type>
   </Table>
+  <Table Name="dbo.tblClient" Member="Clients">
+    <Type Name="Client">
+      <Column Name="GUID" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="Name" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="MeetingDate" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="InitialFee" Type="System.Decimal" DbType="Money NOT NULL" CanBeNull="false" />
+      <Column Name="TimeHorizon" Type="System.Int16" DbType="SmallInt NOT NULL" CanBeNull="false" />
+      <Column Name="ExistingAssets" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="StrategyID" Type="System.String" DbType="NChar(2) NOT NULL" CanBeNull="false" />
+      <Column Name="InvestmentAmount" Type="System.Decimal" DbType="Money NOT NULL" CanBeNull="false" />
+      <Column Name="SSMA_TimeStamp" Type="System.Data.Linq.Binary" DbType="rowversion NOT NULL" CanBeNull="false" IsVersion="true" />
+      <Association Name="Client_ClientAsset" Member="ClientAssets" ThisKey="GUID" OtherKey="ClientGUID" Type="ClientAsset" />
+      <Association Name="Client_ClientAssetClass" Member="ClientAssetClasses" ThisKey="GUID" OtherKey="ClientGUID" Type="ClientAssetClass" />
+      <Association Name="Strategy_Client" Member="Strategy" ThisKey="StrategyID" OtherKey="ID" Type="Strategy" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.tblClientAsset" Member="ClientAssets">
+    <Type Name="ClientAsset">
+      <Column Name="GUID" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="ClientGUID" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
+      <Column Name="AssetName" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="AssetClassID" Type="System.String" DbType="NChar(4) NOT NULL" CanBeNull="false" />
+      <Column Name="Amount" Type="System.Decimal" DbType="Money NOT NULL" CanBeNull="false" />
+      <Association Name="AssetClass_ClientAsset" Member="AssetClass" ThisKey="AssetClassID" OtherKey="ID" Type="AssetClass" IsForeignKey="true" />
+      <Association Name="Client_ClientAsset" Member="Client" ThisKey="ClientGUID" OtherKey="GUID" Type="Client" IsForeignKey="true" DeleteRule="CASCADE" DeleteOnNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.tblClientAssetClass" Member="ClientAssetClasses">
+    <Type Name="ClientAssetClass">
+      <Column Name="GUID" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="ClientGUID" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
+      <Column Name="AssetClassID" Type="System.String" DbType="NChar(4) NOT NULL" CanBeNull="false" />
+      <Column Name="Weighting" Type="System.Decimal" DbType="Decimal(5,4) NOT NULL" CanBeNull="false" />
+      <Column Name="SSMA_TimeStamp" Type="System.Data.Linq.Binary" DbType="rowversion NOT NULL" CanBeNull="false" IsVersion="true" />
+      <Association Name="AssetClass_ClientAssetClass" Member="AssetClass" ThisKey="AssetClassID" OtherKey="ID" Type="AssetClass" IsForeignKey="true" />
+      <Association Name="Client_ClientAssetClass" Member="Client" ThisKey="ClientGUID" OtherKey="GUID" Type="Client" IsForeignKey="true" DeleteRule="CASCADE" DeleteOnNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.tblModelBreakdown" Member="ModelBreakdowns">
+    <Type Name="ModelBreakdown">
+      <Column Name="GUID" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="StrategyID" Type="System.String" DbType="NChar(2) NOT NULL" CanBeNull="false" />
+      <Column Name="AssetClassID" Type="System.String" DbType="NChar(4) NOT NULL" CanBeNull="false" />
+      <Column Name="Weighting" Type="System.Decimal" DbType="Decimal(5,4) NOT NULL" CanBeNull="false" />
+      <Column Name="SSMA_TimeStamp" Type="System.Data.Linq.Binary" DbType="rowversion NOT NULL" CanBeNull="false" IsVersion="true" />
+      <Association Name="AssetClass_ModelBreakdown" Member="AssetClass" ThisKey="AssetClassID" OtherKey="ID" Type="AssetClass" IsForeignKey="true" />
+      <Association Name="Strategy_ModelBreakdown" Member="Strategy" ThisKey="StrategyID" OtherKey="ID" Type="Strategy" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.tblModel" Member="Models">
+    <Type Name="Model">
+      <Column Name="GUID" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="StrategyID" Type="System.String" DbType="NChar(2) NOT NULL" CanBeNull="false" />
+      <Column Name="AssetClassID" Type="System.String" DbType="NChar(4) NOT NULL" CanBeNull="false" />
+      <Column Name="InvestmentName" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="Weighting" Type="System.Decimal" DbType="Decimal(5,4) NOT NULL" CanBeNull="false" />
+      <Column Name="ExpectedYield" Type="System.Decimal" DbType="Decimal(5,4) NOT NULL" CanBeNull="false" />
+      <Column Name="PurchaseCharge" Type="System.Decimal" DbType="Money NOT NULL" CanBeNull="false" />
+      <Column Name="SSMA_TimeStamp" Type="System.Data.Linq.Binary" DbType="rowversion NOT NULL" CanBeNull="false" IsVersion="true" />
+      <Association Name="AssetClass_Model" Member="AssetClass" ThisKey="AssetClassID" OtherKey="ID" Type="AssetClass" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.vwReturnData" Member="ReturnDatas">
+    <Type Name="ReturnData" Id="ID1">
+      <Column Name="Date" Type="System.Int32" DbType="Int" CanBeNull="false" />
+      <Column Name="Value" Type="System.Double" DbType="Float NOT NULL" CanBeNull="false" />
+    </Type>
+  </Table>
+  <Table Name="" Member="ClientWeightingDifferences">
+    <Type Name="ClientWeightingDifference" Id="ID2">
+      <Column Name="AssetClassID" Type="System.String" DbType="NChar(4) NOT NULL" CanBeNull="false" />
+      <Column Name="AssetClassName" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="WeightingDifference" Type="System.Double" DbType="Float NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+    </Type>
+  </Table>
+  <Table Name="dbo.tblBenchmark" Member="Benchmarks">
+    <Type Name="Benchmark">
+      <Column Name="ID" Type="System.String" DbType="NChar(4) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="Name" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Association Name="Benchmark_Strategy" Member="Strategies" ThisKey="ID" OtherKey="BenchmarkID" Type="Strategy" />
+    </Type>
+  </Table>
+  <Table Name="dbo.tblContent" Member="Contents">
+    <Type Name="Content">
+      <Column Name="GUID" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="ContentID" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="Category" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="StrategyID" Type="System.String" DbType="NChar(2)" CanBeNull="true" />
+      <Column Name="Text" Type="System.String" DbType="NVarChar(MAX) NOT NULL" CanBeNull="false" />
+      <Column Name="SSMA_TimeStamp" Type="System.Data.Linq.Binary" DbType="rowversion NOT NULL" CanBeNull="false" IsVersion="true" />
+      <Association Name="Strategy_Content" Member="Strategy" ThisKey="StrategyID" OtherKey="ID" Type="Strategy" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.tblStrategy" Member="Strategies">
+    <Type Name="Strategy">
+      <Column Name="ID" Type="System.String" DbType="NChar(2) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="Name" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="TimeHorizon" Type="System.Int16" DbType="SmallInt NOT NULL" CanBeNull="false" />
+      <Column Name="ReturnOverBase" Type="System.Int16" DbType="SmallInt NOT NULL" CanBeNull="false" />
+      <Column Name="Cost" Type="System.Decimal" DbType="Money NOT NULL" CanBeNull="false" />
+      <Column Name="BenchmarkID" Type="System.String" DbType="NChar(4) NOT NULL" CanBeNull="false" />
+      <Column Name="RollingReturn" Type="System.Decimal" DbType="Decimal(5,1) NOT NULL" CanBeNull="false" />
+      <Association Name="Strategy_Client" Member="Clients" ThisKey="ID" OtherKey="StrategyID" Type="Client" />
+      <Association Name="Strategy_ModelBreakdown" Member="ModelBreakdowns" ThisKey="ID" OtherKey="StrategyID" Type="ModelBreakdown" />
+      <Association Name="Strategy_Content" Member="Contents" ThisKey="ID" OtherKey="StrategyID" Type="Content" />
+      <Association Name="Benchmark_Strategy" Member="Benchmark" ThisKey="BenchmarkID" OtherKey="ID" Type="Benchmark" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Function Name="dbo.spRollingReturn" Method="RollingReturn">
+    <Parameter Name="years" Type="System.Int32" DbType="Int" />
+    <Parameter Name="assetClassID" Type="System.String" DbType="NChar(4)" />
+    <ElementType IdRef="ID1" />
+  </Function>
+  <Function Name="dbo.spAssetClassReturn" Method="AssetClassReturn">
+    <Parameter Name="startDate" Type="System.DateTime" DbType="DateTime" />
+    <Parameter Name="assetClassID" Type="System.String" DbType="NChar(4)" />
+    <ElementType IdRef="ID1" />
+  </Function>
+  <Function Name="dbo.spModelReturn" Method="ModelReturn">
+    <Parameter Name="strategyId" Type="System.String" DbType="Char(2)" />
+    <Parameter Name="startDate" Type="System.DateTime" DbType="DateTime" />
+    <ElementType IdRef="ID1" />
+  </Function>
+  <Function Name="dbo.spHistoricPrice" Method="HistoricPrice">
+    <Parameter Name="assetClassID" Type="System.String" DbType="NChar(4)" />
+    <ElementType IdRef="ID1" />
+  </Function>
+  <Function Name="dbo.spClientWeightingComparison" Method="ClientWeightingComparison">
+    <Parameter Name="clientGUID" Type="System.Guid" DbType="UniqueIdentifier" />
+    <Parameter Name="strategyID" Type="System.String" DbType="NChar(2)" />
+    <ElementType IdRef="ID2" />
+  </Function>
+  <Function Name="dbo.spBenchmarkPrice" Method="BenchmarkPrice">
+    <Parameter Name="startDate" Type="System.DateTime" DbType="DateTime" />
+    <Parameter Name="benchmarkID" Type="System.String" DbType="NChar(4)" />
+    <ElementType IdRef="ID1" />
+  </Function>
+  <Function Name="dbo.spClientAssetReturn" Method="ClientAssetReturn">
+    <Parameter Name="startDate" Type="System.DateTime" DbType="DateTime" />
+    <Parameter Name="ClientGUID" Parameter="clientGUID" Type="System.Guid" DbType="UniqueIdentifier" />
+    <ElementType IdRef="ID1" />
+  </Function>
 </Database>
