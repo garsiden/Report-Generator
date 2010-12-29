@@ -37,6 +37,9 @@
       <caption/>
       <weighting-text/>
     </allocation>
+    <comparison>
+      <header/>
+    </comparison>
     <stress-crash>
       <header/>
       <text/>
@@ -44,5 +47,8 @@
     <stress-rise>
       <text/>
     </stress-rise>
+    <drawdown>
+      <text/>
+    </drawdown>
   </charts>
 </repgen>
