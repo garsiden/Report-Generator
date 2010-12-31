@@ -72,7 +72,7 @@
         <classShapeMoniker Id="5b06870b-2ad0-4701-931e-b65a6a759901" />
       </nodes>
     </associationConnector>
-    <associationConnector edgePoints="[(7.125 : 2.04984781901042); (6.77767556509888 : 2.39717225391154 : JumpStart); (6.65982443490112 : 2.5150233841093 : JumpEnd); (6.5 : 2.67484781901042); (2.875 : 2.67484781901042); (2.875 : 2.46419514973958); (2.5 : 2.08919514973958)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+    <associationConnector edgePoints="[(7.125 : 2.04984781901042); (6.5 : 2.67484781901042); (2.875 : 2.67484781901042); (2.875 : 2.46419514973958); (2.5 : 2.08919514973958)]" fixedFrom="NotFixed" fixedTo="NotFixed">
       <AssociationMoniker Name="/RepGenDataContext/AssetClass/AssetClass_ModelBreakdown" />
       <nodes>
         <classShapeMoniker Id="8dcdb6ff-e756-460a-86d7-941ad7e43132" />
@@ -117,21 +117,21 @@
         <classShapeMoniker Id="a97a07cf-21ee-42b1-b511-4718f12438ab" />
       </nodes>
     </associationConnector>
-    <associationConnector edgePoints="[(2.5 : 4.44221232096354); (5.51041666666667 : 4.44221232096354 : JumpStart); (5.67708333333333 : 4.44221232096354 : JumpEnd); (6.125 : 4.44221232096354)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+    <associationConnector edgePoints="[(2.5 : 4.44221232096354); (6.125 : 4.44221232096354)]" fixedFrom="NotFixed" fixedTo="NotFixed">
       <AssociationMoniker Name="/RepGenDataContext/Strategy/Strategy_Client" />
       <nodes>
         <classShapeMoniker Id="6ff63e00-fb84-4961-a3d0-eef3a0c4efdd" />
         <classShapeMoniker Id="5a08ee7a-7218-4b84-b2bf-0df2e19e83e2" />
       </nodes>
     </associationConnector>
-    <associationConnector edgePoints="[(2.5 : 3.03125); (5.59375 : 3.03125); (5.59375 : 5.25)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+    <associationConnector edgePoints="[(2.5 : 3.03125); (5.59375 : 3.03125); (5.59375 : 5.25)]" fixedFrom="NotFixed" fixedTo="NotFixed">
       <AssociationMoniker Name="/RepGenDataContext/Strategy/Strategy_Content" />
       <nodes>
         <classShapeMoniker Id="6ff63e00-fb84-4961-a3d0-eef3a0c4efdd" />
         <classShapeMoniker Id="67267aac-1bbe-4081-839d-dcecf2829e0d" />
       </nodes>
     </associationConnector>
-    <associationConnector edgePoints="[(3.5 : 3.79807657877604); (2.5 : 3.79807657877604)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+    <associationConnector edgePoints="[(3.5 : 3.79807657877604); (2.5 : 3.79807657877604)]" fixedFrom="NotFixed" fixedTo="NotFixed">
       <AssociationMoniker Name="/RepGenDataContext/Benchmark/Benchmark_Strategy" />
       <nodes>
         <classShapeMoniker Id="759d9c1f-0346-4f0a-9f6d-3ff8ab573208" />
