@@ -6,33 +6,22 @@
     <title></title>
 </head>
 <body>
-    <form id="form1" runat="server">
-    <div>
-        <asp:GridView ID="reportGrid" runat="server" AutoGenerateColumns="False" 
-            CellPadding="4" DataSourceID="clientsObjectDataSource" ForeColor="#333333" 
-            GridLines="None" AllowSorting="True">
-            <RowStyle BackColor="#F7F6F3" ForeColor="#333333" />
-            <Columns>
-                <asp:HyperLinkField DataNavigateUrlFields="GUID" 
-                    DataNavigateUrlFormatString="~/NewReport.aspx?guid={0}" DataTextField="Name" 
-                    HeaderText="Client Name" SortExpression="Name" />
-                <asp:BoundField DataField="MeetingDate" HeaderText="Meeting Date" 
-                    SortExpression="MeetingDate" DataFormatString="{0:d}" />
-            </Columns>
-            <FooterStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
-            <PagerStyle BackColor="#284775" ForeColor="White" HorizontalAlign="Center" />
-            <SelectedRowStyle BackColor="#E2DED6" Font-Bold="True" ForeColor="#333333" />
-            <HeaderStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
-            <EditRowStyle BackColor="#999999" />
-            <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
-        </asp:GridView>
-    </div>
-    <asp:ObjectDataSource ID="clientsObjectDataSource" runat="server" SelectMethod="GetRecentClients"
-        TypeName="RSMTenon.Data.Client">
+    <asp:GridView ID="gridClient" runat="server" AutoGenerateColumns="False" DataKeyNames="GUID"
+        DataSourceID="sourceClient">
+        <Columns>
+            <asp:HyperLinkField DataNavigateUrlFields="GUID" DataNavigateUrlFormatString="~/Pages/Report.aspx?guid={0}"
+                DataTextField="Name" />
+            <asp:BoundField DataField="MeetingDate" DataFormatString="{0:dd/MM/yyyy}" HeaderText="MeetingDate"
+                SortExpression="MeetingDate" />
+            <asp:CommandField ShowDeleteButton="True" />
+        </Columns>
+    </asp:GridView>
+    <asp:ObjectDataSource ID="sourceClient" runat="server" DataObjectTypeName="RSMTenon.Data.Client"
+        DeleteMethod="DeleteClient" SelectMethod="GetRecentClients" TypeName="RSMTenon.Data.Client"
+        InsertMethod="InsertClient" OldValuesParameterFormatString="original_{0}" UpdateMethod="UpdateStockExchange">
         <SelectParameters>
             <asp:Parameter DefaultValue="10" Name="number" Type="Int32" />
         </SelectParameters>
     </asp:ObjectDataSource>
-    </form>
 </body>
 </html>
