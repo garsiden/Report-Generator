@@ -26,6 +26,11 @@ public partial class NewReport : System.Web.UI.Page
         return context;
     }
 
+    public IEnumerable<Strategy> GetStrategies()
+    {
+        return getContext().Strategies;
+    }
+
     protected void createReportButton_Click(object sender, EventArgs e)
     {
         string strTemp = Environment.GetEnvironmentVariable("temp");
@@ -78,5 +83,10 @@ public partial class NewReport : System.Web.UI.Page
             using (StreamWriter ts = new StreamWriter(customXmlPart.GetStream()))
                 ts.Write(customXML);
         }
+    }
+    protected void sourceClient_Inserting(object sender, LinqDataSourceInsertEventArgs e)
+    {
+        Client client = (Client)e.NewObject;
+        client.GUID = Guid.NewGuid();
     }
 }

@@ -1,108 +1,213 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="NewReport.aspx.cs" Inherits="NewReport" %>
 
+<%@ Register Assembly="BasicFrame.WebControls.BasicDatePicker" Namespace="BasicFrame.WebControls"
+    TagPrefix="BDP" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
     <title></title>
 </head>
 <body>
-<h1>New Report</h1>
-    <form id="newReprtForm" runat="server">
-    <div>
-        <table style="width: 100%;" id="newReportTable">
-            <tr>
-                <td>
-                    <asp:Label ID="clientNameLabel" runat="server" Text="Client Name" AssociatedControlID="clientNameText"></asp:Label>
-                </td>
-                <td>
-                    <asp:TextBox ID="clientNameText" runat="server"></asp:TextBox>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <asp:Label ID="meetingDateLabel" runat="server" Text="Meeting Date" AssociatedControlID="meetingDateText"></asp:Label>
-                </td>
-                <td>
-                    <asp:TextBox ID="meetingDateText" runat="server"></asp:TextBox>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <asp:Label ID="reportingFrequencyLabel" runat="server" Text="Reporting Frequency"
-                        AssociatedControlID="reportingFrequencyList"></asp:Label>
-                </td>
-                <td>
-                    <asp:DropDownList ID="reportingFrequencyList" runat="server">
-                        <asp:ListItem Selected="True" Value="H">Half yearly</asp:ListItem>
-                        <asp:ListItem Value="Q">Quarterly</asp:ListItem>
-                    </asp:DropDownList>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <asp:Label ID="initialFeeLabel" runat="server" Text="Initial Fee" AssociatedControlID="initialFeeText"></asp:Label>
-                </td>
-                <td>
-                    <asp:TextBox ID="initialFeeText" runat="server"></asp:TextBox>
-                </td>
-            </tr>
-<tr>
-<td>
-    <asp:Label ID="timeHorizonLabel" runat="server" Text="Time Horizon" 
-        AssociatedControlID="timeHorizonText"></asp:Label></td>
-<td>
-    <asp:TextBox ID="timeHorizonText" runat="server"></asp:TextBox></td>
-</tr>
-<tr>
-<td>
-    <asp:Label ID="suitableLabel" runat="server" 
-        AssociatedControlID="suitableCheck" Text="Suitable"></asp:Label>
-    </td>
-<td>
-    <asp:CheckBox ID="suitableCheck" runat="server" />
-    </td>
-</tr>
-<tr>
-<td>
-    <asp:Label ID="existingAssetsLabel" runat="server" 
-        AssociatedControlID="existingAssetsCheck" Text="Existing Assets"></asp:Label>
-    </td>
-<td>
-    <asp:CheckBox ID="existingAssetsCheck" runat="server" />
-    </td>
-</tr>
-<tr>
-<td>
-    <asp:Label ID="investmetTypeLabel" runat="server" 
-        AssociatedControlID="investmentTypeRadio" Text="Investment Type"></asp:Label>
-    </td>
-<td>
-    <asp:RadioButtonList ID="investmentTypeRadio" runat="server" 
-        RepeatDirection="Horizontal">
-        <asp:ListItem Value="I">Income</asp:ListItem>
-        <asp:ListItem Value="G">Growth</asp:ListItem>
-    </asp:RadioButtonList>
-    </td>
-</tr>
-<tr>
-<td>
-    <asp:Label ID="strategyLabel" runat="server" 
-        AssociatedControlID="strategyRadio" Text="Strategy"></asp:Label>
-    </td>
-<td>
-    <asp:RadioButtonList ID="strategyRadio" runat="server">
-        <asp:ListItem Value="D">Defensive</asp:ListItem>
-        <asp:ListItem Value="C">Cautious</asp:ListItem>
-        <asp:ListItem Value="B">Balanced</asp:ListItem>
-        <asp:ListItem Value="G">Growth</asp:ListItem>
-        <asp:ListItem Value="O">Opportunistic</asp:ListItem>
-    </asp:RadioButtonList>
-    </td>
-</tr>
-        </table>
-    </div>
-    <asp:Button ID="createReportButton" runat="server" Text="Create Report" 
-        onclick="createReportButton_Click" />
-    </form>
+    <h1>
+        New Report</h1>
+    <asp:FormView ID="FormView1" runat="server" DataKeyNames="GUID" DataSourceID="sourceClient">
+        <EditItemTemplate>
+            ReportingFrequency:
+            <br />
+            InitialFeeAmount: GUID:
+            <br />
+            Name:
+            <br />
+            MeetingDate:
+            <br />
+            InitialFee:
+            <br />
+            TimeHorizon:
+            <br />
+            ExistingAssets:
+            <br />
+            StrategyID:
+            <br />
+            InvestmentAmount:
+            <br />
+            SSMA_TimeStamp:
+            <br />
+            ClientAssets:
+            <br />
+            ClientAssetClasses:
+            <br />
+            Strategy:
+            <br />
+            <asp:LinkButton ID="UpdateButton" runat="server" CausesValidation="True" CommandName="Update"
+                Text="Update" />
+            &nbsp;<asp:LinkButton ID="UpdateCancelButton" runat="server" CausesValidation="False"
+                CommandName="Cancel" Text="Cancel" />
+        </EditItemTemplate>
+        <InsertItemTemplate>
+            &nbsp;
+            <table style="width: 100%;">
+                <tr>
+                    <td>
+                        Name
+                    </td>
+                    <td>
+                        <asp:TextBox ID="NameTextBox" runat="server" Text='<%# Bind("Name") %>' Width="80%" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Meeting Date
+                    </td>
+                    <td nowrap="nowrap">
+                        <BDP:BDPLite ID="bdpMeetingDate" runat="server" SelectedDate='<%# Bind("MeetingDate") %>'
+                            Style="display: inline;" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Initial Fee
+                    </td>
+                    <td>
+                        <asp:TextBox ID="InitialFeeTextBox" runat="server" Text='<%# Bind("InitialFee") %>' />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Time Horizon
+                    </td>
+                    <td>
+                        <asp:DropDownList ID="listTimeHorizonEdit" runat="server" SelectedValue='<%# Bind("TimeHorizon") %>'
+                            Width="60px">
+                            <asp:ListItem>1</asp:ListItem>
+                            <asp:ListItem>2</asp:ListItem>
+                            <asp:ListItem>3</asp:ListItem>
+                            <asp:ListItem>4</asp:ListItem>
+                            <asp:ListItem>5</asp:ListItem>
+                            <asp:ListItem>6</asp:ListItem>
+                            <asp:ListItem>7</asp:ListItem>
+                            <asp:ListItem>8</asp:ListItem>
+                            <asp:ListItem>9</asp:ListItem>
+                            <asp:ListItem>10</asp:ListItem>
+                            <asp:ListItem>11</asp:ListItem>
+                            <asp:ListItem>12</asp:ListItem>
+                            <asp:ListItem>13</asp:ListItem>
+                            <asp:ListItem>14</asp:ListItem>
+                            <asp:ListItem>15</asp:ListItem>
+                            <asp:ListItem>16</asp:ListItem>
+                            <asp:ListItem>17</asp:ListItem>
+                            <asp:ListItem>19</asp:ListItem>
+                            <asp:ListItem>20</asp:ListItem>
+                        </asp:DropDownList>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Existing Assets
+                    </td>
+                    <td>
+                        <asp:CheckBox ID="ExistingAssetsCheckBox" runat="server" Checked='<%# Bind("ExistingAssets") %>' />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Strategy
+                    </td>
+                    <td>
+                        <asp:DropDownList ID="listStrategy" runat="server" DataSource="<%# GetStrategies() %>"
+                            DataTextField="Name" DataValueField="ID" DataMember="StrategyID" SelectedValue='<%# Bind("StrategyID") %>'>
+                        </asp:DropDownList>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Investment Amount
+                    </td>
+                    <td>
+                        <asp:TextBox ID="InvestmentAmountTextBox" runat="server" Text='<%# Bind("InvestmentAmount") %>' />
+                    </td>
+                </tr>
+            </table>
+            <br />
+            <br />
+            <asp:LinkButton ID="InsertButton" runat="server" CausesValidation="True" CommandName="Insert"
+                Text="Insert" />
+            &nbsp;<asp:LinkButton ID="InsertCancelButton" runat="server" CausesValidation="False"
+                CommandName="Cancel" Text="Cancel" />
+        </InsertItemTemplate>
+        <ItemTemplate>
+            <table style="width: 100%;">
+                <tr>
+                    <td>
+                        Name
+                    </td>
+                    <td>
+                        <asp:Label ID="NameLabel" runat="server" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Meeting Date
+                    </td>
+                    <td>
+                        <asp:Label ID="MeetingDateLabel" runat="server" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        InitialFee
+                    </td>
+                    <td>
+                        <asp:Label ID="InitialFeeLabel" runat="server" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Time Horizon
+                    </td>
+                    <td>
+                        <asp:Label ID="TimeHorizonLabel" runat="server" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Existing Assets
+                    </td>
+                    <td>
+                        <asp:CheckBox ID="ExistingAssetsCheckBox" runat="server" Enabled="False" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Strategy
+                    </td>
+                    <td>
+                        <asp:Label ID="StrategyIDLabel" runat="server" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Investment Amount
+                    </td>
+                    <td>
+                        <asp:Label ID="InvestmentAmountLabel" runat="server" />
+                    </td>
+                </tr>
+            </table>
+            &nbsp;<br />
+            <asp:LinkButton ID="NewButton" runat="server" CausesValidation="False" CommandName="New"
+                Text="New" />
+        </ItemTemplate>
+    </asp:FormView>
+    <asp:ObjectDataSource ID="sourceClient" runat="server" DataObjectTypeName="RSMTenon.Data.Client"
+        DeleteMethod="DeleteClient" InsertMethod="InsertClient" OldValuesParameterFormatString="original_{0}"
+        SelectMethod="GetRecentClients" TypeName="RSMTenon.Data.Client" UpdateMethod="UpdateClient">
+        <UpdateParameters>
+            <asp:Parameter Name="client" Type="Object" />
+            <asp:Parameter Name="original_client" Type="Object" />
+        </UpdateParameters>
+        <SelectParameters>
+            <asp:Parameter Name="number" DefaultValue="1" Type="Int32" />
+        </SelectParameters>
+    </asp:ObjectDataSource>
 </body>
 </html>
