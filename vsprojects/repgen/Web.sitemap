@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<siteMap xmlns="http://schemas.microsoft.com/AspNet/SiteMap-File-1.0" >
+  <siteMapNode  title="Home"  description="">
+    <siteMapNode url="Default.aspx" title="Home"  description="Home page">
+    </siteMapNode>
+    <siteMapNode title="Clients"  description="">
+      <siteMapNode url="~/Pages/Report.aspx" title="Edit Clients Account"  description="" />
+      <siteMapNode url="NewReport.aspx" title="Add New Client"  description="" />
+    </siteMapNode>
+    <siteMapNode title="Administration" description ="Administrate static data">
+      <siteMapNode url ="~/AdminData/Strategy.aspx" title="Strategies" />
+      <siteMapNode url ="~/AdminData/Benchmark.aspx" title ="Benchmarks" />
+      <siteMapNode url ="~/AdminData/Model.aspx" title ="Models" />
+    </siteMapNode>
+    <siteMapNode title="Search">
+    </siteMapNode>
+    <siteMapNode title="Reports">
+    </siteMapNode>
+  </siteMapNode>
+</siteMap>

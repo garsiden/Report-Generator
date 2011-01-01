@@ -12,7 +12,9 @@
             &nbsp;</td>
     </tr>
     <tr>
-        <td>
+        <td nowrap="nowrap">
+            <asp:Label ID="Label1" runat="server" Font-Bold="True" Font-Names="Tahoma" 
+                Font-Size="Large" Text="Wealth Managment Report Generator"></asp:Label>
         </td>
         <td align="right" width="50%">
             <asp:Label ID="greetingLabel" runat="server"></asp:Label>

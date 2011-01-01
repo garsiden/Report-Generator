@@ -1,16 +1,6 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="Default.aspx.cs" Inherits="_Default" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="Default.aspx.cs" Inherits="_Default" MasterPageFile="~/MasterPages/SiteMasterPage.master" %>
 
-<%@ Register src="UserControls/SiteHeader.ascx" tagname="SiteHeader" tagprefix="uc1" %>
-<%@ Register src="UserControls/SiteFooter.ascx" tagname="SiteFooter" tagprefix="uc2" %>
-
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head runat="server">
-    <title></title>
-</head>
-<body>
-    <form id="form1" runat="server">
-    <div>
+<asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
         <asp:GridView ID="gridClient" runat="server" AutoGenerateColumns="False" 
             DataKeyNames="GUID" DataSourceID="sourceClient">
             <Columns>
@@ -27,12 +17,9 @@
             SelectMethod="GetRecentClients" 
             TypeName="RSMTenon.Data.Client" InsertMethod="InsertClient" 
             OldValuesParameterFormatString="original_{0}" 
-            UpdateMethod="UpdateStockExchange">
+            UpdateMethod="UpdateClient">
             <SelectParameters>
                 <asp:Parameter DefaultValue="10" Name="number" Type="Int32" />
             </SelectParameters>
         </asp:ObjectDataSource>
-    </div>
-    </form>
-</body>
-</html>
+</asp:Content>
