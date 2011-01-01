@@ -500,6 +500,8 @@ namespace RSMTenon.Data
 		
 		private System.Data.Linq.Binary _SSMA_TimeStamp;
 		
+		private bool _HighNetWorth;
+		
 		private EntitySet<ClientAsset> _ClientAssets;
 		
 		private EntitySet<ClientAssetClass> _ClientAssetClasses;
@@ -528,6 +530,8 @@ namespace RSMTenon.Data
     partial void OnInvestmentAmountChanged();
     partial void OnSSMA_TimeStampChanging(System.Data.Linq.Binary value);
     partial void OnSSMA_TimeStampChanged();
+    partial void OnHighNetWorthChanging(bool value);
+    partial void OnHighNetWorthChanged();
     #endregion
 		
 		public Client()
@@ -718,6 +722,26 @@ namespace RSMTenon.Data
 					this._SSMA_TimeStamp = value;
 					this.SendPropertyChanged("SSMA_TimeStamp");
 					this.OnSSMA_TimeStampChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_HighNetWorth", DbType="Bit NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		public bool HighNetWorth
+		{
+			get
+			{
+				return this._HighNetWorth;
+			}
+			set
+			{
+				if ((this._HighNetWorth != value))
+				{
+					this.OnHighNetWorthChanging(value);
+					this.SendPropertyChanging();
+					this._HighNetWorth = value;
+					this.SendPropertyChanged("HighNetWorth");
+					this.OnHighNetWorthChanged();
 				}
 			}
 		}
