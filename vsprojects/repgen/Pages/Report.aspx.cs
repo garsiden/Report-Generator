@@ -17,6 +17,7 @@ public partial class Pages_Report : System.Web.UI.Page
             //var bdp = (BasicFrame.WebControls.BDPLite)formClient.FindControl("dpMeetingInsert");
             //bdp.SelectedDate = DateTime.Today;
         }
+        ExceptionDetails.Visible = false;
 
     }
 
@@ -24,7 +25,6 @@ public partial class Pages_Report : System.Web.UI.Page
     {
         return DataContext.Strategies;
     }
-
 
     private RepGenDataContext DataContext
     {
@@ -37,24 +37,22 @@ public partial class Pages_Report : System.Web.UI.Page
             return context;
         }
     }
-    protected void InvestmentAmountTextBox_TextChanged(object sender, EventArgs e)
+
+    protected void formClient_ItemUpdated(object sender, FormViewUpdatedEventArgs e)
     {
-        string text = ((TextBox)sender).Text;
-
-        int amount = Int32.Parse(text);
-
-        TextBox box = (TextBox)this.formClient.FindControl("ReportingFrequencyTextBox");
-
-        if (amount >= 1000000)
+        if (e.Exception != null)
         {
-            box.Text = "quarterly";
-        }else {
+            // Display a user-friendly message
+            ExceptionDetails.Visible = true;
+            ExceptionDetails.Text = "There was a problem updating the client. ";
+            ExceptionDetails.Text += "<br/>";
+            ExceptionDetails.Text += e.Exception.Message;
 
-            box.Text = "half yearly";
+            // Indicate that the exception has been handled
+            e.ExceptionHandled = true;
+
+            // Keep the row in edit mode
+            e.KeepInEditMode = true;
         }
-    }
-    protected void sourceClient_Inserting(object sender, LinqDataSourceInsertEventArgs e)
-    {
-        ((Client)e.NewObject).GUID = Guid.NewGuid();
     }
 }
