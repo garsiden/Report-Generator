@@ -5,12 +5,13 @@
     </siteMapNode>
     <siteMapNode title="Clients"  description="">
       <siteMapNode url="~/Pages/Report.aspx" title="Edit Clients Account"  description="" />
-      <siteMapNode url="NewReport.aspx" title="Add New Client"  description="" />
+      <siteMapNode url="~/Pages/Client/new.aspx" title="Add New Client"  description="" />
     </siteMapNode>
     <siteMapNode title="Administration" description ="Administrate static data">
-      <siteMapNode url ="~/AdminData/Strategy.aspx" title="Strategies" />
-      <siteMapNode url ="~/AdminData/Benchmark.aspx" title ="Benchmarks" />
-      <siteMapNode url ="~/AdminData/Model.aspx" title ="Models" />
+      <siteMapNode url ="~/Pages/Benchmark/index.aspx" title="Benchmarks" />
+      <siteMapNode url ="~/Pages/Strategy/index.aspx" title ="Strategies" />
+      <siteMapNode url ="~/Pages/Model/index.aspx" title ="Models" />
+      <siteMapNode url ="~/Pages/AssetClass/index.aspx" title ="Asset Classes" />
     </siteMapNode>
     <siteMapNode title="Search">
     </siteMapNode>
