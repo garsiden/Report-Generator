@@ -1,0 +1,78 @@
+/* Forms */
+form {
+  margin-left: 0em;
+  margin-bottom: 2em;
+  min-width: 45em;
+  border: 1px solid #58545c;
+  float: left;
+  width: 75%;
+}
+form legend {
+  font-size: 1.4em;
+  font-weight: bold;
+  padding: 0 0.25em;
+}
+form fieldset {
+  border: 1px solid #8c8296;
+  margin: 2em 12pt;
+  padding: 1em;
+}
+form label {
+  display: block;
+  font-weight: normal;
+  float: left;
+  clear: left;
+  width: 9em;
+  text-align: right;
+  margin-right: 1em;
+  padding-right: 1em;
+  line-height: 1.8em;
+  white-space: nowrap;
+}
+form input {
+  display: block;
+  float: left;
+  margin: 0 0 0.5em 0;
+}
+form input button {
+  width: auto;
+}
+form br {
+  clear: both;
+}
+form p {
+  padding: 3em;
+}
+form input, form select {
+  vertical-align: middle;
+}
+form input[type=button], form input[type=submit], form input[type=reset] {
+  background: #cdd9c4;
+  color: #290d45;
+  border: 1px #2f5a11 double;
+  padding: 0.1em 0.5em;
+}
+form input[type=text], form input[type=radio], form input[type=button] {
+  margin: 0 0.5em 0.5em 0;
+  display: block;
+  float: left;
+}
+form input[type=button] {
+  margin-right: 1em;
+}
+form input[type=text] {
+  width: 8em;
+}
+form input[type=radio] {
+  margin: 0.45em;
+}
+form select {
+  margin: 0 0.5em 0.5em 0;
+  display: block;
+  float: left;
+}
+
+.flash {
+  font-weight: bold;
+  color: #cc0000;
+}

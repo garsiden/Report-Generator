@@ -1,0 +1,6 @@
+/* Layout Content/Header */
+#content, #header-text {
+  float: none;
+  width: 95%;
+  max-width: 95%;
+}
