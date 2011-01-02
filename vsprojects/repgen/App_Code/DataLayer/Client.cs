@@ -6,7 +6,7 @@ using System.Text;
 namespace RSMTenon.Data
 {
     [System.ComponentModel.DataObject]
-    public partial class Client : Data.RepGenDataContext
+    public partial class Client
     {
         #region DataObjectMethods
         [System.ComponentModel.DataObjectMethod(System.ComponentModel.DataObjectMethodType.Select, false)]
@@ -122,7 +122,7 @@ namespace RSMTenon.Data
         #region Data Validation
         partial void OnInitialFeeChanging(decimal value)
         {
-            if (value != null && (value < 0 || value > 5))
+            if ((value < 0 || value > 5))
             {
                 throw new ArgumentException("Initial Fee Percent must be between 0 and 5");
             }
@@ -130,7 +130,7 @@ namespace RSMTenon.Data
 
         partial void OnInvestmentAmountChanging(decimal value)
         {
-            if (value != null && value <= 0)
+            if (value <= 0)
             {
                 throw new ArgumentException("Investment Amount  must be greater than 0");
             }

@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Web;
 
 namespace RSMTenon.Data
 {
     [System.ComponentModel.DataObject]
-    public partial class AssetClass
+    public partial class ClientAsset
     {
-        public string ColourHex { get; set; }
+
     }
 }

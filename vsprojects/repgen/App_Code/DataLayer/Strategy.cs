@@ -5,6 +5,7 @@ using System.Text;
 
 namespace RSMTenon.Data
 {
+    [System.ComponentModel.DataObject]
     public partial class Strategy
     {
         private Dictionary<int, ReturnData> strategyReturn;

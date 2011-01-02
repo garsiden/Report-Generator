@@ -1,11 +1,10 @@
-﻿// $Id$
-using System;
+﻿using System;
 using System.Data;
 using System.Data.SqlClient;
 using System.Collections.Specialized;
 using System.Configuration;
 
-namespace RSMTenon.RepGen.DataLayer
+namespace RSMTenon.Data
 {
 
     /// <summary>
