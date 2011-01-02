@@ -389,7 +389,7 @@
         <HeaderStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
         <EditRowStyle BackColor="#999999" />
     </asp:FormView>
-    </div>
+
     <asp:Label ID="ExceptionDetails" runat="server"></asp:Label>
     <asp:ObjectDataSource ID="sourceClient" runat="server" ConflictDetection="CompareAllValues"
         DataObjectTypeName="RSMTenon.Data.Client" DeleteMethod="DeleteClient" InsertMethod="InsertClient"
