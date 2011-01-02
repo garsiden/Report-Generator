@@ -9,7 +9,7 @@ using System.IO;
 using System.Xml;
 using RSMTenon.Data;
 
-public partial class NewReport : System.Web.UI.Page
+public partial class Pages_Client_new : System.Web.UI.Page
 {
     protected RepGenDataContext context;
 

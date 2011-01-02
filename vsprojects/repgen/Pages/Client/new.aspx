@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="NewReport.aspx.cs" Inherits="NewReport"
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="new.aspx.cs" Inherits="Pages_Client_new"
     MasterPageFile="~/MasterPages/SiteMasterPage.master" %>
 
 <%@ Register Assembly="BasicFrame.WebControls.BasicDatePicker" Namespace="BasicFrame.WebControls"

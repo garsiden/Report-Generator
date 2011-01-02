@@ -6,7 +6,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using RSMTenon.Data;
 
-public partial class Pages_Report : System.Web.UI.Page
+public partial class Pages_Client_edit : System.Web.UI.Page
 {
     private RepGenDataContext context;
 
