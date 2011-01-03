@@ -10,25 +10,47 @@ namespace RSMTenon.Data
     {
         private RepGenDataContext context;
 
-        private RepGenDataContext getContext()
+        private RepGenDataContext DataContext
         {
-            if (context == null)
-                context = new RepGenDataContext();
-            return context;
+            get
+            {
+                if (context == null)
+                    context = new RepGenDataContext();
+                return context;
+            }
         }
 
         public static IQueryable<AssetWeighting> GetModelAllocation(string strategyId)
         {
-            var context = new RepGenDataContext();
-            var models = context.Models;
+            var ctx = new RepGenDataContext();
 
-            var alloction = from model in models
+            var alloction = from model in ctx.Models
                             where model.StrategyID.Equals(strategyId)
                             group model by model.AssetClass.Name into g
-                            select new AssetWeighting { AssetClass = g.Key, Weighting = g.Sum(model => model.Weighting) };
+                            select new AssetWeighting
+                            {
+                                AssetClass = g.Key,
+                                Weighting = g.Sum(model => model.Weighting)
+                            };
 
             return alloction;
         }
 
+        public static IQueryable<ModelAssetClass> GetAssetClasses(string strategyId)
+        {
+            var ctx = new RepGenDataContext();
+
+            var classes = from m in ctx.Models
+                          where m.StrategyID == strategyId
+                          orderby m.AssetClass.Name
+                          group m by m.AssetClassID
+                              into g
+                              select new ModelAssetClass
+                              {
+                                  ID = g.Key,
+                                  Name = g.First().AssetClass.Name,
+                              };
+            return classes;
+        }
     }
 }
