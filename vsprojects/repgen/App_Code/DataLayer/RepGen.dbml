@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Database Name="RepGen" EntityNamespace="RSMTenon.Data" ContextNamespace="RSMTenon.Data" Class="RepGenDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
-  <Connection Mode="WebSettings" ConnectionString="Data Source=ARTHUR;Initial Catalog=RepGen;Persist Security Info=True;User ID=RepGenASP" SettingsObjectName="System.Configuration.ConfigurationManager.ConnectionStrings" SettingsPropertyName="RepGenConnectionString1" Provider="System.Data.SqlClient" />
+  <Connection Mode="WebSettings" ConnectionString="Data Source=ARTHUR;Initial Catalog=RepGen;Integrated Security=True" SettingsObjectName="System.Configuration.ConfigurationManager.ConnectionStrings" SettingsPropertyName="RepGenConnectionString" Provider="System.Data.SqlClient" />
   <Table Name="dbo.tblAssetClass" Member="AssetClasses">
     <Type Name="AssetClass">
       <Column Name="ID" Type="System.String" DbType="NChar(4) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
@@ -132,11 +132,6 @@
     <Parameter Name="assetClassID" Type="System.String" DbType="NChar(4)" />
     <ElementType IdRef="ID1" />
   </Function>
-  <Function Name="dbo.spModelReturn" Method="ModelReturn">
-    <Parameter Name="strategyId" Type="System.String" DbType="Char(2)" />
-    <Parameter Name="startDate" Type="System.DateTime" DbType="DateTime" />
-    <ElementType IdRef="ID1" />
-  </Function>
   <Function Name="dbo.spHistoricPrice" Method="HistoricPrice">
     <Parameter Name="assetClassID" Type="System.String" DbType="NChar(4)" />
     <ElementType IdRef="ID1" />
@@ -154,6 +149,11 @@
   <Function Name="dbo.spClientAssetReturn" Method="ClientAssetReturn">
     <Parameter Name="startDate" Type="System.DateTime" DbType="DateTime" />
     <Parameter Name="ClientGUID" Parameter="clientGUID" Type="System.Guid" DbType="UniqueIdentifier" />
+    <ElementType IdRef="ID1" />
+  </Function>
+  <Function Name="dbo.spModelReturn" Method="ModelReturn">
+    <Parameter Name="strategyId" Type="System.String" DbType="NChar(2)" />
+    <Parameter Name="startDate" Type="System.DateTime" DbType="DateTime" />
     <ElementType IdRef="ID1" />
   </Function>
 </Database>

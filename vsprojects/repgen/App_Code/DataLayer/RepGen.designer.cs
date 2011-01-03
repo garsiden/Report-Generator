@@ -63,7 +63,7 @@ namespace RSMTenon.Data
     #endregion
 		
 		public RepGenDataContext() : 
-				base(global::System.Configuration.ConfigurationManager.ConnectionStrings["RepGenConnectionString1"].ConnectionString, mappingSource)
+				base(global::System.Configuration.ConfigurationManager.ConnectionStrings["RepGenConnectionString"].ConnectionString, mappingSource)
 		{
 			OnCreated();
 		}
@@ -194,13 +194,6 @@ namespace RSMTenon.Data
 			return ((ISingleResult<ReturnData>)(result.ReturnValue));
 		}
 		
-		[Function(Name="dbo.spModelReturn")]
-		public ISingleResult<ReturnData> ModelReturn([Parameter(DbType="Char(2)")] string strategyId, [Parameter(DbType="DateTime")] System.Nullable<System.DateTime> startDate)
-		{
-			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), strategyId, startDate);
-			return ((ISingleResult<ReturnData>)(result.ReturnValue));
-		}
-		
 		[Function(Name="dbo.spHistoricPrice")]
 		public ISingleResult<ReturnData> HistoricPrice([Parameter(DbType="NChar(4)")] string assetClassID)
 		{
@@ -226,6 +219,13 @@ namespace RSMTenon.Data
 		public ISingleResult<ReturnData> ClientAssetReturn([Parameter(DbType="DateTime")] System.Nullable<System.DateTime> startDate, [Parameter(Name="ClientGUID", DbType="UniqueIdentifier")] System.Nullable<System.Guid> clientGUID)
 		{
 			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), startDate, clientGUID);
+			return ((ISingleResult<ReturnData>)(result.ReturnValue));
+		}
+		
+		[Function(Name="dbo.spModelReturn")]
+		public ISingleResult<ReturnData> ModelReturn([Parameter(DbType="NChar(2)")] string strategyId, [Parameter(DbType="DateTime")] System.Nullable<System.DateTime> startDate)
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), strategyId, startDate);
 			return ((ISingleResult<ReturnData>)(result.ReturnValue));
 		}
 	}
