@@ -53,16 +53,7 @@ public partial class Pages_Model_index : RepGenPage
     {
         string strategyId = this.listStrategy.SelectedValue;
 
-        var models = from m in DataContext.Models
-                     where m.StrategyID == strategyId
-                     orderby m.AssetClass.Name
-                     group m by m.AssetClassID
-                         into g
-                         select new ModelAssetClass
-                         {
-                             ID = g.Key,
-                             Name = g.First().AssetClass.Name,
-                         };
-        return models;
+        return Model.GetAssetClasses(strategyId);
+
     }
 }
