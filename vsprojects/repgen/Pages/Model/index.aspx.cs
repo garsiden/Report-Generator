@@ -22,26 +22,10 @@ public partial class Pages_Model_index : RepGenPage
         if (e.Row.RowType == DataControlRowType.DataRow)
         {
             GridView gridChild = (GridView)e.Row.Cells[1].Controls[1];
-            if (gridModel.DataKeys.Count > 0)
-            {
                 string assetClassId = gridModel.DataKeys[e.Row.DataItemIndex].Value.ToString();
                 sourceDetail.WhereParameters[0].DefaultValue = assetClassId;
-
-                //object data = sourceDetail.Select(DataSourceSelectArguments.Empty);
-                //object data = sourceDetail.
-                //var ctx = new RepGenDataContext();
-                //var models = ctx.Models;
-
-                //var match = from model in models
-                //            where model.StrategyID.Equals("CO") && model.AssetClassID.Equals(assetClassId)
-                //            select new {
-                //                InvestmentName = model.InvestmentName,
-                //                Weighting = model.Weighting
-                //            };
-
                 gridChild.DataSource = sourceDetail;
                 gridChild.DataBind();
-            }
         }
     }
     protected void listStrategy_SelectedIndexChanged(object sender, EventArgs e)
