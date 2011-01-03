@@ -28,6 +28,12 @@ namespace RSMTenon.Data
         public decimal Weighting;
     }
 
+    public class ModelAssetClass
+    {
+        public string ID { get; set; }
+        public string Name { get; set; }
+    }
+
     public partial class RepGenDataContext : System.Data.Linq.DataContext
     {
         [Function(Name = "dbo.spClientAssetReturn")]
