@@ -11,8 +11,6 @@ namespace RSMTenon.ReportGenerator
 {
     class TextContent
     {
-         private string destinationXml = @"../../App_Data/content_temp.xml";
-
         public enum TimeHorizon
         {
             one = 1,
@@ -37,19 +35,15 @@ namespace RSMTenon.ReportGenerator
             twenty
         }
 
-        public void GenerateTextContent(MainDocumentPart mainPart,  Client client, string contentFile)
+        public void GenerateTextContent(MainDocumentPart mainPart, Client client, string contentFile, string tempContentFile)
         {
-            GetContent(client, contentFile);
-            string customXml = File.ReadAllText(destinationXml);
+            GetContent(client, contentFile, tempContentFile);
+            string customXml = File.ReadAllText(tempContentFile);
             replaceCustomXML(mainPart, customXml);
             mainPart.Document.Save();
-
-            //Delete the temp files
-            //File.Delete(tempFile);
-            //File.Delete(destinationXml);
         }
 
-        protected void GetContent(Client client, string sourceXml)
+        protected void GetContent(Client client, string sourceXml, string outputXml)
         {
             // get content from database
             string assets = (client.ExistingAssets ? "existing-assets" : "no-existing-assets");
@@ -61,11 +55,8 @@ namespace RSMTenon.ReportGenerator
                           select c;
             var content = match.ToList();
 
-            // create temp content file
-            createTempXmlFile(sourceXml, destinationXml);
-
             XmlDocument doc = new XmlDocument();
-            doc.Load(destinationXml);
+            doc.Load(outputXml);
 
             // Create an XmlNamespaceManager to resolve the default namespace.
             XmlNamespaceManager nsmgr = new XmlNamespaceManager(doc.NameTable);
@@ -222,14 +213,11 @@ namespace RSMTenon.ReportGenerator
             xmlnode = root.SelectSingleNode("/wmr:repgen/wmr:strategy/wmr:performance/wmr:return", nsmgr);
             xmlnode.InnerText = modelReturn.ToString("0.0%");
 
-            doc.Save(destinationXml);
-
+            doc.Save(outputXml);
         }
+
         private void replaceCustomXML(MainDocumentPart mainPart, string customXML)
         {
-            //using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(fileName, true)) {
-            //    MainDocumentPart mainPart = wordDoc.MainDocumentPart;
-
                 mainPart.DeleteParts<CustomXmlPart>(mainPart.CustomXmlParts);
 
                 //Add a new customXML part and then add content
@@ -239,49 +227,6 @@ namespace RSMTenon.ReportGenerator
                 using (StreamWriter ts = new StreamWriter(customXmlPart.GetStream())) {
                     ts.Write(customXML);
             }
-
-        }
-
-        private string createTempDocFile()
-        {
-            string tempDir = Environment.GetEnvironmentVariable("temp");
-            string sourceFile = @"../../App_Data/template1.dotx";
-            string tempFile = String.Format("{0}\\{1}.dotx", tempDir, Guid.NewGuid().ToString());
-            copyFile2(sourceFile, tempFile);
-
-            return tempFile;
-        }
-
-        private void copyFile(string source, string destination)
-        {
-            // copy file allowing sharing
-            FileStream fr = new FileStream(source, FileMode.Open, FileAccess.Read, FileShare.Read);
-            int len = (int)fr.Length;
-            byte[] data = new byte[len];
-            fr.Read(data, 0, len);
-            fr.Close();
-
-            FileStream fw = new FileStream(destination, FileMode.Create, FileAccess.Write);
-            fw.Write(data, 0, len);
-            fw.Close();
-        }
-
-        private void copyFile2(string source, string destination)
-        {
-            using (FileStream input = new FileStream(source, FileMode.Open, FileAccess.Read, FileShare.Read)) {
-                using (FileStream output = new FileStream(destination, FileMode.Create, FileAccess.Write)) {
-                    byte[] buffer = new byte[16384];
-                    int len;
-                    while ((len = input.Read(buffer, 0, buffer.Length)) > 0) {
-                        output.Write(buffer, 0, len);
-                    }
-                }
-            }
-        }
-
-        private void createTempXmlFile(string source, string destination)
-        {
-            copyFile2(source, destination);
         }
 
         private double calculateModelReturn(Strategy strategy)
