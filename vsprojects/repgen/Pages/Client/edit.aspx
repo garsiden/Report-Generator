@@ -310,8 +310,22 @@
                         </asp:RadioButtonList>
                     </td>
                 </tr>
+                <tr>
+                    <td>
+                        &nbsp;</td>
+                    <td>
+                        &nbsp;</td>
+                </tr>
+                <tr>
+                    <td rowspan="2">
+                        <asp:LinkButton ID="linkEdit" runat="server" CommandName="Edit">Edit</asp:LinkButton>
+                    </td>
+                    <td align="right" rowspan="2">
+                        <asp:Button ID="btnCreateReport" runat="server" onclick="btnCreateReport_Click" 
+                            Text="Create Report" />
+                    </td>
+                </tr>
             </table>
-            <asp:LinkButton ID="linkEdit" runat="server" CommandName="Edit">Edit</asp:LinkButton>
             <br />
         </ItemTemplate>
         <PagerStyle BackColor="#284775" ForeColor="White" HorizontalAlign="Center" />
