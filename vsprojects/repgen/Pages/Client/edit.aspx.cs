@@ -6,7 +6,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using RSMTenon.Data;
 
-public partial class Pages_Client_edit : System.Web.UI.Page
+public partial class Pages_Client_edit : RepGenPage
 {
     private RepGenDataContext context;
 
@@ -21,22 +21,22 @@ public partial class Pages_Client_edit : System.Web.UI.Page
 
     }
 
-    public IEnumerable<Strategy> GetStrategies()
-    {
-        return DataContext.Strategies;
-    }
+    //public IEnumerable<Strategy> GetStrategies()
+    //{
+    //    return DataContext.Strategies;
+    //}
 
-    private RepGenDataContext DataContext
-    {
-        get
-        {
-            if (context == null)
-            {
-                context = new RepGenDataContext();
-            }
-            return context;
-        }
-    }
+    //private RepGenDataContext DataContext
+    //{
+    //    get
+    //    {
+    //        if (context == null)
+    //        {
+    //            context = new RepGenDataContext();
+    //        }
+    //        return context;
+    //    }
+    //}
 
     protected void formClient_ItemUpdated(object sender, FormViewUpdatedEventArgs e)
     {
