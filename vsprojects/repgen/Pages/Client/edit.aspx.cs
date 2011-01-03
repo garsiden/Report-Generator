@@ -4,7 +4,9 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using System.IO;
 using RSMTenon.Data;
+using RSMTenon.ReportGenerator;
 
 public partial class Pages_Client_edit : RepGenPage
 {
@@ -12,31 +14,8 @@ public partial class Pages_Client_edit : RepGenPage
 
     protected void Page_Load(object sender, EventArgs e)
     {
-        if (!IsPostBack)
-        {
-            //var bdp = (BasicFrame.WebControls.BDPLite)formClient.FindControl("dpMeetingInsert");
-            //bdp.SelectedDate = DateTime.Today;
-        }
         ExceptionDetails.Visible = false;
-
     }
-
-    //public IEnumerable<Strategy> GetStrategies()
-    //{
-    //    return DataContext.Strategies;
-    //}
-
-    //private RepGenDataContext DataContext
-    //{
-    //    get
-    //    {
-    //        if (context == null)
-    //        {
-    //            context = new RepGenDataContext();
-    //        }
-    //        return context;
-    //    }
-    //}
 
     protected void formClient_ItemUpdated(object sender, FormViewUpdatedEventArgs e)
     {
@@ -53,6 +32,33 @@ public partial class Pages_Client_edit : RepGenPage
 
             // Keep the row in edit mode
             e.KeepInEditMode = true;
+        }
+    }
+
+    protected void btnCreateReport_Click(object sender, EventArgs e)
+    {
+
+        Guid clientGuid = new Guid(this.Request.QueryString["guid"]);
+        Client client = Client.GetClientByGUID(clientGuid);
+        Report report = new Report() { Client = client };
+        var repgen = new ReportGenerator();
+        string tempDocName = repgen.CreateReport(report);
+
+        try
+        {
+            Response.ClearContent();
+            Response.ClearHeaders();
+            Response.AppendHeader("Content-Disposition", "attachment; filename=repgen.dotx");
+            Response.AppendHeader("Content-Type", "application/msword");
+            Response.ContentEncoding = System.Text.Encoding.UTF8;
+            Response.TransmitFile(tempDocName);
+            Response.Flush();
+            Response.Close();
+        }
+        finally
+        {
+            if (File.Exists(tempDocName))
+                File.Delete(tempDocName);
         }
     }
 }
