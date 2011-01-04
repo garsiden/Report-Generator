@@ -60,6 +60,9 @@ namespace RSMTenon.Data
     partial void InsertStrategy(Strategy instance);
     partial void UpdateStrategy(Strategy instance);
     partial void DeleteStrategy(Strategy instance);
+    partial void InsertHistoricData(HistoricData instance);
+    partial void UpdateHistoricData(HistoricData instance);
+    partial void DeleteHistoricData(HistoricData instance);
     #endregion
 		
 		public RepGenDataContext() : 
@@ -177,6 +180,14 @@ namespace RSMTenon.Data
 			get
 			{
 				return this.GetTable<Strategy>();
+			}
+		}
+		
+		public System.Data.Linq.Table<HistoricData> HistoricDatas
+		{
+			get
+			{
+				return this.GetTable<HistoricData>();
 			}
 		}
 		
@@ -2662,6 +2673,380 @@ namespace RSMTenon.Data
 		{
 			this.SendPropertyChanging();
 			entity.Strategy = null;
+		}
+	}
+	
+	[Table(Name="dbo.tblHistoricDataByClass")]
+	public partial class HistoricData : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private System.DateTime _Date;
+		
+		private double _CASH;
+		
+		private double _UKGB;
+		
+		private double _UKCB;
+		
+		private double _COPR;
+		
+		private double _UKHY;
+		
+		private double _WOBO;
+		
+		private double _HEDG;
+		
+		private double _GLEQ;
+		
+		private double _LOSH;
+		
+		private double _UKEQ;
+		
+		private double _PREQ;
+		
+		private double _COMM;
+		
+		private System.Data.Linq.Binary _SSMA_TimeStamp;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnDateChanging(System.DateTime value);
+    partial void OnDateChanged();
+    partial void OnCASHChanging(double value);
+    partial void OnCASHChanged();
+    partial void OnUKGBChanging(double value);
+    partial void OnUKGBChanged();
+    partial void OnUKCBChanging(double value);
+    partial void OnUKCBChanged();
+    partial void OnCOPRChanging(double value);
+    partial void OnCOPRChanged();
+    partial void OnUKHYChanging(double value);
+    partial void OnUKHYChanged();
+    partial void OnWOBOChanging(double value);
+    partial void OnWOBOChanged();
+    partial void OnHEDGChanging(double value);
+    partial void OnHEDGChanged();
+    partial void OnGLEQChanging(double value);
+    partial void OnGLEQChanged();
+    partial void OnLOSHChanging(double value);
+    partial void OnLOSHChanged();
+    partial void OnUKEQChanging(double value);
+    partial void OnUKEQChanged();
+    partial void OnPREQChanging(double value);
+    partial void OnPREQChanged();
+    partial void OnCOMMChanging(double value);
+    partial void OnCOMMChanged();
+    partial void OnSSMA_TimeStampChanging(System.Data.Linq.Binary value);
+    partial void OnSSMA_TimeStampChanged();
+    #endregion
+		
+		public HistoricData()
+		{
+			OnCreated();
+		}
+		
+		[Column(Storage="_Date", DbType="DateTime NOT NULL", IsPrimaryKey=true, UpdateCheck=UpdateCheck.Never)]
+		public System.DateTime Date
+		{
+			get
+			{
+				return this._Date;
+			}
+			set
+			{
+				if ((this._Date != value))
+				{
+					this.OnDateChanging(value);
+					this.SendPropertyChanging();
+					this._Date = value;
+					this.SendPropertyChanged("Date");
+					this.OnDateChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_CASH", DbType="Float NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		public double CASH
+		{
+			get
+			{
+				return this._CASH;
+			}
+			set
+			{
+				if ((this._CASH != value))
+				{
+					this.OnCASHChanging(value);
+					this.SendPropertyChanging();
+					this._CASH = value;
+					this.SendPropertyChanged("CASH");
+					this.OnCASHChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_UKGB", DbType="Float NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		public double UKGB
+		{
+			get
+			{
+				return this._UKGB;
+			}
+			set
+			{
+				if ((this._UKGB != value))
+				{
+					this.OnUKGBChanging(value);
+					this.SendPropertyChanging();
+					this._UKGB = value;
+					this.SendPropertyChanged("UKGB");
+					this.OnUKGBChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_UKCB", DbType="Float NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		public double UKCB
+		{
+			get
+			{
+				return this._UKCB;
+			}
+			set
+			{
+				if ((this._UKCB != value))
+				{
+					this.OnUKCBChanging(value);
+					this.SendPropertyChanging();
+					this._UKCB = value;
+					this.SendPropertyChanged("UKCB");
+					this.OnUKCBChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_COPR", DbType="Float NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		public double COPR
+		{
+			get
+			{
+				return this._COPR;
+			}
+			set
+			{
+				if ((this._COPR != value))
+				{
+					this.OnCOPRChanging(value);
+					this.SendPropertyChanging();
+					this._COPR = value;
+					this.SendPropertyChanged("COPR");
+					this.OnCOPRChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_UKHY", DbType="Float NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		public double UKHY
+		{
+			get
+			{
+				return this._UKHY;
+			}
+			set
+			{
+				if ((this._UKHY != value))
+				{
+					this.OnUKHYChanging(value);
+					this.SendPropertyChanging();
+					this._UKHY = value;
+					this.SendPropertyChanged("UKHY");
+					this.OnUKHYChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_WOBO", DbType="Float NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		public double WOBO
+		{
+			get
+			{
+				return this._WOBO;
+			}
+			set
+			{
+				if ((this._WOBO != value))
+				{
+					this.OnWOBOChanging(value);
+					this.SendPropertyChanging();
+					this._WOBO = value;
+					this.SendPropertyChanged("WOBO");
+					this.OnWOBOChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_HEDG", DbType="Float NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		public double HEDG
+		{
+			get
+			{
+				return this._HEDG;
+			}
+			set
+			{
+				if ((this._HEDG != value))
+				{
+					this.OnHEDGChanging(value);
+					this.SendPropertyChanging();
+					this._HEDG = value;
+					this.SendPropertyChanged("HEDG");
+					this.OnHEDGChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_GLEQ", DbType="Float NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		public double GLEQ
+		{
+			get
+			{
+				return this._GLEQ;
+			}
+			set
+			{
+				if ((this._GLEQ != value))
+				{
+					this.OnGLEQChanging(value);
+					this.SendPropertyChanging();
+					this._GLEQ = value;
+					this.SendPropertyChanged("GLEQ");
+					this.OnGLEQChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_LOSH", DbType="Float NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		public double LOSH
+		{
+			get
+			{
+				return this._LOSH;
+			}
+			set
+			{
+				if ((this._LOSH != value))
+				{
+					this.OnLOSHChanging(value);
+					this.SendPropertyChanging();
+					this._LOSH = value;
+					this.SendPropertyChanged("LOSH");
+					this.OnLOSHChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_UKEQ", DbType="Float NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		public double UKEQ
+		{
+			get
+			{
+				return this._UKEQ;
+			}
+			set
+			{
+				if ((this._UKEQ != value))
+				{
+					this.OnUKEQChanging(value);
+					this.SendPropertyChanging();
+					this._UKEQ = value;
+					this.SendPropertyChanged("UKEQ");
+					this.OnUKEQChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_PREQ", DbType="Float NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		public double PREQ
+		{
+			get
+			{
+				return this._PREQ;
+			}
+			set
+			{
+				if ((this._PREQ != value))
+				{
+					this.OnPREQChanging(value);
+					this.SendPropertyChanging();
+					this._PREQ = value;
+					this.SendPropertyChanged("PREQ");
+					this.OnPREQChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_COMM", DbType="Float NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		public double COMM
+		{
+			get
+			{
+				return this._COMM;
+			}
+			set
+			{
+				if ((this._COMM != value))
+				{
+					this.OnCOMMChanging(value);
+					this.SendPropertyChanging();
+					this._COMM = value;
+					this.SendPropertyChanged("COMM");
+					this.OnCOMMChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_SSMA_TimeStamp", AutoSync=AutoSync.Always, DbType="rowversion NOT NULL", CanBeNull=false, IsDbGenerated=true, IsVersion=true, UpdateCheck=UpdateCheck.Never)]
+		public System.Data.Linq.Binary SSMA_TimeStamp
+		{
+			get
+			{
+				return this._SSMA_TimeStamp;
+			}
+			set
+			{
+				if ((this._SSMA_TimeStamp != value))
+				{
+					this.OnSSMA_TimeStampChanging(value);
+					this.SendPropertyChanging();
+					this._SSMA_TimeStamp = value;
+					this.SendPropertyChanged("SSMA_TimeStamp");
+					this.OnSSMA_TimeStampChanged();
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
 		}
 	}
 }

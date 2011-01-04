@@ -122,6 +122,24 @@
       <Association Name="Benchmark_Strategy" Member="Benchmark" ThisKey="BenchmarkID" OtherKey="ID" Type="Benchmark" IsForeignKey="true" />
     </Type>
   </Table>
+  <Table Name="dbo.tblHistoricDataByClass" Member="HistoricDatas">
+    <Type Name="HistoricData">
+      <Column Name="Date" Type="System.DateTime" DbType="DateTime NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="CASH" Type="System.Double" DbType="Float NOT NULL" CanBeNull="false" />
+      <Column Name="UKGB" Type="System.Double" DbType="Float NOT NULL" CanBeNull="false" />
+      <Column Name="UKCB" Type="System.Double" DbType="Float NOT NULL" CanBeNull="false" />
+      <Column Name="COPR" Type="System.Double" DbType="Float NOT NULL" CanBeNull="false" />
+      <Column Name="UKHY" Type="System.Double" DbType="Float NOT NULL" CanBeNull="false" />
+      <Column Name="WOBO" Type="System.Double" DbType="Float NOT NULL" CanBeNull="false" />
+      <Column Name="HEDG" Type="System.Double" DbType="Float NOT NULL" CanBeNull="false" />
+      <Column Name="GLEQ" Type="System.Double" DbType="Float NOT NULL" CanBeNull="false" />
+      <Column Name="LOSH" Type="System.Double" DbType="Float NOT NULL" CanBeNull="false" />
+      <Column Name="UKEQ" Type="System.Double" DbType="Float NOT NULL" CanBeNull="false" />
+      <Column Name="PREQ" Type="System.Double" DbType="Float NOT NULL" CanBeNull="false" />
+      <Column Name="COMM" Type="System.Double" DbType="Float NOT NULL" CanBeNull="false" />
+      <Column Name="SSMA_TimeStamp" Type="System.Data.Linq.Binary" DbType="rowversion NOT NULL" CanBeNull="false" IsVersion="true" />
+    </Type>
+  </Table>
   <Function Name="dbo.spRollingReturn" Method="RollingReturn">
     <Parameter Name="years" Type="System.Int32" DbType="Int" />
     <Parameter Name="assetClassID" Type="System.String" DbType="NChar(4)" />

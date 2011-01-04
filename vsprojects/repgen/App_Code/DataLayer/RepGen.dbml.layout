@@ -72,7 +72,7 @@
         <classShapeMoniker Id="5b06870b-2ad0-4701-931e-b65a6a759901" />
       </nodes>
     </associationConnector>
-    <associationConnector edgePoints="[(7.14911180924479 : 2.04984781901042); (6.74642556509888 : 2.45253406315633 : JumpStart); (6.62857443490112 : 2.57038519335409 : JumpEnd); (6.52411180924479 : 2.67484781901042); (2.875 : 2.67484781901042); (2.875 : 2.46419514973958); (2.5 : 2.08919514973958)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+    <associationConnector edgePoints="[(7.125 : 2.04984781901042); (6.74642556509888 : 2.42842225391154 : JumpStart); (6.62857443490112 : 2.5462733841093 : JumpEnd); (6.5 : 2.67484781901042); (2.875 : 2.67484781901042); (2.875 : 2.46419514973958); (2.5 : 2.08919514973958)]" fixedFrom="NotFixed" fixedTo="NotFixed">
       <AssociationMoniker Name="/RepGenDataContext/AssetClass/AssetClass_ModelBreakdown" />
       <nodes>
         <classShapeMoniker Id="8dcdb6ff-e756-460a-86d7-941ad7e43132" />
@@ -110,33 +110,39 @@
         <elementListCompartment Id="1416f4bc-eda2-42b3-8205-2edf4b499e19" absoluteBounds="0.51500000000000012, 3.335, 1.9700000000000002, 1.3578898111979165" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
-    <associationConnector edgePoints="[(1.4687475 : 2.875); (1.4687475 : 2.08919514973958)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+    <associationConnector edgePoints="[(1.4687475 : 2.875); (1.4687475 : 2.08919514973958)]" fixedFrom="Algorithm" fixedTo="Algorithm">
       <AssociationMoniker Name="/RepGenDataContext/Strategy/Strategy_ModelBreakdown" />
       <nodes>
         <classShapeMoniker Id="6ff63e00-fb84-4961-a3d0-eef3a0c4efdd" />
         <classShapeMoniker Id="a97a07cf-21ee-42b1-b511-4718f12438ab" />
       </nodes>
     </associationConnector>
-    <associationConnector edgePoints="[(2.5 : 4.600771484375); (6.125 : 4.600771484375)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+    <associationConnector edgePoints="[(2.5 : 4.600771484375); (5.51041666666667 : 4.600771484375 : JumpStart); (5.67708333333333 : 4.600771484375 : JumpEnd); (6.125 : 4.600771484375)]" fixedFrom="Algorithm" fixedTo="Algorithm">
       <AssociationMoniker Name="/RepGenDataContext/Strategy/Strategy_Client" />
       <nodes>
         <classShapeMoniker Id="6ff63e00-fb84-4961-a3d0-eef3a0c4efdd" />
         <classShapeMoniker Id="5a08ee7a-7218-4b84-b2bf-0df2e19e83e2" />
       </nodes>
     </associationConnector>
-    <associationConnector edgePoints="[(2.5 : 3.03125); (5.59375 : 3.03125); (5.59375 : 5.25)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+    <associationConnector edgePoints="[(2.5 : 3.03125); (5.59375 : 3.03125); (5.59375 : 5.25)]" fixedFrom="Algorithm" fixedTo="Algorithm">
       <AssociationMoniker Name="/RepGenDataContext/Strategy/Strategy_Content" />
       <nodes>
         <classShapeMoniker Id="6ff63e00-fb84-4961-a3d0-eef3a0c4efdd" />
         <classShapeMoniker Id="67267aac-1bbe-4081-839d-dcecf2829e0d" />
       </nodes>
     </associationConnector>
-    <associationConnector edgePoints="[(3.5 : 3.79807657877604); (2.5 : 3.79807657877604)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+    <associationConnector edgePoints="[(3.5 : 3.79807657877604); (2.5 : 3.79807657877604)]" fixedFrom="Algorithm" fixedTo="Algorithm">
       <AssociationMoniker Name="/RepGenDataContext/Benchmark/Benchmark_Strategy" />
       <nodes>
         <classShapeMoniker Id="759d9c1f-0346-4f0a-9f6d-3ff8ab573208" />
         <classShapeMoniker Id="6ff63e00-fb84-4961-a3d0-eef3a0c4efdd" />
       </nodes>
     </associationConnector>
+    <classShape Id="4feb2e49-0fe0-4be1-b555-4b3e50d28676" absoluteBounds="1.25, 5.125, 2, 3.0683211263020831">
+      <DataClassMoniker Name="/RepGenDataContext/HistoricData" />
+      <nestedChildShapes>
+        <elementListCompartment Id="7af9d77b-463d-44c6-937b-b03efef85ee0" absoluteBounds="1.2650000000000001, 5.585, 1.9700000000000002, 2.508321126302083" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
   </nestedChildShapes>
 </ordesignerObjectsDiagram>
