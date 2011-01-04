@@ -35,15 +35,20 @@ namespace RSMTenon.ReportGenerator
             twenty
         }
 
-        public void GenerateTextContent(MainDocumentPart mainPart, Client client, string contentFile, string tempContentFile)
+
+        public void GenerateTextContent(MainDocumentPart mainPart, Client client, string contentFileName, Stream tempContentFile)
         {
-            GetContent(client, contentFile, tempContentFile);
-            string customXml = File.ReadAllText(tempContentFile);
+            GetContent(client, contentFileName, tempContentFile);
+
+            StreamReader sr = new StreamReader(tempContentFile, Encoding.UTF8);
+            string customXml = sr.ReadToEnd();
+            sr.Close();
+
             replaceCustomXML(mainPart, customXml);
             mainPart.Document.Save();
         }
 
-        protected void GetContent(Client client, string sourceXml, string outputXml)
+        protected void GetContent(Client client, string sourceXml, Stream outputXml)
         {
             // get content from database
             string assets = (client.ExistingAssets ? "existing-assets" : "no-existing-assets");
@@ -56,6 +61,7 @@ namespace RSMTenon.ReportGenerator
             var content = match.ToList();
 
             XmlDocument doc = new XmlDocument();
+            outputXml.Position = 0;
             doc.Load(outputXml);
 
             // Create an XmlNamespaceManager to resolve the default namespace.
@@ -94,7 +100,7 @@ namespace RSMTenon.ReportGenerator
 
             // client.initial-fee
             xmlnode = root.SelectSingleNode("/wmr:repgen/wmr:client/wmr:initial-fee", nsmgr);
-            xmlnode.InnerText = client.InitialFee.ToString("0.00%");
+            xmlnode.InnerText = (client.InitialFee / 100).ToString("0.00%");
 
             // Strategy
             // get strategy object
@@ -213,7 +219,11 @@ namespace RSMTenon.ReportGenerator
             xmlnode = root.SelectSingleNode("/wmr:repgen/wmr:strategy/wmr:performance/wmr:return", nsmgr);
             xmlnode.InnerText = modelReturn.ToString("0.0%");
 
-            doc.Save(outputXml);
+            outputXml.Position = 0;
+            StreamWriter sw = new StreamWriter(outputXml, Encoding.UTF8);
+
+            doc.Save(sw);
+            outputXml.Position = 0;
         }
 
         private void replaceCustomXML(MainDocumentPart mainPart, string customXML)

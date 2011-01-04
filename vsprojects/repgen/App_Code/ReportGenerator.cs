@@ -25,7 +25,7 @@ namespace RSMTenon.ReportGenerator
         {
             NameValueCollection appSettings = (NameValueCollection)ConfigurationManager.GetSection("appSettings");
             string templateFile = appSettings["TemplateFile"];
-            TemplateFile = Server.MapPath(sourceDir  + templateFile);
+            TemplateFile = Server.MapPath(sourceDir + templateFile);
             string contentFile = appSettings["ContentFile"];
             ContentXmlFile = Server.MapPath(sourceDir + contentFile);
             string tempDir = appSettings["TempDir"];
@@ -38,15 +38,14 @@ namespace RSMTenon.ReportGenerator
         public string CreateReport(Report report)
         {
             string tempDocName = null;
-            string tempXmlName = null;
             WordprocessingDocument myWordDoc = null;
             MainDocumentPart mainPart = null;
+            MemoryStream tempXmlStream = null;
 
-            try
-            {
-                // create temp files
+            try {
+                // create temp files/streams
                 tempDocName = createTempDocFile(TemplateFile, TempDir);
-                tempXmlName = createTempXmlFile(ContentXmlFile, TempContentXmlFile);
+                tempXmlStream = createTempXmlStream(ContentXmlFile);
 
                 // open Word document
                 myWordDoc = WordprocessingDocument.Open(tempDocName, true);
@@ -54,7 +53,7 @@ namespace RSMTenon.ReportGenerator
 
                 // Add text content
                 TextContent tc = new TextContent();
-                tc.GenerateTextContent(mainPart, report.Client, ContentXmlFile, tempXmlName);
+                tc.GenerateTextContent(mainPart, report.Client, ContentXmlFile, tempXmlStream);
 
                 // Model Table
                 string controlName = null;
@@ -64,16 +63,16 @@ namespace RSMTenon.ReportGenerator
 
                 // Charts
                 AddChartsToDoc(mainPart);
-            }
-            finally
-            {
+            } finally {
                 // save and close document
+                if (tempXmlStream != null)
+                    tempXmlStream.Close();
                 if (mainPart != null)
                     mainPart.Document.Save();
                 if (myWordDoc != null)
                     myWordDoc.Close();
-                if (File.Exists(tempXmlName))
-                    File.Delete(tempXmlName);
+                if (tempXmlStream != null)
+                    tempXmlStream.Close();
             }
 
             return tempDocName;
@@ -169,8 +168,7 @@ namespace RSMTenon.ReportGenerator
                 .Contains
                 (s.SdtProperties.GetFirstChild<SdtAlias>().Val.Value)).ToList();
 
-            if (stdList.Count != 0)
-            {
+            if (stdList.Count != 0) {
                 SdtBlock sdt = stdList.First<SdtBlock>();
                 OpenXmlElement parent = sdt.Parent;
                 parent.InsertAfter(table, sdt);
@@ -185,8 +183,7 @@ namespace RSMTenon.ReportGenerator
             SdtBlock sdt = main.Document.Descendants<SdtBlock>().Where(
                  s => s.SdtProperties.GetFirstChild<SdtAlias>().Val.Value.Equals(blockName)).First();
 
-            if (sdt != null)
-            {
+            if (sdt != null) {
                 Paragraph para = sdt.SdtContentBlock.GetFirstChild<Paragraph>();
                 para.RemoveAllChildren();
                 return para;
@@ -202,27 +199,34 @@ namespace RSMTenon.ReportGenerator
             return tempFile;
         }
 
-        private string createTempXmlFile(string source, string destination)
+        private MemoryStream createTempXmlStream(string source)
         {
-            copyFile(source, destination);
-            return destination;
+            int buflen = 16384;
+            MemoryStream output = null;
+
+            using (FileStream input = new FileStream(source, FileMode.Open, FileAccess.Read, FileShare.Read)) {
+                output = new MemoryStream(buflen);
+                byte[] buffer = new byte[buflen];
+                int len;
+                while ((len = input.Read(buffer, 0, buffer.Length)) > 0) {
+                    output.Write(buffer, 0, len);
+                }
+            }
+            output.Position = 0;
+            return output;
         }
 
         private static void copyFile(string source, string destination)
         {
-            using (FileStream input = new FileStream(source, FileMode.Open, FileAccess.Read, FileShare.Read))
-            {
-                using (FileStream output = new FileStream(destination, FileMode.Create, FileAccess.Write))
-                {
+            using (FileStream input = new FileStream(source, FileMode.Open, FileAccess.Read, FileShare.Read)) {
+                using (FileStream output = new FileStream(destination, FileMode.Create, FileAccess.Write)) {
                     byte[] buffer = new byte[16384];
                     int len;
-                    while ((len = input.Read(buffer, 0, buffer.Length)) > 0)
-                    {
+                    while ((len = input.Read(buffer, 0, buffer.Length)) > 0) {
                         output.Write(buffer, 0, len);
                     }
                 }
             }
         }
-
     }
 }
