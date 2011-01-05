@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
@@ -58,5 +59,29 @@ public partial class RepGenPage : System.Web.UI.Page
             if (File.Exists(tempDocName))
                 File.Delete(tempDocName);
         }
+    }
+
+    protected ListDictionary CreateListDictionaryFromGridFooter(string[] fields, GridView gridView)
+    {
+        var listDictionary = new ListDictionary();
+
+        foreach (var f in fields)
+        {
+            string boxName = "text" + f + "Add";
+            TextBox textBox = (TextBox)gridView.FooterRow.FindControl(boxName);
+            if (f == "Date")
+            {
+                DateTime dt = DateTime.Parse(textBox.Text);
+                listDictionary.Add(f, dt);
+            }
+            else
+            {
+                double db = Double.Parse(textBox.Text);
+                listDictionary.Add(f, db);
+            }
+            textBox.Text = String.Empty;
+        }
+
+        return listDictionary;
     }
 }
