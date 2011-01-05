@@ -6,7 +6,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
-public partial class Pages_HistoricData_assetsN_Z : RepGenPage
+public partial class Pages_AssetClass_editN_Z : RepGenPage
 {
     protected void Page_Load(object sender, EventArgs e)
     {

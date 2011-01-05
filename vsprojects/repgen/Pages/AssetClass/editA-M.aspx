@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/MasterPages/SiteMasterPage.master" AutoEventWireup="true" CodeFile="assetsA-M.aspx.cs" Inherits="Pages_HistoricData_assetsA_M" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/MasterPages/SiteMasterPage.master" AutoEventWireup="true" CodeFile="editA-M.aspx.cs" Inherits="Pages_AssetClass_editA_M" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
 </asp:Content>
@@ -134,7 +134,7 @@
 <br />
 <p align="right" >
     <asp:HyperLink ID="linkNZ" runat="server" 
-        NavigateUrl="~/Pages/HistoricData/assetsN-Z.aspx">N - Z</asp:HyperLink>
+        NavigateUrl="~/Pages/AssetClass/editN-Z.aspx">N - Z</asp:HyperLink>
 </p>
 </asp:Content>
 

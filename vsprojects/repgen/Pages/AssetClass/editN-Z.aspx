@@ -1,5 +1,5 @@
 <%@ Page Title="" Language="C#" MasterPageFile="~/MasterPages/SiteMasterPage.master"
-    AutoEventWireup="true" CodeFile="assetsN-Z.aspx.cs" Inherits="Pages_HistoricData_assetsN_Z" %>
+    AutoEventWireup="true" CodeFile="editN-Z.aspx.cs" Inherits="Pages_AssetClass_editN_Z" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
 </asp:Content>
@@ -128,7 +128,7 @@
     </asp:GridView>
     <br />
 <p align="right">
-    <asp:HyperLink ID="linkAM" runat="server" NavigateUrl="~/Pages/HistoricData/assetsA-M.aspx">A - M</asp:HyperLink>
+    <asp:HyperLink ID="linkAM" runat="server" NavigateUrl="~/Pages/AssetClass/editA-M.aspx">A - M</asp:HyperLink>
 </p>
     <asp:LinqDataSource ID="sourceHistoricData" runat="server" ContextTypeName="RSMTenon.Data.RepGenDataContext"
         EnableDelete="True" EnableInsert="True" EnableUpdate="True" OrderBy="Date desc"
