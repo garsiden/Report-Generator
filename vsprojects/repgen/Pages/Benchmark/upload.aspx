@@ -4,7 +4,7 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
 <div>
-    <asp:FileUpload ID="uploader" runat="server" Width="476px" />
+    <asp:FileUpload ID="uploader" runat="server" Width="654px" Height="29px" />
 <br />
 <br />
     <asp:Button ID="btnUpload" runat="server" Text="Upload" 
