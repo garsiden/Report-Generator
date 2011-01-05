@@ -5,6 +5,8 @@ using System.Text;
 using System.Data.Linq;
 using System.Data.Linq.Mapping;
 using System.Reflection;
+using System.Data;
+using System.Data.SqlClient;
 
 namespace RSMTenon.Data
 {
@@ -50,5 +52,27 @@ namespace RSMTenon.Data
         }
     }
 
+    public class DataUtilities
+    {
+        public static void UploadToDatabase(DataTable dt, string tableName)
+        {
+            //string tableName = "tblBenchmarkDataTest";
+            //dt.t
+            string sql = String.Format("DELETE FROM {0}", tableName);
 
+            using (SqlConnection cn = ConnectionFactory.CreateSqlConnection())
+            {
+                cn.Open();
+                SqlCommand cmd = new SqlCommand(sql, cn);
+                int deleted = cmd.ExecuteNonQuery();
+                //Console.WriteLine("{0} record(s) deleted", deleted);
+
+                using (SqlBulkCopy bc = new SqlBulkCopy(cn))
+                {
+                    bc.DestinationTableName = tableName;
+                    bc.WriteToServer(dt);
+                }
+            }
+        }
+    }
 }
