@@ -1,31 +1,33 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <siteMap xmlns="http://schemas.microsoft.com/AspNet/SiteMap-File-1.0" >
-  <siteMapNode  title="Home"  description="">
-    <siteMapNode url="Default.aspx" title="Home"  description="Home page">
-    </siteMapNode>
-    <siteMapNode title="Clients"  description="">
-      <siteMapNode url="~/Pages/Report.aspx" title="Edit Clients Account"  description="" />
-      <siteMapNode url="~/Pages/Client/new.aspx" title="Add New Client"  description="" />
-    </siteMapNode>
-    <siteMapNode title="Administration" description ="Administrate static data">
-      <siteMapNode url ="~/Pages/Benchmark/index.aspx" title="Benchmarks" />
-      <siteMapNode url ="~/Pages/Strategy/index.aspx" title ="Strategies" />
-      <siteMapNode url ="~/Pages/Model/index.aspx" title ="Models" />
-      <siteMapNode url ="~/Pages/AssetClass/index.aspx" title ="Asset Classes" />
-    </siteMapNode>
-    <siteMapNode title="Search">
-    </siteMapNode>
-    <siteMapNode title="Historic Data">
-      <siteMapNode url="~/Pages/AssetClass/editA-M.aspx" title="Asset Classes A-M">
-      </siteMapNode>
-      <siteMapNode url="~/Pages/AssetClass/editN-Z.aspx" title="Asset Classes N-Z">
-      </siteMapNode>
-      <siteMapNode url="~/Pages/Benchmark/edit.aspx" title="Benchmarks">
-      </siteMapNode>
-        <siteMapNode url="~/Pages/Benchmark/upload.aspx" title="Upload Benchmarks">
+    <siteMapNode  title="Home"  description="">
+        <siteMapNode url="Default.aspx" title="Home"  description="Home page">
+        </siteMapNode>
+        <siteMapNode title="Clients"  description="">
+            <siteMapNode url="~/Pages/Report.aspx" title="Edit Clients Account"  description="" />
+            <siteMapNode url="~/Pages/Client/new.aspx" title="Add New Client"  description="" />
+        </siteMapNode>
+        <siteMapNode title="Administration" description ="Administrate static data">
+            <siteMapNode title="Benchmarks"  description="Manage benchmarks">
+                <siteMapNode url ="~/Pages/Benchmark/index.aspx" title="Edit" />
+                <siteMapNode url ="~/Pages/Benchmark/upload.aspx" title="Upload" />
+            </siteMapNode>
+            <siteMapNode url ="~/Pages/Strategy/index.aspx" title ="Strategies" />
+            <siteMapNode url ="~/Pages/Model/index.aspx" title ="Models" />
+            <siteMapNode url ="~/Pages/AssetClass/index.aspx" title ="Asset Classes" />
+        </siteMapNode>
+        <siteMapNode title="Search">
+        </siteMapNode>
+        <siteMapNode title="Historic Data">
+            <siteMapNode url="~/Pages/AssetClass/editA-M.aspx" title="Asset Classes A-M">
+            </siteMapNode>
+            <siteMapNode url="~/Pages/AssetClass/editN-Z.aspx" title="Asset Classes N-Z">
+            </siteMapNode>
+            <siteMapNode url ="~/Pages/AssetClass/upload.aspx" title="Upload" />
+            <siteMapNode url="~/Pages/Benchmark/edit.aspx" title="Benchmarks">
+            </siteMapNode>
+        </siteMapNode>
+        <siteMapNode title="Reports">
         </siteMapNode>
     </siteMapNode>
-    <siteMapNode title="Reports">
-    </siteMapNode>
-  </siteMapNode>
 </siteMap>
