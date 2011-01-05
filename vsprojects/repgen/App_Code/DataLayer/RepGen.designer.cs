@@ -63,6 +63,9 @@ namespace RSMTenon.Data
     partial void InsertHistoricData(HistoricData instance);
     partial void UpdateHistoricData(HistoricData instance);
     partial void DeleteHistoricData(HistoricData instance);
+    partial void InsertBenchmarkData(BenchmarkData instance);
+    partial void UpdateBenchmarkData(BenchmarkData instance);
+    partial void DeleteBenchmarkData(BenchmarkData instance);
     #endregion
 		
 		public RepGenDataContext() : 
@@ -188,6 +191,14 @@ namespace RSMTenon.Data
 			get
 			{
 				return this.GetTable<HistoricData>();
+			}
+		}
+		
+		public System.Data.Linq.Table<BenchmarkData> BenchmarkDatas
+		{
+			get
+			{
+				return this.GetTable<BenchmarkData>();
 			}
 		}
 		
@@ -2676,7 +2687,7 @@ namespace RSMTenon.Data
 		}
 	}
 	
-	[Table(Name="dbo.tblHistoricDataByClass")]
+	[Table(Name="dbo.tblHistoricData")]
 	public partial class HistoricData : INotifyPropertyChanging, INotifyPropertyChanged
 	{
 		
@@ -3005,6 +3016,212 @@ namespace RSMTenon.Data
 					this._COMM = value;
 					this.SendPropertyChanged("COMM");
 					this.OnCOMMChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_SSMA_TimeStamp", AutoSync=AutoSync.Always, DbType="rowversion NOT NULL", CanBeNull=false, IsDbGenerated=true, IsVersion=true, UpdateCheck=UpdateCheck.Never)]
+		public System.Data.Linq.Binary SSMA_TimeStamp
+		{
+			get
+			{
+				return this._SSMA_TimeStamp;
+			}
+			set
+			{
+				if ((this._SSMA_TimeStamp != value))
+				{
+					this.OnSSMA_TimeStampChanging(value);
+					this.SendPropertyChanging();
+					this._SSMA_TimeStamp = value;
+					this.SendPropertyChanged("SSMA_TimeStamp");
+					this.OnSSMA_TimeStampChanged();
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+	}
+	
+	[Table(Name="dbo.tblBenchmarkData")]
+	public partial class BenchmarkData : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private System.DateTime _Date;
+		
+		private double _STBO;
+		
+		private double _CAMA;
+		
+		private double _BAMA;
+		
+		private double _ACMA;
+		
+		private double _GLGR;
+		
+		private System.Data.Linq.Binary _SSMA_TimeStamp;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnDateChanging(System.DateTime value);
+    partial void OnDateChanged();
+    partial void OnSTBOChanging(double value);
+    partial void OnSTBOChanged();
+    partial void OnCAMAChanging(double value);
+    partial void OnCAMAChanged();
+    partial void OnBAMAChanging(double value);
+    partial void OnBAMAChanged();
+    partial void OnACMAChanging(double value);
+    partial void OnACMAChanged();
+    partial void OnGLGRChanging(double value);
+    partial void OnGLGRChanged();
+    partial void OnSSMA_TimeStampChanging(System.Data.Linq.Binary value);
+    partial void OnSSMA_TimeStampChanged();
+    #endregion
+		
+		public BenchmarkData()
+		{
+			OnCreated();
+		}
+		
+		[Column(Storage="_Date", DbType="DateTime NOT NULL", IsPrimaryKey=true, UpdateCheck=UpdateCheck.Never)]
+		public System.DateTime Date
+		{
+			get
+			{
+				return this._Date;
+			}
+			set
+			{
+				if ((this._Date != value))
+				{
+					this.OnDateChanging(value);
+					this.SendPropertyChanging();
+					this._Date = value;
+					this.SendPropertyChanged("Date");
+					this.OnDateChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_STBO", DbType="Float NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		public double STBO
+		{
+			get
+			{
+				return this._STBO;
+			}
+			set
+			{
+				if ((this._STBO != value))
+				{
+					this.OnSTBOChanging(value);
+					this.SendPropertyChanging();
+					this._STBO = value;
+					this.SendPropertyChanged("STBO");
+					this.OnSTBOChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_CAMA", DbType="Float NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		public double CAMA
+		{
+			get
+			{
+				return this._CAMA;
+			}
+			set
+			{
+				if ((this._CAMA != value))
+				{
+					this.OnCAMAChanging(value);
+					this.SendPropertyChanging();
+					this._CAMA = value;
+					this.SendPropertyChanged("CAMA");
+					this.OnCAMAChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_BAMA", DbType="Float NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		public double BAMA
+		{
+			get
+			{
+				return this._BAMA;
+			}
+			set
+			{
+				if ((this._BAMA != value))
+				{
+					this.OnBAMAChanging(value);
+					this.SendPropertyChanging();
+					this._BAMA = value;
+					this.SendPropertyChanged("BAMA");
+					this.OnBAMAChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_ACMA", DbType="Float NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		public double ACMA
+		{
+			get
+			{
+				return this._ACMA;
+			}
+			set
+			{
+				if ((this._ACMA != value))
+				{
+					this.OnACMAChanging(value);
+					this.SendPropertyChanging();
+					this._ACMA = value;
+					this.SendPropertyChanged("ACMA");
+					this.OnACMAChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_GLGR", DbType="Float NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		public double GLGR
+		{
+			get
+			{
+				return this._GLGR;
+			}
+			set
+			{
+				if ((this._GLGR != value))
+				{
+					this.OnGLGRChanging(value);
+					this.SendPropertyChanging();
+					this._GLGR = value;
+					this.SendPropertyChanged("GLGR");
+					this.OnGLGRChanged();
 				}
 			}
 		}

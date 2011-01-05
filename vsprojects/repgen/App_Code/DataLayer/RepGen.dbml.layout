@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ordesignerObjectsDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 11, 9.5" name="RepGen">
+<ordesignerObjectsDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 11, 10.75" name="RepGen">
   <DataContextMoniker Name="/RepGenDataContext" />
   <nestedChildShapes>
     <classShape Id="8dcdb6ff-e756-460a-86d7-941ad7e43132" absoluteBounds="7.125, 0.625, 2, 1.4248478190104168">
@@ -86,10 +86,10 @@
         <classShapeMoniker Id="79199e40-3065-4b0e-a3a6-a45839f7bfd8" />
       </nodes>
     </associationConnector>
-    <classShape Id="1c8c825d-80c8-4eef-ba9a-6b81c6da89ef" absoluteBounds="0.625, 7.625, 2, 1.2605004882812505">
+    <classShape Id="1c8c825d-80c8-4eef-ba9a-6b81c6da89ef" absoluteBounds="0.5, 5.75, 2, 1.2605004882812505">
       <DataClassMoniker Name="/RepGenDataContext/ClientWeightingDifference" />
       <nestedChildShapes>
-        <elementListCompartment Id="337434c0-c919-47b9-9c27-9c55791ed3a3" absoluteBounds="0.64000000000000012, 8.085, 1.9700000000000002, 0.70050048828125" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+        <elementListCompartment Id="337434c0-c919-47b9-9c27-9c55791ed3a3" absoluteBounds="0.51500000000000012, 6.2100000000000009, 1.9700000000000002, 0.70050048828125" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
     <classShape Id="759d9c1f-0346-4f0a-9f6d-3ff8ab573208" absoluteBounds="3.5, 3.25, 2, 1.0961531575520833">
@@ -131,17 +131,23 @@
         <classShapeMoniker Id="67267aac-1bbe-4081-839d-dcecf2829e0d" />
       </nodes>
     </associationConnector>
-    <associationConnector edgePoints="[(3.5 : 3.79807657877604); (2.5 : 3.79807657877604)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+    <associationConnector edgePoints="[(3.5 : 3.79807657877604); (2.5 : 3.79807657877604)]" fixedFrom="NotFixed" fixedTo="NotFixed">
       <AssociationMoniker Name="/RepGenDataContext/Benchmark/Benchmark_Strategy" />
       <nodes>
         <classShapeMoniker Id="759d9c1f-0346-4f0a-9f6d-3ff8ab573208" />
         <classShapeMoniker Id="6ff63e00-fb84-4961-a3d0-eef3a0c4efdd" />
       </nodes>
     </associationConnector>
-    <classShape Id="4feb2e49-0fe0-4be1-b555-4b3e50d28676" absoluteBounds="1.25, 5.125, 2, 3.0683211263020831">
+    <classShape Id="4feb2e49-0fe0-4be1-b555-4b3e50d28676" isExpanded="false" absoluteBounds="0.5, 7.625, 2, 0.45">
       <DataClassMoniker Name="/RepGenDataContext/HistoricData" />
       <nestedChildShapes>
-        <elementListCompartment Id="7af9d77b-463d-44c6-937b-b03efef85ee0" absoluteBounds="1.2650000000000001, 5.585, 1.9700000000000002, 2.508321126302083" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+        <elementListCompartment Id="7af9d77b-463d-44c6-937b-b03efef85ee0" absoluteBounds="0.51500000000000012, 8.085, 1.9700000000000002, 2.508321126302083" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="55526009-2a96-400d-99df-412257a133f7" absoluteBounds="1.625, 8.625, 2, 1.9178898111979166">
+      <DataClassMoniker Name="/RepGenDataContext/BenchmarkData" />
+      <nestedChildShapes>
+        <elementListCompartment Id="f64573b8-6b46-471f-b138-bab614a77b98" absoluteBounds="1.6400000000000001, 9.085, 1.9700000000000002, 1.3578898111979165" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
   </nestedChildShapes>
