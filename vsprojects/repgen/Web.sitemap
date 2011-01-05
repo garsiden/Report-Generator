@@ -16,12 +16,14 @@
     <siteMapNode title="Search">
     </siteMapNode>
     <siteMapNode title="Historic Data">
-      <siteMapNode url="~/Pages/HistoricData/assetsA-M.aspx" title="Asset Classes A-M">
+      <siteMapNode url="~/Pages/AssetClass/editA-M.aspx" title="Asset Classes A-M">
       </siteMapNode>
-      <siteMapNode url="~/Pages/HistoricData/assetsN-Z.aspx" title="Asset Classes N-Z">
+      <siteMapNode url="~/Pages/AssetClass/editN-Z.aspx" title="Asset Classes N-Z">
       </siteMapNode>
-      <siteMapNode url="~/Pages/HistoricData/benchmarks.aspx" title="Benchmarks">
+      <siteMapNode url="~/Pages/Benchmark/edit.aspx" title="Benchmarks">
       </siteMapNode>
+        <siteMapNode url="~/Pages/Benchmark/upload.aspx" title="Upload Benchmarks">
+        </siteMapNode>
     </siteMapNode>
     <siteMapNode title="Reports">
     </siteMapNode>
