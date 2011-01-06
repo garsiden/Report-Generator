@@ -15,6 +15,10 @@
             <siteMapNode url ="~/Pages/Strategy/index.aspx" title ="Strategies" />
             <siteMapNode url ="~/Pages/Model/index.aspx" title ="Models" />
             <siteMapNode url ="~/Pages/AssetClass/index.aspx" title ="Asset Classes" />
+            <siteMapNode title="Template" description="Manage templates">
+                <siteMapNode url="~/Pages/Template/upload.aspx" title="Upload template" />
+                <siteMapNode url="~/Pages/Template/index.aspx" title="Select template" />
+            </siteMapNode>
         </siteMapNode>
         <siteMapNode title="Search">
         </siteMapNode>
