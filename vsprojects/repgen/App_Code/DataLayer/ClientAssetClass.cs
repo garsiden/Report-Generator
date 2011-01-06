@@ -10,7 +10,7 @@ namespace RSMTenon.Data
     {
         public static IQueryable<AssetWeighting> GetClientAssetClass(Guid clientGuid)
         {
-            var ctx = new RepGenDataContext();
+            var ctx = new RepGenDataContext(ConnectionFactory.CreateSqlConnection());
             var assets = ctx.ClientAssetClasses;
 
             var weighting = from asset in assets

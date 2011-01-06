@@ -30,7 +30,7 @@ public partial class RepGenPage : System.Web.UI.Page
         {
             if (context == null)
             {
-                context = new RepGenDataContext();
+                context = new RepGenDataContext(ConnectionFactory.CreateSqlConnection());
             }
             return context;
         }

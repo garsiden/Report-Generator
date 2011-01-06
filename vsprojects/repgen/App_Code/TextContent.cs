@@ -52,7 +52,7 @@ namespace RSMTenon.ReportGenerator
         {
             // get content from database
             string assets = (client.ExistingAssets ? "existing-assets" : "no-existing-assets");
-            var ctx = new RepGenDataContext();
+            var ctx = new RepGenDataContext(ConnectionFactory.CreateSqlConnection());
             var contents = ctx.Contents;
             var match = from c in contents
                           where (c.StrategyID.Equals(client.StrategyID) || c.StrategyID.Equals(null)) &&

@@ -12,7 +12,7 @@ namespace RSMTenon.Data
 
         public static string GetStrategyNameFromId(string id)
         {
-            var ctx = new RepGenDataContext();
+            var ctx = new RepGenDataContext(ConnectionFactory.CreateSqlConnection());
 
             return ctx.Strategies.First(s => s.ID.Equals(id)).Name;
 
@@ -21,7 +21,7 @@ namespace RSMTenon.Data
         public Dictionary<int, ReturnData> GetStrategyReturn()
         {
             if (strategyReturn == null) {
-                var ctx = new RepGenDataContext();
+                var ctx = new RepGenDataContext(ConnectionFactory.CreateSqlConnection());
                 var returns = ctx.ModelReturn(this.ID);
                 var calc = new ReturnCalculation();
                 var prices = from p in returns
