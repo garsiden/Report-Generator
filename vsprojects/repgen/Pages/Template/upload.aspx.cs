@@ -6,7 +6,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.IO;
 
-public partial class Pages_Template_index : System.Web.UI.Page
+public partial class Pages_Template_upload : RepGenPage
 {
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -18,16 +18,17 @@ public partial class Pages_Template_index : System.Web.UI.Page
         {
             try
             {
-                if (uploader.PostedFile.ContentLength > 100000)
+                if (uploader.PostedFile.ContentLength > 1000000)
                 {
                     lblStatus.Text = "File is too large for upload";
                 }
                 else
                 {
-                    string destDir = Server.MapPath("~/App_Data/uploads");
+                    string destDir = Server.MapPath("~/App_Data/templates");
                     string filename = Path.GetFileName(uploader.PostedFile.FileName);
                     string destPath = Path.Combine(destDir, filename);
                     uploader.PostedFile.SaveAs(destPath);
+                    lblStatus.Text = String.Format("File {0} uploaded", filename);
                 }
             }
             catch (Exception err)
