@@ -69,9 +69,9 @@ namespace RSMTenon.Graphing
             categoryAxisData1.Append(stringLiteral1);
 
             Values values1 = new Values();
-            FormatCode formatCode1 = new FormatCode();
-            formatCode1.Text = "General";
-            numberLiteral1.Append(formatCode1);
+            //FormatCode formatCode1 = new FormatCode();
+            //formatCode1.Text = "General";
+            //numberLiteral1.Append(formatCode1);
             values1.Append(numberLiteral1);
 
             pieChartSeries1.Append(index1);
