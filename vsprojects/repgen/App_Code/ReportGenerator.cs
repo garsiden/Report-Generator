@@ -12,7 +12,7 @@ using DocumentFormat.OpenXml.Wordprocessing;
 
 namespace RSMTenon.ReportGenerator
 {
-    public class ReportGenerator : System.Web.UI.Page
+    public class ReportGenerator
     {
         private static string sourceDir = @"~/App_Data/";
         private string TempDir { get; set; }
@@ -25,9 +25,9 @@ namespace RSMTenon.ReportGenerator
         {
             NameValueCollection appSettings = (NameValueCollection)ConfigurationManager.GetSection("appSettings");
             string templateFile = appSettings["TemplateFile"];
-            TemplateFile = Server.MapPath(sourceDir + templateFile);
+            TemplateFile = HttpContext.Current.Server.MapPath(sourceDir + templateFile);
             string contentFile = appSettings["ContentFile"];
-            ContentXmlFile = Server.MapPath(sourceDir + contentFile);
+            ContentXmlFile = HttpContext.Current.Server.MapPath(sourceDir + contentFile);
             string tempDir = appSettings["TempDir"];
             if (tempDir == null)
                 tempDir = Environment.GetEnvironmentVariable("temp");
@@ -42,7 +42,8 @@ namespace RSMTenon.ReportGenerator
             MainDocumentPart mainPart = null;
             MemoryStream tempXmlStream = null;
 
-            try {
+            try
+            {
                 // create temp files/streams
                 tempDocName = createTempDocFile(TemplateFile, TempDir);
                 tempXmlStream = createTempXmlStream(ContentXmlFile);
@@ -63,7 +64,8 @@ namespace RSMTenon.ReportGenerator
 
                 // Charts
                 AddChartsToDoc(mainPart);
-            } finally {
+            } finally
+            {
                 // save and close document
                 if (tempXmlStream != null)
                     tempXmlStream.Close();
@@ -168,7 +170,8 @@ namespace RSMTenon.ReportGenerator
                 .Contains
                 (s.SdtProperties.GetFirstChild<SdtAlias>().Val.Value)).ToList();
 
-            if (stdList.Count != 0) {
+            if (stdList.Count != 0)
+            {
                 SdtBlock sdt = stdList.First<SdtBlock>();
                 OpenXmlElement parent = sdt.Parent;
                 parent.InsertAfter(table, sdt);
@@ -183,7 +186,8 @@ namespace RSMTenon.ReportGenerator
             SdtBlock sdt = main.Document.Descendants<SdtBlock>().Where(
                  s => s.SdtProperties.GetFirstChild<SdtAlias>().Val.Value.Equals(blockName)).First();
 
-            if (sdt != null) {
+            if (sdt != null)
+            {
                 Paragraph para = sdt.SdtContentBlock.GetFirstChild<Paragraph>();
                 para.RemoveAllChildren();
                 return para;
@@ -204,11 +208,13 @@ namespace RSMTenon.ReportGenerator
             int buflen = 16384;
             MemoryStream output = null;
 
-            using (FileStream input = new FileStream(source, FileMode.Open, FileAccess.Read, FileShare.Read)) {
+            using (FileStream input = new FileStream(source, FileMode.Open, FileAccess.Read, FileShare.Read))
+            {
                 output = new MemoryStream(buflen);
                 byte[] buffer = new byte[buflen];
                 int len;
-                while ((len = input.Read(buffer, 0, buffer.Length)) > 0) {
+                while ((len = input.Read(buffer, 0, buffer.Length)) > 0)
+                {
                     output.Write(buffer, 0, len);
                 }
             }
@@ -218,15 +224,23 @@ namespace RSMTenon.ReportGenerator
 
         private static void copyFile(string source, string destination)
         {
-            using (FileStream input = new FileStream(source, FileMode.Open, FileAccess.Read, FileShare.Read)) {
-                using (FileStream output = new FileStream(destination, FileMode.Create, FileAccess.Write)) {
+            using (FileStream input = new FileStream(source, FileMode.Open, FileAccess.Read, FileShare.Read))
+            {
+                using (FileStream output = new FileStream(destination, FileMode.Create, FileAccess.Write))
+                {
                     byte[] buffer = new byte[16384];
                     int len;
-                    while ((len = input.Read(buffer, 0, buffer.Length)) > 0) {
+                    while ((len = input.Read(buffer, 0, buffer.Length)) > 0)
+                    {
                         output.Write(buffer, 0, len);
                     }
                 }
             }
+        }
+
+        public static string GetUserId()
+        {
+            return Environment.UserName;
         }
     }
 }
