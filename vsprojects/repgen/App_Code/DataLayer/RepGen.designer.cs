@@ -524,6 +524,8 @@ namespace RSMTenon.Data
 		
 		private bool _HighNetWorth;
 		
+		private string _UserID;
+		
 		private EntitySet<ClientAsset> _ClientAssets;
 		
 		private EntitySet<ClientAssetClass> _ClientAssetClasses;
@@ -554,6 +556,8 @@ namespace RSMTenon.Data
     partial void OnSSMA_TimeStampChanged();
     partial void OnHighNetWorthChanging(bool value);
     partial void OnHighNetWorthChanged();
+    partial void OnUserIDChanging(string value);
+    partial void OnUserIDChanged();
     #endregion
 		
 		public Client()
@@ -764,6 +768,26 @@ namespace RSMTenon.Data
 					this._HighNetWorth = value;
 					this.SendPropertyChanged("HighNetWorth");
 					this.OnHighNetWorthChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_UserID", DbType="NVarChar(50) NOT NULL", CanBeNull=false)]
+		public string UserID
+		{
+			get
+			{
+				return this._UserID;
+			}
+			set
+			{
+				if ((this._UserID != value))
+				{
+					this.OnUserIDChanging(value);
+					this.SendPropertyChanging();
+					this._UserID = value;
+					this.SendPropertyChanged("UserID");
+					this.OnUserIDChanged();
 				}
 			}
 		}
