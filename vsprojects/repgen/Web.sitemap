@@ -4,8 +4,9 @@
         <siteMapNode url="Default.aspx" title="Home"  description="Home page">
         </siteMapNode>
         <siteMapNode title="Clients"  description="">
-            <siteMapNode url="~/Pages/Report.aspx" title="Edit Clients Account"  description="" />
+            <siteMapNode url="~/Pages/Client/edit.aspx" title="Edit Clients Account"  description="" />
             <siteMapNode url="~/Pages/Client/new.aspx" title="Add New Client"  description="" />
+            <siteMapNode url="~/Pages/Client/index.aspx" title="All Clients"  description="" />
         </siteMapNode>
         <siteMapNode title="Administration" description ="Administrate static data">
             <siteMapNode title="Benchmarks"  description="Manage benchmarks">
