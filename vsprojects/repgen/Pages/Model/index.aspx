@@ -5,50 +5,76 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
     Strategy:&nbsp;<asp:DropDownList ID="listStrategy" runat="server" DataSource="<%# GetStrategies() %>"
-        DataTextField="Name" DataValueField="ID" AutoPostBack="True" 
-        onselectedindexchanged="listStrategy_SelectedIndexChanged">
+        DataTextField="Name" DataValueField="ID" AutoPostBack="True" OnSelectedIndexChanged="listStrategy_SelectedIndexChanged">
     </asp:DropDownList>
     <br />
     <br />
-    <asp:GridView ID="gridModel" runat="server" AutoGenerateColumns="False" onrowdatabound="gridModel_RowDataBound" 
-        DataSource="<%# GetAssetClasses() %>" DataKeyNames="ID" CssClass="listing">
+    <asp:GridView ID="gridModel" runat="server" AutoGenerateColumns="False" OnRowDataBound="gridModel_RowDataBound"
+        DataSource="<%# GetAssetClasses() %>" DataKeyNames="ID" CssClass="listing" ShowFooter="True">
         <RowStyle CssClass="odd" />
         <Columns>
             <asp:TemplateField HeaderText="Asset Class" SortExpression="AssetClassID">
-<ItemStyle VerticalAlign="Top" CssClass="left"/>
+                <FooterStyle CssClass="lnowrap" />
+                <ItemStyle VerticalAlign="Top" CssClass="left" />
                 <ItemTemplate>
-                        <asp:Label ID="Label1" runat="server" Text='<%# Eval("Name") %>'></asp:Label>
+                    <asp:Label ID="Label1" runat="server" Text='<%# Eval("Name") %>'></asp:Label>
                     <br />
                     <br />
                     <br />
                 </ItemTemplate>
             </asp:TemplateField>
             <asp:TemplateField HeaderText="Investments">
+                <FooterStyle CssClass="right" />
                 <ItemStyle VerticalAlign="Top" />
+                <FooterTemplate>
+                    <asp:Table ID="tableFooterTotal" runat="server" Width="100%" Height="100%">
+                        <asp:TableRow runat="server">
+                            <asp:TableCell runat="server"></asp:TableCell>
+                            <asp:TableCell runat="server" Width="20%" CssClass="right"></asp:TableCell>
+                            <asp:TableCell runat="server" Width="20%" CssClass="right"></asp:TableCell>
+                        </asp:TableRow>
+                    </asp:Table>
+                </FooterTemplate>
                 <ItemTemplate>
-                    <asp:GridView ID="gridChild" runat="server" AutoGenerateColumns="False" CssClass="listing" AlternatingRowStyle-CssClass="even" RowStyle-CssClass="odd" Width="100%">
+                    <asp:GridView ID="gridChild" runat="server" AutoGenerateColumns="False" CssClass="listing"
+                        AlternatingRowStyle-CssClass="even" RowStyle-CssClass="odd" Width="100%" ShowFooter="True"
+                        OnRowDataBound="gridChild_RowDataBound">
+                        <RowStyle CssClass="odd" />
                         <Columns>
-                            <asp:BoundField DataField="InvestmentName" ItemStyle-CssClass="left" HeaderStyle-Wrap="False" />
-                            <asp:BoundField DataField="Weighting" HeaderText="Weighting" DataFormatString="{0:0.00%}"  ItemStyle-Width="20%" ItemStyle-CssClass="right" HeaderStyle-Wrap="False" />
-                            <asp:BoundField DataField="ExpectedYield" HeaderText="Expected Yield" DataFormatString="{0:0.00%}"  ItemStyle-Width="20%" ItemStyle-CssClass="right" HeaderStyle-Wrap="False" />
+                            <asp:BoundField DataField="InvestmentName" ItemStyle-CssClass="left" HeaderStyle-Wrap="False">
+                                <FooterStyle CssClass="left" />
+                                <HeaderStyle Wrap="False" />
+                                <ItemStyle CssClass="left" />
+                            </asp:BoundField>
+                            <asp:BoundField DataField="Weighting" HeaderText="Weighting" DataFormatString="{0:0.00%}"
+                                ItemStyle-Width="20%" ItemStyle-CssClass="right" HeaderStyle-Wrap="False">
+                                <FooterStyle CssClass="right" />
+                                <HeaderStyle Wrap="False" />
+                                <ItemStyle CssClass="right" Width="20%" />
+                            </asp:BoundField>
+                            <asp:BoundField DataField="ExpectedYield" HeaderText="Expected Yield" DataFormatString="{0:0.00%}"
+                                ItemStyle-Width="20%" ItemStyle-CssClass="right" HeaderStyle-Wrap="False">
+                                <FooterStyle CssClass="right" />
+                                <HeaderStyle Wrap="False" />
+                                <ItemStyle CssClass="right" Width="20%" />
+                            </asp:BoundField>
                         </Columns>
+                        <AlternatingRowStyle CssClass="even" />
                     </asp:GridView>
                 </ItemTemplate>
             </asp:TemplateField>
         </Columns>
         <AlternatingRowStyle CssClass="odd" />
     </asp:GridView>
-    <asp:LinqDataSource ID="sourceAssetClass" runat="server" 
-        ContextTypeName="RSMTenon.Data.RepGenDataContext" TableName="AssetClasses">
+    <asp:LinqDataSource ID="sourceAssetClass" runat="server" ContextTypeName="RSMTenon.Data.RepGenDataContext"
+        TableName="AssetClasses">
     </asp:LinqDataSource>
-    <asp:LinqDataSource ID="sourceDetail" runat="server" 
-        ContextTypeName="RSMTenon.Data.RepGenDataContext" TableName="Models" 
-        Where="AssetClassID == @AssetClassID &amp;&amp; StrategyID == @StrategyID" 
-        Select="new (InvestmentName, Weighting, ExpectedYield)">
+    <asp:LinqDataSource ID="sourceDetail" runat="server" ContextTypeName="RSMTenon.Data.RepGenDataContext"
+        TableName="Models" Where="AssetClassID == @AssetClassID &amp;&amp; StrategyID == @StrategyID">
         <WhereParameters>
             <asp:Parameter Name="AssetClassID" Type="String" />
-            <asp:ControlParameter ControlID="listStrategy" Name="StrategyID" 
-                PropertyName="SelectedValue" Type="String" />
+            <asp:ControlParameter ControlID="listStrategy" Name="StrategyID" PropertyName="SelectedValue"
+                Type="String" />
         </WhereParameters>
     </asp:LinqDataSource>
 </asp:Content>
