@@ -10,7 +10,6 @@ using RSMTenon.Data;
 using RSMTenon.ReportGenerator;
 
 public partial class RepGenPage : System.Web.UI.Page
-
 {
     protected RepGenDataContext context;
 
@@ -53,8 +52,7 @@ public partial class RepGenPage : System.Web.UI.Page
             Response.TransmitFile(tempDocName);
             Response.Flush();
             Response.Close();
-        }
-        finally
+        } finally
         {
             if (File.Exists(tempDocName))
                 File.Delete(tempDocName);
@@ -73,8 +71,7 @@ public partial class RepGenPage : System.Web.UI.Page
             {
                 DateTime dt = DateTime.Parse(textBox.Text);
                 listDictionary.Add(f, dt);
-            }
-            else
+            } else
             {
                 double db = Double.Parse(textBox.Text);
                 listDictionary.Add(f, db);
