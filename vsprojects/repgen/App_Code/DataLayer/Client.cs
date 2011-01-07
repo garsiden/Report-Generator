@@ -47,6 +47,7 @@ namespace RSMTenon.Data
         public static Guid InsertClient(Client client)
         {
             var ctx = new RepGenDataContext(ConnectionFactory.CreateSqlConnection());
+            client.UserID = ReportGenerator.ReportGenerator.GetUserId();
             ctx.Clients.InsertOnSubmit(client);
             ctx.SubmitChanges();
 
@@ -114,6 +115,14 @@ namespace RSMTenon.Data
             set
             {
                 HighNetWorth = (value == 0);
+            }
+        }
+
+        public string StatusName
+        {
+            get
+            {
+                return HighNetWorth ? "HNW" : "AFF";
             }
         }
 
