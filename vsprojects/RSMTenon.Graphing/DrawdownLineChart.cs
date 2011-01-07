@@ -20,11 +20,6 @@ namespace RSMTenon.Graphing
 
         public Chart GenerateChart(string title)
         {
-            int[] dates = { 35430, 35461, 35489, 35520, 35550, 35580, 35611, 35642, 35671, 35703 };
-            float[] vals1 = { 0F, 0F, 0F, -1.4244555409299146E-2F, 0F, 0F, 0F, 0F, 0F, 0F };
-            float[] vals2 = { 0F, 0F, -5.7615622628477414E-3F, -3.4050797058708955E-2F, 0F, 0F, 0F, 0F, -5.6756873038475431E-2F, -3.7456787148310035E-3F };
-            float[] vals3 = { 0F, 0F, 0F, -1.0539275509624078E-2F, 0F, 0F, 0F, 0F, -2.5648874058951119E-3F, 0F };
-
             // c:chart (Chart)
             Chart chart1 = new Chart();
 
