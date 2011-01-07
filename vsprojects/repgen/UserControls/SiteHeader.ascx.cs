@@ -10,7 +10,7 @@ public partial class UserControls_SiteHeader : System.Web.UI.UserControl
     protected void Page_Load(object sender, EventArgs e)
     {
         if (!IsPostBack)
-            this.greetingLabel.Text = "User: caroline.rose@vantisplc.com";
+            this.greetingLabel.Text = String.Format("User: {0}", RSMTenon.ReportGenerator.ReportGenerator.GetUserId());
 
     }
 }
