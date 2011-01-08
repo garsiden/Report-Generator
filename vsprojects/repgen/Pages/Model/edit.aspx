@@ -6,9 +6,9 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
     <asp:GridView ID="gridModel" runat="server" AlternatingRowStyle-CssClass="odd" CssClass="listing"
         RowStyle-CssClass="even" AllowSorting="True" AutoGenerateColumns="False" DataKeyNames="GUID"
-        DataSourceID="sourceModel" ShowFooter="True" 
-        OnRowCommand="gridModel_RowCommand" 
-        onrowdatabound="gridModel_RowDataBound" Width="100%">
+        DataSourceID="sourceModel" ShowFooter="True" OnRowCommand="gridModel_RowCommand"
+        OnRowDataBound="gridModel_RowDataBound" Width="100%" 
+        Caption="Startegy Name">
         <RowStyle CssClass="even"></RowStyle>
         <Columns>
             <asp:TemplateField HeaderText="Investment Name" SortExpression="InvestmentName">
@@ -68,8 +68,7 @@
             </asp:TemplateField>
             <asp:TemplateField HeaderText="Purchase Charge" SortExpression="PurchaseCharge">
                 <EditItemTemplate>
-                    <asp:TextBox ID="TextBox3" runat="server" Text='<%# Bind("PurchaseCharge") %>'
-                        Width="5em"></asp:TextBox>
+                    <asp:TextBox ID="TextBox3" runat="server" Text='<%# Bind("PurchaseCharge") %>' Width="5em"></asp:TextBox>
                 </EditItemTemplate>
                 <FooterTemplate>
                     <asp:TextBox ID="textPurchaseChargeAdd" runat="server" Width="5em"></asp:TextBox>
@@ -102,9 +101,15 @@
         </Columns>
         <AlternatingRowStyle CssClass="odd"></AlternatingRowStyle>
     </asp:GridView>
-<br />
-    <asp:Label ID="labelTotalWeighting" runat="server" Text="Label"></asp:Label>
-<br />
+    <br />
+    <asp:Label ID="labelTotalWeighting" runat="server" Text="labelTotalWeighting"></asp:Label>
+    <br />
+    <asp:Label ID="labelFixedInterestWeighting" runat="server" 
+        Text="labelFixedInterestWeighting"></asp:Label>
+    <br />
+    <asp:Label ID="labelLongEquityWeighting" runat="server" 
+        Text="labelLongEquityWeighting"></asp:Label>
+    <br />
     <asp:LinqDataSource ID="sourceModel" runat="server" ContextTypeName="RSMTenon.Data.RepGenDataContext"
         EnableDelete="True" EnableInsert="True" EnableUpdate="True" OrderBy="AssetClassID, InvestmentName"
         TableName="Models" Where="StrategyID == @StrategyID">
@@ -112,50 +117,104 @@
             <asp:Parameter DefaultValue="CO" Name="StrategyID" Type="String" />
         </WhereParameters>
     </asp:LinqDataSource>
-    <asp:GridView ID="gridBreakdown" runat="server" AllowSorting="True" 
-        AutoGenerateColumns="False" CssClass="listing" DataKeyNames="GUID" 
-        DataSourceID="sourceBreakdown">
+    <br />
+    <asp:GridView ID="gridFixedInterest" runat="server" AutoGenerateColumns="False" Caption="Fixed Interest"
+        CssClass="listing" DataSourceID="sourceFixedInterest" DataKeyNames="GUID" OnRowDataBound="gridFixedInterest_RowDataBound"
+        ShowFooter="True">
         <RowStyle CssClass="odd" />
         <Columns>
             <asp:TemplateField HeaderText="Asset Class" SortExpression="AssetClassID">
                 <EditItemTemplate>
-                    <asp:DropDownList ID="listBreakdownAssetClass" runat="server" DataSource="<%# GetBreakdownAssetClasses() %>"
-                        DataTextField="Name" DataValueField="ID" SelectedValue='<%# Bind("AssetClassID") %>'>
-                   </asp:DropDownList>
+                    <asp:Label ID="labelAssetClassName" runat="server" Text='<%# Eval("AssetGroupClass.AssetClass.Name") %>'></asp:Label>
                 </EditItemTemplate>
                 <ItemTemplate>
-                    <asp:Label ID="Label1" runat="server" Text='<%# Eval("AssetGroupClass.AssetClass.Name") %>'></asp:Label>
+                    <asp:Label ID="labelAssetClassName" runat="server" Text='<%# Eval("AssetGroupClass.AssetClass.Name") %>'></asp:Label>
+                </ItemTemplate>
+                <ItemStyle CssClass="lnowrap" Width="55%" />
+            </asp:TemplateField>
+            <asp:BoundField DataField="Weighting" DataFormatString="{0:0.00%}" HeaderText="Weighting"
+                SortExpression="Weighting">
+                <FooterStyle CssClass="right" />
+                <ItemStyle CssClass="right" Width="30%" />
+            </asp:BoundField>
+            <asp:TemplateField ShowHeader="False">
+                <EditItemTemplate>
+                    <asp:LinkButton ID="LinkButton1" runat="server" CausesValidation="True" CommandName="Update"
+                        Text="Update"></asp:LinkButton>
+                    &nbsp;<asp:LinkButton ID="LinkButton2" runat="server" CausesValidation="False" CommandName="Cancel"
+                        Text="Cancel"></asp:LinkButton>
+                </EditItemTemplate>
+                <ItemTemplate>
+                    <asp:LinkButton ID="linkEdit" runat="server" CausesValidation="False" CommandName="Edit"
+                        Text="Edit"></asp:LinkButton>
                 </ItemTemplate>
                 <ItemStyle CssClass="left" />
             </asp:TemplateField>
-            <asp:TemplateField HeaderText="Asset Group">
-                <EditItemTemplate>
-                    <asp:TextBox ID="TextBox1" runat="server" 
-                        Text='<%# Bind("AssetGroupClass.AssetGroup.AssetClass.Name") %>'></asp:TextBox>
-                </EditItemTemplate>
-                <ItemTemplate>
-                    <asp:Label ID="Label2" runat="server" 
-                        Text='<%# Eval("AssetGroupClass.AssetGroup.AssetClass.Name") %>'></asp:Label>
-                </ItemTemplate>
-                <ItemStyle CssClass="lnowrap" />
-            </asp:TemplateField>
-            <asp:BoundField DataField="Weighting" 
-                HeaderText="Weighting" SortExpression="Weighting" 
-                DataFormatString="{0:0.0000}">
-            <ItemStyle CssClass="right" />
-            </asp:BoundField>
-            <asp:CommandField ShowDeleteButton="True" ShowEditButton="True">
-            <ItemStyle CssClass="left" />
-            </asp:CommandField>
         </Columns>
         <AlternatingRowStyle CssClass="even" />
     </asp:GridView>
-    <asp:LinqDataSource ID="sourceBreakdown" runat="server" 
-        ContextTypeName="RSMTenon.Data.RepGenDataContext" EnableDelete="True" 
-        EnableInsert="True" EnableUpdate="True" OrderBy="AssetClassID" 
-        TableName="ModelBreakdowns" Where="StrategyID == @StrategyID">
-        <WhereParameters>
-            <asp:Parameter DefaultValue="CO" Name="StrategyID" Type="String" />
-        </WhereParameters>
-    </asp:LinqDataSource>
+    <asp:ObjectDataSource ID="sourceFixedInterest" runat="server" DataObjectTypeName="RSMTenon.Data.ModelBreakdown"
+        OldValuesParameterFormatString="original_{0}" SelectMethod="GetModelBreakdown"
+        TypeName="RSMTenon.Data.ModelBreakdown" UpdateMethod="UpdateModelBreakdown" ConflictDetection="CompareAllValues">
+        <UpdateParameters>
+            <asp:Parameter Name="modelBreakdown" Type="Object" />
+            <asp:Parameter Name="original_modelBreakdown" Type="Object" />
+        </UpdateParameters>
+        <SelectParameters>
+            <asp:Parameter DefaultValue="CO" Name="strategyId" Type="String" />
+            <asp:Parameter DefaultValue="FIIN" Name="assetGroupId" Type="String" />
+        </SelectParameters>
+    </asp:ObjectDataSource>
+<br />
+    <asp:GridView ID="gridLongEquity" runat="server" AutoGenerateColumns="False" Caption="Long Equity"
+        CssClass="listing" DataSourceID="sourceLongEquity" DataKeyNames="GUID"
+        ShowFooter="True" onrowdatabound="gridLongEquity_RowDataBound">
+        <RowStyle CssClass="odd" />
+        <Columns>
+            <asp:TemplateField HeaderText="Asset Class" SortExpression="AssetClassID">
+                <EditItemTemplate>
+                    <asp:Label ID="labelAssetClassName" runat="server" Text='<%# Eval("AssetGroupClass.AssetClass.Name") %>'></asp:Label>
+                </EditItemTemplate>
+                <ItemTemplate>
+                    <asp:Label ID="labelAssetClassName" runat="server" Text='<%# Eval("AssetGroupClass.AssetClass.Name") %>'></asp:Label>
+                </ItemTemplate>
+                <ItemStyle CssClass="lnowrap" Width="55%" />
+            </asp:TemplateField>
+            <asp:BoundField DataField="Weighting" DataFormatString="{0:0.00%}" HeaderText="Weighting"
+                SortExpression="Weighting">
+                <FooterStyle CssClass="right" />
+                <ItemStyle CssClass="right" Width="30%" />
+            </asp:BoundField>
+            <asp:TemplateField ShowHeader="False">
+                <EditItemTemplate>
+                    <asp:LinkButton ID="LinkButton1" runat="server" CausesValidation="True" CommandName="Update"
+                        Text="Update"></asp:LinkButton>
+                    &nbsp;<asp:LinkButton ID="LinkButton2" runat="server" CausesValidation="False" CommandName="Cancel"
+                        Text="Cancel"></asp:LinkButton>
+                </EditItemTemplate>
+                <ItemTemplate>
+                    <asp:LinkButton ID="linkEdit" runat="server" CausesValidation="False" CommandName="Edit"
+                        Text="Edit"></asp:LinkButton>
+                </ItemTemplate>
+                <ItemStyle CssClass="left" />
+            </asp:TemplateField>
+        </Columns>
+        <AlternatingRowStyle CssClass="even" />
+    </asp:GridView>
+    <br />
+    <br />
+
+    <asp:ObjectDataSource ID="sourceLongEquity" runat="server" DataObjectTypeName="RSMTenon.Data.ModelBreakdown"
+        OldValuesParameterFormatString="original_{0}" SelectMethod="GetModelBreakdown"
+        TypeName="RSMTenon.Data.ModelBreakdown" UpdateMethod="UpdateModelBreakdown" ConflictDetection="CompareAllValues">
+        <UpdateParameters>
+            <asp:Parameter Name="modelBreakdown" Type="Object" />
+            <asp:Parameter Name="original_modelBreakdown" Type="Object" />
+        </UpdateParameters>
+        <SelectParameters>
+            <asp:Parameter DefaultValue="CO" Name="strategyId" Type="String" />
+            <asp:Parameter DefaultValue="LOEQ" Name="assetGroupId" Type="String" />
+        </SelectParameters>
+    </asp:ObjectDataSource>
+
 </asp:Content>

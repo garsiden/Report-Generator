@@ -10,10 +10,17 @@ using RSMTenon.Data;
 public partial class Pages_Model_edit : RepGenPage
 {
     private decimal totalWeight = 0;
+    private decimal totalFixedInterestWeight = 0;
+    private decimal totalLongEquityWeight = 0;
+    private decimal fixedInterestWeight = 0;
+    private decimal longEquityWeight = 0;
 
     protected void Page_Load(object sender, EventArgs e)
     {
-
+        if (!IsPostBack)
+        {
+            gridModel.Caption = String.Format("{0} Model", Strategy.GetStrategyNameFromId("CO"));
+        }
     }
     protected void gridModel_RowCommand(object sender, GridViewCommandEventArgs e)
     {
@@ -54,10 +61,37 @@ public partial class Pages_Model_edit : RepGenPage
         if (e.Row.RowType == DataControlRowType.DataRow) {
             var item = (Model)e.Row.DataItem;
             totalWeight += item.Weighting;
+            totalFixedInterestWeight += item.AssetClassID == "FIIN" ? item.Weighting : 0;
+            totalLongEquityWeight += item.AssetClassID == "LOEQ" ? item.Weighting : 0;
         } else if (e.Row.RowType == DataControlRowType.Footer)
         {
             this.labelTotalWeighting.Text = String.Format("Total Weighting: {0:0.00%}", totalWeight);
+            this.labelFixedInterestWeighting.Text = String.Format("Total Fixed Interest Weighting: {0:0.00%}", totalFixedInterestWeight);
+            this.labelLongEquityWeighting.Text = String.Format("Total Long Equity Weighting: {0:0.00%}", totalLongEquityWeight);
         }
 
+    }
+    protected void gridFixedInterest_RowDataBound(object sender, GridViewRowEventArgs e)
+    {
+        if (e.Row.RowType == DataControlRowType.DataRow)
+        {
+            var item = (ModelBreakdown)e.Row.DataItem;
+            fixedInterestWeight += item.Weighting;
+        } else if (e.Row.RowType == DataControlRowType.Footer)
+        {
+            e.Row.Cells[1].Text = fixedInterestWeight.ToString("0.00%");
+        }
+    }
+
+    protected void gridLongEquity_RowDataBound(object sender, GridViewRowEventArgs e)
+    {
+        if (e.Row.RowType == DataControlRowType.DataRow)
+        {
+            var item = (ModelBreakdown)e.Row.DataItem;
+            longEquityWeight += item.Weighting;
+        } else if (e.Row.RowType == DataControlRowType.Footer)
+        {
+            e.Row.Cells[1].Text = longEquityWeight.ToString("0.00%");
+        }
     }
 }
