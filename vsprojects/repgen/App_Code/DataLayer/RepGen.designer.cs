@@ -66,6 +66,12 @@ namespace RSMTenon.Data
     partial void InsertBenchmarkData(BenchmarkData instance);
     partial void UpdateBenchmarkData(BenchmarkData instance);
     partial void DeleteBenchmarkData(BenchmarkData instance);
+    partial void InsertAssetGroup(AssetGroup instance);
+    partial void UpdateAssetGroup(AssetGroup instance);
+    partial void DeleteAssetGroup(AssetGroup instance);
+    partial void InsertAssetGroupClass(AssetGroupClass instance);
+    partial void UpdateAssetGroupClass(AssetGroupClass instance);
+    partial void DeleteAssetGroupClass(AssetGroupClass instance);
     #endregion
 		
 		public RepGenDataContext() : 
@@ -202,6 +208,22 @@ namespace RSMTenon.Data
 			}
 		}
 		
+		public System.Data.Linq.Table<AssetGroup> AssetGroups
+		{
+			get
+			{
+				return this.GetTable<AssetGroup>();
+			}
+		}
+		
+		public System.Data.Linq.Table<AssetGroupClass> AssetGroupClasses
+		{
+			get
+			{
+				return this.GetTable<AssetGroupClass>();
+			}
+		}
+		
 		[Function(Name="dbo.spRollingReturn")]
 		public ISingleResult<ReturnData> RollingReturn([Parameter(DbType="Int")] System.Nullable<int> years, [Parameter(DbType="NChar(4)")] string assetClassID)
 		{
@@ -262,17 +284,15 @@ namespace RSMTenon.Data
 		
 		private string _Name;
 		
-		private bool _IsGroup;
-		
-		private System.Data.Linq.Binary _SSMA_TimeStamp;
-		
 		private EntitySet<ClientAsset> _ClientAssets;
 		
 		private EntitySet<ClientAssetClass> _ClientAssetClasses;
 		
-		private EntitySet<ModelBreakdown> _ModelBreakdowns;
-		
 		private EntitySet<Model> _Models;
+		
+		private EntityRef<AssetGroup> _AssetGroup;
+		
+		private EntityRef<AssetGroupClass> _AssetGroupClass;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -282,18 +302,15 @@ namespace RSMTenon.Data
     partial void OnIDChanged();
     partial void OnNameChanging(string value);
     partial void OnNameChanged();
-    partial void OnIsGroupChanging(bool value);
-    partial void OnIsGroupChanged();
-    partial void OnSSMA_TimeStampChanging(System.Data.Linq.Binary value);
-    partial void OnSSMA_TimeStampChanged();
     #endregion
 		
 		public AssetClass()
 		{
 			this._ClientAssets = new EntitySet<ClientAsset>(new Action<ClientAsset>(this.attach_ClientAssets), new Action<ClientAsset>(this.detach_ClientAssets));
 			this._ClientAssetClasses = new EntitySet<ClientAssetClass>(new Action<ClientAssetClass>(this.attach_ClientAssetClasses), new Action<ClientAssetClass>(this.detach_ClientAssetClasses));
-			this._ModelBreakdowns = new EntitySet<ModelBreakdown>(new Action<ModelBreakdown>(this.attach_ModelBreakdowns), new Action<ModelBreakdown>(this.detach_ModelBreakdowns));
 			this._Models = new EntitySet<Model>(new Action<Model>(this.attach_Models), new Action<Model>(this.detach_Models));
+			this._AssetGroup = default(EntityRef<AssetGroup>);
+			this._AssetGroupClass = default(EntityRef<AssetGroupClass>);
 			OnCreated();
 		}
 		
@@ -337,46 +354,6 @@ namespace RSMTenon.Data
 			}
 		}
 		
-		[Column(Storage="_IsGroup", DbType="Bit NOT NULL", UpdateCheck=UpdateCheck.Never)]
-		public bool IsGroup
-		{
-			get
-			{
-				return this._IsGroup;
-			}
-			set
-			{
-				if ((this._IsGroup != value))
-				{
-					this.OnIsGroupChanging(value);
-					this.SendPropertyChanging();
-					this._IsGroup = value;
-					this.SendPropertyChanged("IsGroup");
-					this.OnIsGroupChanged();
-				}
-			}
-		}
-		
-		[Column(Storage="_SSMA_TimeStamp", AutoSync=AutoSync.Always, DbType="rowversion NOT NULL", CanBeNull=false, IsDbGenerated=true, IsVersion=true, UpdateCheck=UpdateCheck.Never)]
-		public System.Data.Linq.Binary SSMA_TimeStamp
-		{
-			get
-			{
-				return this._SSMA_TimeStamp;
-			}
-			set
-			{
-				if ((this._SSMA_TimeStamp != value))
-				{
-					this.OnSSMA_TimeStampChanging(value);
-					this.SendPropertyChanging();
-					this._SSMA_TimeStamp = value;
-					this.SendPropertyChanged("SSMA_TimeStamp");
-					this.OnSSMA_TimeStampChanged();
-				}
-			}
-		}
-		
 		[Association(Name="AssetClass_ClientAsset", Storage="_ClientAssets", ThisKey="ID", OtherKey="AssetClassID")]
 		public EntitySet<ClientAsset> ClientAssets
 		{
@@ -403,19 +380,6 @@ namespace RSMTenon.Data
 			}
 		}
 		
-		[Association(Name="AssetClass_ModelBreakdown", Storage="_ModelBreakdowns", ThisKey="ID", OtherKey="AssetClassID")]
-		public EntitySet<ModelBreakdown> ModelBreakdowns
-		{
-			get
-			{
-				return this._ModelBreakdowns;
-			}
-			set
-			{
-				this._ModelBreakdowns.Assign(value);
-			}
-		}
-		
 		[Association(Name="AssetClass_Model", Storage="_Models", ThisKey="ID", OtherKey="AssetClassID")]
 		public EntitySet<Model> Models
 		{
@@ -426,6 +390,64 @@ namespace RSMTenon.Data
 			set
 			{
 				this._Models.Assign(value);
+			}
+		}
+		
+		[Association(Name="AssetClass_tblAssetGroup", Storage="_AssetGroup", ThisKey="ID", OtherKey="ID", IsUnique=true, IsForeignKey=false)]
+		public AssetGroup AssetGroup
+		{
+			get
+			{
+				return this._AssetGroup.Entity;
+			}
+			set
+			{
+				AssetGroup previousValue = this._AssetGroup.Entity;
+				if (((previousValue != value) 
+							|| (this._AssetGroup.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._AssetGroup.Entity = null;
+						previousValue.AssetClass = null;
+					}
+					this._AssetGroup.Entity = value;
+					if ((value != null))
+					{
+						value.AssetClass = this;
+					}
+					this.SendPropertyChanged("AssetGroup");
+				}
+			}
+		}
+		
+		[Association(Name="AssetClass_tblAssetGroupClass", Storage="_AssetGroupClass", ThisKey="ID", OtherKey="AssetClassID", IsUnique=true, IsForeignKey=false)]
+		public AssetGroupClass AssetGroupClass
+		{
+			get
+			{
+				return this._AssetGroupClass.Entity;
+			}
+			set
+			{
+				AssetGroupClass previousValue = this._AssetGroupClass.Entity;
+				if (((previousValue != value) 
+							|| (this._AssetGroupClass.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._AssetGroupClass.Entity = null;
+						previousValue.AssetClass = null;
+					}
+					this._AssetGroupClass.Entity = value;
+					if ((value != null))
+					{
+						value.AssetClass = this;
+					}
+					this.SendPropertyChanged("AssetGroupClass");
+				}
 			}
 		}
 		
@@ -468,18 +490,6 @@ namespace RSMTenon.Data
 		}
 		
 		private void detach_ClientAssetClasses(ClientAssetClass entity)
-		{
-			this.SendPropertyChanging();
-			entity.AssetClass = null;
-		}
-		
-		private void attach_ModelBreakdowns(ModelBreakdown entity)
-		{
-			this.SendPropertyChanging();
-			entity.AssetClass = this;
-		}
-		
-		private void detach_ModelBreakdowns(ModelBreakdown entity)
 		{
 			this.SendPropertyChanging();
 			entity.AssetClass = null;
@@ -1393,9 +1403,9 @@ namespace RSMTenon.Data
 		
 		private System.Data.Linq.Binary _SSMA_TimeStamp;
 		
-		private EntityRef<AssetClass> _AssetClass;
-		
 		private EntityRef<Strategy> _Strategy;
+		
+		private EntityRef<AssetGroupClass> _AssetGroupClass;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -1415,8 +1425,8 @@ namespace RSMTenon.Data
 		
 		public ModelBreakdown()
 		{
-			this._AssetClass = default(EntityRef<AssetClass>);
 			this._Strategy = default(EntityRef<Strategy>);
+			this._AssetGroupClass = default(EntityRef<AssetGroupClass>);
 			OnCreated();
 		}
 		
@@ -1475,7 +1485,7 @@ namespace RSMTenon.Data
 			{
 				if ((this._AssetClassID != value))
 				{
-					if (this._AssetClass.HasLoadedOrAssignedValue)
+					if (this._AssetGroupClass.HasLoadedOrAssignedValue)
 					{
 						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
 					}
@@ -1528,40 +1538,6 @@ namespace RSMTenon.Data
 			}
 		}
 		
-		[Association(Name="AssetClass_ModelBreakdown", Storage="_AssetClass", ThisKey="AssetClassID", OtherKey="ID", IsForeignKey=true)]
-		public AssetClass AssetClass
-		{
-			get
-			{
-				return this._AssetClass.Entity;
-			}
-			set
-			{
-				AssetClass previousValue = this._AssetClass.Entity;
-				if (((previousValue != value) 
-							|| (this._AssetClass.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._AssetClass.Entity = null;
-						previousValue.ModelBreakdowns.Remove(this);
-					}
-					this._AssetClass.Entity = value;
-					if ((value != null))
-					{
-						value.ModelBreakdowns.Add(this);
-						this._AssetClassID = value.ID;
-					}
-					else
-					{
-						this._AssetClassID = default(string);
-					}
-					this.SendPropertyChanged("AssetClass");
-				}
-			}
-		}
-		
 		[Association(Name="Strategy_ModelBreakdown", Storage="_Strategy", ThisKey="StrategyID", OtherKey="ID", IsForeignKey=true)]
 		public Strategy Strategy
 		{
@@ -1592,6 +1568,40 @@ namespace RSMTenon.Data
 						this._StrategyID = default(string);
 					}
 					this.SendPropertyChanged("Strategy");
+				}
+			}
+		}
+		
+		[Association(Name="tblAssetGroupClass_ModelBreakdown", Storage="_AssetGroupClass", ThisKey="AssetClassID", OtherKey="AssetClassID", IsForeignKey=true)]
+		public AssetGroupClass AssetGroupClass
+		{
+			get
+			{
+				return this._AssetGroupClass.Entity;
+			}
+			set
+			{
+				AssetGroupClass previousValue = this._AssetGroupClass.Entity;
+				if (((previousValue != value) 
+							|| (this._AssetGroupClass.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._AssetGroupClass.Entity = null;
+						previousValue.ModelBreakdowns.Remove(this);
+					}
+					this._AssetGroupClass.Entity = value;
+					if ((value != null))
+					{
+						value.ModelBreakdowns.Add(this);
+						this._AssetClassID = value.AssetClassID;
+					}
+					else
+					{
+						this._AssetClassID = default(string);
+					}
+					this.SendPropertyChanged("AssetGroupClass");
 				}
 			}
 		}
@@ -3288,6 +3298,333 @@ namespace RSMTenon.Data
 			{
 				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
+		}
+	}
+	
+	[Table(Name="dbo.tblAssetGroup")]
+	public partial class AssetGroup : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private string _ID;
+		
+		private EntitySet<AssetGroupClass> _AssetGroupClasses;
+		
+		private EntityRef<AssetClass> _AssetClass;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnIDChanging(string value);
+    partial void OnIDChanged();
+    #endregion
+		
+		public AssetGroup()
+		{
+			this._AssetGroupClasses = new EntitySet<AssetGroupClass>(new Action<AssetGroupClass>(this.attach_AssetGroupClasses), new Action<AssetGroupClass>(this.detach_AssetGroupClasses));
+			this._AssetClass = default(EntityRef<AssetClass>);
+			OnCreated();
+		}
+		
+		[Column(Storage="_ID", DbType="NChar(4) NOT NULL", CanBeNull=false, IsPrimaryKey=true)]
+		public string ID
+		{
+			get
+			{
+				return this._ID;
+			}
+			set
+			{
+				if ((this._ID != value))
+				{
+					if (this._AssetClass.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnIDChanging(value);
+					this.SendPropertyChanging();
+					this._ID = value;
+					this.SendPropertyChanged("ID");
+					this.OnIDChanged();
+				}
+			}
+		}
+		
+		[Association(Name="AssetGroup_AssetGroupClass", Storage="_AssetGroupClasses", ThisKey="ID", OtherKey="AssetGroupID")]
+		public EntitySet<AssetGroupClass> AssetGroupClasses
+		{
+			get
+			{
+				return this._AssetGroupClasses;
+			}
+			set
+			{
+				this._AssetGroupClasses.Assign(value);
+			}
+		}
+		
+		[Association(Name="AssetClass_tblAssetGroup", Storage="_AssetClass", ThisKey="ID", OtherKey="ID", IsForeignKey=true)]
+		public AssetClass AssetClass
+		{
+			get
+			{
+				return this._AssetClass.Entity;
+			}
+			set
+			{
+				AssetClass previousValue = this._AssetClass.Entity;
+				if (((previousValue != value) 
+							|| (this._AssetClass.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._AssetClass.Entity = null;
+						previousValue.AssetGroup = null;
+					}
+					this._AssetClass.Entity = value;
+					if ((value != null))
+					{
+						value.AssetGroup = this;
+						this._ID = value.ID;
+					}
+					else
+					{
+						this._ID = default(string);
+					}
+					this.SendPropertyChanged("AssetClass");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_AssetGroupClasses(AssetGroupClass entity)
+		{
+			this.SendPropertyChanging();
+			entity.AssetGroup = this;
+		}
+		
+		private void detach_AssetGroupClasses(AssetGroupClass entity)
+		{
+			this.SendPropertyChanging();
+			entity.AssetGroup = null;
+		}
+	}
+	
+	[Table(Name="dbo.tblAssetGroupClass")]
+	public partial class AssetGroupClass : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private string _AssetGroupID;
+		
+		private string _AssetClassID;
+		
+		private EntitySet<ModelBreakdown> _ModelBreakdowns;
+		
+		private EntityRef<AssetClass> _AssetClass;
+		
+		private EntityRef<AssetGroup> _AssetGroup;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnAssetGroupIDChanging(string value);
+    partial void OnAssetGroupIDChanged();
+    partial void OnAssetClassIDChanging(string value);
+    partial void OnAssetClassIDChanged();
+    #endregion
+		
+		public AssetGroupClass()
+		{
+			this._ModelBreakdowns = new EntitySet<ModelBreakdown>(new Action<ModelBreakdown>(this.attach_ModelBreakdowns), new Action<ModelBreakdown>(this.detach_ModelBreakdowns));
+			this._AssetClass = default(EntityRef<AssetClass>);
+			this._AssetGroup = default(EntityRef<AssetGroup>);
+			OnCreated();
+		}
+		
+		[Column(Storage="_AssetGroupID", DbType="NChar(4) NOT NULL", CanBeNull=false)]
+		public string AssetGroupID
+		{
+			get
+			{
+				return this._AssetGroupID;
+			}
+			set
+			{
+				if ((this._AssetGroupID != value))
+				{
+					if (this._AssetGroup.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnAssetGroupIDChanging(value);
+					this.SendPropertyChanging();
+					this._AssetGroupID = value;
+					this.SendPropertyChanged("AssetGroupID");
+					this.OnAssetGroupIDChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_AssetClassID", DbType="NChar(4) NOT NULL", CanBeNull=false, IsPrimaryKey=true)]
+		public string AssetClassID
+		{
+			get
+			{
+				return this._AssetClassID;
+			}
+			set
+			{
+				if ((this._AssetClassID != value))
+				{
+					if (this._AssetClass.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnAssetClassIDChanging(value);
+					this.SendPropertyChanging();
+					this._AssetClassID = value;
+					this.SendPropertyChanged("AssetClassID");
+					this.OnAssetClassIDChanged();
+				}
+			}
+		}
+		
+		[Association(Name="tblAssetGroupClass_ModelBreakdown", Storage="_ModelBreakdowns", ThisKey="AssetClassID", OtherKey="AssetClassID")]
+		public EntitySet<ModelBreakdown> ModelBreakdowns
+		{
+			get
+			{
+				return this._ModelBreakdowns;
+			}
+			set
+			{
+				this._ModelBreakdowns.Assign(value);
+			}
+		}
+		
+		[Association(Name="AssetClass_tblAssetGroupClass", Storage="_AssetClass", ThisKey="AssetClassID", OtherKey="ID", IsForeignKey=true)]
+		public AssetClass AssetClass
+		{
+			get
+			{
+				return this._AssetClass.Entity;
+			}
+			set
+			{
+				AssetClass previousValue = this._AssetClass.Entity;
+				if (((previousValue != value) 
+							|| (this._AssetClass.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._AssetClass.Entity = null;
+						previousValue.AssetGroupClass = null;
+					}
+					this._AssetClass.Entity = value;
+					if ((value != null))
+					{
+						value.AssetGroupClass = this;
+						this._AssetClassID = value.ID;
+					}
+					else
+					{
+						this._AssetClassID = default(string);
+					}
+					this.SendPropertyChanged("AssetClass");
+				}
+			}
+		}
+		
+		[Association(Name="AssetGroup_AssetGroupClass", Storage="_AssetGroup", ThisKey="AssetGroupID", OtherKey="ID", IsForeignKey=true)]
+		public AssetGroup AssetGroup
+		{
+			get
+			{
+				return this._AssetGroup.Entity;
+			}
+			set
+			{
+				AssetGroup previousValue = this._AssetGroup.Entity;
+				if (((previousValue != value) 
+							|| (this._AssetGroup.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._AssetGroup.Entity = null;
+						previousValue.AssetGroupClasses.Remove(this);
+					}
+					this._AssetGroup.Entity = value;
+					if ((value != null))
+					{
+						value.AssetGroupClasses.Add(this);
+						this._AssetGroupID = value.ID;
+					}
+					else
+					{
+						this._AssetGroupID = default(string);
+					}
+					this.SendPropertyChanged("AssetGroup");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_ModelBreakdowns(ModelBreakdown entity)
+		{
+			this.SendPropertyChanging();
+			entity.AssetGroupClass = this;
+		}
+		
+		private void detach_ModelBreakdowns(ModelBreakdown entity)
+		{
+			this.SendPropertyChanging();
+			entity.AssetGroupClass = null;
 		}
 	}
 }
