@@ -23,6 +23,32 @@ public partial class RepGenPage : System.Web.UI.Page
         return DataContext.Benchmarks.OrderBy(b => b.Name);
     }
 
+    public IEnumerable<AssetClass> GetModelAssetClasses()
+    {
+        var classes = from cls in DataContext.AssetClasses
+                      join grp in DataContext.AssetGroupClasses
+                      on cls.ID equals
+                          grp.AssetClassID
+                      into all
+                      from a in all.DefaultIfEmpty()
+                      where a.AssetClassID == null
+                      select cls;
+
+        return classes;
+    }
+
+    public IEnumerable<AssetClass> GetBreakdownAssetClasses()
+    {
+        var classes = from cls in DataContext.AssetClasses
+                      join grp in DataContext.AssetGroupClasses
+                      on cls.ID equals
+                          grp.AssetClassID
+                      orderby cls.Name
+                      select cls;
+
+        return classes;
+    }
+
     protected RepGenDataContext DataContext
     {
         get
