@@ -1430,7 +1430,7 @@ namespace RSMTenon.Data
 			OnCreated();
 		}
 		
-		[Column(Storage="_GUID", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true, UpdateCheck=UpdateCheck.Never)]
+		[Column(Storage="_GUID", AutoSync=AutoSync.OnInsert, DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true, IsDbGenerated=true)]
 		public System.Guid GUID
 		{
 			get
@@ -1518,7 +1518,7 @@ namespace RSMTenon.Data
 			}
 		}
 		
-		[Column(Storage="_SSMA_TimeStamp", AutoSync=AutoSync.Always, DbType="rowversion NOT NULL", CanBeNull=false, IsDbGenerated=true, IsVersion=true, UpdateCheck=UpdateCheck.Never)]
+		[Column(Storage="_SSMA_TimeStamp", AutoSync=AutoSync.Always, DbType="rowversion NOT NULL", CanBeNull=false, IsDbGenerated=true, UpdateCheck=UpdateCheck.Never)]
 		public System.Data.Linq.Binary SSMA_TimeStamp
 		{
 			get
