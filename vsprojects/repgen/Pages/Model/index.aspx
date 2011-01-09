@@ -64,7 +64,7 @@
                 </ItemTemplate>
             </asp:TemplateField>
         </Columns>
-        <AlternatingRowStyle CssClass="odd" />
+        <AlternatingRowStyle CssClass="even" />
     </asp:GridView>
     <asp:LinqDataSource ID="sourceAssetClass" runat="server" ContextTypeName="RSMTenon.Data.RepGenDataContext"
         TableName="AssetClasses">
