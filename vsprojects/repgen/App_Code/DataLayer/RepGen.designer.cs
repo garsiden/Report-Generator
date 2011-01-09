@@ -393,7 +393,7 @@ namespace RSMTenon.Data
 			}
 		}
 		
-		[Association(Name="AssetClass_tblAssetGroup", Storage="_AssetGroup", ThisKey="ID", OtherKey="ID", IsUnique=true, IsForeignKey=false)]
+		[Association(Name="AssetClass_AssetGroup", Storage="_AssetGroup", ThisKey="ID", OtherKey="ID", IsUnique=true, IsForeignKey=false)]
 		public AssetGroup AssetGroup
 		{
 			get
@@ -422,7 +422,7 @@ namespace RSMTenon.Data
 			}
 		}
 		
-		[Association(Name="AssetClass_tblAssetGroupClass", Storage="_AssetGroupClass", ThisKey="ID", OtherKey="AssetClassID", IsUnique=true, IsForeignKey=false)]
+		[Association(Name="AssetClass_AssetGroupClass", Storage="_AssetGroupClass", ThisKey="ID", OtherKey="AssetClassID", IsUnique=true, IsForeignKey=false)]
 		public AssetGroupClass AssetGroupClass
 		{
 			get
@@ -1572,7 +1572,7 @@ namespace RSMTenon.Data
 			}
 		}
 		
-		[Association(Name="tblAssetGroupClass_ModelBreakdown", Storage="_AssetGroupClass", ThisKey="AssetClassID", OtherKey="AssetClassID", IsForeignKey=true)]
+		[Association(Name="AssetGroupClass_ModelBreakdown", Storage="_AssetGroupClass", ThisKey="AssetClassID", OtherKey="AssetClassID", IsForeignKey=true)]
 		public AssetGroupClass AssetGroupClass
 		{
 			get
@@ -2211,7 +2211,7 @@ namespace RSMTenon.Data
 			OnCreated();
 		}
 		
-		[Column(Storage="_GUID", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true, UpdateCheck=UpdateCheck.Never)]
+		[Column(Storage="_GUID", AutoSync=AutoSync.OnInsert, DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true, IsDbGenerated=true)]
 		public System.Guid GUID
 		{
 			get
@@ -2315,7 +2315,7 @@ namespace RSMTenon.Data
 			}
 		}
 		
-		[Column(Storage="_SSMA_TimeStamp", AutoSync=AutoSync.Always, DbType="rowversion NOT NULL", CanBeNull=false, IsDbGenerated=true, IsVersion=true, UpdateCheck=UpdateCheck.Never)]
+		[Column(Storage="_SSMA_TimeStamp", AutoSync=AutoSync.Always, DbType="rowversion NOT NULL", CanBeNull=false, IsDbGenerated=true, UpdateCheck=UpdateCheck.Never)]
 		public System.Data.Linq.Binary SSMA_TimeStamp
 		{
 			get
@@ -3365,7 +3365,7 @@ namespace RSMTenon.Data
 			}
 		}
 		
-		[Association(Name="AssetClass_tblAssetGroup", Storage="_AssetClass", ThisKey="ID", OtherKey="ID", IsForeignKey=true)]
+		[Association(Name="AssetClass_AssetGroup", Storage="_AssetClass", ThisKey="ID", OtherKey="ID", IsForeignKey=true)]
 		public AssetClass AssetClass
 		{
 			get
@@ -3514,7 +3514,7 @@ namespace RSMTenon.Data
 			}
 		}
 		
-		[Association(Name="tblAssetGroupClass_ModelBreakdown", Storage="_ModelBreakdowns", ThisKey="AssetClassID", OtherKey="AssetClassID")]
+		[Association(Name="AssetGroupClass_ModelBreakdown", Storage="_ModelBreakdowns", ThisKey="AssetClassID", OtherKey="AssetClassID")]
 		public EntitySet<ModelBreakdown> ModelBreakdowns
 		{
 			get
@@ -3527,7 +3527,7 @@ namespace RSMTenon.Data
 			}
 		}
 		
-		[Association(Name="AssetClass_tblAssetGroupClass", Storage="_AssetClass", ThisKey="AssetClassID", OtherKey="ID", IsForeignKey=true)]
+		[Association(Name="AssetClass_AssetGroupClass", Storage="_AssetClass", ThisKey="AssetClassID", OtherKey="ID", IsForeignKey=true)]
 		public AssetClass AssetClass
 		{
 			get

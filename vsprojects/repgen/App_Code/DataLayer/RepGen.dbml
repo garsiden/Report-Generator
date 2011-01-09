@@ -8,8 +8,8 @@
       <Association Name="AssetClass_ClientAsset" Member="ClientAssets" ThisKey="ID" OtherKey="AssetClassID" Type="ClientAsset" />
       <Association Name="AssetClass_ClientAssetClass" Member="ClientAssetClasses" ThisKey="ID" OtherKey="AssetClassID" Type="ClientAssetClass" />
       <Association Name="AssetClass_Model" Member="Models" ThisKey="ID" OtherKey="AssetClassID" Type="Model" />
-      <Association Name="AssetClass_tblAssetGroup" Member="AssetGroup" ThisKey="ID" OtherKey="ID" Type="AssetGroup" Cardinality="One" />
-      <Association Name="AssetClass_tblAssetGroupClass" Member="AssetGroupClass" ThisKey="ID" OtherKey="AssetClassID" Type="AssetGroupClass" Cardinality="One" />
+      <Association Name="AssetClass_AssetGroup" Member="AssetGroup" ThisKey="ID" OtherKey="ID" Type="AssetGroup" Cardinality="One" />
+      <Association Name="AssetClass_AssetGroupClass" Member="AssetGroupClass" ThisKey="ID" OtherKey="AssetClassID" Type="AssetGroupClass" Cardinality="One" />
     </Type>
   </Table>
   <Table Name="dbo.tblClient" Member="Clients">
@@ -60,7 +60,7 @@
       <Column Name="Weighting" Type="System.Decimal" DbType="Decimal(5,4) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
       <Column Name="SSMA_TimeStamp" Type="System.Data.Linq.Binary" DbType="rowversion NOT NULL" IsDbGenerated="true" CanBeNull="false" UpdateCheck="Never" />
       <Association Name="Strategy_ModelBreakdown" Member="Strategy" ThisKey="StrategyID" OtherKey="ID" Type="Strategy" IsForeignKey="true" />
-      <Association Name="tblAssetGroupClass_ModelBreakdown" Member="AssetGroupClass" ThisKey="AssetClassID" OtherKey="AssetClassID" Type="AssetGroupClass" IsForeignKey="true" />
+      <Association Name="AssetGroupClass_ModelBreakdown" Member="AssetGroupClass" ThisKey="AssetClassID" OtherKey="AssetClassID" Type="AssetGroupClass" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.tblModel" Member="Models">
@@ -98,12 +98,12 @@
   </Table>
   <Table Name="dbo.tblContent" Member="Contents">
     <Type Name="Content">
-      <Column Name="GUID" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
-      <Column Name="ContentID" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
-      <Column Name="Category" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
-      <Column Name="StrategyID" Type="System.String" DbType="NChar(2)" CanBeNull="true" />
-      <Column Name="Text" Type="System.String" DbType="NVarChar(MAX) NOT NULL" CanBeNull="false" />
-      <Column Name="SSMA_TimeStamp" Type="System.Data.Linq.Binary" DbType="rowversion NOT NULL" CanBeNull="false" IsVersion="true" />
+      <Column Name="GUID" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="ContentID" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="Category" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" UpdateCheck="Never" />
+      <Column Name="StrategyID" Type="System.String" DbType="NChar(2)" CanBeNull="true" UpdateCheck="Never" />
+      <Column Name="Text" Type="System.String" DbType="NVarChar(MAX) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="SSMA_TimeStamp" Type="System.Data.Linq.Binary" DbType="rowversion NOT NULL" IsDbGenerated="true" CanBeNull="false" UpdateCheck="Never" />
       <Association Name="Strategy_Content" Member="Strategy" ThisKey="StrategyID" OtherKey="ID" Type="Strategy" IsForeignKey="true" />
     </Type>
   </Table>
@@ -155,15 +155,15 @@
     <Type Name="AssetGroup">
       <Column Name="ID" Type="System.String" DbType="NChar(4) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
       <Association Name="AssetGroup_AssetGroupClass" Member="AssetGroupClasses" ThisKey="ID" OtherKey="AssetGroupID" Type="AssetGroupClass" />
-      <Association Name="AssetClass_tblAssetGroup" Member="AssetClass" ThisKey="ID" OtherKey="ID" Type="AssetClass" IsForeignKey="true" />
+      <Association Name="AssetClass_AssetGroup" Member="AssetClass" ThisKey="ID" OtherKey="ID" Type="AssetClass" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.tblAssetGroupClass" Member="AssetGroupClasses">
     <Type Name="AssetGroupClass">
       <Column Name="AssetGroupID" Type="System.String" DbType="NChar(4) NOT NULL" CanBeNull="false" />
       <Column Name="AssetClassID" Type="System.String" DbType="NChar(4) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
-      <Association Name="tblAssetGroupClass_ModelBreakdown" Member="ModelBreakdowns" ThisKey="AssetClassID" OtherKey="AssetClassID" Type="ModelBreakdown" />
-      <Association Name="AssetClass_tblAssetGroupClass" Member="AssetClass" ThisKey="AssetClassID" OtherKey="ID" Type="AssetClass" IsForeignKey="true" />
+      <Association Name="AssetGroupClass_ModelBreakdown" Member="ModelBreakdowns" ThisKey="AssetClassID" OtherKey="AssetClassID" Type="ModelBreakdown" />
+      <Association Name="AssetClass_AssetGroupClass" Member="AssetClass" ThisKey="AssetClassID" OtherKey="ID" Type="AssetClass" IsForeignKey="true" />
       <Association Name="AssetGroup_AssetGroupClass" Member="AssetGroup" ThisKey="AssetGroupID" OtherKey="ID" Type="AssetGroup" IsForeignKey="true" />
     </Type>
   </Table>
