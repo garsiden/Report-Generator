@@ -5,7 +5,6 @@
     <Type Name="AssetClass">
       <Column Name="ID" Type="System.String" DbType="NChar(4) NOT NULL" IsPrimaryKey="true" CanBeNull="false" UpdateCheck="Never" />
       <Column Name="Name" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
-      <Association Name="AssetClass_ClientAsset" Member="ClientAssets" ThisKey="ID" OtherKey="AssetClassID" Type="ClientAsset" />
       <Association Name="AssetClass_ClientAssetClass" Member="ClientAssetClasses" ThisKey="ID" OtherKey="AssetClassID" Type="ClientAssetClass" />
       <Association Name="AssetClass_Model" Member="Models" ThisKey="ID" OtherKey="AssetClassID" Type="Model" />
       <Association Name="AssetClass_AssetGroup" Member="AssetGroup" ThisKey="ID" OtherKey="ID" Type="AssetGroup" Cardinality="One" />
@@ -25,29 +24,18 @@
       <Column Name="SSMA_TimeStamp" Type="System.Data.Linq.Binary" DbType="rowversion NOT NULL" IsDbGenerated="true" CanBeNull="false" UpdateCheck="Never" />
       <Column Name="HighNetWorth" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" UpdateCheck="Never" />
       <Column Name="UserID" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
-      <Association Name="Client_ClientAsset" Member="ClientAssets" ThisKey="GUID" OtherKey="ClientGUID" Type="ClientAsset" />
       <Association Name="Client_ClientAssetClass" Member="ClientAssetClasses" ThisKey="GUID" OtherKey="ClientGUID" Type="ClientAssetClass" />
+      <Association Name="Client_ClientAsset" Member="ClientAssets" ThisKey="GUID" OtherKey="ClientGUID" Type="ClientAsset" />
       <Association Name="Strategy_Client" Member="Strategy" ThisKey="StrategyID" OtherKey="ID" Type="Strategy" IsForeignKey="true" />
-    </Type>
-  </Table>
-  <Table Name="dbo.tblClientAsset" Member="ClientAssets">
-    <Type Name="ClientAsset">
-      <Column Name="GUID" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
-      <Column Name="ClientGUID" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
-      <Column Name="AssetName" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" />
-      <Column Name="AssetClassID" Type="System.String" DbType="NChar(4) NOT NULL" CanBeNull="false" />
-      <Column Name="Amount" Type="System.Decimal" DbType="Money NOT NULL" CanBeNull="false" />
-      <Association Name="AssetClass_ClientAsset" Member="AssetClass" ThisKey="AssetClassID" OtherKey="ID" Type="AssetClass" IsForeignKey="true" />
-      <Association Name="Client_ClientAsset" Member="Client" ThisKey="ClientGUID" OtherKey="GUID" Type="Client" IsForeignKey="true" DeleteRule="CASCADE" DeleteOnNull="true" />
     </Type>
   </Table>
   <Table Name="dbo.tblClientAssetClass" Member="ClientAssetClasses">
     <Type Name="ClientAssetClass">
-      <Column Name="GUID" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
-      <Column Name="ClientGUID" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
-      <Column Name="AssetClassID" Type="System.String" DbType="NChar(4) NOT NULL" CanBeNull="false" />
-      <Column Name="Weighting" Type="System.Decimal" DbType="Decimal(5,4) NOT NULL" CanBeNull="false" />
-      <Column Name="SSMA_TimeStamp" Type="System.Data.Linq.Binary" DbType="rowversion NOT NULL" CanBeNull="false" IsVersion="true" />
+      <Column Name="GUID" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="ClientGUID" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="AssetClassID" Type="System.String" DbType="NChar(4) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="Weighting" Type="System.Decimal" DbType="Decimal(5,4) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="SSMA_TimeStamp" Type="System.Data.Linq.Binary" DbType="rowversion NOT NULL" IsDbGenerated="true" CanBeNull="false" UpdateCheck="Never" />
       <Association Name="AssetClass_ClientAssetClass" Member="AssetClass" ThisKey="AssetClassID" OtherKey="ID" Type="AssetClass" IsForeignKey="true" />
       <Association Name="Client_ClientAssetClass" Member="Client" ThisKey="ClientGUID" OtherKey="GUID" Type="Client" IsForeignKey="true" DeleteRule="CASCADE" DeleteOnNull="true" />
     </Type>
@@ -165,6 +153,28 @@
       <Association Name="AssetGroupClass_ModelBreakdown" Member="ModelBreakdowns" ThisKey="AssetClassID" OtherKey="AssetClassID" Type="ModelBreakdown" />
       <Association Name="AssetClass_AssetGroupClass" Member="AssetClass" ThisKey="AssetClassID" OtherKey="ID" Type="AssetClass" IsForeignKey="true" />
       <Association Name="AssetGroup_AssetGroupClass" Member="AssetGroup" ThisKey="AssetGroupID" OtherKey="ID" Type="AssetGroup" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.tblClientAsset" Member="ClientAssets">
+    <Type Name="ClientAsset">
+      <Column Name="GUID" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="ClientGUID" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="AssetName" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="Amount" Type="System.Decimal" DbType="Money NOT NULL" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="CASH" Type="System.Decimal" DbType="Decimal(4,3) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="COMM" Type="System.Decimal" DbType="Decimal(4,3) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="COPR" Type="System.Decimal" DbType="Decimal(4,3) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="GLEQ" Type="System.Decimal" DbType="Decimal(4,3) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="HEDG" Type="System.Decimal" DbType="Decimal(4,3) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="LOSH" Type="System.Decimal" DbType="Decimal(4,3) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="PREQ" Type="System.Decimal" DbType="Decimal(4,3) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="UKCB" Type="System.Decimal" DbType="Decimal(4,3) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="UKEQ" Type="System.Decimal" DbType="Decimal(4,3) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="UKGB" Type="System.Decimal" DbType="Decimal(4,3) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="UKHY" Type="System.Decimal" DbType="Decimal(4,3) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="WOBO" Type="System.Decimal" DbType="Decimal(4,3) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="SSMA_TimeStamp" Type="System.Data.Linq.Binary" DbType="rowversion NOT NULL" IsDbGenerated="true" CanBeNull="false" UpdateCheck="Never" />
+      <Association Name="Client_ClientAsset" Member="Client" ThisKey="ClientGUID" OtherKey="GUID" Type="Client" IsForeignKey="true" DeleteRule="CASCADE" DeleteOnNull="true" />
     </Type>
   </Table>
   <Function Name="dbo.spRollingReturn" Method="RollingReturn">
