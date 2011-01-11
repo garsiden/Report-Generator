@@ -13,26 +13,27 @@ public partial class Pages_Client_assetclasses : RepGenPage
     {
         if (!IsPostBack)
         {
-            ViewState["ClientAssetClass_ClientGUID"] = Request.QueryString["guid"];
+            string guid = Request.QueryString["guid"];
+            if (guid != null)
+            {
+                ViewState["ClientAssetClass_ClientGUID"] = guid;
+                Guid clientGuid = new Guid(guid);
+                Client client = Client.GetClientByGUID(clientGuid);
+                this.detailsView.Caption = client.Name;
+            }
         }
     }
-    protected void formView_ItemCommand(object sender, FormViewCommandEventArgs e)
-    {
 
-    }
     protected void sourceAssets_Inserting(object sender, LinqDataSourceInsertEventArgs e)
     {
         var asset = (ClientAssetClass)e.NewObject;
-       
+
         string guidString = ViewState["ClientAssetClass_ClientGUID"].ToString();
         //Request.QueryString["guid"];
         Guid guid = new Guid(guidString);
         asset.ClientGUID = guid;
     }
-    protected void sourceAssetObject_ObjectCreated(object sender, ObjectDataSourceEventArgs e)
-    {
-       
-    }
+
     protected void sourceAssetObject_Inserting(object sender, ObjectDataSourceMethodEventArgs e)
     {
         string guidString = ViewState["ClientAssetClass_ClientGUID"].ToString();
@@ -42,12 +43,10 @@ public partial class Pages_Client_assetclasses : RepGenPage
         var asset = (ClientAssetClass)e.InputParameters["clientAsset"];
         asset.ClientGUID = guid;
     }
-    protected void sourceAssetObject_Deleting(object sender, ObjectDataSourceMethodEventArgs e)
+    protected void sourceAssetObject_ObjectCreating(object sender, ObjectDataSourceEventArgs e)
     {
-        //string guidString = ViewState["ClientAssetClass_ClientGUID"].ToString();
-        ////Request.QueryString["guid"];
-        //Guid guid = new Guid(guidString);
-
-        //e.InputParameters["clientGuid"] = 
+        //var item = (ClientAssetClass)e.ObjectInstance;
+        //if (item.CASH == null)
+        //    item.CASH = 0;
     }
 }
