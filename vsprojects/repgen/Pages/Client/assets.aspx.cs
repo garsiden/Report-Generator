@@ -12,7 +12,16 @@ public partial class Pages_Client_assets : RepGenPage
 {
     protected void Page_Load(object sender, EventArgs e)
     {
-
+        if (!IsPostBack)
+        {
+            var guidString = Request.QueryString["guid"];
+            if (guidString != null)
+            {
+                Guid guid = new Guid(guidString);
+                Client client = Client.GetClientByGUID(guid);
+                gridAsset.Caption = client.Name;
+            }
+        }
     }
 
     protected void detailsView_DataBound(object sender, EventArgs e)
