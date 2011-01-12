@@ -8,7 +8,7 @@
         RowStyle-CssClass="even" AllowSorting="True" AutoGenerateColumns="False" DataKeyNames="GUID"
         DataSourceID="sourceModel" ShowFooter="True" OnRowCommand="gridModel_RowCommand"
         OnRowDataBound="gridModel_RowDataBound" Width="100%" 
-        Caption="Startegy Name">
+        Caption="Strategy Name">
         <RowStyle CssClass="even"></RowStyle>
         <Columns>
             <asp:TemplateField HeaderText="Investment Name" SortExpression="InvestmentName">
