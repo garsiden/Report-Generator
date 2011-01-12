@@ -40,18 +40,26 @@ public partial class Pages_Client_assets : RepGenPage
     {
         if (e.CommandName == "Insert")
         {
-            TextBox textBox = null;
-
+            TextBox textName = null;
+            TextBox textAmount = null;
             
-            string guidString = sourceAssetsObject.SelectParameters[0].DefaultValue;
-            //string guidString2 = Request.QueryString["guid"].ToString();
+            string guidString = Request.QueryString["guid"].ToString();
             Guid clientGuid = new Guid(guidString);
+            var source = e.CommandSource;
 
-            textBox = (TextBox)gridAsset.FooterRow.FindControl("textAssetNameAdd");
-            string name = textBox.Text;
-
-            textBox = (TextBox)gridAsset.FooterRow.FindControl("textAmountAdd");
-            decimal amount = Convert.ToDecimal(textBox.Text);
+            if (e.CommandArgument == "AllNew")
+            {
+                Table tbl = (Table)gridAsset.Controls[0];
+                GridViewRow gvr = (GridViewRow)tbl.Controls[0];
+                textName = (TextBox)gvr.FindControl("textAssetNameAdd");
+                textAmount = (TextBox)gvr.FindControl("textAmountAdd");
+            } else {
+                textName = (TextBox)gridAsset.FooterRow.FindControl("textAssetNameAdd");
+                textAmount = (TextBox)gridAsset.FooterRow.FindControl("textAmountAdd");
+            }
+            
+            string name = textName.Text;
+            decimal amount = Convert.ToDecimal(textAmount.Text);
 
             ClientAsset asset = new ClientAsset()
             {
@@ -59,8 +67,11 @@ public partial class Pages_Client_assets : RepGenPage
                 AssetName = name,
                 Amount = amount
             };
-            ClientAsset.InsertClient(asset);
+            var guid = ClientAsset.InsertClientAsset(asset);
             gridAsset.DataBind();
+            int nrows = gridAsset.Rows.Count;
+            if (nrows >= 1)
+                gridAsset.SelectedIndex = nrows - 1;
         }
 
     }

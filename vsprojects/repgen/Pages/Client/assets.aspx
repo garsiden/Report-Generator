@@ -9,7 +9,7 @@
         onrowcommand="gridAsset_RowCommand" ShowFooter="True">
         <RowStyle CssClass="odd" />
         <Columns>
-            <asp:TemplateField HeaderText="Asset Name" SortExpression="AssetName">
+            <asp:TemplateField HeaderText="Asset Name">
                 <EditItemTemplate>
                     <asp:TextBox ID="TextBox2" runat="server" Text='<%# Bind("AssetName") %>' Width="100%"></asp:TextBox>
                 </EditItemTemplate>
@@ -21,7 +21,7 @@
                 </ItemTemplate>
                 <ItemStyle CssClass="lnowrap" />
             </asp:TemplateField>
-            <asp:TemplateField HeaderText="Amount" SortExpression="Amount">
+            <asp:TemplateField HeaderText="Amount">
                 <EditItemTemplate>
                     <asp:TextBox ID="TextBox1" runat="server" Text='<%# Bind("Amount", "{0:0}") %>'></asp:TextBox>
                 </EditItemTemplate>
@@ -37,6 +37,7 @@
                 <FooterTemplate>
                     <asp:LinkButton ID="linkAdd" runat="server" CommandName="Insert">Add</asp:LinkButton>
                 </FooterTemplate>
+                <FooterStyle CssClass="left" />
                 <ItemTemplate>
                     <asp:LinkButton ID="LinkButton1" runat="server" CausesValidation="False" 
                         CommandName="Select" Text="Select"></asp:LinkButton>
@@ -46,8 +47,37 @@
             <asp:CommandField ShowEditButton="True">
                 <ItemStyle CssClass="lnowrap" Width="5%" />
             </asp:CommandField>
-            <asp:CommandField ShowDeleteButton="True" />
+            <asp:CommandField ShowDeleteButton="True" >
+            <ItemStyle CssClass="left" Width="5%" />
+            </asp:CommandField>
         </Columns>
+        <EmptyDataTemplate>
+            <table width="80%">
+            <thead>
+<tr>
+<td>Investment Name</td>
+<td>Amount</td>
+<td>&nbsp;</td>
+
+</tr>
+
+            </thead>
+                <tr>
+                    <td class="lnowrap" width="70%">
+                        <asp:TextBox ID="textAssetNameAdd" runat="server" width="100%"></asp:TextBox>
+                        &nbsp;
+                    </td>
+                    <td class="right" width="20%">
+                    <asp:TextBox ID="textAmountAdd" runat="server"></asp:TextBox>
+                        &nbsp;
+                    </td>
+                    <td class="right">
+                    <asp:LinkButton ID="linkAdd" runat="server" CommandName="Insert" CommandArgument="AllNew">Add</asp:LinkButton>
+                        &nbsp;
+                    </td>
+                </tr>
+            </table>
+        </EmptyDataTemplate>
         <AlternatingRowStyle CssClass="even" />
     </asp:GridView>
     <asp:LinqDataSource ID="sourceAssets" runat="server" AutoGenerateWhereClause="True"
@@ -61,7 +91,7 @@
     <asp:ObjectDataSource ID="sourceAssetsObject" runat="server" 
         ConflictDetection="CompareAllValues" 
         DataObjectTypeName="RSMTenon.Data.ClientAsset" DeleteMethod="DeleteClientAsset" 
-        InsertMethod="InsertClient" OldValuesParameterFormatString="original_{0}" 
+        InsertMethod="InsertClientAsset" OldValuesParameterFormatString="original_{0}" 
         SelectMethod="GetAllClientsAssets" TypeName="RSMTenon.Data.ClientAsset" 
         UpdateMethod="UpdateClientAsset">
         <UpdateParameters>
@@ -70,13 +100,13 @@
         </UpdateParameters>
         <SelectParameters>
             <asp:QueryStringParameter DbType="Guid" 
-                DefaultValue="979DE312-8E99-49D3-9D41-54ECAE0CAD5C" Name="clientGuid" 
+                DefaultValue="" Name="clientGuid" 
                 QueryStringField="guid" />
         </SelectParameters>
     </asp:ObjectDataSource>
     <br />
     <br />
-    <asp:DetailsView ID="detailsView" runat="server" AutoGenerateRows="False" Caption="Investment Name"
+    <asp:DetailsView ID="detailsView" runat="server" AutoGenerateRows="False"
         CssClass="listing" DataSourceID="sourceDetails" Height="50px" 
         Width="302px" 
         ondatabound="detailsView_DataBound" DataKeyNames="GUID" >
@@ -151,8 +181,7 @@
     <asp:ObjectDataSource ID="sourceDetails" runat="server" OldValuesParameterFormatString="original_{0}"
         SelectMethod="GetClientAsset" TypeName="RSMTenon.Data.ClientAsset" 
         ConflictDetection="CompareAllValues" 
-        DataObjectTypeName="RSMTenon.Data.ClientAsset" 
-         UpdateMethod="UpdateClientAsset">
+        DataObjectTypeName="RSMTenon.Data.ClientAsset"  UpdateMethod="UpdateClientAsset">
         <UpdateParameters>
             <asp:Parameter Name="clientAsset" Type="Object" />
             <asp:Parameter Name="original_clientAsset" Type="Object" />
