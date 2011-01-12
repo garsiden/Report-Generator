@@ -8,11 +8,22 @@ using RSMTenon.Data;
 
 public partial class Pages_Content_index : RepGenPage
 {
+    private int rowCount = 0;
+
     protected void Page_Load(object sender, EventArgs e)
     {
         if (!IsPostBack)
         {
             this.listStrategy.DataBind();
+        }
+    }
+    protected void gridContent_RowDataBound(object sender, GridViewRowEventArgs e)
+    {
+        if (e.Row.RowType == DataControlRowType.DataRow)
+            rowCount++;
+        else
+        {
+            this.labelCount.Text = rowCount.ToString();
         }
     }
 }
