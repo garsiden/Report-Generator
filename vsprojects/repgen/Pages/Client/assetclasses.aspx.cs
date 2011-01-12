@@ -43,10 +43,4 @@ public partial class Pages_Client_assetclasses : RepGenPage
         var asset = (ClientAssetClass)e.InputParameters["clientAsset"];
         asset.ClientGUID = guid;
     }
-    protected void sourceAssetObject_ObjectCreating(object sender, ObjectDataSourceEventArgs e)
-    {
-        //var item = (ClientAssetClass)e.ObjectInstance;
-        //if (item.CASH == null)
-        //    item.CASH = 0;
-    }
 }

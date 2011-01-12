@@ -9,64 +9,257 @@
         Width="60%">
         <RowStyle CssClass="odd" />
         <EmptyDataTemplate>
-            <asp:LinkButton ID="NewButton" runat="server" CausesValidation="False" CommandName="New"
-                Text="New" />
+            <table class="listing" style="width:100%;">
+                <tr>
+                    <td class="lnowrap"> <%# GetAssetClassName("CASH") %>
+                        &nbsp;</td>
+                    <td>
+                        &nbsp;</td>
+                </tr>
+                <tr>
+                    <td class="lnowrap"> <%# GetAssetClassName("COMM") %>
+                        &nbsp;</td>
+                    <td>
+                        &nbsp;</td>
+                </tr>
+                <tr>
+                    <td class="lnowrap"> <%# GetAssetClassName("COPR") %>
+                        &nbsp;</td>
+                    <td>
+                        &nbsp;</td>
+                </tr>
+                <tr>
+                    <td class="lnowrap"> <%# GetAssetClassName("GLEQ") %>
+                        &nbsp;</td>
+                    <td>
+                        &nbsp;</td>
+                </tr>
+                <tr>
+                    <td class="lnowrap"> <%# GetAssetClassName("HEDG") %>
+                        &nbsp;</td>
+                    <td>
+                        &nbsp;</td>
+                </tr>
+                <tr>
+                    <td class="lnowrap"> <%# GetAssetClassName("LOSH") %>
+                        &nbsp;</td>
+                    <td>
+                        &nbsp;</td>
+                </tr>
+                <tr>
+                    <td class="lnowrap"> <%# GetAssetClassName("PREQ") %>
+                        &nbsp;</td>
+                    <td>
+                        &nbsp;</td>
+                </tr>
+                <tr>
+                    <td class="lnowrap"> <%# GetAssetClassName("UKCB") %>
+                        &nbsp;</td>
+                    <td>
+                        &nbsp;</td>
+                </tr>
+                <tr>
+                    <td class="lnowrap"> <%# GetAssetClassName("UKEQ") %>
+                        &nbsp;</td>
+                    <td>
+                        &nbsp;</td>
+                </tr>
+                <tr>
+                    <td class="lnowrap"> <%# GetAssetClassName("UKGB") %>
+                        &nbsp;</td>
+                    <td>
+                        &nbsp;</td>
+                </tr>
+                <tr>
+                    <td class="lnowrap"> <%# GetAssetClassName("UKHY") %>
+                        &nbsp;</td>
+                    <td>
+                        &nbsp;</td>
+                </tr>
+                <tr>
+                    <td class="lnowrap"> <%# GetAssetClassName("WOBO") %>
+                        &nbsp;</td>
+                    <td>
+                        &nbsp;</td>
+                </tr>
+                <tr>
+                    <td>
+                    </td>
+                    <td class="right"><asp:LinkButton ID="NewButton" runat="server" CausesValidation="False" 
+                            CommandName="New" Text="New" />
+
+                        &nbsp;</td>
+                </tr>
+            </table>
         </EmptyDataTemplate>
         <Fields>
-            <asp:BoundField DataField="CASH" HeaderText="Cash" SortExpression="CASH" DataFormatString="{0:0.0%}">
+            <asp:TemplateField HeaderText="Cash" SortExpression="CASH">
+                <EditItemTemplate>
+                    <asp:TextBox ID="TextBox1" runat="server" Text='<%# Bind("CASH") %>'></asp:TextBox>
+                </EditItemTemplate>
+                <InsertItemTemplate>
+                    <asp:TextBox ID="TextBox1" runat="server" 
+                        Text='<%# Bind("CASH", "{0:0.0%}") %>'></asp:TextBox>
+                </InsertItemTemplate>
+                <ItemTemplate>
+                    <asp:Label ID="Label1" runat="server" Text='<%# Eval("CASH", "{0:0.0%}") %>'></asp:Label>
+                </ItemTemplate>
+                <HeaderStyle CssClass="left" />
                 <ItemStyle CssClass="right" />
-                <HeaderStyle CssClass="left"></HeaderStyle>
-            </asp:BoundField>
-            <asp:BoundField DataField="COMM" HeaderText="Commodities" SortExpression="COMM" DataFormatString="{0:0.0%}">
+            </asp:TemplateField>
+            <asp:TemplateField HeaderText="Commodities" SortExpression="COMM">
+                <EditItemTemplate>
+                    <asp:TextBox ID="TextBox2" runat="server" Text='<%# Bind("COMM") %>'></asp:TextBox>
+                </EditItemTemplate>
+                <InsertItemTemplate>
+                    <asp:TextBox ID="TextBox2" runat="server" 
+                        Text='<%# Bind("COMM", "{0:0.0%}") %>'></asp:TextBox>
+                </InsertItemTemplate>
+                <ItemTemplate>
+                    <asp:Label ID="Label2" runat="server" Text='<%# Eval("COMM", "{0:0.0%}") %>'></asp:Label>
+                </ItemTemplate>
                 <HeaderStyle CssClass="lnowrap" />
                 <ItemStyle CssClass="right" />
-            </asp:BoundField>
-            <asp:BoundField DataField="COPR" HeaderText="Commercial Property" SortExpression="COPR"
-                DataFormatString="{0:0.0%}">
+            </asp:TemplateField>
+            <asp:TemplateField HeaderText="Commercial Property" SortExpression="COPR">
+                <EditItemTemplate>
+                    <asp:TextBox ID="TextBox3" runat="server" Text='<%# Bind("COPR") %>'></asp:TextBox>
+                </EditItemTemplate>
+                <InsertItemTemplate>
+                    <asp:TextBox ID="TextBox3" runat="server" 
+                        Text='<%# Bind("COPR", "{0:0.0%}") %>'></asp:TextBox>
+                </InsertItemTemplate>
+                <ItemTemplate>
+                    <asp:Label ID="Label3" runat="server" Text='<%# Eval("COPR", "{0:0.0%}") %>'></asp:Label>
+                </ItemTemplate>
                 <HeaderStyle CssClass="lnowrap" />
                 <ItemStyle CssClass="right" />
-            </asp:BoundField>
-            <asp:BoundField DataField="GLEQ" HeaderText="Global Equity" SortExpression="GLEQ"
-                DataFormatString="{0:0.0%}">
+            </asp:TemplateField>
+            <asp:TemplateField HeaderText="Global Equity" SortExpression="GLEQ">
+                <EditItemTemplate>
+                    <asp:TextBox ID="TextBox4" runat="server" Text='<%# Bind("GLEQ") %>'></asp:TextBox>
+                </EditItemTemplate>
+                <InsertItemTemplate>
+                    <asp:TextBox ID="TextBox4" runat="server" 
+                        Text='<%# Bind("GLEQ", "{0:0.0%}") %>'></asp:TextBox>
+                </InsertItemTemplate>
+                <ItemTemplate>
+                    <asp:Label ID="Label4" runat="server" Text='<%# Eval("GLEQ", "{0:0.0%}") %>'></asp:Label>
+                </ItemTemplate>
                 <HeaderStyle CssClass="lnowrap" />
                 <ItemStyle CssClass="right" />
-            </asp:BoundField>
-            <asp:BoundField DataField="HEDG" HeaderText="Hedge" SortExpression="HEDG" DataFormatString="{0:0.0%}">
+            </asp:TemplateField>
+            <asp:TemplateField HeaderText="Hedge" SortExpression="HEDG">
+                <EditItemTemplate>
+                    <asp:TextBox ID="TextBox5" runat="server" Text='<%# Bind("HEDG") %>'></asp:TextBox>
+                </EditItemTemplate>
+                <InsertItemTemplate>
+                    <asp:TextBox ID="TextBox5" runat="server" 
+                        Text='<%# Bind("HEDG", "{0:0.0%}") %>'></asp:TextBox>
+                </InsertItemTemplate>
+                <ItemTemplate>
+                    <asp:Label ID="Label5" runat="server" Text='<%# Eval("HEDG", "{0:0.0%}") %>'></asp:Label>
+                </ItemTemplate>
                 <HeaderStyle CssClass="lnowrap" />
                 <ItemStyle CssClass="right" />
-            </asp:BoundField>
-            <asp:BoundField DataField="LOSH" HeaderText="Long Short" SortExpression="LOSH" DataFormatString="{0:0.0%}">
+            </asp:TemplateField>
+            <asp:TemplateField HeaderText="Long Short" SortExpression="LOSH">
+                <EditItemTemplate>
+                    <asp:TextBox ID="TextBox6" runat="server" Text='<%# Bind("LOSH") %>'></asp:TextBox>
+                </EditItemTemplate>
+                <InsertItemTemplate>
+                    <asp:TextBox ID="TextBox6" runat="server" 
+                        Text='<%# Bind("LOSH", "{0:0.0%}") %>'></asp:TextBox>
+                </InsertItemTemplate>
+                <ItemTemplate>
+                    <asp:Label ID="Label6" runat="server" Text='<%# Eval("LOSH", "{0:0.0%}") %>'></asp:Label>
+                </ItemTemplate>
                 <HeaderStyle CssClass="lnowrap" />
                 <ItemStyle CssClass="right" />
-            </asp:BoundField>
-            <asp:BoundField DataField="PREQ" HeaderText="Private Equity" SortExpression="PREQ"
-                DataFormatString="{0:0.0%}">
+            </asp:TemplateField>
+            <asp:TemplateField HeaderText="Private Equity" SortExpression="PREQ">
+                <EditItemTemplate>
+                    <asp:TextBox ID="TextBox7" runat="server" Text='<%# Bind("PREQ") %>'></asp:TextBox>
+                </EditItemTemplate>
+                <InsertItemTemplate>
+                    <asp:TextBox ID="TextBox7" runat="server" 
+                        Text='<%# Bind("PREQ", "{0:0.0%}") %>'></asp:TextBox>
+                </InsertItemTemplate>
+                <ItemTemplate>
+                    <asp:Label ID="Label7" runat="server" Text='<%# Eval("PREQ", "{0:0.0%}") %>'></asp:Label>
+                </ItemTemplate>
                 <HeaderStyle CssClass="lnowrap" />
                 <ItemStyle CssClass="right" />
-            </asp:BoundField>
-            <asp:BoundField DataField="UKCB" HeaderText="UK Corporate Bonds" SortExpression="UKCB"
-                DataFormatString="{0:0.0%}">
+            </asp:TemplateField>
+            <asp:TemplateField HeaderText="UK Corporate Bonds" SortExpression="UKCB">
+                <EditItemTemplate>
+                    <asp:TextBox ID="TextBox8" runat="server" Text='<%# Bind("UKCB") %>'></asp:TextBox>
+                </EditItemTemplate>
+                <InsertItemTemplate>
+                    <asp:TextBox ID="TextBox8" runat="server" 
+                        Text='<%# Bind("UKCB", "{0:0.0%}") %>'></asp:TextBox>
+                </InsertItemTemplate>
+                <ItemTemplate>
+                    <asp:Label ID="Label8" runat="server" Text='<%# Eval("UKCB", "{0:0.0%}") %>'></asp:Label>
+                </ItemTemplate>
                 <HeaderStyle CssClass="lnowrap" />
                 <ItemStyle CssClass="right" />
-            </asp:BoundField>
-            <asp:BoundField DataField="UKEQ" HeaderText="UK Equity" SortExpression="UKEQ" DataFormatString="{0:0.0%}">
+            </asp:TemplateField>
+            <asp:TemplateField HeaderText="UK Equity" SortExpression="UKEQ">
+                <EditItemTemplate>
+                    <asp:TextBox ID="TextBox9" runat="server" Text='<%# Bind("UKEQ") %>'></asp:TextBox>
+                </EditItemTemplate>
+                <InsertItemTemplate>
+                    <asp:TextBox ID="TextBox9" runat="server" 
+                        Text='<%# Bind("UKEQ", "{0:0.0%}") %>'></asp:TextBox>
+                </InsertItemTemplate>
+                <ItemTemplate>
+                    <asp:Label ID="Label9" runat="server" Text='<%# Eval("UKEQ", "{0:0.0%}") %>'></asp:Label>
+                </ItemTemplate>
                 <HeaderStyle CssClass="lnowrap" />
                 <ItemStyle CssClass="right" />
-            </asp:BoundField>
-            <asp:BoundField DataField="UKGB" HeaderText="UK Government Bonds" SortExpression="UKGB"
-                DataFormatString="{0:0.0%}">
+            </asp:TemplateField>
+            <asp:TemplateField HeaderText="UK Government Bonds" SortExpression="UKGB">
+                <EditItemTemplate>
+                    <asp:TextBox ID="TextBox10" runat="server" Text='<%# Bind("UKGB") %>'></asp:TextBox>
+                </EditItemTemplate>
+                <InsertItemTemplate>
+                    <asp:TextBox ID="TextBox10" runat="server" Text='<%# Bind("UKGB") %>'></asp:TextBox>
+                </InsertItemTemplate>
+                <ItemTemplate>
+                    <asp:Label ID="Label10" runat="server" Text='<%# Eval("UKGB", "{0:0.0%}") %>'></asp:Label>
+                </ItemTemplate>
                 <HeaderStyle CssClass="lnowrap" />
                 <ItemStyle CssClass="right" />
-            </asp:BoundField>
-            <asp:BoundField DataField="UKHY" HeaderText="UK High Yield Bonds" SortExpression="UKHY"
-                DataFormatString="{0:0.0%}">
+            </asp:TemplateField>
+            <asp:TemplateField HeaderText="UK High Yield Bonds" SortExpression="UKHY">
+                <EditItemTemplate>
+                    <asp:TextBox ID="TextBox11" runat="server" Text='<%# Bind("UKHY") %>'></asp:TextBox>
+                </EditItemTemplate>
+                <InsertItemTemplate>
+                    <asp:TextBox ID="TextBox11" runat="server" 
+                        Text='<%# Bind("UKHY", "{0:0.0%}") %>'></asp:TextBox>
+                </InsertItemTemplate>
+                <ItemTemplate>
+                    <asp:Label ID="Label11" runat="server" Text='<%# Eval("UKHY", "{0:0.0%}") %>'></asp:Label>
+                </ItemTemplate>
                 <HeaderStyle CssClass="lnowrap" />
                 <ItemStyle CssClass="right" />
-            </asp:BoundField>
-            <asp:BoundField DataField="WOBO" HeaderText="World Bonds" SortExpression="WOBO" DataFormatString="{0:0.0%}">
+            </asp:TemplateField>
+            <asp:TemplateField HeaderText="World Bonds" SortExpression="WOBO">
+                <EditItemTemplate>
+                    <asp:TextBox ID="TextBox12" runat="server" Text='<%# Bind("WOBO") %>'></asp:TextBox>
+                </EditItemTemplate>
+                <InsertItemTemplate>
+                    <asp:TextBox ID="TextBox12" runat="server" 
+                        Text='<%# Bind("WOBO", "{0:0.0%}") %>'></asp:TextBox>
+                </InsertItemTemplate>
+                <ItemTemplate>
+                    <asp:Label ID="Label12" runat="server" Text='<%# Eval("WOBO", "{0:0.0%}") %>'></asp:Label>
+                </ItemTemplate>
                 <HeaderStyle CssClass="lnowrap" />
                 <ItemStyle CssClass="right" />
-            </asp:BoundField>
+            </asp:TemplateField>
             <asp:TemplateField>
                 <EditItemTemplate>
                     <asp:LinkButton ID="UpdateButton" runat="server" CommandName="Update">Update</asp:LinkButton>
@@ -82,8 +275,8 @@
                     <asp:LinkButton ID="DeleteButton" runat="server" CausesValidation="False" CommandName="Delete"
                         Text="Delete" />
                 </ItemTemplate>
-                <HeaderStyle CssClass="lnowrap" />
-                <ItemStyle CssClass="lnowrap" />
+                <HeaderStyle CssClass="right" />
+                <ItemStyle CssClass="right" />
             </asp:TemplateField>
 
         </Fields>
@@ -101,7 +294,6 @@
         DeleteMethod="DeleteClientAsset" OldValuesParameterFormatString="original_{0}"
         SelectMethod="GetClientAssetClass" TypeName="RSMTenon.Data.ClientAssetClass"
         UpdateMethod="UpdateClientAsset" OnInserting="sourceAssetObject_Inserting" 
-        OnObjectCreating="sourceAssetObject_ObjectCreating" 
         ConflictDetection="CompareAllValues" InsertMethod="InsertClientAsset">
         <UpdateParameters>
             <asp:Parameter Name="clientAsset" Type="Object" />
