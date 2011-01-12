@@ -4,9 +4,9 @@
 <%@ Register Assembly="BasicFrame.WebControls.BasicDatePicker" Namespace="BasicFrame.WebControls"
     TagPrefix="BDP" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-    <h1>
-        New Report</h1>
-    <asp:FormView ID="FormView1" runat="server" DataKeyNames="GUID" DataSourceID="sourceClient">
+    <h4>
+        Add New Client</h4>
+    <asp:FormView ID="formView" runat="server" DataKeyNames="GUID" DataSourceID="sourceClient">
         <EditItemTemplate>
             ReportingFrequency:
             <br />
@@ -40,32 +40,30 @@
                 CommandName="Cancel" Text="Cancel" />
         </EditItemTemplate>
         <InsertItemTemplate>
-            &nbsp;
-            <table style="width: 100%;">
-                <tr>
-                    <td>
+            <table class="listing">
+                <tr class="odd">
+                    <td class="lnowrap">
                         Name
                     </td>
-                    <td>
-                        <asp:TextBox ID="NameTextBox" runat="server" Text='<%# Bind("Name") %>' Width="80%" />
+                    <td class="lnowrap">
+                        <asp:TextBox ID="NameTextBox" runat="server" Text='<%# Bind("Name") %>' Width="100%" />
                     </td>
                 </tr>
-                <tr>
-                    <td>
+                <tr class="even">
+                    <td class="lnowrap">
                         Meeting Date
                     </td>
-                    <td nowrap="nowrap">
+                    <td class="lnowrap">
                         <BDP:BDPLite ID="bdpMeetingDate" runat="server" SelectedDate='<%# Bind("MeetingDate") %>'
                             Style="display: inline;" />
                     </td>
                 </tr>
                 <tr>
-                    <td>
+                    <td class="lnowrap">
                         Time Horizon
                     </td>
-                    <td>
-                        <asp:DropDownList ID="listTimeHorizonEdit" runat="server" SelectedValue='<%# Bind("TimeHorizon") %>'
-                            Width="60px">
+                    <td class="lnowrap">
+                        <asp:DropDownList ID="listTimeHorizonEdit" runat="server" SelectedValue='<%# Bind("TimeHorizon") %>'>
                             <asp:ListItem>1</asp:ListItem>
                             <asp:ListItem>2</asp:ListItem>
                             <asp:ListItem>3</asp:ListItem>
@@ -88,19 +86,19 @@
                         </asp:DropDownList>
                     </td>
                 </tr>
-                <tr>
-                    <td>
+                <tr class="even">
+                    <td class="lnowrap">
                         Existing Assets
                     </td>
-                    <td>
+                    <td class="lnowrap">
                         <asp:CheckBox ID="ExistingAssetsCheckBox" runat="server" Checked='<%# Bind("ExistingAssets") %>' />
                     </td>
                 </tr>
                 <tr>
-                    <td>
+                    <td class="lnowrap">
                         Strategy
                     </td>
-                    <td>
+                    <td class="lnowrap">
                         <asp:DropDownList ID="listStrategy" runat="server" DataSource="<%# GetStrategies() %>"
                             DataTextField="Name" DataValueField="ID" DataMember="StrategyID" SelectedValue='<%# Bind("StrategyID") %>'
                             AppendDataBoundItems="True">
@@ -108,62 +106,61 @@
                         </asp:DropDownList>
                     </td>
                 </tr>
-                <tr>
-                    <td nowrap="nowrap">
+                <tr class="even">
+                    <td class="lnowrap">
                         Investment Amount
                     </td>
-                    <td>
+                    <td class="lnowrap">
                         <asp:TextBox ID="InvestmentAmountTextBox" runat="server" Text='<%# Bind("InvestmentAmount") %>' />
                     </td>
                 </tr>
                 <tr>
-                    <td>
+                    <td class="lnowrap">
                         Initial Fee
                     </td>
-                    <td>
+                    <td class="lnowrap">
                         <asp:TextBox ID="InitialFeeTextBox" runat="server" Text='<%# Bind("InitialFee") %>' />
                     </td>
                 </tr>
-                <tr>
-                    <td>
+                <tr class="even">
+                    <td class="lnowrap">
                         Status
                     </td>
-                    <td>
-                        <asp:RadioButtonList ID="RadioButtonList2" runat="server" SelectedIndex='<%# Bind("Status") %>'>
+                    <td class="lnowrap">
+                        <asp:RadioButtonList ID="RadioButtonList2" runat="server" SelectedIndex='<%# Bind("Status") %>'
+                            RepeatLayout="Flow">
                             <asp:ListItem Selected="True">High Net Worth</asp:ListItem>
                             <asp:ListItem>Affluent</asp:ListItem>
                         </asp:RadioButtonList>
                     </td>
                 </tr>
-                <tr>
-                    <td colspan="2">
-                        <asp:LinkButton ID="InsertButton" runat="server" CausesValidation="True" CommandName="Insert"
-                            Text="Insert" />
-                        <asp:LinkButton ID="InsertCancelButton" runat="server" CausesValidation="False" CommandName="Cancel"
-                            Text="Cancel" />
-                    </td>
-                </tr>
             </table>
+            <br />
+            <div align="right">
+                <asp:LinkButton ID="LinkButton1" runat="server" CausesValidation="True" CommandName="Insert"
+                    Text="Insert" />&nbsp;
+                <asp:LinkButton ID="LinkButton2" runat="server" CausesValidation="False" CommandName="Cancel"
+                    Text="Cancel" />
+            </div>
+            <br />
+            <br />
             <asp:ValidationSummary ID="validSummary" runat="server" />
             <asp:CompareValidator ID="validCompareStrategyID" runat="server" ControlToValidate="listStrategy"
                 Display="None" ErrorMessage="Please select a Strategy from the list" Operator="NotEqual"
                 ValueToCompare="XX"></asp:CompareValidator>
-            <br />
-            <br />
-            &nbsp;
         </InsertItemTemplate>
         <ItemTemplate>
-            <table style="width: 100%;">
-                <tr>
-                    <td>
+            <table class="listing">
+                <tr class="odd">
+                    <td class="lnowrap">
                         Name
                     </td>
                     <td>
                         <asp:Label ID="NameLabel" runat="server" />
                     </td>
                 </tr>
-                <tr>
-                    <td>
+                <tr class="even">
+                    <td class="lnowrap">
                         Meeting Date
                     </td>
                     <td>
@@ -171,31 +168,31 @@
                     </td>
                 </tr>
                 <tr>
-                    <td>
+                    <td class="lnowrap">
                         Time Horizon
                     </td>
                     <td>
                         <asp:Label ID="TimeHorizonLabel" runat="server" />
                     </td>
                 </tr>
-                <tr>
-                    <td>
+                <tr class="even">
+                    <td class="lnowrap">
                         Existing Assets
                     </td>
-                    <td>
+                    <td class="lnowrap">
                         <asp:CheckBox ID="ExistingAssetsCheckBox" runat="server" Enabled="False" />
                     </td>
                 </tr>
                 <tr>
-                    <td>
+                    <td class="lnowrap">
                         Strategy
                     </td>
                     <td>
                         <asp:Label ID="StrategyIDLabel" runat="server" />
                     </td>
                 </tr>
-                <tr>
-                    <td>
+                <tr class="even">
+                    <td class="lnowrap">
                         Investment Amount
                     </td>
                     <td>
@@ -203,28 +200,32 @@
                     </td>
                 </tr>
                 <tr>
-                    <td>
+                    <td class="lnowrap">
                         InitialFee
                     </td>
                     <td>
                         <asp:Label ID="InitialFeeLabel" runat="server" />
                     </td>
                 </tr>
-                <tr>
-                    <td>
+                <tr class="even">
+                    <td class="lnowrap">
                         Status
                     </td>
-                    <td>
-                        <asp:RadioButtonList ID="RadioButtonList1" runat="server">
+                    <td class="lnowrap">
+                        <asp:RadioButtonList ID="RadioButtonList1" runat="server" RepeatLayout="Flow">
                             <asp:ListItem>High Net Worth</asp:ListItem>
                             <asp:ListItem>Affluent</asp:ListItem>
                         </asp:RadioButtonList>
                     </td>
                 </tr>
             </table>
-            &nbsp;<br />
-            <asp:LinkButton ID="NewButton" runat="server" CausesValidation="False" CommandName="New"
-                Text="New" />
+            <br />
+            <div align="right">
+                <asp:LinkButton ID="NewButton" runat="server" CausesValidation="False" CommandName="New"
+                    Text="New" />
+            </div>
+<br />
+<br />
         </ItemTemplate>
     </asp:FormView>
     <asp:ObjectDataSource ID="sourceClient" runat="server" DataObjectTypeName="RSMTenon.Data.Client"
