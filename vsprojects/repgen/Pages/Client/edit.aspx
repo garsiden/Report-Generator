@@ -4,13 +4,14 @@
 <%@ Register Assembly="BasicFrame.WebControls.BasicDatePicker" Namespace="BasicFrame.WebControls"
     TagPrefix="BDP" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-<h4 id="clientHeader" runat="server"></h4>
-<br />
+    <h4 id="clientHeader" runat="server">
+    </h4>
+    <br />
     <asp:FormView ID="formClient" runat="server" DataKeyNames="GUID" DataSourceID="sourceClient"
         OnItemUpdated="formClient_ItemUpdated" EnableModelValidation="True" OnDataBound="formClient_DataBound">
         <EditItemTemplate>
             <table class="listing">
-                <tr>
+                <tr class="odd">
                     <td class="left">
                         Name
                     </td>
@@ -18,7 +19,7 @@
                         <asp:TextBox ID="NameTextBox" runat="server" Text='<%# Bind("Name") %>' Width="95%" />
                     </td>
                 </tr>
-                <tr>
+                <tr class="even">
                     <td class="lnowrap">
                         Meeting Date
                     </td>
@@ -35,7 +36,7 @@
                         <asp:TextBox ID="InitialFeeTextBox" runat="server" Text='<%# Bind("InitialFee", "{0:N}") %>' />
                     </td>
                 </tr>
-                <tr>
+                <tr class="even">
                     <td class="lnowrap">
                         Time Horizon
                     </td>
@@ -71,7 +72,7 @@
                         <asp:CheckBox ID="ExistingAssetsCheckBox" runat="server" Checked='<%# Bind("ExistingAssets") %>' />
                     </td>
                 </tr>
-                <tr>
+                <tr class="even">
                     <td class="lnowrap">
                         Strategy
                     </td>
@@ -89,7 +90,7 @@
                         <asp:TextBox ID="InvestmentAmountTextBox" runat="server" Text='<%# Bind("InvestmentAmount", "{0:0}") %>' />
                     </td>
                 </tr>
-                <tr>
+                <tr class="even">
                     <td class="lnowrap">
                         Status
                     </td>
@@ -101,15 +102,16 @@
                         </asp:RadioButtonList>
                     </td>
                 </tr>
-                <tr>
-                    <td class="right" colspan="2" rowspan="1">
-                        <asp:LinkButton ID="UpdateButton" runat="server" CausesValidation="True" CommandName="Update"
-                            Text="Update" />&nbsp;
-                        <asp:LinkButton ID="UpdateCancelButton" runat="server" CausesValidation="False" CommandName="Cancel"
-                            Text="Cancel" />
-                    </td>
-                </tr>
             </table>
+            <br />
+            <br />
+            <div align="right">
+                <asp:LinkButton ID="UpdateButton" runat="server" CausesValidation="True" CommandName="Update"
+                    Text="Update" />&nbsp;
+                <asp:LinkButton ID="UpdateCancelButton" runat="server" CausesValidation="False" CommandName="Cancel"
+                    Text="Cancel" />
+            </div>
+            </br/>
             <asp:ValidationSummary ID="ValidationSummary1" runat="server" DisplayMode="List"
                 HeaderText="Input errors:" />
             <asp:RequiredFieldValidator ID="vaildNameRequired" runat="server" ControlToValidate="NameTextBox"
@@ -131,7 +133,7 @@
                         <asp:TextBox ID="NameTextBox" runat="server" Text='<%# Bind("Name") %>' />
                     </td>
                 </tr>
-                <tr>
+                <tr class="even">
                     <td class="lnowrap">
                         Meeting Date
                     </td>
@@ -148,7 +150,7 @@
                         <asp:TextBox ID="InitialFeeTextBox" runat="server" Text='<%# Bind("InitialFee", "{0:N}") %>' />
                     </td>
                 </tr>
-                <tr>
+                <tr class="even">
                     <td class="lnowrap">
                         Time Horizon
                     </td>
@@ -184,7 +186,7 @@
                         <asp:CheckBox ID="ExistingAssetsCheckBox" runat="server" Checked='<%# Bind("ExistingAssets") %>' />
                     </td>
                 </tr>
-                <tr>
+                <tr class="even">
                     <td class="lnowrap">
                         Strategy
                     </td>
@@ -203,14 +205,14 @@
                         <asp:TextBox ID="InvestmentAmountTextBox" runat="server" Text='<%# Bind("InvestmentAmount", "{0}") %>' />
                     </td>
                 </tr>
-                <tr>
-                    <td colspan="2" class="right">
-                        <asp:LinkButton ID="InsertButton" runat="server" CausesValidation="True" CommandName="Insert"
-                            Text="Insert" />&nbsp; &nbsp;<asp:LinkButton ID="InsertCancelButton" runat="server"
-                                CausesValidation="False" CommandName="Cancel" Text="Cancel" />
-                    </td>
-                </tr>
             </table>
+            <br />
+            <br />
+            <div align="right">
+                <asp:LinkButton ID="InsertButton" runat="server" CausesValidation="True" CommandName="Insert"
+                    Text="Insert" />&nbsp; &nbsp;<asp:LinkButton ID="InsertCancelButton" runat="server"
+                        CausesValidation="False" CommandName="Cancel" Text="Cancel" />
+            </div>
         </InsertItemTemplate>
         <ItemTemplate>
             <table class="listing">
@@ -223,7 +225,7 @@
                         <asp:Label ID="NameLabel" runat="server" Text='<%# Bind("Name") %>' />
                     </td>
                 </tr>
-                <tr>
+                <tr class="even">
                     <td class="lnowrap">
                         Meeting Date
                     </td>
@@ -239,7 +241,7 @@
                         <asp:Label ID="TimeHorizonLabel" runat="server" Text='<%# Eval("TimeHorizon") + " years(s)" %>' />
                     </td>
                 </tr>
-                <tr>
+                <tr class="even">
                     <td class="lnowrap">
                         Strategy
                     </td>
@@ -256,7 +258,7 @@
                             Enabled="False" />
                     </td>
                 </tr>
-                <tr>
+                <tr class="even">
                     <td class="lnowrap">
                         Investment Amount
                     </td>
@@ -272,7 +274,7 @@
                         <asp:Label ID="InitialFeeLabel" runat="server" Text='<%# Bind("InitialFee", "{0:N}") %>' />
                     </td>
                 </tr>
-                <tr>
+                <tr class="even">
                     <td class="lnowrap">
                         Status
                     </td>
@@ -284,12 +286,12 @@
                         </asp:RadioButtonList>
                     </td>
                 </tr>
-                <tr>
-                    <td class="right" colspan="2">
-                        <asp:LinkButton ID="linkEdit" runat="server" CommandName="Edit">Edit</asp:LinkButton>
-                    </td>
-                </tr>
             </table>
+            <br />
+            <br />
+            <div align="right">
+                <asp:LinkButton ID="linkEdit" runat="server" CommandName="Edit">Edit</asp:LinkButton>
+            </div>
         </ItemTemplate>
         <EmptyDataTemplate>
             <table class="listing">
