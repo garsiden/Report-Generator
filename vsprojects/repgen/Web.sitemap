@@ -4,24 +4,23 @@
         <siteMapNode url="Default.aspx" title="Home"  description="Home page">
         </siteMapNode>
         <siteMapNode title="Clients"  description="">
-            <siteMapNode url="~/Pages/Client/edit.aspx" title="Edit Clients Account"  description="" />
             <siteMapNode url="~/Pages/Client/new.aspx" title="Add New Client"  description="" />
             <siteMapNode url="~/Pages/Client/index.aspx" title="All Clients"  description="" />
         </siteMapNode>
+        <siteMapNode url ="~/Pages/Model/index.aspx" title ="Models" />
         <siteMapNode title="Administration" description ="Administrate static data">
             <siteMapNode title="Benchmarks"  description="Manage benchmarks">
                 <siteMapNode url ="~/Pages/Benchmark/index.aspx" title="Edit" />
                 <siteMapNode url ="~/Pages/Benchmark/upload.aspx" title="Upload" />
             </siteMapNode>
             <siteMapNode url ="~/Pages/Strategy/index.aspx" title ="Strategies" />
-            <siteMapNode url ="~/Pages/Model/index.aspx" title ="Models" />
+            <siteMapNode url ="~/Pages/Model/edit.aspx" title ="Edit Models" />
             <siteMapNode url ="~/Pages/AssetClass/index.aspx" title ="Asset Classes" />
             <siteMapNode title="Template" description="Manage templates">
                 <siteMapNode url="~/Pages/Template/upload.aspx" title="Upload template" />
                 <siteMapNode url="~/Pages/Template/index.aspx" title="Select template" />
             </siteMapNode>
-        </siteMapNode>
-        <siteMapNode title="Search">
+            <siteMapNode url ="~/Pages/Content/index.aspx" title ="Text Content" />
         </siteMapNode>
         <siteMapNode title="Historic Data">
             <siteMapNode url="~/Pages/AssetClass/editA-M.aspx" title="Asset Classes A-M">
@@ -31,8 +30,6 @@
             <siteMapNode url ="~/Pages/AssetClass/upload.aspx" title="Upload" />
             <siteMapNode url="~/Pages/Benchmark/edit.aspx" title="Benchmarks">
             </siteMapNode>
-        </siteMapNode>
-        <siteMapNode title="Reports">
         </siteMapNode>
     </siteMapNode>
 </siteMap>
