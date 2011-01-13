@@ -12,18 +12,19 @@ using RSMTenon.ReportGenerator;
 public partial class RepGenPage : System.Web.UI.Page
 {
     protected RepGenDataContext context;
+    private Dictionary<string, AssetClass> assetClassDictionary = null;
 
-    public IEnumerable<Strategy> GetStrategies()
+    public List<Strategy> GetStrategies()
     {
-        return DataContext.Strategies;
+        return Strategy.GetStrategies();
     }
 
-    public IEnumerable<Benchmark> GetBenchmarks()
+    public List<Benchmark> GetBenchmarks()
     {
-        return DataContext.Benchmarks.OrderBy(b => b.Name);
+        return DataContext.Benchmarks.OrderBy(b => b.Name).ToList();
     }
 
-    public IEnumerable<AssetClass> GetModelAssetClasses()
+    public List<AssetClass> GetModelAssetClasses()
     {
         var classes = from cls in DataContext.AssetClasses
                       join grp in DataContext.AssetGroupClasses
@@ -34,10 +35,10 @@ public partial class RepGenPage : System.Web.UI.Page
                       where a.AssetClassID == null
                       select cls;
 
-        return classes;
+        return classes.ToList();
     }
 
-    public IEnumerable<AssetClass> GetBreakdownAssetClasses()
+    public List<AssetClass> GetBreakdownAssetClasses()
     {
         var classes = from cls in DataContext.AssetClasses
                       join grp in DataContext.AssetGroupClasses
@@ -46,7 +47,7 @@ public partial class RepGenPage : System.Web.UI.Page
                       orderby cls.Name
                       select cls;
 
-        return classes;
+        return classes.ToList();
     }
 
     protected RepGenDataContext DataContext
@@ -55,7 +56,7 @@ public partial class RepGenPage : System.Web.UI.Page
         {
             if (context == null)
             {
-                context = new RepGenDataContext(ConnectionFactory.CreateSqlConnection());
+                context = new RepGenDataContext();
             }
             return context;
         }
@@ -106,5 +107,17 @@ public partial class RepGenPage : System.Web.UI.Page
         }
 
         return listDictionary;
+    }
+
+    public string GetAssetClassName(string id)
+    {
+        if (assetClassDictionary == null)
+            assetClassDictionary = DataContext.AssetClasses.ToDictionary(a => a.ID);
+
+        AssetClass asset;
+        if (assetClassDictionary.TryGetValue(id, out asset))
+            return asset.Name;
+        else
+            return string.Empty;
     }
 }
