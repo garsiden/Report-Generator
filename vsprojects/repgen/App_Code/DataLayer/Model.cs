@@ -15,14 +15,14 @@ namespace RSMTenon.Data
             get
             {
                 if (context == null)
-                    context = new RepGenDataContext(ConnectionFactory.CreateSqlConnection());
+                    context = new RepGenDataContext();
                 return context;
             }
         }
 
         public static IQueryable<AssetWeighting> GetModelAllocation(string strategyId)
         {
-            var ctx = new RepGenDataContext(ConnectionFactory.CreateSqlConnection());
+            var ctx = new RepGenDataContext();
 
             var alloction = from model in ctx.Models
                             where model.StrategyID.Equals(strategyId)
@@ -38,7 +38,7 @@ namespace RSMTenon.Data
 
         public static IQueryable<ModelAssetClass> GetAssetClasses(string strategyId)
         {
-            var ctx = new RepGenDataContext(ConnectionFactory.CreateSqlConnection());
+            var ctx = new RepGenDataContext();
 
             var classes = from m in ctx.Models
                           where m.StrategyID == strategyId
