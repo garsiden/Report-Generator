@@ -6,7 +6,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
-    <title>RSM Wealth Management Report Generator</title>
+    <title>RSMTenon Wealth Management Report Generator</title>
     <link href="../css/common.css" rel="stylesheet" type="text/css" />
     <link href="../css/tables.css" rel="stylesheet" type="text/css" />
     <link href="../css/report.css" rel="stylesheet" type="text/css" />
@@ -17,16 +17,29 @@
     <div id="wrapper">
         <form id="form1" runat="server">
         <uc2:SiteHeader ID="SiteHeader1" runat="server" />
-        <asp:Menu ID="menuMasterPage" runat="server" DataSourceID="sourceSiteMap"
-            Orientation="Horizontal">
+        <br />
+        <asp:Menu ID="menuMasterPage" runat="server" DataSourceID="sourceSiteMap" Orientation="Horizontal"
+            BackColor="#B5C7DE" DynamicHorizontalOffset="2" Font-Names="Verdana" Font-Size="1em"
+            ForeColor="#284E98" StaticSubMenuIndent="10px">
+            <StaticSelectedStyle BackColor="#507CD1" />
+            <StaticMenuItemStyle HorizontalPadding="5px" VerticalPadding="2px" />
+            <DynamicHoverStyle BackColor="#284E98" ForeColor="White" />
+            <DynamicMenuStyle BackColor="#B5C7DE" />
+            <DynamicSelectedStyle BackColor="#507CD1" />
+            <DynamicMenuItemStyle HorizontalPadding="5px" VerticalPadding="2px" />
+            <StaticHoverStyle BackColor="#284E98" ForeColor="White" />
         </asp:Menu>
         <asp:SiteMapDataSource ID="sourceSiteMap" runat="server" ShowStartingNode="False" />
+        <br />
         <br />
         <div id="content">
             <div id="content-inner">
                 <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
                 </asp:ContentPlaceHolder>
+                <br />
+                <br />
                 <uc1:SiteFooter ID="SiteFooter1" runat="server" />
+                <br />
             </div>
         </div>
         </form>

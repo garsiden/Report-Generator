@@ -17,7 +17,7 @@
                 Font-Size="Large" Text="Wealth Managment Report Generator"></asp:Label>
         </td>
         <td align="right" width="50%">
-            <asp:Label ID="greetingLabel" runat="server"></asp:Label>
+            <asp:Label ID="greetingLabel" runat="server"></asp:Label>&nbsp;
         </td>
     </tr>
 </table>
