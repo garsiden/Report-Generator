@@ -78,7 +78,7 @@
                     </td>
                     <td class="left">
                         <asp:DropDownList ID="listStrategyEdit" runat="server" DataSource="<%# GetStrategies() %>"
-                            DataTextField="Name" DataValueField="ID" SelectedValue='<%# Bind("StrategyID") %>'>
+                            DataTextField="Name" DataValueField="ID" SelectedValue='<%# Bind("StrategyID") %>' Width="70%">
                         </asp:DropDownList>
                     </td>
                 </tr>
@@ -111,7 +111,7 @@
                 <asp:LinkButton ID="UpdateCancelButton" runat="server" CausesValidation="False" CommandName="Cancel"
                     Text="Cancel" />
             </div>
-            </br/>
+            <br>
             <asp:ValidationSummary ID="ValidationSummary1" runat="server" DisplayMode="List"
                 HeaderText="Input errors:" />
             <asp:RequiredFieldValidator ID="vaildNameRequired" runat="server" ControlToValidate="NameTextBox"
@@ -219,7 +219,6 @@
                 <tr>
                     <td class="lnowrap">
                         Name
-                    </td>
                     </td>
                     <td class="lnowrap">
                         <asp:Label ID="NameLabel" runat="server" Text='<%# Bind("Name") %>' />

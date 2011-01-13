@@ -3,10 +3,12 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
+<h4>Edit Benchmark Historic Data</h4>
+<br />
     <asp:GridView ID="gridBenchmarkData" runat="server" AllowPaging="True" AutoGenerateColumns="False"
         CssClass="listing" DataKeyNames="Date" DataSourceID="sourceBenchmarkData" ShowFooter="True"
         OnRowCommand="gridBenchmarkData_RowCommand" UseAccessibleHeader="False" 
-        Width="5em">
+        Width="5em" AllowSorting="True">
         <RowStyle CssClass="odd" />
         <Columns>
             <asp:TemplateField ShowHeader="False" ItemStyle-CssClass="lnowrap">
@@ -39,7 +41,7 @@
                     <asp:Label ID="Label1" runat="server" Text='<%# Bind("Date", "{0:d}") %>'></asp:Label>
                 </ItemTemplate>
             </asp:TemplateField>
-            <asp:TemplateField HeaderText="Active Managed" SortExpression="ACMA">
+            <asp:TemplateField HeaderText="Active Managed">
                 <EditItemTemplate>
                     <asp:TextBox ID="TextBox1" runat="server" Text='<%# Bind("ACMA", "{0:0.00}") %>'
                         Width="5em"></asp:TextBox>
@@ -53,7 +55,7 @@
                 <FooterStyle CssClass="right" />
                 <ItemStyle CssClass="right" Width="12%" />
             </asp:TemplateField>
-            <asp:TemplateField HeaderText="Balanced Managed" SortExpression="BAMA">
+            <asp:TemplateField HeaderText="Balanced Managed">
                 <EditItemTemplate>
                     <asp:TextBox ID="TextBox2" runat="server" Text='<%# Bind("BAMA", "{0:0.00}") %>'
                         Width="5em"></asp:TextBox>
@@ -67,7 +69,7 @@
                 <FooterStyle CssClass="right" />
                 <ItemStyle CssClass="right" Width="12%" />
             </asp:TemplateField>
-            <asp:TemplateField HeaderText="Cautious Managed" SortExpression="CAMA">
+            <asp:TemplateField HeaderText="Cautious Managed">
                 <EditItemTemplate>
                     <asp:TextBox ID="TextBox3" runat="server" Text='<%# Bind("CAMA", "{0:0.00}") %>'
                         Width="5em"></asp:TextBox>
@@ -81,7 +83,7 @@
                 <FooterStyle CssClass="right" />
                 <ItemStyle CssClass="right" Width="12%" />
             </asp:TemplateField>
-            <asp:TemplateField HeaderText="Global Growth" SortExpression="GLGR">
+            <asp:TemplateField HeaderText="Global Growth">
                 <EditItemTemplate>
                     <asp:TextBox ID="TextBox4" runat="server" Text='<%# Bind("GLGR", "{0:0.00}") %>'
                         Width="5em"></asp:TextBox>
@@ -95,7 +97,7 @@
                 <FooterStyle CssClass="right" />
                 <ItemStyle CssClass="right" Width="12%" />
             </asp:TemplateField>
-            <asp:TemplateField HeaderText="Strategic Bonds £" SortExpression="STBO">
+            <asp:TemplateField HeaderText="Strategic Bonds £">
                 <EditItemTemplate>
                     <asp:TextBox ID="TextBox5" runat="server" Text='<%# Bind("STBO", "{0:0.00}") %>'
                         Width="5em"></asp:TextBox>
