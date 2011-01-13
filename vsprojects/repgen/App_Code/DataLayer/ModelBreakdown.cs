@@ -12,7 +12,7 @@ namespace RSMTenon.Data
         [System.ComponentModel.DataObjectMethod(System.ComponentModel.DataObjectMethodType.Select, false)]
         public static IQueryable<ModelBreakdown> GetModelBreakdown(string strategyId, string assetGroupId)
         {
-            var ctx = new RepGenDataContext(ConnectionFactory.CreateSqlConnection());
+            var ctx = new RepGenDataContext();
 
             var breaks = from b in ctx.ModelBreakdowns
                          join g in ctx.AssetGroupClasses
@@ -27,7 +27,7 @@ namespace RSMTenon.Data
         [System.ComponentModel.DataObjectMethod(System.ComponentModel.DataObjectMethodType.Update, false)]
         public static void UpdateModelBreakdown(ModelBreakdown modelBreakdown, ModelBreakdown original_modelBreakdown)
         {
-            var ctx = new RepGenDataContext(ConnectionFactory.CreateSqlConnection());
+            var ctx = new RepGenDataContext();
             ctx.ModelBreakdowns.Attach(modelBreakdown, original_modelBreakdown);
             ctx.SubmitChanges();
         }
@@ -35,7 +35,7 @@ namespace RSMTenon.Data
         [System.ComponentModel.DataObjectMethod(System.ComponentModel.DataObjectMethodType.Update, false)]
         public static void UpdateModelBreakdown(ModelBreakdown modelBreakdown)
         {
-            var ctx = new RepGenDataContext(ConnectionFactory.CreateSqlConnection());
+            var ctx = new RepGenDataContext();
             ctx.ModelBreakdowns.Attach(modelBreakdown, true);
             ctx.SubmitChanges();
         }

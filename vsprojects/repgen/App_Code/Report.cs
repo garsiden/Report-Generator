@@ -449,7 +449,7 @@ namespace RSMTenon.ReportGenerator
             get
             {
                 if (context == null) {
-                    context = new RepGenDataContext(ConnectionFactory.CreateSqlConnection());
+                    context = new RepGenDataContext();
                 }
 
                 return context;

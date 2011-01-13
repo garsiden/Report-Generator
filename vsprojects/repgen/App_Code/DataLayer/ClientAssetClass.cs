@@ -12,7 +12,7 @@ namespace RSMTenon.Data
         [System.ComponentModel.DataObjectMethod(System.ComponentModel.DataObjectMethodType.Select, true)]
         public static ClientAssetClass GetClientAssetClass(Guid clientGuid)
         {
-            var ctx = new RepGenDataContext(ConnectionFactory.CreateSqlConnection());
+            var ctx = new RepGenDataContext();
             return ctx.ClientAssetClasses.SingleOrDefault(a => a.ClientGUID == clientGuid);
 
         }
@@ -20,7 +20,7 @@ namespace RSMTenon.Data
         [System.ComponentModel.DataObjectMethod(System.ComponentModel.DataObjectMethodType.Select, false)]
         public static IQueryable<ClientAssetClass> GetAllClientsAssets()
         {
-            var ctx = new RepGenDataContext(ConnectionFactory.CreateSqlConnection());
+            var ctx = new RepGenDataContext();
             return ctx.ClientAssetClasses;
 
         }
@@ -28,7 +28,7 @@ namespace RSMTenon.Data
         [System.ComponentModel.DataObjectMethod(System.ComponentModel.DataObjectMethodType.Update, true)]
         public static void UpdateClientAsset(ClientAssetClass clientAsset, ClientAssetClass original_clientAsset)
         {
-            var ctx = new RepGenDataContext(ConnectionFactory.CreateSqlConnection());
+            var ctx = new RepGenDataContext();
             ctx.ClientAssetClasses.Attach(clientAsset, original_clientAsset);
             ctx.SubmitChanges();
         }
@@ -36,7 +36,7 @@ namespace RSMTenon.Data
         [System.ComponentModel.DataObjectMethod(System.ComponentModel.DataObjectMethodType.Delete, true)]
         public static void DeleteClientAsset(ClientAssetClass clientAsset)
         {
-            var ctx = new RepGenDataContext(ConnectionFactory.CreateSqlConnection());
+            var ctx = new RepGenDataContext();
             ctx.ClientAssetClasses.DeleteOnSubmit(ctx.ClientAssetClasses.Single(c => c.ClientGUID == clientAsset.ClientGUID));
             ctx.SubmitChanges();
         }
@@ -44,7 +44,7 @@ namespace RSMTenon.Data
         [System.ComponentModel.DataObjectMethod(System.ComponentModel.DataObjectMethodType.Delete, false)]
         public static void DeleteClientAsset(Guid clientGuid)
         {
-            var ctx = new RepGenDataContext(ConnectionFactory.CreateSqlConnection());
+            var ctx = new RepGenDataContext();
             ctx.ClientAssetClasses.DeleteOnSubmit(ctx.ClientAssetClasses.Single(c => c.ClientGUID == clientGuid));
             ctx.SubmitChanges();
         }
@@ -52,7 +52,7 @@ namespace RSMTenon.Data
         [System.ComponentModel.DataObjectMethod(System.ComponentModel.DataObjectMethodType.Insert, true)]
         public void InsertClientAsset(ClientAssetClass clientAsset)
         {
-            var ctx = new RepGenDataContext(ConnectionFactory.CreateSqlConnection());
+            var ctx = new RepGenDataContext();
             ctx.ClientAssetClasses.InsertOnSubmit(clientAsset);
             ctx.SubmitChanges();
         }
@@ -61,7 +61,7 @@ namespace RSMTenon.Data
 
         //public static IQueryable<AssetWeighting> GetClientAssetClass(Guid clientGuid)
         //{
-        //    var ctx = new RepGenDataContext(ConnectionFactory.CreateSqlConnection());
+        //    var ctx = new RepGenDataContext();
         //    var assets = ctx.ClientAssetClasses;
 
         //    var weighting = from asset in assets

@@ -12,7 +12,7 @@ namespace RSMTenon.Data
         [System.ComponentModel.DataObjectMethod(System.ComponentModel.DataObjectMethodType.Select, true)]
         public static ClientAsset GetClientAsset(Guid guid)
         {
-            var ctx = new RepGenDataContext(ConnectionFactory.CreateSqlConnection());
+            var ctx = new RepGenDataContext();
             return ctx.ClientAssets.SingleOrDefault(a => a.GUID == guid);
 
         }
@@ -20,7 +20,7 @@ namespace RSMTenon.Data
         [System.ComponentModel.DataObjectMethod(System.ComponentModel.DataObjectMethodType.Select, true)]
         public static IQueryable<ClientAsset> GetAllClientsAssets(Guid clientGuid)
         {
-            var ctx = new RepGenDataContext(ConnectionFactory.CreateSqlConnection());
+            var ctx = new RepGenDataContext();
             return ctx.ClientAssets.Where(a => a.ClientGUID == clientGuid);
 
         }
@@ -28,7 +28,7 @@ namespace RSMTenon.Data
         [System.ComponentModel.DataObjectMethod(System.ComponentModel.DataObjectMethodType.Update, true)]
         public static void UpdateClientAsset(ClientAsset clientAsset, ClientAsset original_clientAsset)
         {
-            var ctx = new RepGenDataContext(ConnectionFactory.CreateSqlConnection());
+            var ctx = new RepGenDataContext();
             ctx.ClientAssets.Attach(clientAsset, original_clientAsset);
             ctx.SubmitChanges();
         }
@@ -36,15 +36,15 @@ namespace RSMTenon.Data
         [System.ComponentModel.DataObjectMethod(System.ComponentModel.DataObjectMethodType.Delete, true)]
         public static void DeleteClientAsset(ClientAsset clientAsset)
         {
-            var ctx = new RepGenDataContext(ConnectionFactory.CreateSqlConnection());
+            var ctx = new RepGenDataContext();
             ctx.ClientAssets.DeleteOnSubmit(ctx.ClientAssets.Single(c => c.GUID == clientAsset.GUID));
             ctx.SubmitChanges();
         }
 
         [System.ComponentModel.DataObjectMethod(System.ComponentModel.DataObjectMethodType.Insert, true)]
-        public static Guid InsertClient(ClientAsset clientAsset)
+        public static Guid InsertClientAsset(ClientAsset clientAsset)
         {
-            var ctx = new RepGenDataContext(ConnectionFactory.CreateSqlConnection());
+            var ctx = new RepGenDataContext();
             ctx.ClientAssets.InsertOnSubmit(clientAsset);
             ctx.SubmitChanges();
 

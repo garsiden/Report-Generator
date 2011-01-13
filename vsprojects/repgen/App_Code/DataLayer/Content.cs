@@ -12,7 +12,7 @@ namespace RSMTenon.Data
         [System.ComponentModel.DataObjectMethod(System.ComponentModel.DataObjectMethodType.Select, false)]
         public static IQueryable<Content> GetContent(string strategyId, int contentIdx, int categoryIdx)
         {
-            var ctx = new RepGenDataContext(ConnectionFactory.CreateSqlConnection());
+            var ctx = new RepGenDataContext();
             var predicate = PredicateBuilder.Make<RSMTenon.Data.Content>();
 
             switch (contentIdx)
@@ -61,7 +61,7 @@ namespace RSMTenon.Data
         [System.ComponentModel.DataObjectMethod(System.ComponentModel.DataObjectMethodType.Select, false)]
         public static IQueryable<Content> GetContent(string strategyId, bool strategy, bool charts, bool cash, bool assets, bool general)
         {
-            var ctx = new RepGenDataContext(ConnectionFactory.CreateSqlConnection());
+            var ctx = new RepGenDataContext();
 
             var predicate = PredicateBuilder.Make<RSMTenon.Data.Content>();
 
@@ -101,7 +101,7 @@ namespace RSMTenon.Data
         [System.ComponentModel.DataObjectMethod(System.ComponentModel.DataObjectMethodType.Select, false)]
         public static IQueryable<Content> GetContent(string strategyId)
         {
-            var ctx = new RepGenDataContext(ConnectionFactory.CreateSqlConnection());
+            var ctx = new RepGenDataContext();
 
             var predicate = PredicateBuilder.Make<RSMTenon.Data.Content>();
 
@@ -134,7 +134,7 @@ namespace RSMTenon.Data
         [System.ComponentModel.DataObjectMethod(System.ComponentModel.DataObjectMethodType.Update, true)]
         public static void UpdateClient(Content content, Content original_content)
         {
-            var ctx = new RepGenDataContext(ConnectionFactory.CreateSqlConnection());
+            var ctx = new RepGenDataContext();
             ctx.Contents.Attach(content, original_content);
             ctx.SubmitChanges();
         }
