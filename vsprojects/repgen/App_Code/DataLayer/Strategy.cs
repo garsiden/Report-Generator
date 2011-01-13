@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Data.SqlClient;
 
 namespace RSMTenon.Data
 {
@@ -12,7 +13,7 @@ namespace RSMTenon.Data
 
         public static string GetStrategyNameFromId(string id)
         {
-            var ctx = new RepGenDataContext(ConnectionFactory.CreateSqlConnection());
+            var ctx = new RepGenDataContext();
 
             return ctx.Strategies.First(s => s.ID.Equals(id)).Name;
 
@@ -20,12 +21,14 @@ namespace RSMTenon.Data
 
         public Dictionary<int, ReturnData> GetStrategyReturn()
         {
-            if (strategyReturn == null) {
-                var ctx = new RepGenDataContext(ConnectionFactory.CreateSqlConnection());
+            if (strategyReturn == null)
+            {
+                var ctx = new RepGenDataContext();
                 var returns = ctx.ModelReturn(this.ID);
                 var calc = new ReturnCalculation();
                 var prices = from p in returns
-                             select new ReturnData {
+                             select new ReturnData
+                             {
                                  Date = p.Date,
                                  Value = calc.Price(p)
                              };
@@ -34,6 +37,19 @@ namespace RSMTenon.Data
             }
 
             return strategyReturn;
+        }
+
+        public static List<Strategy> GetStrategies()
+        {
+
+            try
+            {
+                var ctx = new RepGenDataContext();
+                return ctx.Strategies.ToList();
+            } catch (SqlException err)
+            {
+                throw err;
+            }
         }
     }
 }
