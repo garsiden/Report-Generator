@@ -4,6 +4,14 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
+<h4>Edit Models</h4>
+<br />
+    Strategy:&nbsp;<asp:DropDownList ID="listStrategy" runat="server" DataSource="<%# GetStrategies() %>"
+        DataTextField="Name" DataValueField="ID" AutoPostBack="True" OnSelectedIndexChanged="listStrategy_SelectedIndexChanged">
+    </asp:DropDownList>
+    <br />
+    <br />
+
     <asp:GridView ID="gridModel" runat="server" AlternatingRowStyle-CssClass="odd" CssClass="listing"
         RowStyle-CssClass="even" AllowSorting="True" AutoGenerateColumns="False" DataKeyNames="GUID"
         DataSourceID="sourceModel" ShowFooter="True" OnRowCommand="gridModel_RowCommand"
@@ -114,7 +122,8 @@
         EnableDelete="True" EnableInsert="True" EnableUpdate="True" OrderBy="AssetClassID, InvestmentName"
         TableName="Models" Where="StrategyID == @StrategyID">
         <WhereParameters>
-            <asp:Parameter DefaultValue="CO" Name="StrategyID" Type="String" />
+            <asp:ControlParameter ControlID="listStrategy" Name="StrategyID" 
+                PropertyName="SelectedValue" Type="String" />
         </WhereParameters>
     </asp:LinqDataSource>
     <br />
