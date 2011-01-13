@@ -19,7 +19,14 @@ public partial class Pages_Model_edit : RepGenPage
     {
         if (!IsPostBack)
         {
-            gridModel.Caption = String.Format("{0} Model", Strategy.GetStrategyNameFromId("CO"));
+            if (!IsPostBack)
+            {
+                this.DataBind();
+                string id = this.listStrategy.SelectedValue;
+                gridModel.Caption = String.Format("{0} Model", Strategy.GetStrategyNameFromId(id));
+            }
+
+
         }
     }
     protected void gridModel_RowCommand(object sender, GridViewCommandEventArgs e)
@@ -93,5 +100,10 @@ public partial class Pages_Model_edit : RepGenPage
         {
             e.Row.Cells[1].Text = longEquityWeight.ToString("0.00%");
         }
+    }
+
+    protected void listStrategy_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        this.gridModel.DataBind();
     }
 }
