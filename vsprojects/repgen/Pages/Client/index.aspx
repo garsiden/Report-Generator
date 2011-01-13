@@ -12,7 +12,8 @@
         <Columns>
             <asp:HyperLinkField DataNavigateUrlFields="GUID" 
                 DataNavigateUrlFormatString="~/Pages/Client/edit.aspx?guid={0}" 
-                DataTextField="Name" HeaderText="Name" SortExpression="Name">
+                DataTextField="Name" HeaderText="Name" SortExpression="Name" 
+                Text="Edit client details">
             <ItemStyle CssClass="lnowrap" />
             </asp:HyperLinkField>
             <asp:TemplateField HeaderText="Strategy" SortExpression="StrategyID">
@@ -34,10 +35,18 @@
                 SortExpression="TimeHorizon">
             <ItemStyle CssClass="right" />
             </asp:BoundField>
-            <asp:BoundField DataField="InvestmentAmount" DataFormatString="{0:£#,##0}" 
-                HeaderText="Investment Amount" SortExpression="InvestmentAmount">
-            <ItemStyle CssClass="right" />
-            </asp:BoundField>
+            <asp:TemplateField HeaderText="Investment Amount" 
+                SortExpression="InvestmentAmount">
+                <EditItemTemplate>
+                    <asp:TextBox ID="TextBox1" runat="server" 
+                        Text='<%# Bind("InvestmentAmount") %>'></asp:TextBox>
+                </EditItemTemplate>
+                <ItemTemplate>
+                    <asp:Label ID="Label2" runat="server" 
+                        Text='<%# Eval("InvestmentAmount", "{0:c}") %>'></asp:Label>
+                </ItemTemplate>
+                <ItemStyle CssClass="right" />
+            </asp:TemplateField>
             <asp:BoundField DataField="StatusName" HeaderText="Status" 
                 SortExpression="HighNetWorth" />
             <asp:CommandField ShowDeleteButton="True" />
