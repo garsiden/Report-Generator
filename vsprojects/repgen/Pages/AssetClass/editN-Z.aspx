@@ -4,9 +4,12 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
+<h4>Edit Asset Class Historic Data (N - Z)</h4>
+<br />
     <asp:GridView ID="gridHistoricData" runat="server" AllowPaging="True" AutoGenerateColumns="False"
         CssClass="listing" DataKeyNames="Date" DataSourceID="sourceHistoricData" ShowFooter="True"
-        OnRowCommand="gridHistoricData_RowCommand" UseAccessibleHeader="False" Width="5em">
+        OnRowCommand="gridHistoricData_RowCommand" UseAccessibleHeader="False" 
+        Width="5em" AllowSorting="True">
         <RowStyle CssClass="odd" />
         <Columns>
             <asp:TemplateField ShowHeader="False" ItemStyle-CssClass="lnowrap">
@@ -39,7 +42,7 @@
                     <asp:Label ID="Label1" runat="server" Text='<%# Bind("Date", "{0:d}") %>'></asp:Label>
                 </ItemTemplate>
             </asp:TemplateField>
-            <asp:TemplateField HeaderText="Private Equity" SortExpression="PREQ">
+            <asp:TemplateField HeaderText="Private Equity">
                 <EditItemTemplate>
                     <asp:TextBox ID="TextBox1" runat="server" Text='<%# Bind("PREQ", "{0:0.00}") %>'
                         Width="5em"></asp:TextBox>
@@ -53,7 +56,7 @@
                 <FooterStyle CssClass="right" />
                 <ItemStyle CssClass="right" Width="12%" />
             </asp:TemplateField>
-            <asp:TemplateField HeaderText="UK Corp Bonds" SortExpression="UKCB">
+            <asp:TemplateField HeaderText="UK Corp Bonds">
                 <EditItemTemplate>
                     <asp:TextBox ID="TextBox2" runat="server" Text='<%# Bind("UKCB", "{0:0.00}") %>'
                         Width="5em"></asp:TextBox>
@@ -67,7 +70,7 @@
                 <FooterStyle CssClass="right" />
                 <ItemStyle CssClass="right" Width="12%" />
             </asp:TemplateField>
-            <asp:TemplateField HeaderText="UK Govt Bonds" SortExpression="UKGB">
+            <asp:TemplateField HeaderText="UK Govt Bonds">
                 <EditItemTemplate>
                     <asp:TextBox ID="TextBox3" runat="server" Text='<%# Bind("UKGB", "{0:0.00}") %>'
                         Width="5em"></asp:TextBox>
@@ -81,7 +84,7 @@
                 <FooterStyle CssClass="right" />
                 <ItemStyle CssClass="right" Width="12%" />
             </asp:TemplateField>
-            <asp:TemplateField HeaderText="UK High Yield" SortExpression="UKHY">
+            <asp:TemplateField HeaderText="UK High Yield">
                 <EditItemTemplate>
                     <asp:TextBox ID="TextBox4" runat="server" Text='<%# Bind("UKHY", "{0:0.00}") %>'
                         Width="5em"></asp:TextBox>
@@ -95,7 +98,7 @@
                 <FooterStyle CssClass="right" />
                 <ItemStyle CssClass="right" Width="12%" />
             </asp:TemplateField>
-            <asp:TemplateField HeaderText="UK Equities" SortExpression="UKEQ">
+            <asp:TemplateField HeaderText="UK Equities">
                 <EditItemTemplate>
                     <asp:TextBox ID="TextBox5" runat="server" Text='<%# Bind("UKEQ", "{0:0.00}") %>'
                         Width="5em"></asp:TextBox>
@@ -109,7 +112,7 @@
                 <FooterStyle CssClass="right" />
                 <ItemStyle CssClass="right" Width="12%" />
             </asp:TemplateField>
-            <asp:TemplateField HeaderText="World Bonds" SortExpression="WOBO">
+            <asp:TemplateField HeaderText="World Bonds">
                 <EditItemTemplate>
                     <asp:TextBox ID="TextBox6" runat="server" Text='<%# Bind("WOBO", "{0:0.00}") %>'
                         Width="5em"></asp:TextBox>

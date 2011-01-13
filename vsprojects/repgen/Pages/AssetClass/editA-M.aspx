@@ -3,10 +3,12 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
+<h4>Edit Asset Class Historic Data (A - M)</h4>
+<br />
     <asp:GridView ID="gridHistoricData" runat="server" AllowPaging="True" AutoGenerateColumns="False"
         CssClass="listing" DataKeyNames="Date" DataSourceID="sourceHistoricData" ShowFooter="True"
         OnRowCommand="gridHistoricData_RowCommand" UseAccessibleHeader="False" 
-        Width="5em">
+        Width="100%" AllowSorting="True">
         <RowStyle CssClass="odd" />
         <Columns>
             <asp:TemplateField ShowHeader="False" ItemStyle-CssClass="lnowrap">
@@ -39,7 +41,7 @@
                     <asp:Label ID="Label1" runat="server" Text='<%# Bind("Date", "{0:d}") %>'></asp:Label>
                 </ItemTemplate>
             </asp:TemplateField>
-            <asp:TemplateField HeaderText="Cash" SortExpression="CASH">
+            <asp:TemplateField HeaderText="Cash">
                 <EditItemTemplate>
                     <asp:TextBox ID="TextBox1" runat="server" Text='<%# Bind("CASH", "{0:0.00}") %>'
                         Width="5em"></asp:TextBox>
@@ -53,7 +55,7 @@
                 <FooterStyle CssClass="right" />
                 <ItemStyle CssClass="right" Width="12%" />
             </asp:TemplateField>
-            <asp:TemplateField HeaderText="Comm. Property" SortExpression="COPR">
+            <asp:TemplateField HeaderText="Comm. Property">
                 <EditItemTemplate>
                     <asp:TextBox ID="TextBox2" runat="server" Text='<%# Bind("COPR", "{0:0.00}") %>'
                         Width="5em"></asp:TextBox>
@@ -67,7 +69,7 @@
                 <FooterStyle CssClass="right" />
                 <ItemStyle CssClass="right" Width="12%" />
             </asp:TemplateField>
-            <asp:TemplateField HeaderText="Commod- ities" SortExpression="COMM">
+            <asp:TemplateField HeaderText="Commod- ities">
                 <EditItemTemplate>
                     <asp:TextBox ID="TextBox3" runat="server" Text='<%# Bind("COMM", "{0:0.00}") %>'
                         Width="5em"></asp:TextBox>
@@ -81,7 +83,7 @@
                 <FooterStyle CssClass="right" />
                 <ItemStyle CssClass="right" Width="12%" />
             </asp:TemplateField>
-            <asp:TemplateField HeaderText="Global Equities" SortExpression="GLEQ">
+            <asp:TemplateField HeaderText="Global Equities">
                 <EditItemTemplate>
                     <asp:TextBox ID="TextBox4" runat="server" Text='<%# Bind("GLEQ", "{0:0.00}") %>'
                         Width="5em"></asp:TextBox>
@@ -95,7 +97,7 @@
                 <FooterStyle CssClass="right" />
                 <ItemStyle CssClass="right" Width="12%" />
             </asp:TemplateField>
-            <asp:TemplateField HeaderText="Hedge" SortExpression="HEDG">
+            <asp:TemplateField HeaderText="Hedge">
                 <EditItemTemplate>
                     <asp:TextBox ID="TextBox5" runat="server" Text='<%# Bind("HEDG", "{0:0.00}") %>'
                         Width="5em"></asp:TextBox>
@@ -109,7 +111,7 @@
                 <FooterStyle CssClass="right" />
                 <ItemStyle CssClass="right" Width="12%" />
             </asp:TemplateField>
-            <asp:TemplateField HeaderText="Long Short" SortExpression="LOSH">
+            <asp:TemplateField HeaderText="Long Short">
                 <EditItemTemplate>
                     <asp:TextBox ID="TextBox6" runat="server" Text='<%# Bind("LOSH", "{0:0.00}") %>'
                         Width="5em"></asp:TextBox>
