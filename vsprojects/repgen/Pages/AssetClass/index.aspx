@@ -3,17 +3,24 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
+<h4>Edit Asset Classes</h4>
+<br />
     <asp:GridView ID="gridAssetClass" runat="server" class="listing"
     DataSourceID="sourceAssetClass" AllowSorting="True" 
-    AutoGenerateColumns="False" DataKeyNames="ID">
+    AutoGenerateColumns="False" DataKeyNames="ID" Width="60%">
+        <RowStyle CssClass="odd" />
         <Columns>
             <asp:BoundField DataField="Name" HeaderText="Name" SortExpression="Name" ItemStyle-CssClass="lnowrap">
 
+            <ControlStyle Width="90%" />
+            <ItemStyle CssClass="lnowrap" />
+
             </asp:BoundField>
-            <asp:CheckBoxField DataField="IsGroup" HeaderText="Group?" ReadOnly="True" 
-                SortExpression="IsGroup" />
-            <asp:CommandField ShowEditButton="True"  ItemStyle-CssClass="left"/>
+            <asp:CommandField ShowEditButton="True">
+            <ItemStyle CssClass="lnowrap" Width="15%" />
+            </asp:CommandField>
         </Columns>
+        <AlternatingRowStyle CssClass="even" />
     </asp:GridView>
     <asp:LinqDataSource ID="sourceAssetClass" runat="server" 
         ContextTypeName="RSMTenon.Data.RepGenDataContext" EnableUpdate="True" 
