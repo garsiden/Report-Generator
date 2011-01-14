@@ -3,6 +3,8 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
+<h4>Set Template</h4>
+<br />
     <asp:Label ID="Label1" runat="server" Text="Label">Select template:&nbsp;</asp:Label>
 <asp:DropDownList ID="dropList" runat="server" 
     DataSource="<%# GetTemplates() %>" DataTextField="Name" DataValueField="Name" 
