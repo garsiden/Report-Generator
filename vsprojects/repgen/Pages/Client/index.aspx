@@ -53,6 +53,11 @@
         </Columns>
         <AlternatingRowStyle CssClass="odd" />
     </asp:GridView>
+<br />
+<div>
+    <asp:HyperLink ID="hyperNewClient" runat="server" 
+        NavigateUrl="~/Pages/Client/new.aspx">New Client</asp:HyperLink>
+</div>
     <asp:LinqDataSource ID="sourceClient" runat="server" 
         ContextTypeName="RSMTenon.Data.RepGenDataContext" EnableDelete="True" 
         EnableInsert="True" EnableUpdate="True" OrderBy="Name" TableName="Clients">
