@@ -47,7 +47,7 @@ public partial class Pages_AssetClass_upload : System.Web.UI.Page
                             }
                         }
                     }
-                    RSMTenon.Data.DataUtilities.UploadToDatabase(dt, "tblHistoricDataByClass");
+                    RSMTenon.Data.DataUtilities.UploadToDatabase(dt, "tblHistoricData");
                     lblStatus.Text = String.Format("{0:#,##0} row(s) added to database", dt.Rows.Count);
                 }
             } catch (Exception err)
