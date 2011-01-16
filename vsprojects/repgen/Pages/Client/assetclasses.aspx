@@ -4,19 +4,21 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
-    <asp:DetailsView ID="detailsView" runat="server" AutoGenerateRows="False" DataSourceID="sourceAssetObject"
+    <h4 id="clientAssetHeader" runat="server"></h4>
+<br />
+    <asp:DetailsView ID="detailsView" runat="server" AutoGenerateRows="False" DataSourceID="sourceAssets"
         CaptionAlign="Top" CssClass="listing" DataKeyNames="ClientGUID" 
-        Width="60%">
+        Width="60%" oniteminserted="detailsView_ItemInserted" 
+        onitemupdated="detailsView_ItemUpdated">
         <RowStyle CssClass="odd" />
         <EmptyDataTemplate>
-            <table class="listing" style="width:100%;">
-                <tr>
+                <tr class="odd">
                     <td class="lnowrap"> <%# GetAssetClassName("CASH") %>
                         &nbsp;</td>
                     <td>
                         &nbsp;</td>
                 </tr>
-                <tr>
+                <tr class="even">
                     <td class="lnowrap"> <%# GetAssetClassName("COMM") %>
                         &nbsp;</td>
                     <td>
@@ -28,7 +30,7 @@
                     <td>
                         &nbsp;</td>
                 </tr>
-                <tr>
+                <tr class="even">
                     <td class="lnowrap"> <%# GetAssetClassName("GLEQ") %>
                         &nbsp;</td>
                     <td>
@@ -40,7 +42,7 @@
                     <td>
                         &nbsp;</td>
                 </tr>
-                <tr>
+                <tr class="even">
                     <td class="lnowrap"> <%# GetAssetClassName("LOSH") %>
                         &nbsp;</td>
                     <td>
@@ -52,7 +54,7 @@
                     <td>
                         &nbsp;</td>
                 </tr>
-                <tr>
+                <tr class="even">
                     <td class="lnowrap"> <%# GetAssetClassName("UKCB") %>
                         &nbsp;</td>
                     <td>
@@ -64,7 +66,7 @@
                     <td>
                         &nbsp;</td>
                 </tr>
-                <tr>
+                <tr class="even">
                     <td class="lnowrap"> <%# GetAssetClassName("UKGB") %>
                         &nbsp;</td>
                     <td>
@@ -76,7 +78,7 @@
                     <td>
                         &nbsp;</td>
                 </tr>
-                <tr>
+                <tr class="even">
                     <td class="lnowrap"> <%# GetAssetClassName("WOBO") %>
                         &nbsp;</td>
                     <td>
@@ -90,7 +92,6 @@
 
                         &nbsp;</td>
                 </tr>
-            </table>
         </EmptyDataTemplate>
         <Fields>
             <asp:TemplateField HeaderText="Cash" SortExpression="CASH">
@@ -282,11 +283,14 @@
         </Fields>
         <AlternatingRowStyle CssClass="even" />
     </asp:DetailsView>
+    <br />
+    <asp:Label ID="ExceptionDetails" runat="server"></asp:Label><br />
+
     <asp:LinqDataSource ID="sourceAssets" runat="server" ContextTypeName="RSMTenon.Data.RepGenDataContext"
         EnableDelete="True" EnableInsert="True" EnableUpdate="True" TableName="ClientAssetClasses"
         Where="ClientGUID == @ClientGUID" OnInserting="sourceAssets_Inserting">
         <WhereParameters>
-            <asp:QueryStringParameter DbType="Guid" DefaultValue="636C8103-E06D-4575-AAFC-574474C2D7F8"
+            <asp:QueryStringParameter DbType="Guid"
                 Name="ClientGUID" QueryStringField="guid" />
         </WhereParameters>
     </asp:LinqDataSource>
