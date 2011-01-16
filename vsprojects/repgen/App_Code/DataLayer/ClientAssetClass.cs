@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Data.Linq;
 
 namespace RSMTenon.Data
 {
@@ -57,6 +58,28 @@ namespace RSMTenon.Data
             ctx.SubmitChanges();
         }
 
+        #endregion
+
+        partial void OnValidate(System.Data.Linq.ChangeAction action)
+        {
+
+            if (action == ChangeAction.Insert || action == ChangeAction.Update)
+            {
+                if (TotalAssetAllocation != 1) {
+                    string msg = String.Format("Asset allocations must total 100% (currently {0:0.0%})", TotalAssetAllocation);
+                    throw new ArgumentException(msg);
+                    }
+            }
+        }
+
+        #region Extended Properties
+        public decimal TotalAssetAllocation
+        {
+            get
+            {
+                return CASH + COMM + COPR + GLEQ + HEDG + +LOSH + PREQ + UKCB + UKEQ + UKGB + UKHY + WOBO;
+            }
+        }
         #endregion
 
         //public static IQueryable<AssetWeighting> GetClientAssetClass(Guid clientGuid)
