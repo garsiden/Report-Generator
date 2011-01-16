@@ -92,7 +92,7 @@
     <Type Name="Benchmark">
       <Column Name="ID" Type="System.String" DbType="NChar(4) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
       <Column Name="Name" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
-      <Association Name="Benchmark_tblStrategy" Member="Strategies" ThisKey="ID" OtherKey="BenchmarkID" Type="Strategy" />
+      <Association Name="Benchmark_Strategy" Member="Strategies" ThisKey="ID" OtherKey="BenchmarkID" Type="Strategy" />
     </Type>
   </Table>
   <Table Name="dbo.tblContent" Member="Contents">
@@ -103,7 +103,7 @@
       <Column Name="StrategyID" Type="System.String" DbType="NChar(2)" CanBeNull="true" />
       <Column Name="Text" Type="System.String" DbType="NVarChar(MAX) NOT NULL" CanBeNull="false" />
       <Column Name="SSMA_TimeStamp" Type="System.Data.Linq.Binary" DbType="rowversion NOT NULL" CanBeNull="false" IsVersion="true" />
-      <Association Name="tblStrategy_Content" Member="Strategy" ThisKey="StrategyID" OtherKey="ID" Type="Strategy" IsForeignKey="true" />
+      <Association Name="Strategy_Content" Member="Strategy" ThisKey="StrategyID" OtherKey="ID" Type="Strategy" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.tblStrategy" Member="Strategies">
@@ -115,10 +115,10 @@
       <Column Name="Cost" Type="System.Decimal" DbType="Money NOT NULL" CanBeNull="false" />
       <Column Name="BenchmarkID" Type="System.String" DbType="NChar(4) NOT NULL" CanBeNull="false" />
       <Column Name="RollingReturn" Type="System.Decimal" DbType="Decimal(5,1) NOT NULL" CanBeNull="false" />
-      <Association Name="tblStrategy_Content" Member="Contents" ThisKey="ID" OtherKey="StrategyID" Type="Content" />
-      <Association Name="Strategy_ModelBreakdown" Member="ModelBreakdowns" ThisKey="ID" OtherKey="StrategyID" Type="ModelBreakdown" />
       <Association Name="Strategy_Client" Member="Clients" ThisKey="ID" OtherKey="StrategyID" Type="Client" />
-      <Association Name="Benchmark_tblStrategy" Member="Benchmark" ThisKey="BenchmarkID" OtherKey="ID" Type="Benchmark" IsForeignKey="true" />
+      <Association Name="Strategy_ModelBreakdown" Member="ModelBreakdowns" ThisKey="ID" OtherKey="StrategyID" Type="ModelBreakdown" />
+      <Association Name="Strategy_Content" Member="Contents" ThisKey="ID" OtherKey="StrategyID" Type="Content" />
+      <Association Name="Benchmark_Strategy" Member="Benchmark" ThisKey="BenchmarkID" OtherKey="ID" Type="Benchmark" IsForeignKey="true" />
     </Type>
   </Table>
   <Function Name="dbo.spRollingReturn" Method="RollingReturn">

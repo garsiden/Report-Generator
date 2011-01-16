@@ -2041,7 +2041,7 @@ namespace RSMTenon.Data
 			}
 		}
 		
-		[Association(Name="Benchmark_tblStrategy", Storage="_Strategies", ThisKey="ID", OtherKey="BenchmarkID")]
+		[Association(Name="Benchmark_Strategy", Storage="_Strategies", ThisKey="ID", OtherKey="BenchmarkID")]
 		public EntitySet<Strategy> Strategies
 		{
 			get
@@ -2255,7 +2255,7 @@ namespace RSMTenon.Data
 			}
 		}
 		
-		[Association(Name="tblStrategy_Content", Storage="_Strategy", ThisKey="StrategyID", OtherKey="ID", IsForeignKey=true)]
+		[Association(Name="Strategy_Content", Storage="_Strategy", ThisKey="StrategyID", OtherKey="ID", IsForeignKey=true)]
 		public Strategy Strategy
 		{
 			get
@@ -2330,11 +2330,11 @@ namespace RSMTenon.Data
 		
 		private decimal _RollingReturn;
 		
-		private EntitySet<Content> _Contents;
+		private EntitySet<Client> _Clients;
 		
 		private EntitySet<ModelBreakdown> _ModelBreakdowns;
 		
-		private EntitySet<Client> _Clients;
+		private EntitySet<Content> _Contents;
 		
 		private EntityRef<Benchmark> _Benchmark;
 		
@@ -2360,9 +2360,9 @@ namespace RSMTenon.Data
 		
 		public Strategy()
 		{
-			this._Contents = new EntitySet<Content>(new Action<Content>(this.attach_Contents), new Action<Content>(this.detach_Contents));
-			this._ModelBreakdowns = new EntitySet<ModelBreakdown>(new Action<ModelBreakdown>(this.attach_ModelBreakdowns), new Action<ModelBreakdown>(this.detach_ModelBreakdowns));
 			this._Clients = new EntitySet<Client>(new Action<Client>(this.attach_Clients), new Action<Client>(this.detach_Clients));
+			this._ModelBreakdowns = new EntitySet<ModelBreakdown>(new Action<ModelBreakdown>(this.attach_ModelBreakdowns), new Action<ModelBreakdown>(this.detach_ModelBreakdowns));
+			this._Contents = new EntitySet<Content>(new Action<Content>(this.attach_Contents), new Action<Content>(this.detach_Contents));
 			this._Benchmark = default(EntityRef<Benchmark>);
 			OnCreated();
 		}
@@ -2511,16 +2511,16 @@ namespace RSMTenon.Data
 			}
 		}
 		
-		[Association(Name="tblStrategy_Content", Storage="_Contents", ThisKey="ID", OtherKey="StrategyID")]
-		public EntitySet<Content> Contents
+		[Association(Name="Strategy_Client", Storage="_Clients", ThisKey="ID", OtherKey="StrategyID")]
+		public EntitySet<Client> Clients
 		{
 			get
 			{
-				return this._Contents;
+				return this._Clients;
 			}
 			set
 			{
-				this._Contents.Assign(value);
+				this._Clients.Assign(value);
 			}
 		}
 		
@@ -2537,20 +2537,20 @@ namespace RSMTenon.Data
 			}
 		}
 		
-		[Association(Name="Strategy_Client", Storage="_Clients", ThisKey="ID", OtherKey="StrategyID")]
-		public EntitySet<Client> Clients
+		[Association(Name="Strategy_Content", Storage="_Contents", ThisKey="ID", OtherKey="StrategyID")]
+		public EntitySet<Content> Contents
 		{
 			get
 			{
-				return this._Clients;
+				return this._Contents;
 			}
 			set
 			{
-				this._Clients.Assign(value);
+				this._Contents.Assign(value);
 			}
 		}
 		
-		[Association(Name="Benchmark_tblStrategy", Storage="_Benchmark", ThisKey="BenchmarkID", OtherKey="ID", IsForeignKey=true)]
+		[Association(Name="Benchmark_Strategy", Storage="_Benchmark", ThisKey="BenchmarkID", OtherKey="ID", IsForeignKey=true)]
 		public Benchmark Benchmark
 		{
 			get
@@ -2604,13 +2604,13 @@ namespace RSMTenon.Data
 			}
 		}
 		
-		private void attach_Contents(Content entity)
+		private void attach_Clients(Client entity)
 		{
 			this.SendPropertyChanging();
 			entity.Strategy = this;
 		}
 		
-		private void detach_Contents(Content entity)
+		private void detach_Clients(Client entity)
 		{
 			this.SendPropertyChanging();
 			entity.Strategy = null;
@@ -2628,13 +2628,13 @@ namespace RSMTenon.Data
 			entity.Strategy = null;
 		}
 		
-		private void attach_Clients(Client entity)
+		private void attach_Contents(Content entity)
 		{
 			this.SendPropertyChanging();
 			entity.Strategy = this;
 		}
 		
-		private void detach_Clients(Client entity)
+		private void detach_Contents(Content entity)
 		{
 			this.SendPropertyChanging();
 			entity.Strategy = null;
