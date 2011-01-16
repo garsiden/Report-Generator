@@ -6,36 +6,20 @@ using System.Configuration;
 
 namespace RSMTenon.Data
 {
-
-    /// <summary>
-    /// Summary description for ConnectionFactory
-    /// </summary>
     public class ConnectionFactory
     {
         static public SqlConnection CreateSqlConnection()
         {
-
-            string appName = System.Web.HttpContext.Current.Request.ApplicationPath.Substring(1);
-            string dbName;
-
-            dbName = ConfigurationSettings.AppSettings["DbDefault"];
-
-            return CreateSqlConnection(dbName);
+            string defaultConnection = ConfigurationSettings.AppSettings["DefaultConnection"];
+            return CreateSqlConnection(defaultConnection);
         }
 
-        static public SqlConnection CreateSqlConnection(string dbName)
+        static public SqlConnection CreateSqlConnection(string connectionStringName)
         {
+            ConnectionStringSettingsCollection cs = ConfigurationManager.ConnectionStrings;
+            string connString = cs[connectionStringName].ConnectionString;
+            SqlConnection conn = new SqlConnection(connString);
 
-            NameValueCollection appSettings = (NameValueCollection)ConfigurationManager.GetSection("appSettings");
-            string server = appSettings["DbServer"];
-            string user = appSettings["DbUser"];
-            string pwd = appSettings["DbPwd"];
-
-            SqlConnection conn = new SqlConnection();
-            conn.ConnectionString = "SERVER=" + server +
-                                    ";DATABASE=" + dbName +
-                                    ";UID=" + user +
-                                    ";PWD=" + pwd;
             return conn;
         }
     }
