@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Xml;
+//using System.Text.RegularExpressions
 using DocumentFormat.OpenXml.Packaging;
 using RSMTenon.Data;
 
@@ -11,7 +12,7 @@ namespace RSMTenon.ReportGenerator
 {
     class TextContent
     {
-        public enum TimeHorizon
+        private enum TimeHorizon
         {
             one = 1,
             two,
@@ -35,9 +36,10 @@ namespace RSMTenon.ReportGenerator
             twenty
         }
 
-
+        public Client Client { get; set; }
         public void GenerateTextContent(MainDocumentPart mainPart, Client client, string contentFileName, Stream tempContentFile)
         {
+            Client = client;
             GetContent(client, contentFileName, tempContentFile);
 
             StreamReader sr = new StreamReader(tempContentFile, Encoding.UTF8);
@@ -51,14 +53,8 @@ namespace RSMTenon.ReportGenerator
         protected void GetContent(Client client, string sourceXml, Stream outputXml)
         {
             // get content from database
-            string assets = (client.ExistingAssets ? "existing-assets" : "no-existing-assets");
-            var ctx = new RepGenDataContext();
-            var contents = ctx.Contents;
-            var match = from c in contents
-                          where (c.StrategyID.Equals(client.StrategyID) || c.StrategyID.Equals(null)) &&
-                            (c.Category.Equals(assets) || c.Category.Equals(null))
-                          select c;
-            var content = match.ToList();
+            string category = (client.ExistingAssets ? "existing-assets" : "no-existing-assets");
+            var contents = RSMTenon.Data.Content.GetContents(client.StrategyID, category).ToDictionary(c => c.ContentID);
 
             XmlDocument doc = new XmlDocument();
             outputXml.Position = 0;
@@ -133,28 +129,35 @@ namespace RSMTenon.ReportGenerator
 
             // Look up
             // strategy.aim
-            xmlnode = root.SelectSingleNode("/wmr:repgen/wmr:strategy/wmr:aim", nsmgr);
-            xmlnode.InnerText = content.Single(c => c.ContentID == "strategy.aim").Text;
+            //xmlnode = root.SelectSingleNode("/wmr:repgen/wmr:strategy/wmr:aim", nsmgr);
+            //xmlnode.InnerText = content.Single(c => c.ContentID == "strategy.aim").Text;
+            setTextNode(root, "/wmr:repgen/wmr:strategy/wmr:aim", nsmgr, "strategy.aim", contents);
 
             // strategy.asset-classes
-            xmlnode = root.SelectSingleNode("/wmr:repgen/wmr:strategy/wmr:asset-classes", nsmgr);
-            xmlnode.InnerText = content.Single(c => c.ContentID == "strategy.asset-classes").Text;
+            //xmlnode = root.SelectSingleNode("/wmr:repgen/wmr:strategy/wmr:asset-classes", nsmgr);
+            //xmlnode.InnerText = contents.Single(c => c.ContentID == "strategy.asset-classes").Text;
+            setTextNode(root, "/wmr:repgen/wmr:strategy/wmr:asset-classes", nsmgr,"strategy.asset-classes", contents);
 
             // strategy.investor-focus
-            xmlnode = root.SelectSingleNode("/wmr:repgen/wmr:strategy/wmr:investor-focus", nsmgr);
-            xmlnode.InnerText = content.Single(c => c.ContentID == "strategy.investor-focus").Text;
+            //xmlnode = root.SelectSingleNode("/wmr:repgen/wmr:strategy/wmr:investor-focus", nsmgr);
+            //xmlnode.InnerText = contents.Single(c => c.ContentID == "strategy.investor-focus").Text;
+            setTextNode(root, "/wmr:repgen/wmr:strategy/wmr:investor-focus", nsmgr, "strategy.investor-focus", contents);
 
             // strategy.comparison-chart-header
-            xmlnode = root.SelectSingleNode("/wmr:repgen/wmr:charts/wmr:comparison/wmr:header", nsmgr);
-            xmlnode.InnerText = content.Single(c => c.ContentID == "strategy.comparison-chart-header").Text;
+            //xmlnode = root.SelectSingleNode("/wmr:repgen/wmr:charts/wmr:comparison/wmr:header", nsmgr);
+            //xmlnode.InnerText = contents.Single(c => c.ContentID == "strategy.comparison-chart-header").Text;
+            setTextNode(root, "/wmr:repgen/wmr:charts/wmr:comparison/wmr:header", nsmgr, "strategy.comparison-chart-header", contents);
 
             // strategy.income-note1
-            xmlnode = root.SelectSingleNode("/wmr:repgen/wmr:strategy/wmr:income-note1", nsmgr);
-            xmlnode.InnerText = content.Single(c => c.ContentID == "strategy.income-note1").Text;
+            //xmlnode = root.SelectSingleNode("/wmr:repgen/wmr:strategy/wmr:income-note1", nsmgr);
+            //xmlnode.InnerText = contents.Single(c => c.ContentID == "strategy.income-note1").Text;
+            setTextNode(root, "/wmr:repgen/wmr:strategy/wmr:income-note1", nsmgr, "strategy.income-note1", contents);
+
 
             // strategy.income-note2
-            xmlnode = root.SelectSingleNode("/wmr:repgen/wmr:strategy/wmr:income-note2", nsmgr);
-            xmlnode.InnerText = content.Single(c => c.ContentID == "strategy.income-note2").Text;
+            //xmlnode = root.SelectSingleNode("/wmr:repgen/wmr:strategy/wmr:income-note2", nsmgr);
+            //xmlnode.InnerText = contents.Single(c => c.ContentID == "strategy.income-note2").Text;
+            setTextNode(root, "/wmr:repgen/wmr:strategy/wmr:income-note2", nsmgr, "strategy.income-note2", contents);
 
             // Cash or Assets
             string allocationHeader;
@@ -165,53 +168,60 @@ namespace RSMTenon.ReportGenerator
             string stressRiseText = null;
 
             if (client.ExistingAssets) {
-                allocationHeader = content.Single(c => c.ContentID == "charts.allocation.header").Text;
-                allocationCaption = content.Single(c => c.ContentID == "charts.allocation.caption").Text;
-                weightingText = content.Single(c => c.ContentID == "charts.allocation.weighting-text").Text;
-                stressCrashHeader = content.Single(c => c.ContentID == "charts.stress-crash.header").Text;
-                stressCrashText = String.Format(content.Single(c => c.ContentID == "charts.stress-crash.text").Text, strategy.Name);
-                // TODO: add to text database
-                stressRiseText = content.Single(c => c.ContentID == "charts.stress-rise.text").Text;
+                allocationHeader = contents["charts.allocation.header"].Text;
+                allocationCaption = contents["charts.allocation.caption"].Text;
+                weightingText = contents["charts.allocation.weighting-text"].Text;
+                stressCrashHeader = contents["charts.stress-crash.header"].Text;
+                stressCrashText = contents["charts.stress-crash.text"].Text;
+                stressRiseText = contents["charts.stress-rise.text"].Text;
             } else {
-                allocationHeader = String.Format(content.Single(c => c.ContentID == "charts.allocation.header").Text, strategy.Name);
-                allocationCaption = String.Format(content.Single(c => c.ContentID == "charts.allocation.caption").Text, strategy.Name);
+                allocationHeader = contents["charts.allocation.header"].Text;
+                allocationCaption = contents["charts.allocation.caption"].Text;
+                stressRiseText = contents["charts.stress-rise.text"].Text;
             }
 
             // charts.allocation.header [BOTH]
-            xmlnode = root.SelectSingleNode("/wmr:repgen/wmr:charts/wmr:allocation/wmr:header", nsmgr);
-            xmlnode.InnerText = allocationHeader;
+            //xmlnode = root.SelectSingleNode("/wmr:repgen/wmr:charts/wmr:allocation/wmr:header", nsmgr);
+            //xmlnode.InnerText = allocationHeader;
+            setTextNode(root, "/wmr:repgen/wmr:charts/wmr:allocation/wmr:header", nsmgr, allocationHeader);
 
             // charts.allocation.caption [BOTH]
-            xmlnode = root.SelectSingleNode("/wmr:repgen/wmr:charts/wmr:allocation/wmr:caption", nsmgr);
-            xmlnode.InnerText = allocationCaption;
+            //xmlnode = root.SelectSingleNode("/wmr:repgen/wmr:charts/wmr:allocation/wmr:caption", nsmgr);
+            //xmlnode.InnerText = allocationCaption;
+            setTextNode(root, "/wmr:repgen/wmr:charts/wmr:allocation/wmr:caption", nsmgr, allocationCaption);
 
             // charts.allocation.weighting-text [ASSETS]
             if (weightingText != null) {
-                xmlnode = root.SelectSingleNode("/wmr:repgen/wmr:charts/wmr:allocation/wmr:weighting-text", nsmgr);
-                xmlnode.InnerText = weightingText;
+                //xmlnode = root.SelectSingleNode("/wmr:repgen/wmr:charts/wmr:allocation/wmr:weighting-text", nsmgr);
+                //xmlnode.InnerText = weightingText;
+                setTextNode(root, "/wmr:repgen/wmr:charts/wmr:allocation/wmr:weighting-text", nsmgr, weightingText);
             }
 
             // charts.stress-crash.header [ASSETS]
             if (stressCrashHeader != null) {
-                xmlnode = root.SelectSingleNode("/wmr:repgen/wmr:charts/wmr:stress-crash/wmr:header", nsmgr);
-                xmlnode.InnerText = stressCrashHeader;
+                //xmlnode = root.SelectSingleNode("/wmr:repgen/wmr:charts/wmr:stress-crash/wmr:header", nsmgr);
+                //xmlnode.InnerText = stressCrashHeader;
+                setTextNode(root, "/wmr:repgen/wmr:charts/wmr:stress-crash/wmr:header", nsmgr, stressCrashHeader);
             }
 
             // charts.stress-crash.text [ASSETS]
             if (stressCrashText != null) {
-                xmlnode = root.SelectSingleNode("/wmr:repgen/wmr:charts/wmr:stress-crash/wmr:text", nsmgr);
-                xmlnode.InnerText = stressCrashText;
+                //xmlnode = root.SelectSingleNode("/wmr:repgen/wmr:charts/wmr:stress-crash/wmr:text", nsmgr);
+                //xmlnode.InnerText = stressCrashText;
+                setTextNode(root, "/wmr:repgen/wmr:charts/wmr:stress-crash/wmr:text", nsmgr, stressCrashText);
             }
 
             // charts.stress-rise.text [ASSETS]
             if (stressRiseText != null) {
-                xmlnode = root.SelectSingleNode("/wmr:repgen/wmr:charts/wmr:stress-rise/wmr:text", nsmgr);
-                xmlnode.InnerText = stressRiseText;
+                //xmlnode = root.SelectSingleNode("/wmr:repgen/wmr:charts/wmr:stress-rise/wmr:text", nsmgr);
+                //xmlnode.InnerText = stressRiseText;
+                setTextNode(root, "/wmr:repgen/wmr:charts/wmr:stress-rise/wmr:text", nsmgr, stressRiseText);
             }
 
             // charts.drawdown.text
-            xmlnode = root.SelectSingleNode("/wmr:repgen/wmr:charts/wmr:drawdown/wmr:text", nsmgr);
-            xmlnode.InnerText = content.Single(c => c.ContentID == "charts.drawdown.text").Text;
+            //xmlnode = root.SelectSingleNode("/wmr:repgen/wmr:charts/wmr:drawdown/wmr:text", nsmgr);
+            //xmlnode.InnerText = contents.Single(c => c.ContentID == "charts.drawdown.text").Text;
+            setTextNode(root, "/wmr:repgen/wmr:charts/wmr:drawdown/wmr:text", nsmgr, "charts.drawdown.text", contents);
 
             // Calculation
             // strategy.performance.return
@@ -250,5 +260,22 @@ namespace RSMTenon.ReportGenerator
 
             return rtrn;
         }
+
+        private void setTextNode(XmlNode root, string contentPath, XmlNamespaceManager nsmgr, string contentId, Dictionary<string,Content> contents)
+        {
+            XmlNode xmlnode = root.SelectSingleNode(contentPath, nsmgr);
+            //var item = contents.Single(c => c.ContentID == contentId);
+            Content item = null;
+            contents.TryGetValue(contentId, out item);
+            if (item != null)
+                xmlnode.InnerText = item.Text.Replace("[Strategy]", Client.Strategy.Name);
+        }
+
+        private void setTextNode(XmlNode root, string contentPath, XmlNamespaceManager nsmgr, string content)
+        {
+            XmlNode xmlnode = root.SelectSingleNode(contentPath, nsmgr);
+            xmlnode.InnerText = content.Replace("[Strategy]", Client.Strategy.Name);
+        }
+
     }
 }
