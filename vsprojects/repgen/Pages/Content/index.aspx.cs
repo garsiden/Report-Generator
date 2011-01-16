@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
@@ -15,6 +16,7 @@ public partial class Pages_Content_index : RepGenPage
         if (!IsPostBack)
         {
             this.listStrategy.DataBind();
+            this.listContentTag.DataBind();
         }
     }
     protected void gridContent_RowDataBound(object sender, GridViewRowEventArgs e)
