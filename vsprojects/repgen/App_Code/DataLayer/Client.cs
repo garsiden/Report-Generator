@@ -22,10 +22,16 @@ namespace RSMTenon.Data
         }
 
         [System.ComponentModel.DataObjectMethod(System.ComponentModel.DataObjectMethodType.Select, false)]
-        public static List<Client> GetRecentClients(int number)
+        public static IQueryable<Client> GetRecentClients(int number)
         {
-            var ctx = new RepGenDataContext();
-            return ctx.Clients.OrderByDescending(c => c.MeetingDate).Take(number).ToList();
+            if (number > 0)
+            {
+                var ctx = new RepGenDataContext();
+                return ctx.Clients.OrderByDescending(c => c.MeetingDate).Take(number);
+            } else
+            {
+                return null;
+            }
         }
 
         [System.ComponentModel.DataObjectMethod(System.ComponentModel.DataObjectMethodType.Update, true)]
