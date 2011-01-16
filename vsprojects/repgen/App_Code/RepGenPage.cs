@@ -120,4 +120,20 @@ public partial class RepGenPage : System.Web.UI.Page
         else
             return string.Empty;
     }
+
+    public IQueryable<Client> GetRecentClients(int number)
+    {
+        return Client.GetRecentClients(number);
+    }
+
+    public List<string> GetContentTags()
+    {
+        var contents = DataContext.Contents;
+
+        var tags = from tag in contents
+                   orderby tag.ContentID
+                   select tag.ContentID;
+
+        return tags.Distinct().ToList();
+    }
 }
