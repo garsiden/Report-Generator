@@ -16,7 +16,6 @@ namespace RSMTenon.Data
             var ctx = new RepGenDataContext();
 
             return ctx.Strategies.First(s => s.ID.Equals(id)).Name;
-
         }
 
         public Dictionary<int, ReturnData> GetStrategyReturn()
@@ -41,15 +40,8 @@ namespace RSMTenon.Data
 
         public static List<Strategy> GetStrategies()
         {
-
-            try
-            {
-                var ctx = new RepGenDataContext();
-                return ctx.Strategies.ToList();
-            } catch (SqlException err)
-            {
-                throw err;
-            }
+            var ctx = new RepGenDataContext();
+            return ctx.Strategies.ToList();
         }
     }
 }

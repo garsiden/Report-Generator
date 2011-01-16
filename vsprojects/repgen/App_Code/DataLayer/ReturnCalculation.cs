@@ -11,8 +11,6 @@ namespace RSMTenon.Data
         private double previousDD = 1D;
         private double previousPriceRR = 100D;
         private double previousRebase = 100D;
-        //private double previousReturn = 100D; // 101.4504179D;
-
 
         public double Price(ReturnData returnData)
         {
@@ -37,7 +35,7 @@ namespace RSMTenon.Data
 
         public double RollingReturn(ReturnData returnData1, ReturnData returnData2, int years)
         {
-            double retval = Math.Log(returnData1.Value / returnData2.Value)/ years;
+            double retval = Math.Log(returnData1.Value / returnData2.Value) / years;
 
             return retval;
         }
@@ -46,9 +44,11 @@ namespace RSMTenon.Data
         {
             double retval = 0D;
 
-            if ((price / previousPrice > 1) && previousDD == 1) {
+            if ((price / previousPrice > 1) && previousDD == 1)
+            {
                 retval = 1D;
-            } else {
+            } else
+            {
                 retval = Math.Min(1D, previousDD * (1 + Math.Log(price / previousPrice)));
                 this.previousDD = retval;
             }
@@ -62,9 +62,11 @@ namespace RSMTenon.Data
         {
             double retval = 0D;
 
-            if ((price / previousPrice > 1) && previousDD == 1) {
+            if ((price / previousPrice > 1) && previousDD == 1)
+            {
                 retval = 1D;
-            } else {
+            } else
+            {
                 retval = Math.Min(1D, previousDD * (1 + rtrn));
                 this.previousDD = retval;
             }
@@ -99,6 +101,5 @@ namespace RSMTenon.Data
 
             return retval;
         }
-
     }
 }

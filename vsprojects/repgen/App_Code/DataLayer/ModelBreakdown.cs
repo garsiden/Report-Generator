@@ -8,7 +8,6 @@ namespace RSMTenon.Data
     [System.ComponentModel.DataObject]
     public partial class ModelBreakdown
     {
-
         [System.ComponentModel.DataObjectMethod(System.ComponentModel.DataObjectMethodType.Select, false)]
         public static IQueryable<ModelBreakdown> GetModelBreakdown(string strategyId, string assetGroupId)
         {
@@ -39,7 +38,5 @@ namespace RSMTenon.Data
             ctx.ModelBreakdowns.Attach(modelBreakdown, true);
             ctx.SubmitChanges();
         }
-
-
     }
 }

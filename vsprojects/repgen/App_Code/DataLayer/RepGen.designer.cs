@@ -75,7 +75,7 @@ namespace RSMTenon.Data
     #endregion
 		
 		public RepGenDataContext() : 
-				base(global::System.Configuration.ConfigurationManager.ConnectionStrings["RepGenConnectionString"].ConnectionString, mappingSource)
+				base(global::System.Configuration.ConfigurationManager.ConnectionStrings["RepGenConnectionString1"].ConnectionString, mappingSource)
 		{
 			OnCreated();
 		}
@@ -726,7 +726,7 @@ namespace RSMTenon.Data
 			}
 		}
 		
-		[Column(Storage="_UserID", DbType="NVarChar(50) NOT NULL", CanBeNull=false)]
+		[Column(Storage="_UserID", DbType="NVarChar(50) NOT NULL", CanBeNull=false, UpdateCheck=UpdateCheck.Never)]
 		public string UserID
 		{
 			get

@@ -13,9 +13,11 @@ namespace RSMTenon.Data
         public static Client GetClientByGUID(Guid? clientGuid)
         {
 
-            if (clientGuid == null) {
+            if (clientGuid == null)
+            {
                 return null;
-            } else {
+            } else
+            {
                 var ctx = new RepGenDataContext();
                 return ctx.Clients.SingleOrDefault(c => c.GUID == clientGuid);
             }
@@ -85,9 +87,11 @@ namespace RSMTenon.Data
         {
             get
             {
-                if (this.InvestmentAmount >= 1000000) {
+                if (this.InvestmentAmount >= 1000000)
+                {
                     return "quarterly";
-                } else {
+                } else
+                {
                     return "half-yearly";
                 }
             }
@@ -154,7 +158,8 @@ namespace RSMTenon.Data
 
         partial void OnMeetingDateChanging(System.DateTime value)
         {
-            if (value != null && value > DateTime.Today) {
+            if (value != null && value > DateTime.Today)
+            {
                 throw new ArgumentException("Meeting Date must be less than or equal to today");
             }
         }

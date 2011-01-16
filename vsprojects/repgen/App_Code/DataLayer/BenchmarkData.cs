@@ -9,7 +9,6 @@ namespace RSMTenon.Data
     {
         #region Data Validation
 
-
         partial void OnDateChanging(System.DateTime value)
         {
             if (value < new DateTime(1997,1,1) || value > DateTime.Today)
@@ -19,6 +18,5 @@ namespace RSMTenon.Data
         }
 
         #endregion Data Validation
-
     }
 }

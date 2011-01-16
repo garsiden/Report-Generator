@@ -49,7 +49,6 @@ namespace RSMTenon.Data
             }
 
             var contents = ctx.Contents;
-
             var match = contents.Where(predicate).OrderBy(c => c.ContentID).ThenBy(c => c.Category).ThenBy(c => c.StrategyID);
 
             return match;
@@ -60,7 +59,6 @@ namespace RSMTenon.Data
         public static IQueryable<Content> GetContents(string strategyId)
         {
             var ctx = new RepGenDataContext();
-
             var predicate = PredicateBuilder.Make<RSMTenon.Data.Content>();
 
             switch (strategyId)
@@ -83,7 +81,6 @@ namespace RSMTenon.Data
             //predicate = predicate.Or(c => c.Age > 50 && c.Age < 55);
 
             var contents = ctx.Contents;
-
             var match = contents.Where(predicate).OrderBy(c => c.ContentID).ThenBy(c => c.Category);
 
             return match;
@@ -108,6 +105,5 @@ namespace RSMTenon.Data
                         select c;
             return match;
         }
-
     }
 }

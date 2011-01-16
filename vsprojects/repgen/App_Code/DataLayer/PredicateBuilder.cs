@@ -4,7 +4,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Web;
 
-
 namespace RSMTenon.Data
 {
     public static class PredicateBuilder
@@ -32,5 +31,4 @@ namespace RSMTenon.Data
             return Expression.Lambda<Func<T, bool>>(Expression.And(expr.Body, invokedExpr), expr.Parameters);
         }
     }
-
 }
