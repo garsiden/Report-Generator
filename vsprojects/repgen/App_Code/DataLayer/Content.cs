@@ -9,23 +9,18 @@ namespace RSMTenon.Data
     [System.ComponentModel.DataObject]
     public partial class Content
     {
-        [System.ComponentModel.DataObjectMethod(System.ComponentModel.DataObjectMethodType.Select, false)]
-        public static IQueryable<Content> GetContent(string strategyId, int contentIdx, int categoryIdx)
+        [System.ComponentModel.DataObjectMethod(System.ComponentModel.DataObjectMethodType.Select, true)]
+        public static IQueryable<Content> GetContents(string strategyId, int categoryIdx, string contentId)
         {
             var ctx = new RepGenDataContext();
             var predicate = PredicateBuilder.Make<RSMTenon.Data.Content>();
 
-            switch (contentIdx)
+            if (contentId != "All")
             {
-                case 0:
-                    predicate = predicate.And(c => c.ContentID.StartsWith("strategy."));
-                    break;
-                case 1:
-                    predicate = predicate.And(c => c.ContentID.StartsWith("charts."));
-                    break;
-                case 2:
-                    predicate = predicate.Or(c => c.ContentID.Length > 0);
-                    break;
+                predicate = predicate.And(c => c.ContentID == contentId);
+            } else
+            {
+                predicate = predicate.And(c => c.ContentID != null);
             }
 
             switch (categoryIdx)
@@ -40,12 +35,14 @@ namespace RSMTenon.Data
 
             switch (strategyId)
             {
-                case "%":
-                    //predicate = predicate.And(c => c.StrategyID != null);
+                case "Any":
+                    predicate = predicate.And(c => c.StrategyID != null);
                     break;
-                case "":
+                case "None":
                     predicate = predicate.And(c => c.StrategyID == null);
-                    break;                  
+                    break;
+                case "AnyOrNone":
+                    break;
                 default:
                     predicate = predicate.And(c => c.StrategyID == strategyId);
                     break;
@@ -53,53 +50,14 @@ namespace RSMTenon.Data
 
             var contents = ctx.Contents;
 
-            var match = contents.Where(predicate).OrderBy(c => c.ContentID).ThenBy(c => c.Category);
+            var match = contents.Where(predicate).OrderBy(c => c.ContentID).ThenBy(c => c.Category).ThenBy(c => c.StrategyID);
 
             return match;
         }
 
-        [System.ComponentModel.DataObjectMethod(System.ComponentModel.DataObjectMethodType.Select, false)]
-        public static IQueryable<Content> GetContent(string strategyId, bool strategy, bool charts, bool cash, bool assets, bool general)
-        {
-            var ctx = new RepGenDataContext();
-
-            var predicate = PredicateBuilder.Make<RSMTenon.Data.Content>();
-
-
-            if (!charts)
-                predicate = predicate.And(c => !c.ContentID.StartsWith("charts."));
-            else
-                predicate = predicate.Or(c => c.ContentID.StartsWith("charts."));
-
-            //if (!cash)
-            //    predicate = predicate.Or(c => !c.Category.Equals("no-existing-assets"));
-            //if (!assets)
-            //    predicate = predicate.Or(c => !c.Category.Equals("existing-assets"));
-            //if (!general)
-            //    predicate = predicate.Or(c => c.StrategyID != null);
-            if (strategy)
-                switch (strategyId)
-                {
-                    case "%":
-                        predicate = predicate.And(c => c.StrategyID != null);
-                        break;
-                    default:
-                        predicate = predicate.And(c => c.StrategyID == strategyId);
-                        break;
-                } else
-                predicate = predicate.And(c => c.StrategyID == null);
-
-
-
-            var contents = ctx.Contents;
-
-            var match = contents.Where(predicate).OrderBy(c => c.ContentID).ThenBy(c => c.Category);
-
-            return match;
-        }
 
         [System.ComponentModel.DataObjectMethod(System.ComponentModel.DataObjectMethodType.Select, false)]
-        public static IQueryable<Content> GetContent(string strategyId)
+        public static IQueryable<Content> GetContents(string strategyId)
         {
             var ctx = new RepGenDataContext();
 
@@ -132,13 +90,24 @@ namespace RSMTenon.Data
         }
 
         [System.ComponentModel.DataObjectMethod(System.ComponentModel.DataObjectMethodType.Update, true)]
-        public static void UpdateClient(Content content, Content original_content)
+        public static void UpdateContent(Content content, Content original_content)
         {
             var ctx = new RepGenDataContext();
             ctx.Contents.Attach(content, original_content);
             ctx.SubmitChanges();
         }
 
+        [System.ComponentModel.DataObjectMethod(System.ComponentModel.DataObjectMethodType.Select, false)]
+        public static IQueryable<Content> GetContents(string strategyId, string category)
+        {
+            var ctx = new RepGenDataContext();
+
+            var match = from c in ctx.Contents
+                        where (c.StrategyID.Equals(strategyId) || c.StrategyID.Equals(null)) &&
+                          (c.Category.Equals(category) || c.Category.Equals(null))
+                        select c;
+            return match;
+        }
 
     }
 }
