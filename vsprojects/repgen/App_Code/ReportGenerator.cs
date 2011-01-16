@@ -29,9 +29,12 @@ namespace RSMTenon.ReportGenerator
             string contentFile = appSettings["ContentFile"];
             ContentXmlFile = HttpContext.Current.Server.MapPath(sourceDir + contentFile);
             string tempDir = appSettings["TempDir"];
-            if (tempDir == null)
-                tempDir = Environment.GetEnvironmentVariable("temp");
-            TempDir = tempDir;
+
+            if (tempDir != null && Directory.Exists(tempDir))
+                TempDir = tempDir;
+            else
+                TempDir = Environment.GetEnvironmentVariable("temp");
+
             TempContentXmlFile = tempDir + "\\content_temp.xml";
         }
 
