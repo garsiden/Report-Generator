@@ -26,7 +26,6 @@ namespace RSMTenon.ReportGenerator
             this.colwidths = colwidths;
             Table table1 = new Table();
 
-
             TableProperties tableProperties1 = new TableProperties();
             TableWidth tableWidth1 = new TableWidth() { Width = "5000", Type = TableWidthUnitValues.Dxa };
             TableIndentation tableIndentation1 = new TableIndentation() { Width = 108, Type = TableWidthUnitValues.Dxa };
@@ -45,6 +44,8 @@ namespace RSMTenon.ReportGenerator
             }
 
             TableRow headerRow = generateHeaderRow(headers);
+            table1.Append(tableProperties1);
+            table1.Append(tableGrid1);
             table1.Append(headerRow);
 
             return table1;
