@@ -30,14 +30,6 @@
                 </tr>
                 <tr>
                     <td class="lnowrap">
-                        Initial Fee %
-                    </td>
-                    <td class="left">
-                        <asp:TextBox ID="InitialFeeTextBox" runat="server" Text='<%# Bind("InitialFee", "{0:N}") %>' />
-                    </td>
-                </tr>
-                <tr class="even">
-                    <td class="lnowrap">
                         Time Horizon
                     </td>
                     <td class="left">
@@ -64,25 +56,26 @@
                         </asp:DropDownList>
                     </td>
                 </tr>
-                <tr>
+                <tr class="even">
                     <td class="lnowrap">
-                        Existing Assets
+                        Use Existing Assets
                     </td>
                     <td class="left">
                         <asp:CheckBox ID="ExistingAssetsCheckBox" runat="server" Checked='<%# Bind("ExistingAssets") %>' />
                     </td>
                 </tr>
-                <tr class="even">
+                <tr>
                     <td class="lnowrap">
                         Strategy
                     </td>
                     <td class="left">
-                        <asp:DropDownList ID="listStrategyEdit" runat="server" DataSource="<%# GetStrategies() %>"
-                            DataTextField="Name" DataValueField="ID" SelectedValue='<%# Bind("StrategyID") %>' Width="70%">
+                        <asp:DropDownList ID="listStrategy" runat="server" DataSource="<%# GetStrategies() %>"
+                            DataTextField="Name" DataValueField="ID" SelectedValue='<%# Bind("StrategyID") %>'
+                            Width="70%">
                         </asp:DropDownList>
                     </td>
                 </tr>
-                <tr>
+                <tr class="even">
                     <td class="lnowrap">
                         Investment Amount
                     </td>
@@ -90,12 +83,20 @@
                         <asp:TextBox ID="InvestmentAmountTextBox" runat="server" Text='<%# Bind("InvestmentAmount", "{0:0}") %>' />
                     </td>
                 </tr>
+                <tr>
+                    <td class="lnowrap">
+                        Initial Fee %
+                    </td>
+                    <td class="left">
+                        <asp:TextBox ID="InitialFeeTextBox" runat="server" Text='<%# Bind("InitialFee", "{0:N}") %>' />
+                    </td>
+                </tr>
                 <tr class="even">
                     <td class="lnowrap">
                         Status
                     </td>
                     <td class="left">
-                        <asp:RadioButtonList ID="radioListStatusUpdate" runat="server" SelectedIndex='<%# Bind("Status") %>'
+                        <asp:RadioButtonList ID="radioListStatus" runat="server" SelectedIndex='<%# Bind("Status") %>'
                             BorderStyle="None" RepeatLayout="Flow">
                             <asp:ListItem Selected="True">High Net Worth</asp:ListItem>
                             <asp:ListItem>Affluent</asp:ListItem>
@@ -112,16 +113,21 @@
                     Text="Cancel" />
             </div>
             <br>
-            <asp:ValidationSummary ID="ValidationSummary1" runat="server" DisplayMode="List"
-                HeaderText="Input errors:" />
-            <asp:RequiredFieldValidator ID="vaildNameRequired" runat="server" ControlToValidate="NameTextBox"
-                ErrorMessage="Name required" Display="None"></asp:RequiredFieldValidator>
-            <asp:RangeValidator ID="vaildRangeInitialFee" runat="server" ControlToValidate="InitialFeeTextBox"
-                ErrorMessage="Initial Fee must be between 0 and 5" MaximumValue="5" MinimumValue="0"
-                Type="Double" Display="None"></asp:RangeValidator>
-            <asp:CompareValidator ID="validCompareInvestmentAmount" runat="server" ErrorMessage="Investment Amount must be greater than 0"
-                ValueToCompare="0" ControlToValidate="InvestmentAmountTextBox" Display="None"
-                Operator="GreaterThan" Type="Integer"></asp:CompareValidator>
+            <asp:ValidationSummary ID="validSummary" runat="server" />
+            <asp:RequiredFieldValidator ID="validRequiredName" runat="server" ErrorMessage="Please enter a client Name."
+                Display="None" ControlToValidate="NameTextBox"></asp:RequiredFieldValidator>
+            <asp:RequiredFieldValidator ID="validRequiredMeetingDate" runat="server" ErrorMessage="Please enter a Meeting Date."
+                ControlToValidate="bdpMeetingDate" Display="None"></asp:RequiredFieldValidator>
+            <asp:RequiredFieldValidator ID="validRequiredInvestmentAmount" runat="server" ErrorMessage="Please enter an Investment Amount."
+                ControlToValidate="InvestmentAmountTextBox" Display="None"></asp:RequiredFieldValidator>
+            <asp:CompareValidator ID="validCompareInvestment" runat="server" ErrorMessage="Please enter a valid Investment Amount."
+                ValueToCompare="1" Type="Currency" Operator="GreaterThanEqual" ControlToValidate="InvestmentAmountTextBox"
+                Display="None"></asp:CompareValidator>
+            <asp:RequiredFieldValidator ID="validRequiredInitialFee" runat="server" ErrorMessage="Please enter an Initial Fee."
+                ControlToValidate="InitialFeeTextBox" Display="None"></asp:RequiredFieldValidator>
+            <asp:RangeValidator ID="validRangeInitialFee" runat="server" ErrorMessage="Please enter a valid Initial Fee."
+                Type="Currency" MaximumValue="5" MinimumValue="0.25" ControlToValidate="InitialFeeTextBox"
+                Display="None"></asp:RangeValidator>
         </EditItemTemplate>
         <InsertItemTemplate>
             <table class="listing">
@@ -242,19 +248,18 @@
                 </tr>
                 <tr class="even">
                     <td class="lnowrap">
-                        Strategy
-                    </td>
+                        Use Existing Assets</td>
                     <td class="lnowrap">
-                        <asp:Label ID="StrategyNameLabel" runat="server" Text='<%# Bind("Strategy.Name") %>' />
+                        <asp:CheckBox ID="ExistingAssetsCheckBox" runat="server" Checked='<%# Bind("ExistingAssets") %>'
+                            Enabled="False" />
                     </td>
                 </tr>
                 <tr>
                     <td class="lnowrap">
-                        Existing Assets
+                        Strategy
                     </td>
                     <td class="lnowrap">
-                        <asp:CheckBox ID="ExistingAssetsCheckBox" runat="server" Checked='<%# Bind("ExistingAssets") %>'
-                            Enabled="False" />
+                        <asp:Label ID="StrategyNameLabel" runat="server" Text='<%# Bind("Strategy.Name") %>' />
                     </td>
                 </tr>
                 <tr class="even">
@@ -320,7 +325,7 @@
                 </tr>
                 <tr>
                     <td class="lnowrap">
-                        Strategy
+                        Existing Assets
                     </td>
                     <td>
                         &nbsp;
@@ -328,7 +333,7 @@
                 </tr>
                 <tr>
                     <td class="lnowrap">
-                        Existing Assets
+                        Strategy
                     </td>
                     <td>
                         &nbsp;
@@ -345,6 +350,14 @@
                 <tr>
                     <td class="lnowrap">
                         Initial Fee %
+                    </td>
+                    <td>
+                        &nbsp;
+                    </td>
+                </tr>
+                <tr>
+                    <td class="lnowrap">
+                        Status
                     </td>
                     <td>
                         &nbsp;
