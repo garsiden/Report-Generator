@@ -19,9 +19,14 @@ public partial class Pages_Client_assetclasses : RepGenPage
                 ViewState["ClientAssetClass_ClientGUID"] = guid;
                 Guid clientGuid = new Guid(guid);
                 Client client = Client.GetClientByGUID(clientGuid);
-                this.detailsView.Caption = client.Name;
+                clientAssetHeader.InnerText = "Client Assets By Class for " + client.Name;
+
+                if (client.ClientAssetClass == null) {
+                    detailsView.ChangeMode(DetailsViewMode.Insert);
+                }
             }
         }
+        ExceptionDetails.Visible = false;
     }
 
     protected void sourceAssets_Inserting(object sender, LinqDataSourceInsertEventArgs e)
@@ -42,5 +47,41 @@ public partial class Pages_Client_assetclasses : RepGenPage
 
         var asset = (ClientAssetClass)e.InputParameters["clientAsset"];
         asset.ClientGUID = guid;
+    }
+    protected void detailsView_ItemUpdated(object sender, DetailsViewUpdatedEventArgs e)
+    {
+        if (e.Exception != null)
+        {
+            // Display a user-friendly message
+            ExceptionDetails.Visible = true;
+            ExceptionDetails.Text = "There was a problem updating the client assets. ";
+            ExceptionDetails.Text += "<br/>";
+            ExceptionDetails.Text += e.Exception.Message;
+
+            // Indicate that the exception has been handled
+            e.ExceptionHandled = true;
+
+            // Keep the row in edit mode
+            e.KeepInEditMode = true;
+        }
+
+    }
+    protected void detailsView_ItemInserted(object sender, DetailsViewInsertedEventArgs e)
+    {
+        if (e.Exception != null)
+        {
+            // Display a user-friendly message
+            ExceptionDetails.Visible = true;
+            ExceptionDetails.Text = "There was a problem inserting the client assets. ";
+            ExceptionDetails.Text += "<br/>";
+            ExceptionDetails.Text += e.Exception.Message;
+
+            // Indicate that the exception has been handled
+            e.ExceptionHandled = true;
+
+            // Keep the row in edit mode
+            e.KeepInInsertMode = true;
+        }
+
     }
 }
