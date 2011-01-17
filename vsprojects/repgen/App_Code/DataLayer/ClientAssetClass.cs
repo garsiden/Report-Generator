@@ -83,17 +83,19 @@ namespace RSMTenon.Data
         }
         #endregion
 
-        //public static IQueryable<AssetWeighting> GetClientAssetClass(Guid clientGuid)
-        //{
-        //    var ctx = new RepGenDataContext();
-        //    var assets = ctx.ClientAssetClasses;
+        public static List<AssetWeighting> GetClientAssetWeighting(Guid clientGuid)
+        {
+            var ctx = new RepGenDataContext();
+            //var assets = ctx.ClientAssetClasses;
 
-        //    var weighting = from asset in assets
-        //                    where asset.ClientGUID.Equals(clientGuid)
-        //                    //group asset by asset.AssetClass.Name  into g
-        //                    //select new AssetWeighting { AssetClass = g.Key, Allocation = g.Sum(asset => asset.Weighting) };
-        //                    select new AssetWeighting { AssetClass = asset.AssetClass.Name, Weighting = asset.Weighting };
-        //    return weighting;
-        //}
+            //var weighting = from asset in assets
+            //                where asset.ClientGUID.Equals(clientGuid)
+            //                //group asset by asset.AssetClass.Name  into g
+            //                //select new AssetWeighting { AssetClass = g.Key, Allocation = g.Sum(asset => asset.Weighting) };
+            //                select new AssetWeighting { AssetClass = asset.AssetClass.Name, Weighting = asset.Weighting };
+            //return weighting;
+            return ctx.ClientAssetWeighting(clientGuid).ToList();
+
+        }
     }
 }
