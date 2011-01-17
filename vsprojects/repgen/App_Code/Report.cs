@@ -10,7 +10,7 @@ using System.Globalization;
 using DocumentFormat.OpenXml.Wordprocessing;
 using C = DocumentFormat.OpenXml.Drawing.Charts;
 using RSMTenon.Data;
-//using RSMTenon.Graphing;
+using RSMTenon.Graphing;
 
 namespace RSMTenon.ReportGenerator
 {
@@ -71,9 +71,9 @@ namespace RSMTenon.ReportGenerator
         private List<AssetClass> assetClasses = null;
         private string strategyName;
         // "C0C0C0", "808080", "0066CC", "98CC00"
-        //private string strategyColourHex = "0066CC";
-        //private string clientColourHex = "98CC00";
-        //private string benchmarkColourHex = "C0C0C0";
+        private string strategyColourHex = "0066CC";
+        private string clientColourHex = "98CC00";
+        private string benchmarkColourHex = "C0C0C0";
         private DateTime tenYearStart = new DateTime(1999, 9, 30);
 
         #region Text
@@ -159,286 +159,303 @@ namespace RSMTenon.ReportGenerator
         #endregion model table
 
         #region Charts
-        //public ChartItem Allocation()
-        //{
-        //    XElement rpt = chartSpec("allocation");
-        //    string title = null;
+        public ChartItem Allocation()
+        {
+            XElement rpt = chartSpec("allocation");
+            string title = null;
 
-        //    // set title
-        //    if (Client.ExistingAssets) {
-        //        title = rpt.Element("title").Element("existing-assets").Value;
-        //    } else {
-        //        title = String.Format(rpt.Element("title").Element("cash").Value, StrategyName);
-        //    }
+            // set title
+            if (Client.ExistingAssets)
+            {
+                title = rpt.Element("title").Element("existing-assets").Value;
+            } else
+            {
+                title = String.Format(rpt.Element("title").Element("cash").Value, StrategyName);
+            }
 
-        //    IQueryable<AssetWeighting> data;
+            List<AssetWeighting> data;
 
-        //    if (Client.ExistingAssets) {
-        //        data = ClientAssetClass.GetClientAssetClass(Client.GUID);
-        //    } else {
-        //        data = Model.GetModelAllocation(Client.StrategyID);
-        //    }
+            if (Client.ExistingAssets)
+            {
+                data = ClientAssetClass.GetClientAssetWeighting(Client.GUID);
+            } else
+            {
+                data = Model.GetModelAllocation(Client.StrategyID).ToList();
+            }
 
-        //    AllocationPieChart pie = new AllocationPieChart();
-        //    C.Chart chart = pie.GenerateChart(title, data.ToList());
+            AllocationPieChart pie = new AllocationPieChart();
+            C.Chart chart = pie.GenerateChart(title, data.ToList());
+
+            string ccn = rpt.Element("control-name").Value;
+            ChartItem chartItem = new ChartItem { Chart = chart, Title = title, CustomControlName = ccn };
+
+            return chartItem;
+        }
+
+        public ChartItem AllocationComparison()
+        {
+            // get chart specs
+            XElement rpt = chartSpec("allocation-comparison");
+
+            // set title
+            string title = String.Format(rpt.Element("title").Value, StrategyName);
 
-        //    string ccn = rpt.Element("control-name").Value;
-        //    ChartItem chartItem = new ChartItem { Chart = chart, Title = title, CustomControlName = ccn };
+            var comp = DataContext.ClientWeightingComparison(Client.GUID, Client.StrategyID);
+            var data = comp.ToList();
 
-        //    return chartItem;
-        //}
+            AllocationComparisonBarChart bc = new AllocationComparisonBarChart();
+            C.Chart chart = bc.GenerateChart(title, data);
 
-        //public ChartItem AllocationComparison()
-        //{
-        //    // get chart specs
-        //    XElement rpt = chartSpec("allocation-comparison");
+            string ccn = rpt.Element("control-name").Value;
+            ChartItem chartItem = new ChartItem { Chart = chart, Title = title, CustomControlName = ccn };
 
-        //    // set title
-        //    string title = String.Format(rpt.Element("title").Value, StrategyName);
+            return chartItem;
+        }
 
-        //    var comp = DataContext.ClientWeightingComparison(Client.GUID, Client.StrategyID);
-        //    var data = comp.ToList();
+        public ChartItem Drawdown()
+        {
+            // get chart specs
+            XElement rpt = chartSpec("drawdown");
 
-        //    AllocationComparisonBarChart bc = new AllocationComparisonBarChart();
-        //    C.Chart chart = bc.GenerateChart(title, data);
+            // set title
+            string title = rpt.Element("title").Value;
 
-        //    string ccn = rpt.Element("control-name").Value;
-        //    ChartItem chartItem = new ChartItem { Chart = chart, Title = title, CustomControlName = ccn };
+            // get asset classes to plot (default is UKGB and GLEQ)
+            var assets = getAssetClasses();
 
-        //    return chartItem;
-        //}
+            // create chart
+            DrawdownLineChart lc = new DrawdownLineChart();
+            C.Chart chart = lc.GenerateChart(title);
+
+            // client assets
+            if (Client.ExistingAssets)
+            {
+                var data1 = getClientAssetDrawdown(Client.GUID);
+                lc.AddLineChartSeries(chart, data1, "Current", clientColourHex);
+
+            }
+
+            // first asset class
+            var data2 = getAssetClassDrawdown(assets[0].ID);
+            lc.AddLineChartSeries(chart, data2, assets[0].Name, assets[0].ColourHex);
+
+            // second asset class
+            var data3 = getAssetClassDrawdown(assets[1].ID);
+            lc.AddLineChartSeries(chart, data3, assets[1].Name, assets[1].ColourHex);
 
-        //public ChartItem Drawdown()
-        //{
-        //    // get chart specs
-        //    XElement rpt = chartSpec("drawdown");
+            // model drawdown
+            var data4 = getModelDrawdown(Client.StrategyID);
+            lc.AddLineChartSeries(chart, data4, StrategyName + " Strategy", strategyColourHex);
 
-        //    // set title
-        //    string title = rpt.Element("title").Value;
+            string ccn = rpt.Element("control-name").Value;
+
+            ChartItem chartItem = new ChartItem { Chart = chart, Title = title, CustomControlName = ccn };
 
-        //    // get asset classes to plot (default is UKGB and GLEQ)
-        //    var assets = getAssetClasses();
+            return chartItem;
+        }
 
-        //    // create chart
-        //    DrawdownLineChart lc = new DrawdownLineChart();
-        //    C.Chart chart = lc.GenerateChart(title);
+        public ChartItem StressTestMarketRise()
+        {
+            // get chart specs
+            XElement rpt = chartSpec("stress-test-market-rise");
 
-        //    // client assets
-        //    if (Client.ExistingAssets) {
-        //        var data1 = getClientAssetDrawdown(Client.GUID);
-        //        lc.AddLineChartSeries(chart, data1, "Current", clientColourHex);
-
-        //    }
-
-        //    // first asset class
-        //    var data2 = getAssetClassDrawdown(assets[0].ID);
-        //    lc.AddLineChartSeries(chart, data2, assets[0].Name, assets[0].ColourHex);
-
-        //    // second asset class
-        //    var data3 = getAssetClassDrawdown(assets[1].ID);
-        //    lc.AddLineChartSeries(chart, data3, assets[1].Name, assets[1].ColourHex);
-
-        //    // model drawdown
-        //    var data4 = getModelDrawdown(Client.StrategyID);
-        //    lc.AddLineChartSeries(chart, data4, StrategyName + " Strategy", strategyColourHex);
-
-        //    string ccn = rpt.Element("control-name").Value;
-
-        //    ChartItem chartItem = new ChartItem { Chart = chart, Title = title, CustomControlName = ccn };
-
-        //    return chartItem;
-        //}
-
-        //public ChartItem StressTestMarketRise()
-        //{
-        //    // get chart specs
-        //    XElement rpt = chartSpec("stress-test-market-rise");
-
-        //    // set title
-        //    string title = rpt.Element("title").Value;
-
-        //    // get asset classes to plot (default is UKGB and GLEQ)
-        //    var assets = getAssetClasses();
-        //    var ctx = DataContext;
-
-        //    // create chart
-        //    StressTestBarChart bc = new StressTestBarChart();
-        //    C.Chart chart = bc.GenerateChart(title);
-
-        //    if (Client.ExistingAssets) {
-        //        var returns1 = getStressTestClientAssetReturn(Client.GUID);
-        //        var series1 = stressTestMarketRiseSeries(returns1, "Current", clientColourHex, rpt);
-        //        bc.AddBarChartSeries(chart, series1);
-        //    }
-
-        //    // first asset class (Note: GLEQ)
-        //    var returns2 = getStressTestAssetClassReturn(assets[1].ID);
-        //    var series2 = stressTestMarketRiseSeries(returns2, assets[1].Name, assets[1].ColourHex, rpt);
-        //    bc.AddBarChartSeries(chart, series2);
-
-        //    // second asset class
-        //    var returns3 = getStressTestAssetClassReturn(assets[0].ID);
-        //    var series3 = stressTestMarketRiseSeries(returns3, assets[0].Name, assets[0].ColourHex, rpt);
-        //    bc.AddBarChartSeries(chart, series3);
-
-        //    // strategy
-        //    var returns4 = getStressTestModelReturn(Client);
-        //    var series4 = stressTestMarketRiseSeries(returns4, Client.Strategy.Name, strategyColourHex, rpt);
-        //    bc.AddBarChartSeries(chart, series4);
-
-        //    string ccn = rpt.Element("control-name").Value;
-        //    ChartItem chartItem = new ChartItem { Chart = chart, Title = title, CustomControlName = ccn };
-
-        //    return chartItem;
-
-        //}
-
-        //public ChartItem StressTestMarketCrash()
-        //{
-        //    // get chart specs
-        //    XElement rpt = chartSpec("stress-test-market-crash");
-
-        //    // set title
-        //    string title = rpt.Element("title").Value;
-
-        //    // get asset classes to plot (default is UKGB and GLEQ)
-        //    var assets = getAssetClasses();
-        //    var ctx = DataContext;
-
-        //    // create chart
-        //    StressTestBarChart bc = new StressTestBarChart();
-        //    C.Chart chart = bc.GenerateChart(title);
-
-        //    if (Client.ExistingAssets) {
-        //        var returns1 = getStressTestClientAssetReturn(Client.GUID);
-        //        var series1 = stressTestMarketCrashSeries(returns1, "Current", clientColourHex, rpt);
-        //        bc.AddBarChartSeries(chart, series1);
-        //    }
-
-        //    // first asset class (Note: GLEQ)
-        //    var returns2 = getStressTestAssetClassReturn(assets[1].ID);
-        //    var series2 = stressTestMarketCrashSeries(returns2, assets[1].Name, assets[1].ColourHex, rpt);
-        //    bc.AddBarChartSeries(chart, series2);
-
-        //    // second asset class
-        //    var returns3 = getStressTestAssetClassReturn(assets[0].ID);
-        //    var series3 = stressTestMarketCrashSeries(returns3, assets[0].Name, assets[0].ColourHex, rpt);
-        //    bc.AddBarChartSeries(chart, series3);
-
-        //    // strategy
-        //    var returns4 = getStressTestModelReturn(Client);
-        //    var series4 = stressTestMarketCrashSeries(returns4, Client.Strategy.Name, strategyColourHex, rpt);
-        //    bc.AddBarChartSeries(chart, series4);
-
-        //    string ccn = rpt.Element("control-name").Value;
-        //    ChartItem chartItem = new ChartItem { Chart = chart, Title = title, CustomControlName = ccn };
-
-        //    return chartItem;
-
-        //}
-
-        //public ChartItem TenYearReturn()
-        //{
-        //    // get chart specs
-        //    XElement rpt = chartSpec("ten-year-return");
-
-        //    // set title
-        //    string title = rpt.Element("title").Value;
-
-        //    // get asset classes to plot (default is UKGB and GLEQ)
-        //    var assets = getAssetClasses(rpt);
-        //    var ctx = DataContext;
-
-        //    // create chart
-        //    TenYearLineChart lc = new TenYearLineChart();
-        //    C.Chart chart = lc.GenerateChart(null);
-
-        //    if (Client.ExistingAssets) {
-        //        var data1 = getTenYearClientAssetReturn(Client.GUID, tenYearStart);
-        //        string dataKey1 = "Current";
-        //        lc.AddLineChartSeries(chart, data1, dataKey1, clientColourHex);
-        //    }
-
-        //    // first asset class
-        //    var data2 = getTenYearAssetClassReturn(assetClasses[0].ID, tenYearStart);
-        //    string dataKey2 = assetClasses[0].Name;
-        //    lc.AddLineChartSeries(chart, data2.ToList(), dataKey2, assetClasses[0].ColourHex);
-
-        //    // second asset class
-        //    var data3 = getTenYearAssetClassReturn(assetClasses[1].ID, tenYearStart);
-        //    string dataKey3 = assetClasses[1].Name;
-        //    lc.AddLineChartSeries(chart, data3.ToList(), dataKey3, assetClasses[1].ColourHex);
-
-        //    // IMA Benchmark
-        //    var data5 = getTenYearBenchmarkReturn("CAMA", tenYearStart);
-        //    string dataKey5 = Client.Strategy.Benchmark.Name;
-        //    lc.AddLineChartSeries(chart, data5, dataKey5, benchmarkColourHex);
-
-        //    // strategy
-        //    var data4 = getTenYearModelReturn(Client.StrategyID, tenYearStart);
-        //    string dataKey4 = StrategyName;
-        //    lc.AddLineChartSeries(chart, data4, dataKey4, strategyColourHex);
-
-        //    string ccn = rpt.Element("control-name").Value;
-        //    ChartItem chartItem = new ChartItem { Chart = chart, Title = title, CustomControlName = ccn };
-
-        //    return chartItem;
-
-        //}
-
-        //public ChartItem RollingReturnChart(int years)
-        //{
-        //    string id = null;
-
-        //    switch (years) {
-        //        case 1: id = "rolling-return-1yr"; break;
-        //        case 3: id = "rolling-return-3yr"; break;
-        //        case 5: id = "rolling-return-5yr"; break;
-        //        default: throw new ArgumentException("Illegal argument: 1, 3 or 5 only are valid");
-        //    }
-
-        //    // get chart specs
-        //    XElement rpt = chartSpec(id);
-
-        //    // set title
-        //    string title = rpt.Element("title").Value;
-
-        //    // get asset classes to plot (default is UKGB and GLEQ)
-        //    var assets = getAssetClasses();
-        //    var ctx = DataContext;
-
-        //    // create chart
-        //    RollingReturnLineChart lc = new RollingReturnLineChart();
-        //    C.Chart chart = lc.GenerateChart(title);
-
-        //    if (Client.ExistingAssets) {
-        //        string dataKey1 = "Current";
-        //        var data1 = ctx.ClientAssetReturn(Client.GUID);
-        //        var rrex = getRollingReturn(data1, years);
-        //        lc.AddLineChartSeries(chart, rrex, dataKey1, clientColourHex);
-        //    }
-
-        //    // first asset class
-        //    var data2 = ctx.RollingReturn(years, assetClasses[0].ID);
-        //    string dataKey2 = assetClasses[0].Name;
-        //    lc.AddLineChartSeries(chart, data2.ToList(), dataKey2, assetClasses[0].ColourHex);
-
-        //    // add second data series
-        //    var data3 = ctx.RollingReturn(years, assetClasses[1].ID);
-        //    string dataKey3 = assetClasses[1].Name;
-        //    lc.AddLineChartSeries(chart, data3.ToList(), dataKey3, assetClasses[1].ColourHex);
-
-        //    // add appropriate strategy data
-        //    var data4 = ctx.ModelReturn(Client.StrategyID);
-        //    string dataKey4 = StrategyName + " Strategy";
-        //    var rr = getRollingReturn(data4, years);
-        //    lc.AddLineChartSeries(chart, rr, dataKey4, strategyColourHex);
-
-        //    string ccn = rpt.Element("control-name").Value;
-        //    ChartItem chartItem = new ChartItem { Chart = chart, Title = title, CustomControlName = ccn };
-
-        //    return chartItem;
-        //}
+            // set title
+            string title = rpt.Element("title").Value;
+
+            // get asset classes to plot (default is UKGB and GLEQ)
+            var assets = getAssetClasses();
+            var ctx = DataContext;
+
+            // create chart
+            StressTestBarChart bc = new StressTestBarChart();
+            C.Chart chart = bc.GenerateChart(title);
+
+            if (Client.ExistingAssets)
+            {
+                var returns1 = getStressTestClientAssetReturn(Client.GUID);
+                var series1 = stressTestMarketRiseSeries(returns1, "Current", clientColourHex, rpt);
+                bc.AddBarChartSeries(chart, series1);
+            }
+
+            // first asset class (Note: GLEQ)
+            var returns2 = getStressTestAssetClassReturn(assets[1].ID);
+            var series2 = stressTestMarketRiseSeries(returns2, assets[1].Name, assets[1].ColourHex, rpt);
+            bc.AddBarChartSeries(chart, series2);
+
+            // second asset class
+            var returns3 = getStressTestAssetClassReturn(assets[0].ID);
+            var series3 = stressTestMarketRiseSeries(returns3, assets[0].Name, assets[0].ColourHex, rpt);
+            bc.AddBarChartSeries(chart, series3);
+
+            // strategy
+            var returns4 = getStressTestModelReturn(Client);
+            var series4 = stressTestMarketRiseSeries(returns4, Client.Strategy.Name, strategyColourHex, rpt);
+            bc.AddBarChartSeries(chart, series4);
+
+            string ccn = rpt.Element("control-name").Value;
+            ChartItem chartItem = new ChartItem { Chart = chart, Title = title, CustomControlName = ccn };
+
+            return chartItem;
+
+        }
+
+        public ChartItem StressTestMarketCrash()
+        {
+            // get chart specs
+            XElement rpt = chartSpec("stress-test-market-crash");
+
+            // set title
+            string title = rpt.Element("title").Value;
+
+            // get asset classes to plot (default is UKGB and GLEQ)
+            var assets = getAssetClasses();
+            var ctx = DataContext;
+
+            // create chart
+            StressTestBarChart bc = new StressTestBarChart();
+            C.Chart chart = bc.GenerateChart(title);
+
+            if (Client.ExistingAssets)
+            {
+                var returns1 = getStressTestClientAssetReturn(Client.GUID);
+                var series1 = stressTestMarketCrashSeries(returns1, "Current", clientColourHex, rpt);
+                bc.AddBarChartSeries(chart, series1);
+            }
+
+            // first asset class (Note: GLEQ)
+            var returns2 = getStressTestAssetClassReturn(assets[1].ID);
+            var series2 = stressTestMarketCrashSeries(returns2, assets[1].Name, assets[1].ColourHex, rpt);
+            bc.AddBarChartSeries(chart, series2);
+
+            // second asset class
+            var returns3 = getStressTestAssetClassReturn(assets[0].ID);
+            var series3 = stressTestMarketCrashSeries(returns3, assets[0].Name, assets[0].ColourHex, rpt);
+            bc.AddBarChartSeries(chart, series3);
+
+            // strategy
+            var returns4 = getStressTestModelReturn(Client);
+            var series4 = stressTestMarketCrashSeries(returns4, Client.Strategy.Name, strategyColourHex, rpt);
+            bc.AddBarChartSeries(chart, series4);
+
+            string ccn = rpt.Element("control-name").Value;
+            ChartItem chartItem = new ChartItem { Chart = chart, Title = title, CustomControlName = ccn };
+
+            return chartItem;
+
+        }
+
+        public ChartItem TenYearReturn()
+        {
+            // get chart specs
+            XElement rpt = chartSpec("ten-year-return");
+
+            // set title
+            string title = rpt.Element("title").Value;
+
+            // get asset classes to plot (default is UKGB and GLEQ)
+            var assets = getAssetClasses(rpt);
+            var ctx = DataContext;
+
+            // create chart
+            TenYearLineChart lc = new TenYearLineChart();
+            C.Chart chart = lc.GenerateChart(null);
+
+            if (Client.ExistingAssets)
+            {
+                var data1 = getTenYearClientAssetReturn(Client.GUID, tenYearStart);
+                string dataKey1 = "Current";
+                lc.AddLineChartSeries(chart, data1, dataKey1, clientColourHex);
+            }
+
+            // first asset class
+            var data2 = getTenYearAssetClassReturn(assetClasses[0].ID, tenYearStart);
+            string dataKey2 = assetClasses[0].Name;
+            lc.AddLineChartSeries(chart, data2.ToList(), dataKey2, assetClasses[0].ColourHex);
+
+            // second asset class
+            var data3 = getTenYearAssetClassReturn(assetClasses[1].ID, tenYearStart);
+            string dataKey3 = assetClasses[1].Name;
+            lc.AddLineChartSeries(chart, data3.ToList(), dataKey3, assetClasses[1].ColourHex);
+
+            // IMA Benchmark
+            var data5 = getTenYearBenchmarkReturn("CAMA", tenYearStart);
+            string dataKey5 = Client.Strategy.Benchmark.Name;
+            lc.AddLineChartSeries(chart, data5, dataKey5, benchmarkColourHex);
+
+            // strategy
+            var data4 = getTenYearModelReturn(Client.StrategyID, tenYearStart);
+            string dataKey4 = StrategyName;
+            lc.AddLineChartSeries(chart, data4, dataKey4, strategyColourHex);
+
+            string ccn = rpt.Element("control-name").Value;
+            ChartItem chartItem = new ChartItem { Chart = chart, Title = title, CustomControlName = ccn };
+
+            return chartItem;
+
+        }
+
+        public ChartItem RollingReturnChart(int years)
+        {
+            string id = null;
+
+            switch (years)
+            {
+                case 1:
+                    id = "rolling-return-1yr";
+                    break;
+                case 3:
+                    id = "rolling-return-3yr";
+                    break;
+                case 5:
+                    id = "rolling-return-5yr";
+                    break;
+                default:
+                    throw new ArgumentException("Illegal argument: 1, 3 or 5 only are valid");
+            }
+
+            // get chart specs
+            XElement rpt = chartSpec(id);
+
+            // set title
+            string title = rpt.Element("title").Value;
+
+            // get asset classes to plot (default is UKGB and GLEQ)
+            var assets = getAssetClasses();
+            var ctx = DataContext;
+
+            // create chart
+            RollingReturnLineChart lc = new RollingReturnLineChart();
+            C.Chart chart = lc.GenerateChart(title);
+
+            if (Client.ExistingAssets)
+            {
+                string dataKey1 = "Current";
+                var data1 = ctx.ClientAssetReturn(Client.GUID);
+                var rrex = getRollingReturn(data1, years);
+                lc.AddLineChartSeries(chart, rrex, dataKey1, clientColourHex);
+            }
+
+            // first asset class
+            var data2 = ctx.RollingReturn(years, assetClasses[0].ID);
+            string dataKey2 = assetClasses[0].Name;
+            lc.AddLineChartSeries(chart, data2.ToList(), dataKey2, assetClasses[0].ColourHex);
+
+            // add second data series
+            var data3 = ctx.RollingReturn(years, assetClasses[1].ID);
+            string dataKey3 = assetClasses[1].Name;
+            lc.AddLineChartSeries(chart, data3.ToList(), dataKey3, assetClasses[1].ColourHex);
+
+            // add appropriate strategy data
+            var data4 = ctx.ModelReturn(Client.StrategyID);
+            string dataKey4 = StrategyName + " Strategy";
+            var rr = getRollingReturn(data4, years);
+            lc.AddLineChartSeries(chart, rr, dataKey4, strategyColourHex);
+
+            string ccn = rpt.Element("control-name").Value;
+            ChartItem chartItem = new ChartItem { Chart = chart, Title = title, CustomControlName = ccn };
+
+            return chartItem;
+        }
 
         #endregion Charts
 
@@ -653,96 +670,101 @@ namespace RSMTenon.ReportGenerator
         #endregion Database Access
 
         #region Chart Series Calculations
-        //private List<ReturnData> getRollingReturn(ISingleResult<ReturnData> data, int years)
-        //{
-        //    ReturnCalculation calc = new ReturnCalculation();
+        private List<ReturnData> getRollingReturn(ISingleResult<ReturnData> data, int years)
+        {
+            ReturnCalculation calc = new ReturnCalculation();
 
-        //    var prices = from d in data
-        //                 select new ReturnData {
-        //                     Value = calc.Price(d),
-        //                     Date = d.Date
-        //                 };
+            var prices = from d in data
+                         select new ReturnData
+                         {
+                             Value = calc.Price(d),
+                             Date = d.Date
+                         };
 
-        //    // create the 'From' list, starting with index value of 100
-        //    var from = prices.ToList();
-        //    from.Insert(0, new ReturnData() { Value = 100D });
+            // create the 'From' list, starting with index value of 100
+            var from = prices.ToList();
+            from.Insert(0, new ReturnData() { Value = 100D });
 
-        //    // create the 'To' list, starting with a years * 12 offset
-        //    var to = from.Skip(12 * years);
+            // create the 'To' list, starting with a years * 12 offset
+            var to = from.Skip(12 * years);
 
-        //    // new list for return values
-        //    var rv = new List<ReturnData>();
-        //    int i = 0;
+            // new list for return values
+            var rv = new List<ReturnData>();
+            int i = 0;
 
-        //    foreach (var item in to) {
-        //        var rd = new ReturnData {
-        //            Value = calc.RollingReturn(item, from.ElementAt(i++), years),
-        //            Date = item.Date
-        //        };
-        //        rv.Add(rd);
-        //    }
+            foreach (var item in to)
+            {
+                var rd = new ReturnData
+                {
+                    Value = calc.RollingReturn(item, from.ElementAt(i++), years),
+                    Date = item.Date
+                };
+                rv.Add(rd);
+            }
 
-        //    return rv;
-        //}
+            return rv;
+        }
 
-        //private BarGraphSeries stressTestMarketCrashSeries(Dictionary<int, ReturnData> pd, string seriesName, string colourHex, XElement rpt)
-        //{
-        //    var test1 = new StressTest("russian-debt-crisis", rpt);
+        private BarGraphSeries stressTestMarketCrashSeries(Dictionary<int, ReturnData> pd, string seriesName, string colourHex, XElement rpt)
+        {
+            var test1 = new StressTest("russian-debt-crisis", rpt);
 
-        //    // Russian Debt
-        //    var start1 = pd.TakeWhile(p => p.Key < test1.FromIntegerDate).Last();
-        //    var end1 = pd[test1.ToIntegerDate];
-        //    double return1 = (end1.Value - start1.Value.Value) / start1.Value.Value;
+            // Russian Debt
+            var start1 = pd.TakeWhile(p => p.Key < test1.FromIntegerDate).Last();
+            var end1 = pd[test1.ToIntegerDate];
+            double return1 = (end1.Value - start1.Value.Value) / start1.Value.Value;
 
-        //    // Economic Slowdown
-        //    var test2 = new StressTest("economic-slowdown", rpt);
-        //    var start2 = pd[test2.FromIntegerDate];
-        //    var end2 = pd[test2.ToIntegerDate];
-        //    double return2 = (end2.Value - start2.Value) / start2.Value;
+            // Economic Slowdown
+            var test2 = new StressTest("economic-slowdown", rpt);
+            var start2 = pd[test2.FromIntegerDate];
+            var end2 = pd[test2.ToIntegerDate];
+            double return2 = (end2.Value - start2.Value) / start2.Value;
 
-        //    // Technology Bubble
-        //    var test3 = new StressTest("technology-bubble-burst", rpt);
-        //    var start3 = pd[test3.FromIntegerDate];
-        //    var end3 = pd[test3.ToIntegerDate];
-        //    double return3 = (end3.Value - start3.Value) / start3.Value;
+            // Technology Bubble
+            var test3 = new StressTest("technology-bubble-burst", rpt);
+            var start3 = pd[test3.FromIntegerDate];
+            var end3 = pd[test3.ToIntegerDate];
+            double return3 = (end3.Value - start3.Value) / start3.Value;
 
-        //    var series = new BarGraphSeries {
-        //        Name = seriesName,
-        //        ColourHex = colourHex,
-        //        PointNames = new string[] { test1.PointName, test2.PointName, test3.PointName },
-        //        Values = new double[] { return1, return2, return3 }
-        //    };
+            var series = new BarGraphSeries
+            {
+                Name = seriesName,
+                ColourHex = colourHex,
+                PointNames = new string[] { test1.PointName, test2.PointName, test3.PointName },
+                Values = new double[] { return1, return2, return3 }
+            };
 
-        //    return series;
-        //}
+            return series;
+        }
 
-        //private BarGraphSeries stressTestMarketRiseSeries(Dictionary<int, ReturnData> pd, string seriesName, string colourHex, XElement rpt)
-        //{
-        //    var test1 = new StressTest("bull", rpt);
+        private BarGraphSeries stressTestMarketRiseSeries(Dictionary<int, ReturnData> pd, string seriesName, string colourHex, XElement rpt)
+        {
+            var test1 = new StressTest("bull", rpt);
 
-        //    // Bull
-        //    var start1 = pd[test1.FromIntegerDate];
-        //    var end1 = pd[test1.ToIntegerDate];
-        //    double return1 = (end1.Value - start1.Value) / start1.Value;
+            // Bull
+            var start1 = pd[test1.FromIntegerDate];
+            var end1 = pd[test1.ToIntegerDate];
+            double return1 = (end1.Value - start1.Value) / start1.Value;
 
-        //    // Ten Year Return
-        //    var test2 = new StressTest("ten-year", rpt);
-        //    var start2 = pd.ElementAt(pd.Count() - 121);
-        //    var end2 = pd.Last();
+            // Ten Year Return
+            var test2 = new StressTest("ten-year", rpt);
+            var start2 = pd.ElementAt(pd.Count() - 121);
+            var end2 = pd.Last();
 
-        //    double return2 = Math.Log(end2.Value.Value / start2.Value.Value);
-        //    test2.FromDate = start2.Value.DateFromInteger;
-        //    test2.ToDate = end2.Value.DateFromInteger;
+            double return2 = Math.Log(end2.Value.Value / start2.Value.Value);
+            test2.FromDate = start2.Value.DateFromInteger;
+            test2.ToDate = end2.Value.DateFromInteger;
 
-        //    var series = new BarGraphSeries {
-        //        Name = seriesName,
-        //        ColourHex = colourHex,
-        //        PointNames = new string[] { test1.PointName, test2.PointName },
-        //        Values = new double[] { return1, return2 }
-        //    };
+            var series = new BarGraphSeries
+            {
+                Name = seriesName,
+                ColourHex = colourHex,
+                PointNames = new string[] { test1.PointName, test2.PointName },
+                Values = new double[] { return1, return2 }
+            };
 
-        //    return series;
-        //}
+            return series;
+        }
 
         #endregion Chart Series Calculations
 
