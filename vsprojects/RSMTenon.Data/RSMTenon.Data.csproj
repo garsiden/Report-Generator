@@ -47,6 +47,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -66,11 +67,23 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssetClass.cs" />
+    <Compile Include="BenchmarkData.cs" />
     <Compile Include="Client.cs" />
+    <Compile Include="ClientAsset.cs" />
     <Compile Include="ClientAssetClass.cs" />
+    <Compile Include="ConnectionFactory.cs" />
+    <Compile Include="Content.cs" />
+    <Compile Include="DataUpload.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DataUpload.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="DataUtility.cs" />
     <Compile Include="LinqDataClasses.cs" />
     <Compile Include="Model.cs" />
+    <Compile Include="ModelBreakdown.cs" />
     <Compile Include="ModelReturn.cs" />
+    <Compile Include="PredicateBuilder.cs" />
     <Compile Include="RepGen.designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -88,6 +101,17 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="DataUpload.xsc">
+      <DependentUpon>DataUpload.xsd</DependentUpon>
+    </None>
+    <None Include="DataUpload.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>DataUpload.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="DataUpload.xss">
+      <DependentUpon>DataUpload.xsd</DependentUpon>
+    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
