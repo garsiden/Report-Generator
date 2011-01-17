@@ -4,16 +4,20 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Web;
 using System.Configuration;
+using RSMTenon.Graphing;
 
 using System.IO;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
+using C = DocumentFormat.OpenXml.Drawing.Charts;
 
 namespace RSMTenon.ReportGenerator
 {
     public class ReportGenerator
     {
+        private uint docPrId = 0U;
+
         private static string sourceDir = @"~/App_Data/";
         private string TempDir { get; set; }
 
@@ -25,7 +29,7 @@ namespace RSMTenon.ReportGenerator
         {
             NameValueCollection appSettings = (NameValueCollection)ConfigurationManager.GetSection("appSettings");
             string templateFile = appSettings["TemplateFile"];
-            TemplateFile = HttpContext.Current.Server.MapPath(sourceDir + templateFile);
+            TemplateFile = HttpContext.Current.Server.MapPath(sourceDir + "templates\\" + templateFile);
             string contentFile = appSettings["ContentFile"];
             ContentXmlFile = HttpContext.Current.Server.MapPath(sourceDir + contentFile);
             string tempDir = appSettings["TempDir"];
@@ -66,7 +70,7 @@ namespace RSMTenon.ReportGenerator
                 AddTableToDoc(mainPart, table, controlName);
 
                 // Charts
-                AddChartsToDoc(mainPart);
+                AddChartsToDoc(mainPart, report);
             } finally
             {
                 // save and close document
@@ -83,81 +87,82 @@ namespace RSMTenon.ReportGenerator
             return tempDocName;
         }
 
-        private void AddChartsToDoc(MainDocumentPart mainPart)
+        private void AddChartsToDoc(MainDocumentPart mainPart, Report report)
         {
 
-            //string controlName = null;
-            //ChartItem chartItem = null;
-            //// Drawdown
-            //chartItem = report.Drawdown();
-            //controlName = chartItem.CustomControlName;
-            //AddChartToDoc(mainPart, chartItem, controlName);
+            string controlName = null;
+            ChartItem chartItem = null;
+            // Drawdown
+            chartItem = report.Drawdown();
+            controlName = chartItem.CustomControlName;
+            AddChartToDoc(mainPart, chartItem, controlName);
 
-            //// Comparison Chart
-            //if (report.Client.ExistingAssets)
-            //{
-            //    chartItem = report.AllocationComparison();
-            //    controlName = chartItem.CustomControlName;
-            //    AddChartToDoc(mainPart, chartItem, controlName);
-            //}
 
-            //// Stress Test Market Rise Bar Chart
-            //chartItem = report.StressTestMarketRise();
-            //controlName = chartItem.CustomControlName;
-            //AddChartToDoc(mainPart, chartItem, controlName);
+            // Comparison Chart
+            if (report.Client.ExistingAssets)
+            {
+                chartItem = report.AllocationComparison();
+                controlName = chartItem.CustomControlName;
+                AddChartToDoc(mainPart, chartItem, controlName);
+            }
 
-            //// Stress Test Market Crash Bar Chart
-            //chartItem = report.StressTestMarketCrash();
-            //controlName = chartItem.CustomControlName;
-            //AddChartToDoc(mainPart, chartItem, controlName);
+            // Stress Test Market Rise Bar Chart
+            chartItem = report.StressTestMarketRise();
+            controlName = chartItem.CustomControlName;
+            AddChartToDoc(mainPart, chartItem, controlName);
 
-            //// Allocation Pie Chart
-            //chartItem = report.Allocation();
-            //controlName = chartItem.CustomControlName;
-            //AddChartToDoc(mainPart, chartItem, controlName);
+            // Stress Test Market Crash Bar Chart
+            chartItem = report.StressTestMarketCrash();
+            controlName = chartItem.CustomControlName;
+            AddChartToDoc(mainPart, chartItem, controlName);
 
-            //// Rolling Return 1 yr
-            //chartItem = report.RollingReturnChart(1);
-            //controlName = chartItem.CustomControlName;
-            //AddChartToDoc(mainPart, chartItem, controlName);
+            // Allocation Pie Chart
+            chartItem = report.Allocation();
+            controlName = chartItem.CustomControlName;
+            AddChartToDoc(mainPart, chartItem, controlName);
 
-            //// Rolling Return 3 yr
-            //chartItem = report.RollingReturnChart(3);
-            //controlName = chartItem.CustomControlName;
-            //AddChartToDoc(mainPart, chartItem, controlName);
+            // Rolling Return 1 yr
+            chartItem = report.RollingReturnChart(1);
+            controlName = chartItem.CustomControlName;
+            AddChartToDoc(mainPart, chartItem, controlName);
 
-            //// Rolling Return 5 yr
-            //chartItem = report.RollingReturnChart(5);
-            //controlName = chartItem.CustomControlName;
-            //AddChartToDoc(mainPart, chartItem, controlName);
+            // Rolling Return 3 yr
+            chartItem = report.RollingReturnChart(3);
+            controlName = chartItem.CustomControlName;
+            AddChartToDoc(mainPart, chartItem, controlName);
 
-            //// Ten Year Return Chart
-            //chartItem = report.TenYearReturn();
-            //controlName = chartItem.CustomControlName;
-            //AddChartToDoc(mainPart, chartItem, controlName);
+            // Rolling Return 5 yr
+            chartItem = report.RollingReturnChart(5);
+            controlName = chartItem.CustomControlName;
+            AddChartToDoc(mainPart, chartItem, controlName);
+
+            // Ten Year Return Chart
+            chartItem = report.TenYearReturn();
+            controlName = chartItem.CustomControlName;
+            AddChartToDoc(mainPart, chartItem, controlName);
         }
 
         private void AddChartToDoc(MainDocumentPart mainPart, ChartItem chartItem, string controlName)
         {
-            //// open Word documant and remove existing content from control
-            //Paragraph para = findAndRemoveContent(mainPart, controlName);
+            // open Word documant and remove existing content from control
+            Paragraph para = findAndRemoveContent(mainPart, controlName);
 
-            //// generate new ChartPart and ChartSpace
-            //ChartPart chartPart = mainPart.AddNewPart<ChartPart>();
-            //string relId = mainPart.GetIdOfPart(chartPart);
-            //C.ChartSpace chartSpace = GraphSpace.GenerateChartSpace(chartPart);
-            //chartSpace.Append(chartItem.Chart);
+            // generate new ChartPart and ChartSpace
+            ChartPart chartPart = mainPart.AddNewPart<ChartPart>();
+            string relId = mainPart.GetIdOfPart(chartPart);
+            C.ChartSpace chartSpace = GraphSpace.GenerateChartSpace(chartPart);
+            chartSpace.Append(chartItem.Chart);
 
-            //// set ChartPart ChartSpace
-            //chartPart.ChartSpace = chartSpace;
+            // set ChartPart ChartSpace
+            chartPart.ChartSpace = chartSpace;
 
-            //// generate a new Wordprocessing Drawing, add to a new Run,
-            //// and relate to new ChartPart
-            //Run run = new Run();
-            //Drawing drawing = GraphDrawing.GenerateDrawing(relId, controlName, docPrId, Graph.Cx, Graph.Cy);
-            //docPrId++;
-            //para.Append(run);
-            //run.Append(drawing);
+            // generate a new Wordprocessing Drawing, add to a new Run,
+            // and relate to new ChartPart
+            Run run = new Run();
+            Drawing drawing = GraphDrawing.GenerateDrawing(relId, controlName, docPrId, Graph.Cx, Graph.Cy);
+            docPrId++;
+            para.Append(run);
+            run.Append(drawing);
         }
 
         private void AddTableToDoc(MainDocumentPart mainPart, Table table, string controlName)
