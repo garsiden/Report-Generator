@@ -3,7 +3,8 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <asp:GridView ID="gridClient" runat="server" AutoGenerateColumns="False" DataKeyNames="GUID"
-        DataSourceID="sourceClient" CssClass="listing">
+        DataSourceID="sourceClient" CssClass="listing" Caption="Recent Clients" 
+        AllowSorting="True">
         <Columns>
             <asp:HyperLinkField DataNavigateUrlFields="GUID" DataNavigateUrlFormatString="~/Pages/Client/edit.aspx?guid={0}"
                 DataTextField="Name" HeaderText="Client Name" SortExpression="Name" >
@@ -15,16 +16,18 @@
             <ItemStyle CssClass="left" />
             </asp:CommandField>
         </Columns>
+        <EmptyDataTemplate>
+            No clients to display.
+        </EmptyDataTemplate>
     </asp:GridView>
-    <asp:ObjectDataSource ID="sourceClient" runat="server" DataObjectTypeName="RSMTenon.Data.Client"
-        DeleteMethod="DeleteClient" SelectMethod="GetRecentClients" TypeName="RSMTenon.Data.Client"
-        InsertMethod="InsertClient" OldValuesParameterFormatString="original_{0}" UpdateMethod="UpdateClient">
-        <UpdateParameters>
-            <asp:Parameter Name="client" Type="Object" />
-            <asp:Parameter Name="original_client" Type="Object" />
-        </UpdateParameters>
-        <SelectParameters>
-            <asp:Parameter DefaultValue="10" Name="number" Type="Int32" />
-        </SelectParameters>
-    </asp:ObjectDataSource>
+        <asp:LinqDataSource ID="sourceClient" runat="server" 
+            ContextTypeName="RSMTenon.Data.RepGenDataContext" 
+            OrderBy="MeetingDate desc, Name" TableName="Clients" 
+        EnableDelete="True" onselecting="sourceClient_Selecting">
+        </asp:LinqDataSource>
+
+    <br />
+    <div align="right">    
+        <asp:HyperLink ID="hyperNewClient" runat="server" NavigateUrl="Pages/Client/new.aspx">Add New Client</asp:HyperLink></div>
+
 </asp:Content>
