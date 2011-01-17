@@ -7,6 +7,7 @@ using System.Web.UI.WebControls;
 using System.IO;
 using System.Data;
 using System.Globalization;
+using RSMTenon.Data;
 
 public partial class Pages_Benchmark_upload : System.Web.UI.Page
 {
@@ -47,7 +48,7 @@ public partial class Pages_Benchmark_upload : System.Web.UI.Page
                             }
                         }
                     }
-                    RSMTenon.Data.DataUtilities.UploadToDatabase(dt, "tblBenchmarkData");
+                    RSMTenon.Data.DataUtilities.UploadToDatabase(dt, "tblBenchmarkDataTest");
                     lblStatus.Text = String.Format("{0:#,##0} row(s) added to database", dt.Rows.Count);
                 }
             } catch (Exception err)

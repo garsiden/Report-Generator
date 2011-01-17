@@ -7,6 +7,7 @@ using System.Web.UI.WebControls;
 using System.IO;
 using System.Data;
 using System.Globalization;
+using RSMTenon.Data;
 
 public partial class Pages_AssetClass_upload : System.Web.UI.Page
 {
