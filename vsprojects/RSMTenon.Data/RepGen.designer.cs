@@ -36,12 +36,6 @@ namespace RSMTenon.Data
     partial void InsertClient(Client instance);
     partial void UpdateClient(Client instance);
     partial void DeleteClient(Client instance);
-    partial void InsertClientAsset(ClientAsset instance);
-    partial void UpdateClientAsset(ClientAsset instance);
-    partial void DeleteClientAsset(ClientAsset instance);
-    partial void InsertClientAssetClass(ClientAssetClass instance);
-    partial void UpdateClientAssetClass(ClientAssetClass instance);
-    partial void DeleteClientAssetClass(ClientAssetClass instance);
     partial void InsertModelBreakdown(ModelBreakdown instance);
     partial void UpdateModelBreakdown(ModelBreakdown instance);
     partial void DeleteModelBreakdown(ModelBreakdown instance);
@@ -60,10 +54,28 @@ namespace RSMTenon.Data
     partial void InsertStrategy(Strategy instance);
     partial void UpdateStrategy(Strategy instance);
     partial void DeleteStrategy(Strategy instance);
+    partial void InsertHistoricData(HistoricData instance);
+    partial void UpdateHistoricData(HistoricData instance);
+    partial void DeleteHistoricData(HistoricData instance);
+    partial void InsertBenchmarkData(BenchmarkData instance);
+    partial void UpdateBenchmarkData(BenchmarkData instance);
+    partial void DeleteBenchmarkData(BenchmarkData instance);
+    partial void InsertAssetGroup(AssetGroup instance);
+    partial void UpdateAssetGroup(AssetGroup instance);
+    partial void DeleteAssetGroup(AssetGroup instance);
+    partial void InsertAssetGroupClass(AssetGroupClass instance);
+    partial void UpdateAssetGroupClass(AssetGroupClass instance);
+    partial void DeleteAssetGroupClass(AssetGroupClass instance);
+    partial void InsertClientAsset(ClientAsset instance);
+    partial void UpdateClientAsset(ClientAsset instance);
+    partial void DeleteClientAsset(ClientAsset instance);
+    partial void InsertClientAssetClass(ClientAssetClass instance);
+    partial void UpdateClientAssetClass(ClientAssetClass instance);
+    partial void DeleteClientAssetClass(ClientAssetClass instance);
     #endregion
 		
 		public RepGenDataContext() : 
-				base(global::RSMTenon.Data.Properties.Settings.Default.RepGenConnectionString3, mappingSource)
+				base(global::RSMTenon.Data.Properties.Settings.Default.RepGenConnectionString, mappingSource)
 		{
 			OnCreated();
 		}
@@ -105,22 +117,6 @@ namespace RSMTenon.Data
 			get
 			{
 				return this.GetTable<Client>();
-			}
-		}
-		
-		public System.Data.Linq.Table<ClientAsset> ClientAssets
-		{
-			get
-			{
-				return this.GetTable<ClientAsset>();
-			}
-		}
-		
-		public System.Data.Linq.Table<ClientAssetClass> ClientAssetClasses
-		{
-			get
-			{
-				return this.GetTable<ClientAssetClass>();
 			}
 		}
 		
@@ -180,6 +176,62 @@ namespace RSMTenon.Data
 			}
 		}
 		
+		public System.Data.Linq.Table<HistoricData> HistoricDatas
+		{
+			get
+			{
+				return this.GetTable<HistoricData>();
+			}
+		}
+		
+		public System.Data.Linq.Table<BenchmarkData> BenchmarkDatas
+		{
+			get
+			{
+				return this.GetTable<BenchmarkData>();
+			}
+		}
+		
+		public System.Data.Linq.Table<AssetGroup> AssetGroups
+		{
+			get
+			{
+				return this.GetTable<AssetGroup>();
+			}
+		}
+		
+		public System.Data.Linq.Table<AssetGroupClass> AssetGroupClasses
+		{
+			get
+			{
+				return this.GetTable<AssetGroupClass>();
+			}
+		}
+		
+		public System.Data.Linq.Table<ClientAsset> ClientAssets
+		{
+			get
+			{
+				return this.GetTable<ClientAsset>();
+			}
+		}
+		
+		public System.Data.Linq.Table<ClientAssetClass> ClientAssetClasses
+		{
+			get
+			{
+				return this.GetTable<ClientAssetClass>();
+			}
+		}
+		
+		public System.Data.Linq.Table<AssetWeighting> AssetWeightings
+		{
+			get
+			{
+				return this.GetTable<AssetWeighting>();
+			}
+		}
+		
 		[Function(Name="dbo.spRollingReturn")]
 		public ISingleResult<ReturnData> RollingReturn([Parameter(DbType="Int")] System.Nullable<int> years, [Parameter(DbType="NChar(4)")] string assetClassID)
 		{
@@ -191,13 +243,6 @@ namespace RSMTenon.Data
 		public ISingleResult<ReturnData> AssetClassReturn([Parameter(DbType="DateTime")] System.Nullable<System.DateTime> startDate, [Parameter(DbType="NChar(4)")] string assetClassID)
 		{
 			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), startDate, assetClassID);
-			return ((ISingleResult<ReturnData>)(result.ReturnValue));
-		}
-		
-		[Function(Name="dbo.spModelReturn")]
-		public ISingleResult<ReturnData> ModelReturn([Parameter(DbType="Char(2)")] string strategyId, [Parameter(DbType="DateTime")] System.Nullable<System.DateTime> startDate)
-		{
-			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), strategyId, startDate);
 			return ((ISingleResult<ReturnData>)(result.ReturnValue));
 		}
 		
@@ -228,6 +273,20 @@ namespace RSMTenon.Data
 			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), startDate, clientGUID);
 			return ((ISingleResult<ReturnData>)(result.ReturnValue));
 		}
+		
+		[Function(Name="dbo.spModelReturn")]
+		public ISingleResult<ReturnData> ModelReturn([Parameter(DbType="NChar(2)")] string strategyId, [Parameter(DbType="DateTime")] System.Nullable<System.DateTime> startDate)
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), strategyId, startDate);
+			return ((ISingleResult<ReturnData>)(result.ReturnValue));
+		}
+		
+		[Function(Name="dbo.spClientAssetWeighting")]
+		public ISingleResult<AssetWeighting> ClientAssetWeighting([Parameter(Name="ClientGUID", DbType="UniqueIdentifier")] System.Nullable<System.Guid> clientGUID)
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), clientGUID);
+			return ((ISingleResult<AssetWeighting>)(result.ReturnValue));
+		}
 	}
 	
 	[Table(Name="dbo.tblAssetClass")]
@@ -240,17 +299,11 @@ namespace RSMTenon.Data
 		
 		private string _Name;
 		
-		private bool _IsGroup;
-		
-		private System.Data.Linq.Binary _SSMA_TimeStamp;
-		
-		private EntitySet<ClientAsset> _ClientAssets;
-		
-		private EntitySet<ClientAssetClass> _ClientAssetClasses;
-		
-		private EntitySet<ModelBreakdown> _ModelBreakdowns;
-		
 		private EntitySet<Model> _Models;
+		
+		private EntityRef<AssetGroup> _AssetGroup;
+		
+		private EntityRef<AssetGroupClass> _AssetGroupClass;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -260,18 +313,13 @@ namespace RSMTenon.Data
     partial void OnIDChanged();
     partial void OnNameChanging(string value);
     partial void OnNameChanged();
-    partial void OnIsGroupChanging(bool value);
-    partial void OnIsGroupChanged();
-    partial void OnSSMA_TimeStampChanging(System.Data.Linq.Binary value);
-    partial void OnSSMA_TimeStampChanged();
     #endregion
 		
 		public AssetClass()
 		{
-			this._ClientAssets = new EntitySet<ClientAsset>(new Action<ClientAsset>(this.attach_ClientAssets), new Action<ClientAsset>(this.detach_ClientAssets));
-			this._ClientAssetClasses = new EntitySet<ClientAssetClass>(new Action<ClientAssetClass>(this.attach_ClientAssetClasses), new Action<ClientAssetClass>(this.detach_ClientAssetClasses));
-			this._ModelBreakdowns = new EntitySet<ModelBreakdown>(new Action<ModelBreakdown>(this.attach_ModelBreakdowns), new Action<ModelBreakdown>(this.detach_ModelBreakdowns));
 			this._Models = new EntitySet<Model>(new Action<Model>(this.attach_Models), new Action<Model>(this.detach_Models));
+			this._AssetGroup = default(EntityRef<AssetGroup>);
+			this._AssetGroupClass = default(EntityRef<AssetGroupClass>);
 			OnCreated();
 		}
 		
@@ -315,85 +363,6 @@ namespace RSMTenon.Data
 			}
 		}
 		
-		[Column(Storage="_IsGroup", DbType="Bit NOT NULL", UpdateCheck=UpdateCheck.Never)]
-		public bool IsGroup
-		{
-			get
-			{
-				return this._IsGroup;
-			}
-			set
-			{
-				if ((this._IsGroup != value))
-				{
-					this.OnIsGroupChanging(value);
-					this.SendPropertyChanging();
-					this._IsGroup = value;
-					this.SendPropertyChanged("IsGroup");
-					this.OnIsGroupChanged();
-				}
-			}
-		}
-		
-		[Column(Storage="_SSMA_TimeStamp", AutoSync=AutoSync.Always, DbType="rowversion NOT NULL", CanBeNull=false, IsDbGenerated=true, IsVersion=true, UpdateCheck=UpdateCheck.Never)]
-		public System.Data.Linq.Binary SSMA_TimeStamp
-		{
-			get
-			{
-				return this._SSMA_TimeStamp;
-			}
-			set
-			{
-				if ((this._SSMA_TimeStamp != value))
-				{
-					this.OnSSMA_TimeStampChanging(value);
-					this.SendPropertyChanging();
-					this._SSMA_TimeStamp = value;
-					this.SendPropertyChanged("SSMA_TimeStamp");
-					this.OnSSMA_TimeStampChanged();
-				}
-			}
-		}
-		
-		[Association(Name="AssetClass_ClientAsset", Storage="_ClientAssets", ThisKey="ID", OtherKey="AssetClassID")]
-		public EntitySet<ClientAsset> ClientAssets
-		{
-			get
-			{
-				return this._ClientAssets;
-			}
-			set
-			{
-				this._ClientAssets.Assign(value);
-			}
-		}
-		
-		[Association(Name="AssetClass_ClientAssetClass", Storage="_ClientAssetClasses", ThisKey="ID", OtherKey="AssetClassID")]
-		public EntitySet<ClientAssetClass> ClientAssetClasses
-		{
-			get
-			{
-				return this._ClientAssetClasses;
-			}
-			set
-			{
-				this._ClientAssetClasses.Assign(value);
-			}
-		}
-		
-		[Association(Name="AssetClass_ModelBreakdown", Storage="_ModelBreakdowns", ThisKey="ID", OtherKey="AssetClassID")]
-		public EntitySet<ModelBreakdown> ModelBreakdowns
-		{
-			get
-			{
-				return this._ModelBreakdowns;
-			}
-			set
-			{
-				this._ModelBreakdowns.Assign(value);
-			}
-		}
-		
 		[Association(Name="AssetClass_Model", Storage="_Models", ThisKey="ID", OtherKey="AssetClassID")]
 		public EntitySet<Model> Models
 		{
@@ -404,6 +373,64 @@ namespace RSMTenon.Data
 			set
 			{
 				this._Models.Assign(value);
+			}
+		}
+		
+		[Association(Name="AssetClass_AssetGroup", Storage="_AssetGroup", ThisKey="ID", OtherKey="ID", IsUnique=true, IsForeignKey=false)]
+		public AssetGroup AssetGroup
+		{
+			get
+			{
+				return this._AssetGroup.Entity;
+			}
+			set
+			{
+				AssetGroup previousValue = this._AssetGroup.Entity;
+				if (((previousValue != value) 
+							|| (this._AssetGroup.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._AssetGroup.Entity = null;
+						previousValue.AssetClass = null;
+					}
+					this._AssetGroup.Entity = value;
+					if ((value != null))
+					{
+						value.AssetClass = this;
+					}
+					this.SendPropertyChanged("AssetGroup");
+				}
+			}
+		}
+		
+		[Association(Name="AssetClass_AssetGroupClass", Storage="_AssetGroupClass", ThisKey="ID", OtherKey="AssetClassID", IsUnique=true, IsForeignKey=false)]
+		public AssetGroupClass AssetGroupClass
+		{
+			get
+			{
+				return this._AssetGroupClass.Entity;
+			}
+			set
+			{
+				AssetGroupClass previousValue = this._AssetGroupClass.Entity;
+				if (((previousValue != value) 
+							|| (this._AssetGroupClass.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._AssetGroupClass.Entity = null;
+						previousValue.AssetClass = null;
+					}
+					this._AssetGroupClass.Entity = value;
+					if ((value != null))
+					{
+						value.AssetClass = this;
+					}
+					this.SendPropertyChanged("AssetGroupClass");
+				}
 			}
 		}
 		
@@ -425,42 +452,6 @@ namespace RSMTenon.Data
 			{
 				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
-		}
-		
-		private void attach_ClientAssets(ClientAsset entity)
-		{
-			this.SendPropertyChanging();
-			entity.AssetClass = this;
-		}
-		
-		private void detach_ClientAssets(ClientAsset entity)
-		{
-			this.SendPropertyChanging();
-			entity.AssetClass = null;
-		}
-		
-		private void attach_ClientAssetClasses(ClientAssetClass entity)
-		{
-			this.SendPropertyChanging();
-			entity.AssetClass = this;
-		}
-		
-		private void detach_ClientAssetClasses(ClientAssetClass entity)
-		{
-			this.SendPropertyChanging();
-			entity.AssetClass = null;
-		}
-		
-		private void attach_ModelBreakdowns(ModelBreakdown entity)
-		{
-			this.SendPropertyChanging();
-			entity.AssetClass = this;
-		}
-		
-		private void detach_ModelBreakdowns(ModelBreakdown entity)
-		{
-			this.SendPropertyChanging();
-			entity.AssetClass = null;
 		}
 		
 		private void attach_Models(Model entity)
@@ -500,9 +491,13 @@ namespace RSMTenon.Data
 		
 		private System.Data.Linq.Binary _SSMA_TimeStamp;
 		
+		private bool _HighNetWorth;
+		
+		private string _UserID;
+		
 		private EntitySet<ClientAsset> _ClientAssets;
 		
-		private EntitySet<ClientAssetClass> _ClientAssetClasses;
+		private EntityRef<ClientAssetClass> _ClientAssetClass;
 		
 		private EntityRef<Strategy> _Strategy;
 		
@@ -528,17 +523,21 @@ namespace RSMTenon.Data
     partial void OnInvestmentAmountChanged();
     partial void OnSSMA_TimeStampChanging(System.Data.Linq.Binary value);
     partial void OnSSMA_TimeStampChanged();
+    partial void OnHighNetWorthChanging(bool value);
+    partial void OnHighNetWorthChanged();
+    partial void OnUserIDChanging(string value);
+    partial void OnUserIDChanged();
     #endregion
 		
 		public Client()
 		{
 			this._ClientAssets = new EntitySet<ClientAsset>(new Action<ClientAsset>(this.attach_ClientAssets), new Action<ClientAsset>(this.detach_ClientAssets));
-			this._ClientAssetClasses = new EntitySet<ClientAssetClass>(new Action<ClientAssetClass>(this.attach_ClientAssetClasses), new Action<ClientAssetClass>(this.detach_ClientAssetClasses));
+			this._ClientAssetClass = default(EntityRef<ClientAssetClass>);
 			this._Strategy = default(EntityRef<Strategy>);
 			OnCreated();
 		}
 		
-		[Column(Storage="_GUID", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true, UpdateCheck=UpdateCheck.Never)]
+		[Column(Storage="_GUID", AutoSync=AutoSync.OnInsert, DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true, IsDbGenerated=true)]
 		public System.Guid GUID
 		{
 			get
@@ -702,7 +701,7 @@ namespace RSMTenon.Data
 			}
 		}
 		
-		[Column(Storage="_SSMA_TimeStamp", AutoSync=AutoSync.Always, DbType="rowversion NOT NULL", CanBeNull=false, IsDbGenerated=true, IsVersion=true, UpdateCheck=UpdateCheck.Never)]
+		[Column(Storage="_SSMA_TimeStamp", AutoSync=AutoSync.Always, DbType="rowversion NOT NULL", CanBeNull=false, IsDbGenerated=true, UpdateCheck=UpdateCheck.Never)]
 		public System.Data.Linq.Binary SSMA_TimeStamp
 		{
 			get
@@ -722,6 +721,46 @@ namespace RSMTenon.Data
 			}
 		}
 		
+		[Column(Storage="_HighNetWorth", DbType="Bit NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		public bool HighNetWorth
+		{
+			get
+			{
+				return this._HighNetWorth;
+			}
+			set
+			{
+				if ((this._HighNetWorth != value))
+				{
+					this.OnHighNetWorthChanging(value);
+					this.SendPropertyChanging();
+					this._HighNetWorth = value;
+					this.SendPropertyChanged("HighNetWorth");
+					this.OnHighNetWorthChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_UserID", DbType="NVarChar(50) NOT NULL", CanBeNull=false, UpdateCheck=UpdateCheck.Never)]
+		public string UserID
+		{
+			get
+			{
+				return this._UserID;
+			}
+			set
+			{
+				if ((this._UserID != value))
+				{
+					this.OnUserIDChanging(value);
+					this.SendPropertyChanging();
+					this._UserID = value;
+					this.SendPropertyChanged("UserID");
+					this.OnUserIDChanged();
+				}
+			}
+		}
+		
 		[Association(Name="Client_ClientAsset", Storage="_ClientAssets", ThisKey="GUID", OtherKey="ClientGUID")]
 		public EntitySet<ClientAsset> ClientAssets
 		{
@@ -735,16 +774,32 @@ namespace RSMTenon.Data
 			}
 		}
 		
-		[Association(Name="Client_ClientAssetClass", Storage="_ClientAssetClasses", ThisKey="GUID", OtherKey="ClientGUID")]
-		public EntitySet<ClientAssetClass> ClientAssetClasses
+		[Association(Name="Client_ClientAssetClass", Storage="_ClientAssetClass", ThisKey="GUID", OtherKey="ClientGUID", IsUnique=true, IsForeignKey=false)]
+		public ClientAssetClass ClientAssetClass
 		{
 			get
 			{
-				return this._ClientAssetClasses;
+				return this._ClientAssetClass.Entity;
 			}
 			set
 			{
-				this._ClientAssetClasses.Assign(value);
+				ClientAssetClass previousValue = this._ClientAssetClass.Entity;
+				if (((previousValue != value) 
+							|| (this._ClientAssetClass.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._ClientAssetClass.Entity = null;
+						previousValue.Client = null;
+					}
+					this._ClientAssetClass.Entity = value;
+					if ((value != null))
+					{
+						value.Client = this;
+					}
+					this.SendPropertyChanged("ClientAssetClass");
+				}
 			}
 		}
 		
@@ -813,498 +868,6 @@ namespace RSMTenon.Data
 			this.SendPropertyChanging();
 			entity.Client = null;
 		}
-		
-		private void attach_ClientAssetClasses(ClientAssetClass entity)
-		{
-			this.SendPropertyChanging();
-			entity.Client = this;
-		}
-		
-		private void detach_ClientAssetClasses(ClientAssetClass entity)
-		{
-			this.SendPropertyChanging();
-			entity.Client = null;
-		}
-	}
-	
-	[Table(Name="dbo.tblClientAsset")]
-	public partial class ClientAsset : INotifyPropertyChanging, INotifyPropertyChanged
-	{
-		
-		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-		
-		private System.Guid _GUID;
-		
-		private System.Guid _ClientGUID;
-		
-		private string _AssetName;
-		
-		private string _AssetClassID;
-		
-		private decimal _Amount;
-		
-		private EntityRef<AssetClass> _AssetClass;
-		
-		private EntityRef<Client> _Client;
-		
-    #region Extensibility Method Definitions
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void OnGUIDChanging(System.Guid value);
-    partial void OnGUIDChanged();
-    partial void OnClientGUIDChanging(System.Guid value);
-    partial void OnClientGUIDChanged();
-    partial void OnAssetNameChanging(string value);
-    partial void OnAssetNameChanged();
-    partial void OnAssetClassIDChanging(string value);
-    partial void OnAssetClassIDChanged();
-    partial void OnAmountChanging(decimal value);
-    partial void OnAmountChanged();
-    #endregion
-		
-		public ClientAsset()
-		{
-			this._AssetClass = default(EntityRef<AssetClass>);
-			this._Client = default(EntityRef<Client>);
-			OnCreated();
-		}
-		
-		[Column(Storage="_GUID", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true)]
-		public System.Guid GUID
-		{
-			get
-			{
-				return this._GUID;
-			}
-			set
-			{
-				if ((this._GUID != value))
-				{
-					this.OnGUIDChanging(value);
-					this.SendPropertyChanging();
-					this._GUID = value;
-					this.SendPropertyChanged("GUID");
-					this.OnGUIDChanged();
-				}
-			}
-		}
-		
-		[Column(Storage="_ClientGUID", DbType="UniqueIdentifier NOT NULL")]
-		public System.Guid ClientGUID
-		{
-			get
-			{
-				return this._ClientGUID;
-			}
-			set
-			{
-				if ((this._ClientGUID != value))
-				{
-					if (this._Client.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
-					this.OnClientGUIDChanging(value);
-					this.SendPropertyChanging();
-					this._ClientGUID = value;
-					this.SendPropertyChanged("ClientGUID");
-					this.OnClientGUIDChanged();
-				}
-			}
-		}
-		
-		[Column(Storage="_AssetName", DbType="NVarChar(100) NOT NULL", CanBeNull=false)]
-		public string AssetName
-		{
-			get
-			{
-				return this._AssetName;
-			}
-			set
-			{
-				if ((this._AssetName != value))
-				{
-					this.OnAssetNameChanging(value);
-					this.SendPropertyChanging();
-					this._AssetName = value;
-					this.SendPropertyChanged("AssetName");
-					this.OnAssetNameChanged();
-				}
-			}
-		}
-		
-		[Column(Storage="_AssetClassID", DbType="NChar(4) NOT NULL", CanBeNull=false)]
-		public string AssetClassID
-		{
-			get
-			{
-				return this._AssetClassID;
-			}
-			set
-			{
-				if ((this._AssetClassID != value))
-				{
-					if (this._AssetClass.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
-					this.OnAssetClassIDChanging(value);
-					this.SendPropertyChanging();
-					this._AssetClassID = value;
-					this.SendPropertyChanged("AssetClassID");
-					this.OnAssetClassIDChanged();
-				}
-			}
-		}
-		
-		[Column(Storage="_Amount", DbType="Money NOT NULL")]
-		public decimal Amount
-		{
-			get
-			{
-				return this._Amount;
-			}
-			set
-			{
-				if ((this._Amount != value))
-				{
-					this.OnAmountChanging(value);
-					this.SendPropertyChanging();
-					this._Amount = value;
-					this.SendPropertyChanged("Amount");
-					this.OnAmountChanged();
-				}
-			}
-		}
-		
-		[Association(Name="AssetClass_ClientAsset", Storage="_AssetClass", ThisKey="AssetClassID", OtherKey="ID", IsForeignKey=true)]
-		public AssetClass AssetClass
-		{
-			get
-			{
-				return this._AssetClass.Entity;
-			}
-			set
-			{
-				AssetClass previousValue = this._AssetClass.Entity;
-				if (((previousValue != value) 
-							|| (this._AssetClass.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._AssetClass.Entity = null;
-						previousValue.ClientAssets.Remove(this);
-					}
-					this._AssetClass.Entity = value;
-					if ((value != null))
-					{
-						value.ClientAssets.Add(this);
-						this._AssetClassID = value.ID;
-					}
-					else
-					{
-						this._AssetClassID = default(string);
-					}
-					this.SendPropertyChanged("AssetClass");
-				}
-			}
-		}
-		
-		[Association(Name="Client_ClientAsset", Storage="_Client", ThisKey="ClientGUID", OtherKey="GUID", IsForeignKey=true, DeleteOnNull=true, DeleteRule="CASCADE")]
-		public Client Client
-		{
-			get
-			{
-				return this._Client.Entity;
-			}
-			set
-			{
-				Client previousValue = this._Client.Entity;
-				if (((previousValue != value) 
-							|| (this._Client.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._Client.Entity = null;
-						previousValue.ClientAssets.Remove(this);
-					}
-					this._Client.Entity = value;
-					if ((value != null))
-					{
-						value.ClientAssets.Add(this);
-						this._ClientGUID = value.GUID;
-					}
-					else
-					{
-						this._ClientGUID = default(System.Guid);
-					}
-					this.SendPropertyChanged("Client");
-				}
-			}
-		}
-		
-		public event PropertyChangingEventHandler PropertyChanging;
-		
-		public event PropertyChangedEventHandler PropertyChanged;
-		
-		protected virtual void SendPropertyChanging()
-		{
-			if ((this.PropertyChanging != null))
-			{
-				this.PropertyChanging(this, emptyChangingEventArgs);
-			}
-		}
-		
-		protected virtual void SendPropertyChanged(String propertyName)
-		{
-			if ((this.PropertyChanged != null))
-			{
-				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-			}
-		}
-	}
-	
-	[Table(Name="dbo.tblClientAssetClass")]
-	public partial class ClientAssetClass : INotifyPropertyChanging, INotifyPropertyChanged
-	{
-		
-		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-		
-		private System.Guid _GUID;
-		
-		private System.Guid _ClientGUID;
-		
-		private string _AssetClassID;
-		
-		private decimal _Weighting;
-		
-		private System.Data.Linq.Binary _SSMA_TimeStamp;
-		
-		private EntityRef<AssetClass> _AssetClass;
-		
-		private EntityRef<Client> _Client;
-		
-    #region Extensibility Method Definitions
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void OnGUIDChanging(System.Guid value);
-    partial void OnGUIDChanged();
-    partial void OnClientGUIDChanging(System.Guid value);
-    partial void OnClientGUIDChanged();
-    partial void OnAssetClassIDChanging(string value);
-    partial void OnAssetClassIDChanged();
-    partial void OnWeightingChanging(decimal value);
-    partial void OnWeightingChanged();
-    partial void OnSSMA_TimeStampChanging(System.Data.Linq.Binary value);
-    partial void OnSSMA_TimeStampChanged();
-    #endregion
-		
-		public ClientAssetClass()
-		{
-			this._AssetClass = default(EntityRef<AssetClass>);
-			this._Client = default(EntityRef<Client>);
-			OnCreated();
-		}
-		
-		[Column(Storage="_GUID", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true, UpdateCheck=UpdateCheck.Never)]
-		public System.Guid GUID
-		{
-			get
-			{
-				return this._GUID;
-			}
-			set
-			{
-				if ((this._GUID != value))
-				{
-					this.OnGUIDChanging(value);
-					this.SendPropertyChanging();
-					this._GUID = value;
-					this.SendPropertyChanged("GUID");
-					this.OnGUIDChanged();
-				}
-			}
-		}
-		
-		[Column(Storage="_ClientGUID", DbType="UniqueIdentifier NOT NULL", UpdateCheck=UpdateCheck.Never)]
-		public System.Guid ClientGUID
-		{
-			get
-			{
-				return this._ClientGUID;
-			}
-			set
-			{
-				if ((this._ClientGUID != value))
-				{
-					if (this._Client.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
-					this.OnClientGUIDChanging(value);
-					this.SendPropertyChanging();
-					this._ClientGUID = value;
-					this.SendPropertyChanged("ClientGUID");
-					this.OnClientGUIDChanged();
-				}
-			}
-		}
-		
-		[Column(Storage="_AssetClassID", DbType="NChar(4) NOT NULL", CanBeNull=false, UpdateCheck=UpdateCheck.Never)]
-		public string AssetClassID
-		{
-			get
-			{
-				return this._AssetClassID;
-			}
-			set
-			{
-				if ((this._AssetClassID != value))
-				{
-					if (this._AssetClass.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
-					this.OnAssetClassIDChanging(value);
-					this.SendPropertyChanging();
-					this._AssetClassID = value;
-					this.SendPropertyChanged("AssetClassID");
-					this.OnAssetClassIDChanged();
-				}
-			}
-		}
-		
-		[Column(Storage="_Weighting", DbType="Decimal(5,4) NOT NULL", UpdateCheck=UpdateCheck.Never)]
-		public decimal Weighting
-		{
-			get
-			{
-				return this._Weighting;
-			}
-			set
-			{
-				if ((this._Weighting != value))
-				{
-					this.OnWeightingChanging(value);
-					this.SendPropertyChanging();
-					this._Weighting = value;
-					this.SendPropertyChanged("Weighting");
-					this.OnWeightingChanged();
-				}
-			}
-		}
-		
-		[Column(Storage="_SSMA_TimeStamp", AutoSync=AutoSync.Always, DbType="rowversion NOT NULL", CanBeNull=false, IsDbGenerated=true, IsVersion=true, UpdateCheck=UpdateCheck.Never)]
-		public System.Data.Linq.Binary SSMA_TimeStamp
-		{
-			get
-			{
-				return this._SSMA_TimeStamp;
-			}
-			set
-			{
-				if ((this._SSMA_TimeStamp != value))
-				{
-					this.OnSSMA_TimeStampChanging(value);
-					this.SendPropertyChanging();
-					this._SSMA_TimeStamp = value;
-					this.SendPropertyChanged("SSMA_TimeStamp");
-					this.OnSSMA_TimeStampChanged();
-				}
-			}
-		}
-		
-		[Association(Name="AssetClass_ClientAssetClass", Storage="_AssetClass", ThisKey="AssetClassID", OtherKey="ID", IsForeignKey=true)]
-		public AssetClass AssetClass
-		{
-			get
-			{
-				return this._AssetClass.Entity;
-			}
-			set
-			{
-				AssetClass previousValue = this._AssetClass.Entity;
-				if (((previousValue != value) 
-							|| (this._AssetClass.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._AssetClass.Entity = null;
-						previousValue.ClientAssetClasses.Remove(this);
-					}
-					this._AssetClass.Entity = value;
-					if ((value != null))
-					{
-						value.ClientAssetClasses.Add(this);
-						this._AssetClassID = value.ID;
-					}
-					else
-					{
-						this._AssetClassID = default(string);
-					}
-					this.SendPropertyChanged("AssetClass");
-				}
-			}
-		}
-		
-		[Association(Name="Client_ClientAssetClass", Storage="_Client", ThisKey="ClientGUID", OtherKey="GUID", IsForeignKey=true, DeleteOnNull=true, DeleteRule="CASCADE")]
-		public Client Client
-		{
-			get
-			{
-				return this._Client.Entity;
-			}
-			set
-			{
-				Client previousValue = this._Client.Entity;
-				if (((previousValue != value) 
-							|| (this._Client.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._Client.Entity = null;
-						previousValue.ClientAssetClasses.Remove(this);
-					}
-					this._Client.Entity = value;
-					if ((value != null))
-					{
-						value.ClientAssetClasses.Add(this);
-						this._ClientGUID = value.GUID;
-					}
-					else
-					{
-						this._ClientGUID = default(System.Guid);
-					}
-					this.SendPropertyChanged("Client");
-				}
-			}
-		}
-		
-		public event PropertyChangingEventHandler PropertyChanging;
-		
-		public event PropertyChangedEventHandler PropertyChanged;
-		
-		protected virtual void SendPropertyChanging()
-		{
-			if ((this.PropertyChanging != null))
-			{
-				this.PropertyChanging(this, emptyChangingEventArgs);
-			}
-		}
-		
-		protected virtual void SendPropertyChanged(String propertyName)
-		{
-			if ((this.PropertyChanged != null))
-			{
-				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-			}
-		}
 	}
 	
 	[Table(Name="dbo.tblModelBreakdown")]
@@ -1323,9 +886,9 @@ namespace RSMTenon.Data
 		
 		private System.Data.Linq.Binary _SSMA_TimeStamp;
 		
-		private EntityRef<AssetClass> _AssetClass;
-		
 		private EntityRef<Strategy> _Strategy;
+		
+		private EntityRef<AssetGroupClass> _AssetGroupClass;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -1345,12 +908,12 @@ namespace RSMTenon.Data
 		
 		public ModelBreakdown()
 		{
-			this._AssetClass = default(EntityRef<AssetClass>);
 			this._Strategy = default(EntityRef<Strategy>);
+			this._AssetGroupClass = default(EntityRef<AssetGroupClass>);
 			OnCreated();
 		}
 		
-		[Column(Storage="_GUID", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true, UpdateCheck=UpdateCheck.Never)]
+		[Column(Storage="_GUID", AutoSync=AutoSync.OnInsert, DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true, IsDbGenerated=true)]
 		public System.Guid GUID
 		{
 			get
@@ -1405,7 +968,7 @@ namespace RSMTenon.Data
 			{
 				if ((this._AssetClassID != value))
 				{
-					if (this._AssetClass.HasLoadedOrAssignedValue)
+					if (this._AssetGroupClass.HasLoadedOrAssignedValue)
 					{
 						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
 					}
@@ -1438,7 +1001,7 @@ namespace RSMTenon.Data
 			}
 		}
 		
-		[Column(Storage="_SSMA_TimeStamp", AutoSync=AutoSync.Always, DbType="rowversion NOT NULL", CanBeNull=false, IsDbGenerated=true, IsVersion=true, UpdateCheck=UpdateCheck.Never)]
+		[Column(Storage="_SSMA_TimeStamp", AutoSync=AutoSync.Always, DbType="rowversion NOT NULL", CanBeNull=false, IsDbGenerated=true, UpdateCheck=UpdateCheck.Never)]
 		public System.Data.Linq.Binary SSMA_TimeStamp
 		{
 			get
@@ -1454,40 +1017,6 @@ namespace RSMTenon.Data
 					this._SSMA_TimeStamp = value;
 					this.SendPropertyChanged("SSMA_TimeStamp");
 					this.OnSSMA_TimeStampChanged();
-				}
-			}
-		}
-		
-		[Association(Name="AssetClass_ModelBreakdown", Storage="_AssetClass", ThisKey="AssetClassID", OtherKey="ID", IsForeignKey=true)]
-		public AssetClass AssetClass
-		{
-			get
-			{
-				return this._AssetClass.Entity;
-			}
-			set
-			{
-				AssetClass previousValue = this._AssetClass.Entity;
-				if (((previousValue != value) 
-							|| (this._AssetClass.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._AssetClass.Entity = null;
-						previousValue.ModelBreakdowns.Remove(this);
-					}
-					this._AssetClass.Entity = value;
-					if ((value != null))
-					{
-						value.ModelBreakdowns.Add(this);
-						this._AssetClassID = value.ID;
-					}
-					else
-					{
-						this._AssetClassID = default(string);
-					}
-					this.SendPropertyChanged("AssetClass");
 				}
 			}
 		}
@@ -1522,6 +1051,40 @@ namespace RSMTenon.Data
 						this._StrategyID = default(string);
 					}
 					this.SendPropertyChanged("Strategy");
+				}
+			}
+		}
+		
+		[Association(Name="AssetGroupClass_ModelBreakdown", Storage="_AssetGroupClass", ThisKey="AssetClassID", OtherKey="AssetClassID", IsForeignKey=true)]
+		public AssetGroupClass AssetGroupClass
+		{
+			get
+			{
+				return this._AssetGroupClass.Entity;
+			}
+			set
+			{
+				AssetGroupClass previousValue = this._AssetGroupClass.Entity;
+				if (((previousValue != value) 
+							|| (this._AssetGroupClass.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._AssetGroupClass.Entity = null;
+						previousValue.ModelBreakdowns.Remove(this);
+					}
+					this._AssetGroupClass.Entity = value;
+					if ((value != null))
+					{
+						value.ModelBreakdowns.Add(this);
+						this._AssetClassID = value.AssetClassID;
+					}
+					else
+					{
+						this._AssetClassID = default(string);
+					}
+					this.SendPropertyChanged("AssetGroupClass");
 				}
 			}
 		}
@@ -2131,7 +1694,7 @@ namespace RSMTenon.Data
 			OnCreated();
 		}
 		
-		[Column(Storage="_GUID", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true, UpdateCheck=UpdateCheck.Never)]
+		[Column(Storage="_GUID", AutoSync=AutoSync.OnInsert, DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true, IsDbGenerated=true)]
 		public System.Guid GUID
 		{
 			get
@@ -2235,7 +1798,7 @@ namespace RSMTenon.Data
 			}
 		}
 		
-		[Column(Storage="_SSMA_TimeStamp", AutoSync=AutoSync.Always, DbType="rowversion NOT NULL", CanBeNull=false, IsDbGenerated=true, IsVersion=true, UpdateCheck=UpdateCheck.Never)]
+		[Column(Storage="_SSMA_TimeStamp", AutoSync=AutoSync.Always, DbType="rowversion NOT NULL", CanBeNull=false, IsDbGenerated=true, UpdateCheck=UpdateCheck.Never)]
 		public System.Data.Linq.Binary SSMA_TimeStamp
 		{
 			get
@@ -2638,6 +2201,1860 @@ namespace RSMTenon.Data
 		{
 			this.SendPropertyChanging();
 			entity.Strategy = null;
+		}
+	}
+	
+	[Table(Name="dbo.tblHistoricData")]
+	public partial class HistoricData : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private System.DateTime _Date;
+		
+		private double _CASH;
+		
+		private double _UKGB;
+		
+		private double _UKCB;
+		
+		private double _COPR;
+		
+		private double _UKHY;
+		
+		private double _WOBO;
+		
+		private double _HEDG;
+		
+		private double _GLEQ;
+		
+		private double _LOSH;
+		
+		private double _UKEQ;
+		
+		private double _PREQ;
+		
+		private double _COMM;
+		
+		private System.Data.Linq.Binary _SSMA_TimeStamp;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnDateChanging(System.DateTime value);
+    partial void OnDateChanged();
+    partial void OnCASHChanging(double value);
+    partial void OnCASHChanged();
+    partial void OnUKGBChanging(double value);
+    partial void OnUKGBChanged();
+    partial void OnUKCBChanging(double value);
+    partial void OnUKCBChanged();
+    partial void OnCOPRChanging(double value);
+    partial void OnCOPRChanged();
+    partial void OnUKHYChanging(double value);
+    partial void OnUKHYChanged();
+    partial void OnWOBOChanging(double value);
+    partial void OnWOBOChanged();
+    partial void OnHEDGChanging(double value);
+    partial void OnHEDGChanged();
+    partial void OnGLEQChanging(double value);
+    partial void OnGLEQChanged();
+    partial void OnLOSHChanging(double value);
+    partial void OnLOSHChanged();
+    partial void OnUKEQChanging(double value);
+    partial void OnUKEQChanged();
+    partial void OnPREQChanging(double value);
+    partial void OnPREQChanged();
+    partial void OnCOMMChanging(double value);
+    partial void OnCOMMChanged();
+    partial void OnSSMA_TimeStampChanging(System.Data.Linq.Binary value);
+    partial void OnSSMA_TimeStampChanged();
+    #endregion
+		
+		public HistoricData()
+		{
+			OnCreated();
+		}
+		
+		[Column(Storage="_Date", DbType="DateTime NOT NULL", IsPrimaryKey=true, UpdateCheck=UpdateCheck.Never)]
+		public System.DateTime Date
+		{
+			get
+			{
+				return this._Date;
+			}
+			set
+			{
+				if ((this._Date != value))
+				{
+					this.OnDateChanging(value);
+					this.SendPropertyChanging();
+					this._Date = value;
+					this.SendPropertyChanged("Date");
+					this.OnDateChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_CASH", DbType="Float NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		public double CASH
+		{
+			get
+			{
+				return this._CASH;
+			}
+			set
+			{
+				if ((this._CASH != value))
+				{
+					this.OnCASHChanging(value);
+					this.SendPropertyChanging();
+					this._CASH = value;
+					this.SendPropertyChanged("CASH");
+					this.OnCASHChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_UKGB", DbType="Float NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		public double UKGB
+		{
+			get
+			{
+				return this._UKGB;
+			}
+			set
+			{
+				if ((this._UKGB != value))
+				{
+					this.OnUKGBChanging(value);
+					this.SendPropertyChanging();
+					this._UKGB = value;
+					this.SendPropertyChanged("UKGB");
+					this.OnUKGBChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_UKCB", DbType="Float NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		public double UKCB
+		{
+			get
+			{
+				return this._UKCB;
+			}
+			set
+			{
+				if ((this._UKCB != value))
+				{
+					this.OnUKCBChanging(value);
+					this.SendPropertyChanging();
+					this._UKCB = value;
+					this.SendPropertyChanged("UKCB");
+					this.OnUKCBChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_COPR", DbType="Float NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		public double COPR
+		{
+			get
+			{
+				return this._COPR;
+			}
+			set
+			{
+				if ((this._COPR != value))
+				{
+					this.OnCOPRChanging(value);
+					this.SendPropertyChanging();
+					this._COPR = value;
+					this.SendPropertyChanged("COPR");
+					this.OnCOPRChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_UKHY", DbType="Float NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		public double UKHY
+		{
+			get
+			{
+				return this._UKHY;
+			}
+			set
+			{
+				if ((this._UKHY != value))
+				{
+					this.OnUKHYChanging(value);
+					this.SendPropertyChanging();
+					this._UKHY = value;
+					this.SendPropertyChanged("UKHY");
+					this.OnUKHYChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_WOBO", DbType="Float NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		public double WOBO
+		{
+			get
+			{
+				return this._WOBO;
+			}
+			set
+			{
+				if ((this._WOBO != value))
+				{
+					this.OnWOBOChanging(value);
+					this.SendPropertyChanging();
+					this._WOBO = value;
+					this.SendPropertyChanged("WOBO");
+					this.OnWOBOChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_HEDG", DbType="Float NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		public double HEDG
+		{
+			get
+			{
+				return this._HEDG;
+			}
+			set
+			{
+				if ((this._HEDG != value))
+				{
+					this.OnHEDGChanging(value);
+					this.SendPropertyChanging();
+					this._HEDG = value;
+					this.SendPropertyChanged("HEDG");
+					this.OnHEDGChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_GLEQ", DbType="Float NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		public double GLEQ
+		{
+			get
+			{
+				return this._GLEQ;
+			}
+			set
+			{
+				if ((this._GLEQ != value))
+				{
+					this.OnGLEQChanging(value);
+					this.SendPropertyChanging();
+					this._GLEQ = value;
+					this.SendPropertyChanged("GLEQ");
+					this.OnGLEQChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_LOSH", DbType="Float NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		public double LOSH
+		{
+			get
+			{
+				return this._LOSH;
+			}
+			set
+			{
+				if ((this._LOSH != value))
+				{
+					this.OnLOSHChanging(value);
+					this.SendPropertyChanging();
+					this._LOSH = value;
+					this.SendPropertyChanged("LOSH");
+					this.OnLOSHChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_UKEQ", DbType="Float NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		public double UKEQ
+		{
+			get
+			{
+				return this._UKEQ;
+			}
+			set
+			{
+				if ((this._UKEQ != value))
+				{
+					this.OnUKEQChanging(value);
+					this.SendPropertyChanging();
+					this._UKEQ = value;
+					this.SendPropertyChanged("UKEQ");
+					this.OnUKEQChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_PREQ", DbType="Float NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		public double PREQ
+		{
+			get
+			{
+				return this._PREQ;
+			}
+			set
+			{
+				if ((this._PREQ != value))
+				{
+					this.OnPREQChanging(value);
+					this.SendPropertyChanging();
+					this._PREQ = value;
+					this.SendPropertyChanged("PREQ");
+					this.OnPREQChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_COMM", DbType="Float NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		public double COMM
+		{
+			get
+			{
+				return this._COMM;
+			}
+			set
+			{
+				if ((this._COMM != value))
+				{
+					this.OnCOMMChanging(value);
+					this.SendPropertyChanging();
+					this._COMM = value;
+					this.SendPropertyChanged("COMM");
+					this.OnCOMMChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_SSMA_TimeStamp", AutoSync=AutoSync.Always, DbType="rowversion NOT NULL", CanBeNull=false, IsDbGenerated=true, IsVersion=true, UpdateCheck=UpdateCheck.Never)]
+		public System.Data.Linq.Binary SSMA_TimeStamp
+		{
+			get
+			{
+				return this._SSMA_TimeStamp;
+			}
+			set
+			{
+				if ((this._SSMA_TimeStamp != value))
+				{
+					this.OnSSMA_TimeStampChanging(value);
+					this.SendPropertyChanging();
+					this._SSMA_TimeStamp = value;
+					this.SendPropertyChanged("SSMA_TimeStamp");
+					this.OnSSMA_TimeStampChanged();
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+	}
+	
+	[Table(Name="dbo.tblBenchmarkData")]
+	public partial class BenchmarkData : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private System.DateTime _Date;
+		
+		private double _STBO;
+		
+		private double _CAMA;
+		
+		private double _BAMA;
+		
+		private double _ACMA;
+		
+		private double _GLGR;
+		
+		private System.Data.Linq.Binary _SSMA_TimeStamp;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnDateChanging(System.DateTime value);
+    partial void OnDateChanged();
+    partial void OnSTBOChanging(double value);
+    partial void OnSTBOChanged();
+    partial void OnCAMAChanging(double value);
+    partial void OnCAMAChanged();
+    partial void OnBAMAChanging(double value);
+    partial void OnBAMAChanged();
+    partial void OnACMAChanging(double value);
+    partial void OnACMAChanged();
+    partial void OnGLGRChanging(double value);
+    partial void OnGLGRChanged();
+    partial void OnSSMA_TimeStampChanging(System.Data.Linq.Binary value);
+    partial void OnSSMA_TimeStampChanged();
+    #endregion
+		
+		public BenchmarkData()
+		{
+			OnCreated();
+		}
+		
+		[Column(Storage="_Date", DbType="DateTime NOT NULL", IsPrimaryKey=true, UpdateCheck=UpdateCheck.Never)]
+		public System.DateTime Date
+		{
+			get
+			{
+				return this._Date;
+			}
+			set
+			{
+				if ((this._Date != value))
+				{
+					this.OnDateChanging(value);
+					this.SendPropertyChanging();
+					this._Date = value;
+					this.SendPropertyChanged("Date");
+					this.OnDateChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_STBO", DbType="Float NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		public double STBO
+		{
+			get
+			{
+				return this._STBO;
+			}
+			set
+			{
+				if ((this._STBO != value))
+				{
+					this.OnSTBOChanging(value);
+					this.SendPropertyChanging();
+					this._STBO = value;
+					this.SendPropertyChanged("STBO");
+					this.OnSTBOChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_CAMA", DbType="Float NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		public double CAMA
+		{
+			get
+			{
+				return this._CAMA;
+			}
+			set
+			{
+				if ((this._CAMA != value))
+				{
+					this.OnCAMAChanging(value);
+					this.SendPropertyChanging();
+					this._CAMA = value;
+					this.SendPropertyChanged("CAMA");
+					this.OnCAMAChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_BAMA", DbType="Float NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		public double BAMA
+		{
+			get
+			{
+				return this._BAMA;
+			}
+			set
+			{
+				if ((this._BAMA != value))
+				{
+					this.OnBAMAChanging(value);
+					this.SendPropertyChanging();
+					this._BAMA = value;
+					this.SendPropertyChanged("BAMA");
+					this.OnBAMAChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_ACMA", DbType="Float NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		public double ACMA
+		{
+			get
+			{
+				return this._ACMA;
+			}
+			set
+			{
+				if ((this._ACMA != value))
+				{
+					this.OnACMAChanging(value);
+					this.SendPropertyChanging();
+					this._ACMA = value;
+					this.SendPropertyChanged("ACMA");
+					this.OnACMAChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_GLGR", DbType="Float NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		public double GLGR
+		{
+			get
+			{
+				return this._GLGR;
+			}
+			set
+			{
+				if ((this._GLGR != value))
+				{
+					this.OnGLGRChanging(value);
+					this.SendPropertyChanging();
+					this._GLGR = value;
+					this.SendPropertyChanged("GLGR");
+					this.OnGLGRChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_SSMA_TimeStamp", AutoSync=AutoSync.Always, DbType="rowversion NOT NULL", CanBeNull=false, IsDbGenerated=true, IsVersion=true, UpdateCheck=UpdateCheck.Never)]
+		public System.Data.Linq.Binary SSMA_TimeStamp
+		{
+			get
+			{
+				return this._SSMA_TimeStamp;
+			}
+			set
+			{
+				if ((this._SSMA_TimeStamp != value))
+				{
+					this.OnSSMA_TimeStampChanging(value);
+					this.SendPropertyChanging();
+					this._SSMA_TimeStamp = value;
+					this.SendPropertyChanged("SSMA_TimeStamp");
+					this.OnSSMA_TimeStampChanged();
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+	}
+	
+	[Table(Name="dbo.tblAssetGroup")]
+	public partial class AssetGroup : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private string _ID;
+		
+		private EntitySet<AssetGroupClass> _AssetGroupClasses;
+		
+		private EntityRef<AssetClass> _AssetClass;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnIDChanging(string value);
+    partial void OnIDChanged();
+    #endregion
+		
+		public AssetGroup()
+		{
+			this._AssetGroupClasses = new EntitySet<AssetGroupClass>(new Action<AssetGroupClass>(this.attach_AssetGroupClasses), new Action<AssetGroupClass>(this.detach_AssetGroupClasses));
+			this._AssetClass = default(EntityRef<AssetClass>);
+			OnCreated();
+		}
+		
+		[Column(Storage="_ID", DbType="NChar(4) NOT NULL", CanBeNull=false, IsPrimaryKey=true)]
+		public string ID
+		{
+			get
+			{
+				return this._ID;
+			}
+			set
+			{
+				if ((this._ID != value))
+				{
+					if (this._AssetClass.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnIDChanging(value);
+					this.SendPropertyChanging();
+					this._ID = value;
+					this.SendPropertyChanged("ID");
+					this.OnIDChanged();
+				}
+			}
+		}
+		
+		[Association(Name="AssetGroup_AssetGroupClass", Storage="_AssetGroupClasses", ThisKey="ID", OtherKey="AssetGroupID")]
+		public EntitySet<AssetGroupClass> AssetGroupClasses
+		{
+			get
+			{
+				return this._AssetGroupClasses;
+			}
+			set
+			{
+				this._AssetGroupClasses.Assign(value);
+			}
+		}
+		
+		[Association(Name="AssetClass_AssetGroup", Storage="_AssetClass", ThisKey="ID", OtherKey="ID", IsForeignKey=true)]
+		public AssetClass AssetClass
+		{
+			get
+			{
+				return this._AssetClass.Entity;
+			}
+			set
+			{
+				AssetClass previousValue = this._AssetClass.Entity;
+				if (((previousValue != value) 
+							|| (this._AssetClass.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._AssetClass.Entity = null;
+						previousValue.AssetGroup = null;
+					}
+					this._AssetClass.Entity = value;
+					if ((value != null))
+					{
+						value.AssetGroup = this;
+						this._ID = value.ID;
+					}
+					else
+					{
+						this._ID = default(string);
+					}
+					this.SendPropertyChanged("AssetClass");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_AssetGroupClasses(AssetGroupClass entity)
+		{
+			this.SendPropertyChanging();
+			entity.AssetGroup = this;
+		}
+		
+		private void detach_AssetGroupClasses(AssetGroupClass entity)
+		{
+			this.SendPropertyChanging();
+			entity.AssetGroup = null;
+		}
+	}
+	
+	[Table(Name="dbo.tblAssetGroupClass")]
+	public partial class AssetGroupClass : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private string _AssetGroupID;
+		
+		private string _AssetClassID;
+		
+		private EntitySet<ModelBreakdown> _ModelBreakdowns;
+		
+		private EntityRef<AssetClass> _AssetClass;
+		
+		private EntityRef<AssetGroup> _AssetGroup;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnAssetGroupIDChanging(string value);
+    partial void OnAssetGroupIDChanged();
+    partial void OnAssetClassIDChanging(string value);
+    partial void OnAssetClassIDChanged();
+    #endregion
+		
+		public AssetGroupClass()
+		{
+			this._ModelBreakdowns = new EntitySet<ModelBreakdown>(new Action<ModelBreakdown>(this.attach_ModelBreakdowns), new Action<ModelBreakdown>(this.detach_ModelBreakdowns));
+			this._AssetClass = default(EntityRef<AssetClass>);
+			this._AssetGroup = default(EntityRef<AssetGroup>);
+			OnCreated();
+		}
+		
+		[Column(Storage="_AssetGroupID", DbType="NChar(4) NOT NULL", CanBeNull=false)]
+		public string AssetGroupID
+		{
+			get
+			{
+				return this._AssetGroupID;
+			}
+			set
+			{
+				if ((this._AssetGroupID != value))
+				{
+					if (this._AssetGroup.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnAssetGroupIDChanging(value);
+					this.SendPropertyChanging();
+					this._AssetGroupID = value;
+					this.SendPropertyChanged("AssetGroupID");
+					this.OnAssetGroupIDChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_AssetClassID", DbType="NChar(4) NOT NULL", CanBeNull=false, IsPrimaryKey=true)]
+		public string AssetClassID
+		{
+			get
+			{
+				return this._AssetClassID;
+			}
+			set
+			{
+				if ((this._AssetClassID != value))
+				{
+					if (this._AssetClass.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnAssetClassIDChanging(value);
+					this.SendPropertyChanging();
+					this._AssetClassID = value;
+					this.SendPropertyChanged("AssetClassID");
+					this.OnAssetClassIDChanged();
+				}
+			}
+		}
+		
+		[Association(Name="AssetGroupClass_ModelBreakdown", Storage="_ModelBreakdowns", ThisKey="AssetClassID", OtherKey="AssetClassID")]
+		public EntitySet<ModelBreakdown> ModelBreakdowns
+		{
+			get
+			{
+				return this._ModelBreakdowns;
+			}
+			set
+			{
+				this._ModelBreakdowns.Assign(value);
+			}
+		}
+		
+		[Association(Name="AssetClass_AssetGroupClass", Storage="_AssetClass", ThisKey="AssetClassID", OtherKey="ID", IsForeignKey=true)]
+		public AssetClass AssetClass
+		{
+			get
+			{
+				return this._AssetClass.Entity;
+			}
+			set
+			{
+				AssetClass previousValue = this._AssetClass.Entity;
+				if (((previousValue != value) 
+							|| (this._AssetClass.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._AssetClass.Entity = null;
+						previousValue.AssetGroupClass = null;
+					}
+					this._AssetClass.Entity = value;
+					if ((value != null))
+					{
+						value.AssetGroupClass = this;
+						this._AssetClassID = value.ID;
+					}
+					else
+					{
+						this._AssetClassID = default(string);
+					}
+					this.SendPropertyChanged("AssetClass");
+				}
+			}
+		}
+		
+		[Association(Name="AssetGroup_AssetGroupClass", Storage="_AssetGroup", ThisKey="AssetGroupID", OtherKey="ID", IsForeignKey=true)]
+		public AssetGroup AssetGroup
+		{
+			get
+			{
+				return this._AssetGroup.Entity;
+			}
+			set
+			{
+				AssetGroup previousValue = this._AssetGroup.Entity;
+				if (((previousValue != value) 
+							|| (this._AssetGroup.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._AssetGroup.Entity = null;
+						previousValue.AssetGroupClasses.Remove(this);
+					}
+					this._AssetGroup.Entity = value;
+					if ((value != null))
+					{
+						value.AssetGroupClasses.Add(this);
+						this._AssetGroupID = value.ID;
+					}
+					else
+					{
+						this._AssetGroupID = default(string);
+					}
+					this.SendPropertyChanged("AssetGroup");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_ModelBreakdowns(ModelBreakdown entity)
+		{
+			this.SendPropertyChanging();
+			entity.AssetGroupClass = this;
+		}
+		
+		private void detach_ModelBreakdowns(ModelBreakdown entity)
+		{
+			this.SendPropertyChanging();
+			entity.AssetGroupClass = null;
+		}
+	}
+	
+	[Table(Name="dbo.tblClientAsset")]
+	public partial class ClientAsset : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private System.Guid _GUID;
+		
+		private System.Guid _ClientGUID;
+		
+		private string _AssetName;
+		
+		private decimal _Amount;
+		
+		private decimal _CASH;
+		
+		private decimal _COMM;
+		
+		private decimal _COPR;
+		
+		private decimal _GLEQ;
+		
+		private decimal _HEDG;
+		
+		private decimal _LOSH;
+		
+		private decimal _PREQ;
+		
+		private decimal _UKCB;
+		
+		private decimal _UKEQ;
+		
+		private decimal _UKGB;
+		
+		private decimal _UKHY;
+		
+		private decimal _WOBO;
+		
+		private System.Data.Linq.Binary _SSMA_TimeStamp;
+		
+		private EntityRef<Client> _Client;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnGUIDChanging(System.Guid value);
+    partial void OnGUIDChanged();
+    partial void OnClientGUIDChanging(System.Guid value);
+    partial void OnClientGUIDChanged();
+    partial void OnAssetNameChanging(string value);
+    partial void OnAssetNameChanged();
+    partial void OnAmountChanging(decimal value);
+    partial void OnAmountChanged();
+    partial void OnCASHChanging(decimal value);
+    partial void OnCASHChanged();
+    partial void OnCOMMChanging(decimal value);
+    partial void OnCOMMChanged();
+    partial void OnCOPRChanging(decimal value);
+    partial void OnCOPRChanged();
+    partial void OnGLEQChanging(decimal value);
+    partial void OnGLEQChanged();
+    partial void OnHEDGChanging(decimal value);
+    partial void OnHEDGChanged();
+    partial void OnLOSHChanging(decimal value);
+    partial void OnLOSHChanged();
+    partial void OnPREQChanging(decimal value);
+    partial void OnPREQChanged();
+    partial void OnUKCBChanging(decimal value);
+    partial void OnUKCBChanged();
+    partial void OnUKEQChanging(decimal value);
+    partial void OnUKEQChanged();
+    partial void OnUKGBChanging(decimal value);
+    partial void OnUKGBChanged();
+    partial void OnUKHYChanging(decimal value);
+    partial void OnUKHYChanged();
+    partial void OnWOBOChanging(decimal value);
+    partial void OnWOBOChanged();
+    partial void OnSSMA_TimeStampChanging(System.Data.Linq.Binary value);
+    partial void OnSSMA_TimeStampChanged();
+    #endregion
+		
+		public ClientAsset()
+		{
+			this._Client = default(EntityRef<Client>);
+			OnCreated();
+		}
+		
+		[Column(Storage="_GUID", AutoSync=AutoSync.OnInsert, DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true, IsDbGenerated=true)]
+		public System.Guid GUID
+		{
+			get
+			{
+				return this._GUID;
+			}
+			set
+			{
+				if ((this._GUID != value))
+				{
+					this.OnGUIDChanging(value);
+					this.SendPropertyChanging();
+					this._GUID = value;
+					this.SendPropertyChanged("GUID");
+					this.OnGUIDChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_ClientGUID", DbType="UniqueIdentifier NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		public System.Guid ClientGUID
+		{
+			get
+			{
+				return this._ClientGUID;
+			}
+			set
+			{
+				if ((this._ClientGUID != value))
+				{
+					if (this._Client.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnClientGUIDChanging(value);
+					this.SendPropertyChanging();
+					this._ClientGUID = value;
+					this.SendPropertyChanged("ClientGUID");
+					this.OnClientGUIDChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_AssetName", DbType="NVarChar(100) NOT NULL", CanBeNull=false, UpdateCheck=UpdateCheck.Never)]
+		public string AssetName
+		{
+			get
+			{
+				return this._AssetName;
+			}
+			set
+			{
+				if ((this._AssetName != value))
+				{
+					this.OnAssetNameChanging(value);
+					this.SendPropertyChanging();
+					this._AssetName = value;
+					this.SendPropertyChanged("AssetName");
+					this.OnAssetNameChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_Amount", DbType="Money NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		public decimal Amount
+		{
+			get
+			{
+				return this._Amount;
+			}
+			set
+			{
+				if ((this._Amount != value))
+				{
+					this.OnAmountChanging(value);
+					this.SendPropertyChanging();
+					this._Amount = value;
+					this.SendPropertyChanged("Amount");
+					this.OnAmountChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_CASH", DbType="Decimal(4,3) NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		public decimal CASH
+		{
+			get
+			{
+				return this._CASH;
+			}
+			set
+			{
+				if ((this._CASH != value))
+				{
+					this.OnCASHChanging(value);
+					this.SendPropertyChanging();
+					this._CASH = value;
+					this.SendPropertyChanged("CASH");
+					this.OnCASHChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_COMM", DbType="Decimal(4,3) NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		public decimal COMM
+		{
+			get
+			{
+				return this._COMM;
+			}
+			set
+			{
+				if ((this._COMM != value))
+				{
+					this.OnCOMMChanging(value);
+					this.SendPropertyChanging();
+					this._COMM = value;
+					this.SendPropertyChanged("COMM");
+					this.OnCOMMChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_COPR", DbType="Decimal(4,3) NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		public decimal COPR
+		{
+			get
+			{
+				return this._COPR;
+			}
+			set
+			{
+				if ((this._COPR != value))
+				{
+					this.OnCOPRChanging(value);
+					this.SendPropertyChanging();
+					this._COPR = value;
+					this.SendPropertyChanged("COPR");
+					this.OnCOPRChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_GLEQ", DbType="Decimal(4,3) NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		public decimal GLEQ
+		{
+			get
+			{
+				return this._GLEQ;
+			}
+			set
+			{
+				if ((this._GLEQ != value))
+				{
+					this.OnGLEQChanging(value);
+					this.SendPropertyChanging();
+					this._GLEQ = value;
+					this.SendPropertyChanged("GLEQ");
+					this.OnGLEQChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_HEDG", DbType="Decimal(4,3) NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		public decimal HEDG
+		{
+			get
+			{
+				return this._HEDG;
+			}
+			set
+			{
+				if ((this._HEDG != value))
+				{
+					this.OnHEDGChanging(value);
+					this.SendPropertyChanging();
+					this._HEDG = value;
+					this.SendPropertyChanged("HEDG");
+					this.OnHEDGChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_LOSH", DbType="Decimal(4,3) NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		public decimal LOSH
+		{
+			get
+			{
+				return this._LOSH;
+			}
+			set
+			{
+				if ((this._LOSH != value))
+				{
+					this.OnLOSHChanging(value);
+					this.SendPropertyChanging();
+					this._LOSH = value;
+					this.SendPropertyChanged("LOSH");
+					this.OnLOSHChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_PREQ", DbType="Decimal(4,3) NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		public decimal PREQ
+		{
+			get
+			{
+				return this._PREQ;
+			}
+			set
+			{
+				if ((this._PREQ != value))
+				{
+					this.OnPREQChanging(value);
+					this.SendPropertyChanging();
+					this._PREQ = value;
+					this.SendPropertyChanged("PREQ");
+					this.OnPREQChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_UKCB", DbType="Decimal(4,3) NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		public decimal UKCB
+		{
+			get
+			{
+				return this._UKCB;
+			}
+			set
+			{
+				if ((this._UKCB != value))
+				{
+					this.OnUKCBChanging(value);
+					this.SendPropertyChanging();
+					this._UKCB = value;
+					this.SendPropertyChanged("UKCB");
+					this.OnUKCBChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_UKEQ", DbType="Decimal(4,3) NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		public decimal UKEQ
+		{
+			get
+			{
+				return this._UKEQ;
+			}
+			set
+			{
+				if ((this._UKEQ != value))
+				{
+					this.OnUKEQChanging(value);
+					this.SendPropertyChanging();
+					this._UKEQ = value;
+					this.SendPropertyChanged("UKEQ");
+					this.OnUKEQChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_UKGB", DbType="Decimal(4,3) NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		public decimal UKGB
+		{
+			get
+			{
+				return this._UKGB;
+			}
+			set
+			{
+				if ((this._UKGB != value))
+				{
+					this.OnUKGBChanging(value);
+					this.SendPropertyChanging();
+					this._UKGB = value;
+					this.SendPropertyChanged("UKGB");
+					this.OnUKGBChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_UKHY", DbType="Decimal(4,3) NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		public decimal UKHY
+		{
+			get
+			{
+				return this._UKHY;
+			}
+			set
+			{
+				if ((this._UKHY != value))
+				{
+					this.OnUKHYChanging(value);
+					this.SendPropertyChanging();
+					this._UKHY = value;
+					this.SendPropertyChanged("UKHY");
+					this.OnUKHYChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_WOBO", DbType="Decimal(4,3) NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		public decimal WOBO
+		{
+			get
+			{
+				return this._WOBO;
+			}
+			set
+			{
+				if ((this._WOBO != value))
+				{
+					this.OnWOBOChanging(value);
+					this.SendPropertyChanging();
+					this._WOBO = value;
+					this.SendPropertyChanged("WOBO");
+					this.OnWOBOChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_SSMA_TimeStamp", AutoSync=AutoSync.Always, DbType="rowversion NOT NULL", CanBeNull=false, IsDbGenerated=true, UpdateCheck=UpdateCheck.Never)]
+		public System.Data.Linq.Binary SSMA_TimeStamp
+		{
+			get
+			{
+				return this._SSMA_TimeStamp;
+			}
+			set
+			{
+				if ((this._SSMA_TimeStamp != value))
+				{
+					this.OnSSMA_TimeStampChanging(value);
+					this.SendPropertyChanging();
+					this._SSMA_TimeStamp = value;
+					this.SendPropertyChanged("SSMA_TimeStamp");
+					this.OnSSMA_TimeStampChanged();
+				}
+			}
+		}
+		
+		[Association(Name="Client_ClientAsset", Storage="_Client", ThisKey="ClientGUID", OtherKey="GUID", IsForeignKey=true, DeleteOnNull=true, DeleteRule="CASCADE")]
+		public Client Client
+		{
+			get
+			{
+				return this._Client.Entity;
+			}
+			set
+			{
+				Client previousValue = this._Client.Entity;
+				if (((previousValue != value) 
+							|| (this._Client.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Client.Entity = null;
+						previousValue.ClientAssets.Remove(this);
+					}
+					this._Client.Entity = value;
+					if ((value != null))
+					{
+						value.ClientAssets.Add(this);
+						this._ClientGUID = value.GUID;
+					}
+					else
+					{
+						this._ClientGUID = default(System.Guid);
+					}
+					this.SendPropertyChanged("Client");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+	}
+	
+	[Table(Name="dbo.tblClientAssetClass")]
+	public partial class ClientAssetClass : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private System.Guid _ClientGUID;
+		
+		private decimal _CASH;
+		
+		private decimal _COMM;
+		
+		private decimal _COPR;
+		
+		private decimal _GLEQ;
+		
+		private decimal _HEDG;
+		
+		private decimal _LOSH;
+		
+		private decimal _PREQ;
+		
+		private decimal _UKCB;
+		
+		private decimal _UKEQ;
+		
+		private decimal _UKGB;
+		
+		private decimal _UKHY;
+		
+		private decimal _WOBO;
+		
+		private System.Data.Linq.Binary _SSMA_TimeStamp;
+		
+		private EntityRef<Client> _Client;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnClientGUIDChanging(System.Guid value);
+    partial void OnClientGUIDChanged();
+    partial void OnCASHChanging(decimal value);
+    partial void OnCASHChanged();
+    partial void OnCOMMChanging(decimal value);
+    partial void OnCOMMChanged();
+    partial void OnCOPRChanging(decimal value);
+    partial void OnCOPRChanged();
+    partial void OnGLEQChanging(decimal value);
+    partial void OnGLEQChanged();
+    partial void OnHEDGChanging(decimal value);
+    partial void OnHEDGChanged();
+    partial void OnLOSHChanging(decimal value);
+    partial void OnLOSHChanged();
+    partial void OnPREQChanging(decimal value);
+    partial void OnPREQChanged();
+    partial void OnUKCBChanging(decimal value);
+    partial void OnUKCBChanged();
+    partial void OnUKEQChanging(decimal value);
+    partial void OnUKEQChanged();
+    partial void OnUKGBChanging(decimal value);
+    partial void OnUKGBChanged();
+    partial void OnUKHYChanging(decimal value);
+    partial void OnUKHYChanged();
+    partial void OnWOBOChanging(decimal value);
+    partial void OnWOBOChanged();
+    partial void OnSSMA_TimeStampChanging(System.Data.Linq.Binary value);
+    partial void OnSSMA_TimeStampChanged();
+    #endregion
+		
+		public ClientAssetClass()
+		{
+			this._Client = default(EntityRef<Client>);
+			OnCreated();
+		}
+		
+		[Column(Storage="_ClientGUID", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true, UpdateCheck=UpdateCheck.Never)]
+		public System.Guid ClientGUID
+		{
+			get
+			{
+				return this._ClientGUID;
+			}
+			set
+			{
+				if ((this._ClientGUID != value))
+				{
+					if (this._Client.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnClientGUIDChanging(value);
+					this.SendPropertyChanging();
+					this._ClientGUID = value;
+					this.SendPropertyChanged("ClientGUID");
+					this.OnClientGUIDChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_CASH", DbType="Decimal(4,3) NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		public decimal CASH
+		{
+			get
+			{
+				return this._CASH;
+			}
+			set
+			{
+				if ((this._CASH != value))
+				{
+					this.OnCASHChanging(value);
+					this.SendPropertyChanging();
+					this._CASH = value;
+					this.SendPropertyChanged("CASH");
+					this.OnCASHChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_COMM", DbType="Decimal(4,3) NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		public decimal COMM
+		{
+			get
+			{
+				return this._COMM;
+			}
+			set
+			{
+				if ((this._COMM != value))
+				{
+					this.OnCOMMChanging(value);
+					this.SendPropertyChanging();
+					this._COMM = value;
+					this.SendPropertyChanged("COMM");
+					this.OnCOMMChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_COPR", DbType="Decimal(4,3) NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		public decimal COPR
+		{
+			get
+			{
+				return this._COPR;
+			}
+			set
+			{
+				if ((this._COPR != value))
+				{
+					this.OnCOPRChanging(value);
+					this.SendPropertyChanging();
+					this._COPR = value;
+					this.SendPropertyChanged("COPR");
+					this.OnCOPRChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_GLEQ", DbType="Decimal(4,3) NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		public decimal GLEQ
+		{
+			get
+			{
+				return this._GLEQ;
+			}
+			set
+			{
+				if ((this._GLEQ != value))
+				{
+					this.OnGLEQChanging(value);
+					this.SendPropertyChanging();
+					this._GLEQ = value;
+					this.SendPropertyChanged("GLEQ");
+					this.OnGLEQChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_HEDG", DbType="Decimal(4,3) NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		public decimal HEDG
+		{
+			get
+			{
+				return this._HEDG;
+			}
+			set
+			{
+				if ((this._HEDG != value))
+				{
+					this.OnHEDGChanging(value);
+					this.SendPropertyChanging();
+					this._HEDG = value;
+					this.SendPropertyChanged("HEDG");
+					this.OnHEDGChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_LOSH", DbType="Decimal(4,3) NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		public decimal LOSH
+		{
+			get
+			{
+				return this._LOSH;
+			}
+			set
+			{
+				if ((this._LOSH != value))
+				{
+					this.OnLOSHChanging(value);
+					this.SendPropertyChanging();
+					this._LOSH = value;
+					this.SendPropertyChanged("LOSH");
+					this.OnLOSHChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_PREQ", DbType="Decimal(4,3) NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		public decimal PREQ
+		{
+			get
+			{
+				return this._PREQ;
+			}
+			set
+			{
+				if ((this._PREQ != value))
+				{
+					this.OnPREQChanging(value);
+					this.SendPropertyChanging();
+					this._PREQ = value;
+					this.SendPropertyChanged("PREQ");
+					this.OnPREQChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_UKCB", DbType="Decimal(4,3) NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		public decimal UKCB
+		{
+			get
+			{
+				return this._UKCB;
+			}
+			set
+			{
+				if ((this._UKCB != value))
+				{
+					this.OnUKCBChanging(value);
+					this.SendPropertyChanging();
+					this._UKCB = value;
+					this.SendPropertyChanged("UKCB");
+					this.OnUKCBChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_UKEQ", DbType="Decimal(4,3) NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		public decimal UKEQ
+		{
+			get
+			{
+				return this._UKEQ;
+			}
+			set
+			{
+				if ((this._UKEQ != value))
+				{
+					this.OnUKEQChanging(value);
+					this.SendPropertyChanging();
+					this._UKEQ = value;
+					this.SendPropertyChanged("UKEQ");
+					this.OnUKEQChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_UKGB", DbType="Decimal(4,3) NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		public decimal UKGB
+		{
+			get
+			{
+				return this._UKGB;
+			}
+			set
+			{
+				if ((this._UKGB != value))
+				{
+					this.OnUKGBChanging(value);
+					this.SendPropertyChanging();
+					this._UKGB = value;
+					this.SendPropertyChanged("UKGB");
+					this.OnUKGBChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_UKHY", DbType="Decimal(4,3) NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		public decimal UKHY
+		{
+			get
+			{
+				return this._UKHY;
+			}
+			set
+			{
+				if ((this._UKHY != value))
+				{
+					this.OnUKHYChanging(value);
+					this.SendPropertyChanging();
+					this._UKHY = value;
+					this.SendPropertyChanged("UKHY");
+					this.OnUKHYChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_WOBO", DbType="Decimal(4,3) NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		public decimal WOBO
+		{
+			get
+			{
+				return this._WOBO;
+			}
+			set
+			{
+				if ((this._WOBO != value))
+				{
+					this.OnWOBOChanging(value);
+					this.SendPropertyChanging();
+					this._WOBO = value;
+					this.SendPropertyChanged("WOBO");
+					this.OnWOBOChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_SSMA_TimeStamp", AutoSync=AutoSync.Always, DbType="rowversion NOT NULL", CanBeNull=false, IsDbGenerated=true, UpdateCheck=UpdateCheck.Never)]
+		public System.Data.Linq.Binary SSMA_TimeStamp
+		{
+			get
+			{
+				return this._SSMA_TimeStamp;
+			}
+			set
+			{
+				if ((this._SSMA_TimeStamp != value))
+				{
+					this.OnSSMA_TimeStampChanging(value);
+					this.SendPropertyChanging();
+					this._SSMA_TimeStamp = value;
+					this.SendPropertyChanged("SSMA_TimeStamp");
+					this.OnSSMA_TimeStampChanged();
+				}
+			}
+		}
+		
+		[Association(Name="Client_ClientAssetClass", Storage="_Client", ThisKey="ClientGUID", OtherKey="GUID", IsForeignKey=true, DeleteOnNull=true, DeleteRule="CASCADE")]
+		public Client Client
+		{
+			get
+			{
+				return this._Client.Entity;
+			}
+			set
+			{
+				Client previousValue = this._Client.Entity;
+				if (((previousValue != value) 
+							|| (this._Client.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Client.Entity = null;
+						previousValue.ClientAssetClass = null;
+					}
+					this._Client.Entity = value;
+					if ((value != null))
+					{
+						value.ClientAssetClass = this;
+						this._ClientGUID = value.GUID;
+					}
+					else
+					{
+						this._ClientGUID = default(System.Guid);
+					}
+					this.SendPropertyChanged("Client");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+	}
+	
+	[Table(Name="dbo.vwClientAssetWeighting")]
+	public partial class AssetWeighting
+	{
+		
+		private string _AssetClass;
+		
+		private System.Nullable<decimal> _Weighting;
+		
+		public AssetWeighting()
+		{
+		}
+		
+		[Column(Storage="_AssetClass", DbType="NVarChar(50) NOT NULL", CanBeNull=false)]
+		public string AssetClass
+		{
+			get
+			{
+				return this._AssetClass;
+			}
+			set
+			{
+				if ((this._AssetClass != value))
+				{
+					this._AssetClass = value;
+				}
+			}
+		}
+		
+		[Column(Storage="_Weighting", DbType="Decimal(38,3)")]
+		public System.Nullable<decimal> Weighting
+		{
+			get
+			{
+				return this._Weighting;
+			}
+			set
+			{
+				if ((this._Weighting != value))
+				{
+					this._Weighting = value;
+				}
+			}
 		}
 	}
 }

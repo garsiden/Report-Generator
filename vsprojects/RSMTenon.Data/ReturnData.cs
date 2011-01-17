@@ -7,7 +7,7 @@ namespace RSMTenon.Data
 {
     public partial class ReturnData
     {
-        private static DateTime startDate = new DateTime(1900,1,1);
+        private static DateTime startDate = new DateTime(1900, 1, 1);
 
         public DateTime DateFromInteger
         {

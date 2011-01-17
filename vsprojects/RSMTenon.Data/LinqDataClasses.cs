@@ -5,15 +5,17 @@ using System.Text;
 using System.Data.Linq;
 using System.Data.Linq.Mapping;
 using System.Reflection;
+using System.Data;
+using System.Data.SqlClient;
 
 namespace RSMTenon.Data
 {
     // Model allocation weightings
-    public class AssetWeighting
-    {
-        public string AssetClass { get; set; }
-        public decimal Weighting { get; set; }
-    }
+    //public class AssetWeighting
+    //{
+    //    public string AssetClass { get; set; }
+    //    public decimal Weighting { get; set; }
+    //}
 
     public class RankedReturnData : ReturnData
     {
@@ -26,6 +28,12 @@ namespace RSMTenon.Data
         public string AssetClassName;
         public IGrouping<string, Model> Investments;
         public decimal Weighting;
+    }
+
+    public class ModelAssetClass
+    {
+        public string ID { get; set; }
+        public string Name { get; set; }
     }
 
     public partial class RepGenDataContext : System.Data.Linq.DataContext
@@ -43,6 +51,4 @@ namespace RSMTenon.Data
             return ((ISingleResult<ReturnData>)(result.ReturnValue));
         }
     }
-
-
 }
