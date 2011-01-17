@@ -35,6 +35,8 @@ namespace RSMTenon.ReportGenerator
             nineteen,
             twenty
         }
+        private static string nspace = "/wmr:";
+        private static string nsprefix = "/wmr:repgen/wmr:";
 
         public Client Client { get; set; }
         public void GenerateTextContent(MainDocumentPart mainPart, Client client, string contentFileName, Stream tempContentFile)
@@ -105,11 +107,13 @@ namespace RSMTenon.ReportGenerator
             // Strategy properties
             // strategy.name-lower
             xmlnode = root.SelectSingleNode("/wmr:repgen/wmr:strategy/wmr:name-lower", nsmgr);
-            xmlnode.InnerText = strategy.Name.ToLower(); ;
+            xmlnode.InnerText = strategy.Name.ToLower();
+            ;
 
             // strategy.name-proper
             xmlnode = root.SelectSingleNode("/wmr:repgen/wmr:strategy/wmr:name-proper", nsmgr);
-            xmlnode.InnerText = strategy.Name; ;
+            xmlnode.InnerText = strategy.Name;
+            ;
 
             // strategy.performance.return-over-base
             xmlnode = root.SelectSingleNode("/wmr:repgen/wmr:strategy/wmr:performance/wmr:return-over-base", nsmgr);
@@ -131,33 +135,33 @@ namespace RSMTenon.ReportGenerator
             // strategy.aim
             //xmlnode = root.SelectSingleNode("/wmr:repgen/wmr:strategy/wmr:aim", nsmgr);
             //xmlnode.InnerText = content.Single(c => c.ContentID == "strategy.aim").Text;
-            setTextNode(root, "/wmr:repgen/wmr:strategy/wmr:aim", nsmgr, "strategy.aim", contents);
+            setTextNode(root, nsmgr, "strategy.aim", contents);
 
             // strategy.asset-classes
             //xmlnode = root.SelectSingleNode("/wmr:repgen/wmr:strategy/wmr:asset-classes", nsmgr);
             //xmlnode.InnerText = contents.Single(c => c.ContentID == "strategy.asset-classes").Text;
-            setTextNode(root, "/wmr:repgen/wmr:strategy/wmr:asset-classes", nsmgr,"strategy.asset-classes", contents);
+            setTextNode(root, nsmgr, "strategy.asset-classes", contents);
 
             // strategy.investor-focus
             //xmlnode = root.SelectSingleNode("/wmr:repgen/wmr:strategy/wmr:investor-focus", nsmgr);
             //xmlnode.InnerText = contents.Single(c => c.ContentID == "strategy.investor-focus").Text;
-            setTextNode(root, "/wmr:repgen/wmr:strategy/wmr:investor-focus", nsmgr, "strategy.investor-focus", contents);
+            setTextNode(root, nsmgr, "strategy.investor-focus", contents);
 
             // strategy.comparison-chart-header
             //xmlnode = root.SelectSingleNode("/wmr:repgen/wmr:charts/wmr:comparison/wmr:header", nsmgr);
             //xmlnode.InnerText = contents.Single(c => c.ContentID == "strategy.comparison-chart-header").Text;
-            setTextNode(root, "/wmr:repgen/wmr:charts/wmr:comparison/wmr:header", nsmgr, "strategy.comparison-chart-header", contents);
+            setTextNode(root, nsmgr, "charts.comparison.header", contents);
 
             // strategy.income-note1
             //xmlnode = root.SelectSingleNode("/wmr:repgen/wmr:strategy/wmr:income-note1", nsmgr);
             //xmlnode.InnerText = contents.Single(c => c.ContentID == "strategy.income-note1").Text;
-            setTextNode(root, "/wmr:repgen/wmr:strategy/wmr:income-note1", nsmgr, "strategy.income-note1", contents);
+            setTextNode(root, nsmgr, "strategy.income-note1", contents);
 
 
             // strategy.income-note2
             //xmlnode = root.SelectSingleNode("/wmr:repgen/wmr:strategy/wmr:income-note2", nsmgr);
             //xmlnode.InnerText = contents.Single(c => c.ContentID == "strategy.income-note2").Text;
-            setTextNode(root, "/wmr:repgen/wmr:strategy/wmr:income-note2", nsmgr, "strategy.income-note2", contents);
+            setTextNode(root, nsmgr, "strategy.income-note2", contents);
 
             // Cash or Assets
             string allocationHeader;
@@ -167,14 +171,16 @@ namespace RSMTenon.ReportGenerator
             string stressCrashText = null;
             string stressRiseText = null;
 
-            if (client.ExistingAssets) {
+            if (client.ExistingAssets)
+            {
                 allocationHeader = contents["charts.allocation.header"].Text;
                 allocationCaption = contents["charts.allocation.caption"].Text;
                 weightingText = contents["charts.allocation.weighting-text"].Text;
                 stressCrashHeader = contents["charts.stress-crash.header"].Text;
                 stressCrashText = contents["charts.stress-crash.text"].Text;
                 stressRiseText = contents["charts.stress-rise.text"].Text;
-            } else {
+            } else
+            {
                 allocationHeader = contents["charts.allocation.header"].Text;
                 allocationCaption = contents["charts.allocation.caption"].Text;
                 stressRiseText = contents["charts.stress-rise.text"].Text;
@@ -191,28 +197,32 @@ namespace RSMTenon.ReportGenerator
             setTextNode(root, "/wmr:repgen/wmr:charts/wmr:allocation/wmr:caption", nsmgr, allocationCaption);
 
             // charts.allocation.weighting-text [ASSETS]
-            if (weightingText != null) {
+            if (weightingText != null)
+            {
                 //xmlnode = root.SelectSingleNode("/wmr:repgen/wmr:charts/wmr:allocation/wmr:weighting-text", nsmgr);
                 //xmlnode.InnerText = weightingText;
                 setTextNode(root, "/wmr:repgen/wmr:charts/wmr:allocation/wmr:weighting-text", nsmgr, weightingText);
             }
 
             // charts.stress-crash.header [ASSETS]
-            if (stressCrashHeader != null) {
+            if (stressCrashHeader != null)
+            {
                 //xmlnode = root.SelectSingleNode("/wmr:repgen/wmr:charts/wmr:stress-crash/wmr:header", nsmgr);
                 //xmlnode.InnerText = stressCrashHeader;
                 setTextNode(root, "/wmr:repgen/wmr:charts/wmr:stress-crash/wmr:header", nsmgr, stressCrashHeader);
             }
 
             // charts.stress-crash.text [ASSETS]
-            if (stressCrashText != null) {
+            if (stressCrashText != null)
+            {
                 //xmlnode = root.SelectSingleNode("/wmr:repgen/wmr:charts/wmr:stress-crash/wmr:text", nsmgr);
                 //xmlnode.InnerText = stressCrashText;
                 setTextNode(root, "/wmr:repgen/wmr:charts/wmr:stress-crash/wmr:text", nsmgr, stressCrashText);
             }
 
             // charts.stress-rise.text [ASSETS]
-            if (stressRiseText != null) {
+            if (stressRiseText != null)
+            {
                 //xmlnode = root.SelectSingleNode("/wmr:repgen/wmr:charts/wmr:stress-rise/wmr:text", nsmgr);
                 //xmlnode.InnerText = stressRiseText;
                 setTextNode(root, "/wmr:repgen/wmr:charts/wmr:stress-rise/wmr:text", nsmgr, stressRiseText);
@@ -221,7 +231,7 @@ namespace RSMTenon.ReportGenerator
             // charts.drawdown.text
             //xmlnode = root.SelectSingleNode("/wmr:repgen/wmr:charts/wmr:drawdown/wmr:text", nsmgr);
             //xmlnode.InnerText = contents.Single(c => c.ContentID == "charts.drawdown.text").Text;
-            setTextNode(root, "/wmr:repgen/wmr:charts/wmr:drawdown/wmr:text", nsmgr, "charts.drawdown.text", contents);
+            setTextNode(root, nsmgr, "charts.drawdown.text", contents);
 
             // Calculation
             // strategy.performance.return
@@ -238,14 +248,15 @@ namespace RSMTenon.ReportGenerator
 
         private void replaceCustomXML(MainDocumentPart mainPart, string customXML)
         {
-                mainPart.DeleteParts<CustomXmlPart>(mainPart.CustomXmlParts);
+            mainPart.DeleteParts<CustomXmlPart>(mainPart.CustomXmlParts);
 
-                //Add a new customXML part and then add content
-                CustomXmlPart customXmlPart = mainPart.AddCustomXmlPart(CustomXmlPartType.CustomXml);
+            //Add a new customXML part and then add content
+            CustomXmlPart customXmlPart = mainPart.AddCustomXmlPart(CustomXmlPartType.CustomXml);
 
-                //copy the XML into the new part...
-                using (StreamWriter ts = new StreamWriter(customXmlPart.GetStream())) {
-                    ts.Write(customXML);
+            //copy the XML into the new part...
+            using (StreamWriter ts = new StreamWriter(customXmlPart.GetStream()))
+            {
+                ts.Write(customXML);
             }
         }
 
@@ -261,10 +272,10 @@ namespace RSMTenon.ReportGenerator
             return rtrn;
         }
 
-        private void setTextNode(XmlNode root, string contentPath, XmlNamespaceManager nsmgr, string contentId, Dictionary<string,Content> contents)
+        private void setTextNode(XmlNode root, XmlNamespaceManager nsmgr, string contentId, Dictionary<string, Content> contents)
         {
+            string contentPath = nsprefix + contentId.Replace(".", nspace);
             XmlNode xmlnode = root.SelectSingleNode(contentPath, nsmgr);
-            //var item = contents.Single(c => c.ContentID == contentId);
             Content item = null;
             contents.TryGetValue(contentId, out item);
             if (item != null)
