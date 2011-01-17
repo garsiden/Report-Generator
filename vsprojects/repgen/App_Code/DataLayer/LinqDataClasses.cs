@@ -11,11 +11,11 @@ using System.Data.SqlClient;
 namespace RSMTenon.Data
 {
     // Model allocation weightings
-    public class AssetWeighting
-    {
-        public string AssetClass { get; set; }
-        public decimal Weighting { get; set; }
-    }
+    //public class AssetWeighting
+    //{
+    //    public string AssetClass { get; set; }
+    //    public decimal Weighting { get; set; }
+    //}
 
     public class RankedReturnData : ReturnData
     {
