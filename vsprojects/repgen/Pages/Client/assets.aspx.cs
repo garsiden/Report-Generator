@@ -57,7 +57,7 @@ public partial class Pages_Client_assets : RepGenPage
             Guid clientGuid = new Guid(guidString);
             var source = e.CommandSource;
 
-            if (e.CommandArgument == "AllNew")
+            if ((string)e.CommandArgument == "AllNew")
             {
                 Table tbl = (Table)gridAsset.Controls[0];
                 //var tbl2 = gridAsset.Controls[1];
