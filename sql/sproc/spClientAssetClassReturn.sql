@@ -13,15 +13,9 @@ BEGIN
 	-- interfering with SELECT statements.
 	SET NOCOUNT ON;
 
--- get pivoted client asset weightings
 WITH c AS
 (
-SELECT CASH, COMM, COPR, GLEQ, HEDG, LOSH, PREQ, UKCB, UKEQ, UKGB, UKHY, WOBO
-
-FROM (SELECT AssetClassId, Weighting
-FROM  tblClientAssetClass WHERE ClientGUID=@ClientGUID) piv
- PIVOT ( SUM(Weighting)
-FOR AssetClassID IN (CASH, COMM, COPR, GLEQ, HEDG, LOSH, PREQ, UKCB, UKEQ, UKGB, UKHY, WOBO)) AS chld
+SELECT * FROM tblClientAssetClass WHERE ClientGUID = @ClientGUID
 )
 
 SELECT   CAST([Date] AS INT) AS [Date],
