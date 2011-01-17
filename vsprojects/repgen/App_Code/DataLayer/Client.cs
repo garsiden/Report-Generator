@@ -56,7 +56,7 @@ namespace RSMTenon.Data
         public static Guid InsertClient(Client client)
         {
             var ctx = new RepGenDataContext();
-            client.UserID = ReportGenerator.ReportGenerator.GetUserId();
+            //client.UserID = ReportGenerator.ReportGenerator.GetUserId();
             ctx.Clients.InsertOnSubmit(client);
             ctx.SubmitChanges();
 
