@@ -26,47 +26,12 @@ namespace RSMTenon.Data.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=.\\SQLEXPRESS;AttachDbFilename=\"C:\\Documents and Settings\\garsiden\\My " +
-            "Documents\\Projects\\RepGen\\source\\repgen.mdf\";Integrated Security=True;Connect Ti" +
-            "meout=30;User Instance=True")]
-        public string repgenConnectionString {
-            get {
-                return ((string)(this["repgenConnectionString"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=.\\SQLEXPRESS;AttachDbFilename=\"C:\\Program Files\\Microsoft SQL Server\\" +
-            "MSSQL.1\\MSSQL\\Data\\RepGen.mdf\";Integrated Security=True;Connect Timeout=30;User " +
-            "Instance=True")]
-        public string RepGenConnectionString1 {
-            get {
-                return ((string)(this["RepGenConnectionString1"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=.\\SQLEXPRESS;AttachDbFilename=|DataDirectory|\\RepGen.mdf;Integrated S" +
-            "ecurity=True;Connect Timeout=30;User Instance=True")]
-        public string RepGenConnectionString2 {
-            get {
-                return ((string)(this["RepGenConnectionString2"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
         [global::System.Configuration.DefaultSettingValueAttribute("Data Source=.\\SQLEXPRESS;AttachDbFilename=\"C:\\Program Files\\Microsoft SQL Server\\" +
             "MSSQL.1\\MSSQL\\Backup\\RepGen.mdf\";Integrated Security=True;Connect Timeout=30;Use" +
             "r Instance=True")]
-        public string RepGenConnectionString3 {
+        public string RepGenConnectionString {
             get {
-                return ((string)(this["RepGenConnectionString3"]));
+                return ((string)(this["RepGenConnectionString"]));
             }
         }
     }
