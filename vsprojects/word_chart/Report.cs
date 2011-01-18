@@ -171,12 +171,12 @@ namespace RSMTenon.ReportGenerator
                 title = String.Format(rpt.Element("title").Element("cash").Value, StrategyName);
             }
 
-            IQueryable<AssetWeighting> data;
+            List<AssetWeighting> data;
 
             if (Client.ExistingAssets) {
-                data = ClientAssetClass.GetClientAssetClass(Client.GUID);
+                data = ClientAssetClass.GetClientAssetWeighting(Client.GUID);
             } else {
-                data = Model.GetModelAllocation(Client.StrategyID);
+                data = Model.GetModelAllocation(Client.StrategyID).ToList();
             }
 
             AllocationPieChart pie = new AllocationPieChart();
@@ -518,7 +518,7 @@ namespace RSMTenon.ReportGenerator
 
         private List<ReturnData> getTenYearModelReturn(string strategyId, DateTime tenYearStart)
         {
-            var data = DataContext.ModelReturn(strategyId, tenYearStart);
+            var data = DataContext.ModelReturn(tenYearStart, strategyId);
 
             ReturnCalculation calc = new ReturnCalculation();
             var tyr = from d in data
