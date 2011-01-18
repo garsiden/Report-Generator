@@ -11,7 +11,7 @@ namespace RSMTenon.ReportGenerator
 {
     class TextContent
     {
-         private string destinationXml = @"../../App_Data/content_temp.xml";
+        private string destinationXml = @"../../App_Data/content_temp.xml";
 
         public enum TimeHorizon
         {
@@ -37,7 +37,7 @@ namespace RSMTenon.ReportGenerator
             twenty
         }
 
-        public void GenerateTextContent(MainDocumentPart mainPart,  Client client, string contentFile)
+        public void GenerateTextContent(MainDocumentPart mainPart, Client client, string contentFile)
         {
             GetContent(client, contentFile);
             string customXml = File.ReadAllText(destinationXml);
@@ -56,9 +56,9 @@ namespace RSMTenon.ReportGenerator
             var ctx = new RepGenDataContext();
             var contents = ctx.Contents;
             var match = from c in contents
-                          where (c.StrategyID.Equals(client.StrategyID) || c.StrategyID.Equals(null)) &&
-                            (c.Category.Equals(assets) || c.Category.Equals(null))
-                          select c;
+                        where (c.StrategyID.Equals(client.StrategyID) || c.StrategyID.Equals(null)) &&
+                          (c.Category.Equals(assets) || c.Category.Equals(null))
+                        select c;
             var content = match.ToList();
 
             // create temp content file
@@ -172,7 +172,8 @@ namespace RSMTenon.ReportGenerator
                 allocationCaption = content.Single(c => c.ContentID == "charts.allocation.caption").Text;
                 weightingText = content.Single(c => c.ContentID == "charts.allocation.weighting-text").Text;
                 stressCrashHeader = content.Single(c => c.ContentID == "charts.stress-crash.header").Text;
-                stressCrashText = String.Format(content.Single(c => c.ContentID == "charts.stress-crash.text").Text, strategy.Name);
+                stressCrashText = String.Format(
+content.Single(c => c.ContentID == "charts.stress-crash.text" && c.StrategyID == strategy.ID).Text, strategy.Name);
                 // TODO: add to text database
                 stressRiseText = content.Single(c => c.ContentID == "charts.stress-rise.text").Text;
             } else {
@@ -230,14 +231,14 @@ namespace RSMTenon.ReportGenerator
             //using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(fileName, true)) {
             //    MainDocumentPart mainPart = wordDoc.MainDocumentPart;
 
-                mainPart.DeleteParts<CustomXmlPart>(mainPart.CustomXmlParts);
+            mainPart.DeleteParts<CustomXmlPart>(mainPart.CustomXmlParts);
 
-                //Add a new customXML part and then add content
-                CustomXmlPart customXmlPart = mainPart.AddCustomXmlPart(CustomXmlPartType.CustomXml);
+            //Add a new customXML part and then add content
+            CustomXmlPart customXmlPart = mainPart.AddCustomXmlPart(CustomXmlPartType.CustomXml);
 
-                //copy the XML into the new part...
-                using (StreamWriter ts = new StreamWriter(customXmlPart.GetStream())) {
-                    ts.Write(customXML);
+            //copy the XML into the new part...
+            using (StreamWriter ts = new StreamWriter(customXmlPart.GetStream())) {
+                ts.Write(customXML);
             }
 
         }
