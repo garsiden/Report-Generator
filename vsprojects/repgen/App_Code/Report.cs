@@ -535,7 +535,7 @@ namespace RSMTenon.ReportGenerator
 
         private List<ReturnData> getTenYearModelReturn(string strategyId, DateTime tenYearStart)
         {
-            var data = DataContext.ModelReturn(strategyId, tenYearStart);
+            var data = DataContext.ModelReturn(tenYearStart, strategyId);
 
             ReturnCalculation calc = new ReturnCalculation();
             var tyr = from d in data
