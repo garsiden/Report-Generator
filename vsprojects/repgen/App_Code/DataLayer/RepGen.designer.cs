@@ -75,7 +75,7 @@ namespace RSMTenon.Data
     #endregion
 		
 		public RepGenDataContext() : 
-				base(global::System.Configuration.ConfigurationManager.ConnectionStrings["RepGenConnectionString1"].ConnectionString, mappingSource)
+				base(global::System.Configuration.ConfigurationManager.ConnectionStrings["RSMTenon.Data.Properties.Settings.RepGenConnectionString"].ConnectionString, mappingSource)
 		{
 			OnCreated();
 		}
@@ -224,6 +224,14 @@ namespace RSMTenon.Data
 			}
 		}
 		
+		public System.Data.Linq.Table<AssetWeighting> AssetWeightings
+		{
+			get
+			{
+				return this.GetTable<AssetWeighting>();
+			}
+		}
+		
 		[Function(Name="dbo.spRollingReturn")]
 		public ISingleResult<ReturnData> RollingReturn([Parameter(DbType="Int")] System.Nullable<int> years, [Parameter(DbType="NChar(4)")] string assetClassID)
 		{
@@ -266,10 +274,17 @@ namespace RSMTenon.Data
 			return ((ISingleResult<ReturnData>)(result.ReturnValue));
 		}
 		
-		[Function(Name="dbo.spModelReturn")]
-		public ISingleResult<ReturnData> ModelReturn([Parameter(DbType="NChar(2)")] string strategyId, [Parameter(DbType="DateTime")] System.Nullable<System.DateTime> startDate)
+		[Function(Name="dbo.spClientAssetWeighting")]
+		public ISingleResult<AssetWeighting> ClientAssetWeighting([Parameter(Name="ClientGUID", DbType="UniqueIdentifier")] System.Nullable<System.Guid> clientGUID)
 		{
-			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), strategyId, startDate);
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), clientGUID);
+			return ((ISingleResult<AssetWeighting>)(result.ReturnValue));
+		}
+		
+		[Function(Name="dbo.spModelReturn")]
+		public ISingleResult<ReturnData> ModelReturn([Parameter(DbType="DateTime")] System.Nullable<System.DateTime> startDate, [Parameter(DbType="NChar(2)")] string strategyId)
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), startDate, strategyId);
 			return ((ISingleResult<ReturnData>)(result.ReturnValue));
 		}
 	}
@@ -3994,6 +4009,51 @@ namespace RSMTenon.Data
 			if ((this.PropertyChanged != null))
 			{
 				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+	}
+	
+	[Table(Name="")]
+	public partial class AssetWeighting
+	{
+		
+		private string _AssetClass;
+		
+		private System.Nullable<double> _Weighting;
+		
+		public AssetWeighting()
+		{
+		}
+		
+		[Column(Storage="_AssetClass", DbType="NVarChar(50) NOT NULL", CanBeNull=false)]
+		public string AssetClass
+		{
+			get
+			{
+				return this._AssetClass;
+			}
+			set
+			{
+				if ((this._AssetClass != value))
+				{
+					this._AssetClass = value;
+				}
+			}
+		}
+		
+		[Column(Storage="_Weighting", DbType="Float")]
+		public System.Nullable<double> Weighting
+		{
+			get
+			{
+				return this._Weighting;
+			}
+			set
+			{
+				if ((this._Weighting != value))
+				{
+					this._Weighting = value;
+				}
 			}
 		}
 	}

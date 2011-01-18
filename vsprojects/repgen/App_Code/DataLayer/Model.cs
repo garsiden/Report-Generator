@@ -30,7 +30,7 @@ namespace RSMTenon.Data
                             select new AssetWeighting
                             {
                                 AssetClass = g.Key,
-                                Weighting = g.Sum(model => model.Weighting)
+                                Weighting = (float)g.Sum(model => model.Weighting)
                             };
 
             return alloction;

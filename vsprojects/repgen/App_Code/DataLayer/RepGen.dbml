@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Database Name="RepGen" EntityNamespace="RSMTenon.Data" ContextNamespace="RSMTenon.Data" Class="RepGenDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
-  <Connection Mode="WebSettings" ConnectionString="Data Source=ARTHUR;Initial Catalog=RepGen;Integrated Security=True" SettingsObjectName="System.Configuration.ConfigurationManager.ConnectionStrings" SettingsPropertyName="RepGenConnectionString1" Provider="System.Data.SqlClient" />
+  <Connection Mode="WebSettings" ConnectionString="Data Source=ARTHUR;Initial Catalog=RepGen;Persist Security Info=True;User ID=RepGenASP" SettingsObjectName="System.Configuration.ConfigurationManager.ConnectionStrings" SettingsPropertyName="RSMTenon.Data.Properties.Settings.RepGenConnectionString" Provider="System.Data.SqlClient" />
   <Table Name="dbo.tblAssetClass" Member="AssetClasses">
     <Type Name="AssetClass">
       <Column Name="ID" Type="System.String" DbType="NChar(4) NOT NULL" IsPrimaryKey="true" CanBeNull="false" UpdateCheck="Never" />
@@ -184,6 +184,12 @@
       <Association Name="Client_ClientAssetClass" Member="Client" ThisKey="ClientGUID" OtherKey="GUID" Type="Client" IsForeignKey="true" DeleteRule="CASCADE" DeleteOnNull="true" />
     </Type>
   </Table>
+  <Table Name="" Member="AssetWeightings">
+    <Type Name="AssetWeighting" Id="ID3">
+      <Column Name="AssetClass" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="Weighting" Type="System.Double" DbType="Float" CanBeNull="true" />
+    </Type>
+  </Table>
   <Function Name="dbo.spRollingReturn" Method="RollingReturn">
     <Parameter Name="years" Type="System.Int32" DbType="Int" />
     <Parameter Name="assetClassID" Type="System.String" DbType="NChar(4)" />
@@ -213,9 +219,13 @@
     <Parameter Name="ClientGUID" Parameter="clientGUID" Type="System.Guid" DbType="UniqueIdentifier" />
     <ElementType IdRef="ID1" />
   </Function>
+  <Function Name="dbo.spClientAssetWeighting" Method="ClientAssetWeighting">
+    <Parameter Name="ClientGUID" Parameter="clientGUID" Type="System.Guid" DbType="UniqueIdentifier" />
+    <ElementType IdRef="ID3" />
+  </Function>
   <Function Name="dbo.spModelReturn" Method="ModelReturn">
-    <Parameter Name="strategyId" Type="System.String" DbType="NChar(2)" />
     <Parameter Name="startDate" Type="System.DateTime" DbType="DateTime" />
+    <Parameter Name="strategyId" Type="System.String" DbType="NChar(2)" />
     <ElementType IdRef="ID1" />
   </Function>
 </Database>

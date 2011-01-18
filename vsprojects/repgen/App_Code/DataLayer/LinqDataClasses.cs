@@ -36,7 +36,7 @@ namespace RSMTenon.Data
         public string Name { get; set; }
     }
 
-    public partial class RepGenDataContext : System.Data.Linq.DataContext
+    public partial class RepGenDataContext
     {
         [Function(Name = "dbo.spClientAssetReturn")]
         public ISingleResult<ReturnData> ClientAssetReturn([Parameter(Name = "ClientGUID", DbType = "UniqueIdentifier")] System.Nullable<System.Guid> clientGUID)
@@ -44,11 +44,20 @@ namespace RSMTenon.Data
             IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), clientGUID);
             return ((ISingleResult<ReturnData>)(result.ReturnValue));
         }
+        //[Function(Name = "dbo.spModelReturn")]
+        //public ISingleResult<ReturnData> ModelReturn([Parameter(DbType = "Char(2)")] string strategyId)
+        //{
+        //    IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), strategyId);
+        //    return ((ISingleResult<ReturnData>)(result.ReturnValue));
+        //}
+
         [Function(Name = "dbo.spModelReturn")]
-        public ISingleResult<ReturnData> ModelReturn([Parameter(DbType = "Char(2)")] string strategyId)
+        public ISingleResult<ReturnData> ModelReturn([Parameter(Name = "strategyId", DbType = "NChar(2)")] string strategyId)
         {
-            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), strategyId);
-            return ((ISingleResult<ReturnData>)(result.ReturnValue));
+            //IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())),  strategyId);
+            //return ((ISingleResult<ReturnData>)(result.ReturnValue));
+            return ModelReturn(new DateTime(1997, 12, 31), strategyId);
         }
+
     }
 }
