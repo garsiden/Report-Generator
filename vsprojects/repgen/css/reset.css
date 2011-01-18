@@ -16,6 +16,7 @@ body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, code, form, fiel
 table {
   border-collapse: collapse;
   border-spacing: 0;
+    margin-right: 0px;
 }
 
 fieldset, img {
@@ -64,6 +65,13 @@ input, textarea, select {
 }
 
 input, textarea, select * {
+  font-size: 100%;
+}
+
+legend {
+  color: black;
+}
+rea, select * {
   font-size: 100%;
 }
 
