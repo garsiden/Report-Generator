@@ -219,13 +219,13 @@
     <Parameter Name="ClientGUID" Parameter="clientGUID" Type="System.Guid" DbType="UniqueIdentifier" />
     <ElementType IdRef="ID1" />
   </Function>
-  <Function Name="dbo.spModelReturn" Method="ModelReturn">
-    <Parameter Name="strategyId" Type="System.String" DbType="NChar(2)" />
-    <Parameter Name="startDate" Type="System.DateTime" DbType="DateTime" />
-    <ElementType IdRef="ID1" />
-  </Function>
   <Function Name="dbo.spClientAssetWeighting" Method="ClientAssetWeighting">
     <Parameter Name="ClientGUID" Parameter="clientGUID" Type="System.Guid" DbType="UniqueIdentifier" />
     <ElementType IdRef="ID3" />
+  </Function>
+  <Function Name="dbo.spModelReturn" Method="ModelReturn">
+    <Parameter Name="startDate" Type="System.DateTime" DbType="DateTime" />
+    <Parameter Name="strategyId" Type="System.String" DbType="NChar(2)" />
+    <ElementType IdRef="ID1" />
   </Function>
 </Database>

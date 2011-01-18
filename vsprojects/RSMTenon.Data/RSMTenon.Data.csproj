@@ -82,7 +82,6 @@
     <Compile Include="LinqDataClasses.cs" />
     <Compile Include="Model.cs" />
     <Compile Include="ModelBreakdown.cs" />
-    <Compile Include="ModelReturn.cs" />
     <Compile Include="PredicateBuilder.cs" />
     <Compile Include="RepGen.designer.cs">
       <AutoGen>True</AutoGen>
