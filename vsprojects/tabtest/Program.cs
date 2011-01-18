@@ -13,7 +13,7 @@ namespace RSMTenon.ReportGenerator
 
     class Program
     {
-        private static string docName = @"C:\Documents and Settings\garsiden\My Documents\Projects\RepGen\test\TableTest.docx";
+        private static string docName = @"C:\Documents and Settings\garsiden\My Documents\Projects\RepGen\test\table\TableTest.docx";
 
         static void Main(string[] args)
         {

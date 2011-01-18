@@ -141,7 +141,7 @@ namespace RSMTenon.ReportGenerator
                 TableCell tableCell1 = new TableCell();
                 TableCellProperties tableCellProperties1 = new TableCellProperties();
 
-                TableCellBorders tableCellBorders1 = generateTableCellBordersBox();
+                TableCellBorders tableCellBorders1 = generateTableCellBordersPlain();
                 Shading shading1 = new Shading() { Val = ShadingPatternValues.Clear, Color = "auto", Fill = "auto" };
                 NoWrap noWrap1 = new NoWrap();
                 TableCellVerticalAlignment tableCellVerticalAlignment1 = new TableCellVerticalAlignment() { Val = TableVerticalAlignmentValues.Center };
