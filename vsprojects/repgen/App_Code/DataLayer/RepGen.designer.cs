@@ -42,9 +42,6 @@ namespace RSMTenon.Data
     partial void InsertModel(Model instance);
     partial void UpdateModel(Model instance);
     partial void DeleteModel(Model instance);
-    partial void InsertClientWeightingDifference(ClientWeightingDifference instance);
-    partial void UpdateClientWeightingDifference(ClientWeightingDifference instance);
-    partial void DeleteClientWeightingDifference(ClientWeightingDifference instance);
     partial void InsertBenchmark(Benchmark instance);
     partial void UpdateBenchmark(Benchmark instance);
     partial void DeleteBenchmark(Benchmark instance);
@@ -239,38 +236,10 @@ namespace RSMTenon.Data
 			return ((ISingleResult<ReturnData>)(result.ReturnValue));
 		}
 		
-		[Function(Name="dbo.spAssetClassReturn")]
-		public ISingleResult<ReturnData> AssetClassReturn([Parameter(DbType="DateTime")] System.Nullable<System.DateTime> startDate, [Parameter(DbType="NChar(4)")] string assetClassID)
-		{
-			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), startDate, assetClassID);
-			return ((ISingleResult<ReturnData>)(result.ReturnValue));
-		}
-		
 		[Function(Name="dbo.spHistoricPrice")]
 		public ISingleResult<ReturnData> HistoricPrice([Parameter(DbType="NChar(4)")] string assetClassID)
 		{
 			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), assetClassID);
-			return ((ISingleResult<ReturnData>)(result.ReturnValue));
-		}
-		
-		[Function(Name="dbo.spClientWeightingComparison")]
-		public ISingleResult<ClientWeightingDifference> ClientWeightingComparison([Parameter(DbType="UniqueIdentifier")] System.Nullable<System.Guid> clientGUID, [Parameter(DbType="NChar(2)")] string strategyID)
-		{
-			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), clientGUID, strategyID);
-			return ((ISingleResult<ClientWeightingDifference>)(result.ReturnValue));
-		}
-		
-		[Function(Name="dbo.spBenchmarkPrice")]
-		public ISingleResult<ReturnData> BenchmarkPrice([Parameter(DbType="DateTime")] System.Nullable<System.DateTime> startDate, [Parameter(DbType="NChar(4)")] string benchmarkID)
-		{
-			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), startDate, benchmarkID);
-			return ((ISingleResult<ReturnData>)(result.ReturnValue));
-		}
-		
-		[Function(Name="dbo.spClientAssetReturn")]
-		public ISingleResult<ReturnData> ClientAssetReturn([Parameter(DbType="DateTime")] System.Nullable<System.DateTime> startDate, [Parameter(Name="ClientGUID", DbType="UniqueIdentifier")] System.Nullable<System.Guid> clientGUID)
-		{
-			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), startDate, clientGUID);
 			return ((ISingleResult<ReturnData>)(result.ReturnValue));
 		}
 		
@@ -282,9 +251,37 @@ namespace RSMTenon.Data
 		}
 		
 		[Function(Name="dbo.spModelReturn")]
-		public ISingleResult<ReturnData> ModelReturn([Parameter(DbType="DateTime")] System.Nullable<System.DateTime> startDate, [Parameter(DbType="NChar(2)")] string strategyId)
+		public ISingleResult<ReturnData> ModelReturn([Parameter(Name="StrategyID", DbType="NChar(2)")] string strategyID, [Parameter(Name="ModelType", DbType="NChar(3)")] string modelType)
 		{
-			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), startDate, strategyId);
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), strategyID, modelType);
+			return ((ISingleResult<ReturnData>)(result.ReturnValue));
+		}
+		
+		[Function(Name="dbo.spClientWeightingComparison")]
+		public ISingleResult<ClientWeightingDifference> ClientWeightingComparison([Parameter(Name="ClientGUID", DbType="UniqueIdentifier")] System.Nullable<System.Guid> clientGUID, [Parameter(Name="StrategyID", DbType="NChar(2)")] string strategyID)
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), clientGUID, strategyID);
+			return ((ISingleResult<ClientWeightingDifference>)(result.ReturnValue));
+		}
+		
+		[Function(Name="dbo.spAssetClassReturn")]
+		public ISingleResult<ReturnData> AssetClassReturn([Parameter(Name="AssetClassID", DbType="NChar(4)")] string assetClassID)
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), assetClassID);
+			return ((ISingleResult<ReturnData>)(result.ReturnValue));
+		}
+		
+		[Function(Name="dbo.spBenchmarkPrice")]
+		public ISingleResult<ReturnData> BenchmarkPrice([Parameter(Name="BenchmarkID", DbType="NChar(4)")] string benchmarkID)
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), benchmarkID);
+			return ((ISingleResult<ReturnData>)(result.ReturnValue));
+		}
+		
+		[Function(Name="dbo.spClientAssetReturn")]
+		public ISingleResult<ReturnData> ClientAssetReturn([Parameter(Name="ClientGUID", DbType="UniqueIdentifier")] System.Nullable<System.Guid> clientGUID)
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), clientGUID);
 			return ((ISingleResult<ReturnData>)(result.ReturnValue));
 		}
 	}
@@ -886,6 +883,10 @@ namespace RSMTenon.Data
 		
 		private System.Data.Linq.Binary _SSMA_TimeStamp;
 		
+		private decimal _WeightingHNW;
+		
+		private decimal _WeightingAffluent;
+		
 		private EntityRef<Strategy> _Strategy;
 		
 		private EntityRef<AssetGroupClass> _AssetGroupClass;
@@ -904,6 +905,10 @@ namespace RSMTenon.Data
     partial void OnWeightingChanged();
     partial void OnSSMA_TimeStampChanging(System.Data.Linq.Binary value);
     partial void OnSSMA_TimeStampChanged();
+    partial void OnWeightingHNWChanging(decimal value);
+    partial void OnWeightingHNWChanged();
+    partial void OnWeightingAffluentChanging(decimal value);
+    partial void OnWeightingAffluentChanged();
     #endregion
 		
 		public ModelBreakdown()
@@ -1021,6 +1026,46 @@ namespace RSMTenon.Data
 			}
 		}
 		
+		[Column(Storage="_WeightingHNW", DbType="Decimal(5,4)", UpdateCheck=UpdateCheck.Never)]
+		public decimal WeightingHNW
+		{
+			get
+			{
+				return this._WeightingHNW;
+			}
+			set
+			{
+				if ((this._WeightingHNW != value))
+				{
+					this.OnWeightingHNWChanging(value);
+					this.SendPropertyChanging();
+					this._WeightingHNW = value;
+					this.SendPropertyChanged("WeightingHNW");
+					this.OnWeightingHNWChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_WeightingAffluent", DbType="Decimal(5,4) NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		public decimal WeightingAffluent
+		{
+			get
+			{
+				return this._WeightingAffluent;
+			}
+			set
+			{
+				if ((this._WeightingAffluent != value))
+				{
+					this.OnWeightingAffluentChanging(value);
+					this.SendPropertyChanging();
+					this._WeightingAffluent = value;
+					this.SendPropertyChanged("WeightingAffluent");
+					this.OnWeightingAffluentChanged();
+				}
+			}
+		}
+		
 		[Association(Name="Strategy_ModelBreakdown", Storage="_Strategy", ThisKey="StrategyID", OtherKey="ID", IsForeignKey=true)]
 		public Strategy Strategy
 		{
@@ -1132,6 +1177,10 @@ namespace RSMTenon.Data
 		
 		private System.Data.Linq.Binary _SSMA_TimeStamp;
 		
+		private decimal _WeightingHNW;
+		
+		private decimal _WeightingAffluent;
+		
 		private EntityRef<AssetClass> _AssetClass;
 		
     #region Extensibility Method Definitions
@@ -1154,6 +1203,10 @@ namespace RSMTenon.Data
     partial void OnPurchaseChargeChanged();
     partial void OnSSMA_TimeStampChanging(System.Data.Linq.Binary value);
     partial void OnSSMA_TimeStampChanged();
+    partial void OnWeightingHNWChanging(decimal value);
+    partial void OnWeightingHNWChanged();
+    partial void OnWeightingAffluentChanging(decimal value);
+    partial void OnWeightingAffluentChanged();
     #endregion
 		
 		public Model()
@@ -1326,6 +1379,46 @@ namespace RSMTenon.Data
 			}
 		}
 		
+		[Column(Storage="_WeightingHNW", DbType="Decimal(5,4)", UpdateCheck=UpdateCheck.Never)]
+		public decimal WeightingHNW
+		{
+			get
+			{
+				return this._WeightingHNW;
+			}
+			set
+			{
+				if ((this._WeightingHNW != value))
+				{
+					this.OnWeightingHNWChanging(value);
+					this.SendPropertyChanging();
+					this._WeightingHNW = value;
+					this.SendPropertyChanged("WeightingHNW");
+					this.OnWeightingHNWChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_WeightingAffluent", DbType="Decimal(5,4)", UpdateCheck=UpdateCheck.Never)]
+		public decimal WeightingAffluent
+		{
+			get
+			{
+				return this._WeightingAffluent;
+			}
+			set
+			{
+				if ((this._WeightingAffluent != value))
+				{
+					this.OnWeightingAffluentChanging(value);
+					this.SendPropertyChanging();
+					this._WeightingAffluent = value;
+					this.SendPropertyChanged("WeightingAffluent");
+					this.OnWeightingAffluentChanged();
+				}
+			}
+		}
+		
 		[Association(Name="AssetClass_Model", Storage="_AssetClass", ThisKey="AssetClassID", OtherKey="ID", IsForeignKey=true)]
 		public AssetClass AssetClass
 		{
@@ -1427,10 +1520,8 @@ namespace RSMTenon.Data
 	}
 	
 	[Table(Name="")]
-	public partial class ClientWeightingDifference : INotifyPropertyChanging, INotifyPropertyChanged
+	public partial class ClientWeightingDifference
 	{
-		
-		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
 		
 		private string _AssetClassID;
 		
@@ -1438,21 +1529,10 @@ namespace RSMTenon.Data
 		
 		private double _WeightingDifference;
 		
-    #region Extensibility Method Definitions
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void OnAssetClassIDChanging(string value);
-    partial void OnAssetClassIDChanged();
-    partial void OnAssetClassNameChanging(string value);
-    partial void OnAssetClassNameChanged();
-    partial void OnWeightingDifferenceChanging(double value);
-    partial void OnWeightingDifferenceChanged();
-    #endregion
+		private double _WeightingDifferenceAffluent;
 		
 		public ClientWeightingDifference()
 		{
-			OnCreated();
 		}
 		
 		[Column(Storage="_AssetClassID", DbType="NChar(4) NOT NULL", CanBeNull=false)]
@@ -1466,11 +1546,7 @@ namespace RSMTenon.Data
 			{
 				if ((this._AssetClassID != value))
 				{
-					this.OnAssetClassIDChanging(value);
-					this.SendPropertyChanging();
 					this._AssetClassID = value;
-					this.SendPropertyChanged("AssetClassID");
-					this.OnAssetClassIDChanged();
 				}
 			}
 		}
@@ -1486,17 +1562,13 @@ namespace RSMTenon.Data
 			{
 				if ((this._AssetClassName != value))
 				{
-					this.OnAssetClassNameChanging(value);
-					this.SendPropertyChanging();
 					this._AssetClassName = value;
-					this.SendPropertyChanged("AssetClassName");
-					this.OnAssetClassNameChanged();
 				}
 			}
 		}
 		
-		[Column(Storage="_WeightingDifference", DbType="Float NOT NULL", IsPrimaryKey=true)]
-		public double WeightingDifference
+		[Column(Storage="_WeightingDifference", DbType="Float NOT NULL")]
+		public double WeightingDifferenceHNW
 		{
 			get
 			{
@@ -1506,32 +1578,24 @@ namespace RSMTenon.Data
 			{
 				if ((this._WeightingDifference != value))
 				{
-					this.OnWeightingDifferenceChanging(value);
-					this.SendPropertyChanging();
 					this._WeightingDifference = value;
-					this.SendPropertyChanged("WeightingDifference");
-					this.OnWeightingDifferenceChanged();
 				}
 			}
 		}
 		
-		public event PropertyChangingEventHandler PropertyChanging;
-		
-		public event PropertyChangedEventHandler PropertyChanged;
-		
-		protected virtual void SendPropertyChanging()
+		[Column(Storage="_WeightingDifferenceAffluent", DbType="Float NOT NULL", IsDbGenerated=true)]
+		public double WeightingDifferenceAffluent
 		{
-			if ((this.PropertyChanging != null))
+			get
 			{
-				this.PropertyChanging(this, emptyChangingEventArgs);
+				return this._WeightingDifferenceAffluent;
 			}
-		}
-		
-		protected virtual void SendPropertyChanged(String propertyName)
-		{
-			if ((this.PropertyChanged != null))
+			set
 			{
-				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+				if ((this._WeightingDifferenceAffluent != value))
+				{
+					this._WeightingDifferenceAffluent = value;
+				}
 			}
 		}
 	}
