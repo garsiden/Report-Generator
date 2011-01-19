@@ -235,7 +235,7 @@ namespace RSMTenon.ReportGenerator
 
             // Calculation
             // strategy.performance.return
-            double modelReturn = calculateModelReturn(client.Strategy);
+            double modelReturn = calculateModelReturn(client.Strategy, client.StatusName);
             xmlnode = root.SelectSingleNode("/wmr:repgen/wmr:strategy/wmr:performance/wmr:return", nsmgr);
             xmlnode.InnerText = modelReturn.ToString("0.0%");
 
@@ -260,9 +260,9 @@ namespace RSMTenon.ReportGenerator
             }
         }
 
-        private double calculateModelReturn(Strategy strategy)
+        private double calculateModelReturn(Strategy strategy, string status)
         {
-            var prices = strategy.GetStrategyReturn();
+            var prices = strategy.GetStrategyReturn(status);
 
             double endPrice = prices.Last().Value.Value;
             double startPrice = prices.ElementAt(prices.Count - 121).Value.Value;
