@@ -8,10 +8,16 @@ using RSMTenon.Data;
 
 public partial class Pages_Model_index : RepGenPage
 {
-    private decimal classWeighting = 0;
-    private decimal strategyWeighting = 0;
-    private decimal classIncome = 0;
-    private decimal strategyIncome = 0;
+    private decimal classWeightHNW = 0;
+    private decimal strategyWeightHNW = 0;
+    private decimal classIncomeHNW = 0;
+    private decimal strategyIncomeAff = 0;
+
+    private decimal[] sub = { 0, 0, 0 };
+    private decimal[] tot = { 0, 0, 0 };
+    private static int HNW = 0;
+    private static int AFF = 1;
+    private static int INC = 2;
 
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -34,8 +40,9 @@ public partial class Pages_Model_index : RepGenPage
         } else if (e.Row.RowType == DataControlRowType.Footer)
         {
             Table table = (Table)(e.Row.Cells[1].FindControl("tableFooterTotal"));
-            table.Rows[0].Cells[1].Text = strategyWeighting.ToString("0.00%");
-            table.Rows[0].Cells[2].Text = (strategyIncome / 100).ToString("0.00%");
+            table.Rows[0].Cells[1].Text = tot[HNW].ToString("0.00%");
+            table.Rows[0].Cells[2].Text = tot[AFF].ToString("0.00%");
+            table.Rows[0].Cells[3].Text = (tot[INC] / 100).ToString("0.00%");
         }
     }
     protected void listStrategy_SelectedIndexChanged(object sender, EventArgs e)
@@ -55,15 +62,19 @@ public partial class Pages_Model_index : RepGenPage
         if (e.Row.RowType == DataControlRowType.DataRow)
         {
             var item = (Model)e.Row.DataItem;
-            classWeighting += item.Weighting;
-            classIncome += (100 * item.Weighting * item.ExpectedYield);
-        } else if (e.Row.RowType == DataControlRowType.Footer) {
-            e.Row.Cells[0].Text = "Weighting Total/Average Yield";
-            e.Row.Cells[1].Text = classWeighting.ToString("0.00%");
-            e.Row.Cells[2].Text = (classIncome / (100 * classWeighting)).ToString("0.00%");
-            strategyWeighting += classWeighting;
-            strategyIncome += classIncome;
-            classWeighting = classIncome = 0;
+            sub[HNW] += item.WeightingHNW;
+            sub[AFF] += item.WeightingAffluent;
+            sub[INC] += (100 * item.WeightingHNW * item.ExpectedYield);
+        } else if (e.Row.RowType == DataControlRowType.Footer)
+        {
+            e.Row.Cells[0].Text = "Weighting Total/Average HNW Yield";
+            e.Row.Cells[1].Text = sub[HNW].ToString("0.00%");
+            e.Row.Cells[2].Text = sub[AFF].ToString("0.00%");
+            e.Row.Cells[3].Text = (sub[INC] / (100 * sub[HNW])).ToString("0.00%");
+            tot[HNW] += sub[HNW];
+            tot[AFF] += sub[AFF];
+            tot[INC] += sub[INC];
+            sub[HNW] = sub[AFF] = sub[INC] = 0;
         }
     }
 }

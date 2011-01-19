@@ -9,11 +9,14 @@ using RSMTenon.Data;
 
 public partial class Pages_Model_edit : RepGenPage
 {
-    private decimal totalWeight = 0;
-    private decimal totalFixedInterestWeight = 0;
-    private decimal totalLongEquityWeight = 0;
-    private decimal fixedInterestWeight = 0;
-    private decimal longEquityWeight = 0;
+    private decimal[] fiin = { 0, 0 };
+    private decimal[] loeq = { 0, 0 };
+    private decimal[,] total = { { 0, 0 }, { 0, 0 }, { 0, 0 } };
+    private static int HNW = 0;
+    private static int AFF = 1;
+    private static int TOTAL = 0;
+    private static int FIIN = 1;
+    private static int LOEQ = 2;
 
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -24,11 +27,12 @@ public partial class Pages_Model_edit : RepGenPage
                 this.DataBind();
                 string id = this.listStrategy.SelectedValue;
                 gridModel.Caption = String.Format("{0} Model", Strategy.GetStrategyNameFromId(id));
+                gridFixedInterest.Caption = AssetClass.GetAssetClassNameFromId("FIIN");
+                gridLongEquity.Caption = AssetClass.GetAssetClassNameFromId("LOEQ");
             }
-
-
         }
     }
+
     protected void gridModel_RowCommand(object sender, GridViewCommandEventArgs e)
     {
         if (e.CommandName == "Insert")
@@ -47,9 +51,13 @@ public partial class Pages_Model_edit : RepGenPage
             string assetClassId = list.SelectedValue;
             listDictionary.Add("AssetClassID", assetClassId);
 
-            textBox = (TextBox)gridModel.FooterRow.FindControl("textWeightingAdd");
-            decimal weighting = Convert.ToDecimal(textBox.Text);
-            listDictionary.Add("Weighting", weighting);
+            textBox = (TextBox)gridModel.FooterRow.FindControl("textWeightingHNWAdd");
+            decimal weightingHNW = Convert.ToDecimal(textBox.Text);
+            listDictionary.Add("WeightingHNW", weightingHNW);
+
+            textBox = (TextBox)gridModel.FooterRow.FindControl("textWeightingAffluentAdd");
+            decimal weightingAffluent = Convert.ToDecimal(textBox.Text);
+            listDictionary.Add("WeightingAffluent", weightingAffluent);
 
             textBox = (TextBox)gridModel.FooterRow.FindControl("textExpectedYieldAdd");
             decimal yield = Convert.ToDecimal(textBox.Text);
@@ -67,14 +75,22 @@ public partial class Pages_Model_edit : RepGenPage
     {
         if (e.Row.RowType == DataControlRowType.DataRow) {
             var item = (Model)e.Row.DataItem;
-            totalWeight += item.Weighting;
-            totalFixedInterestWeight += item.AssetClassID == "FIIN" ? item.Weighting : 0;
-            totalLongEquityWeight += item.AssetClassID == "LOEQ" ? item.Weighting : 0;
+
+            total[TOTAL, HNW] += item.WeightingHNW;
+            total[TOTAL, AFF] += item.WeightingAffluent;
+            total[FIIN, HNW] += item.AssetClassID == "FIIN" ? item.WeightingHNW : 0;
+            total[FIIN, AFF] += item.AssetClassID == "FIIN" ? item.WeightingAffluent : 0;
+            total[LOEQ, HNW] += item.AssetClassID == "LOEQ" ? item.WeightingHNW : 0;
+            total[LOEQ, AFF] += item.AssetClassID == "LOEQ" ? item.WeightingAffluent : 0;
         } else if (e.Row.RowType == DataControlRowType.Footer)
         {
-            this.labelTotalWeighting.Text = String.Format("Total Weighting: {0:0.00%}", totalWeight);
-            this.labelFixedInterestWeighting.Text = String.Format("Total Fixed Interest Weighting: {0:0.00%}", totalFixedInterestWeight);
-            this.labelLongEquityWeighting.Text = String.Format("Total Long Equity Weighting: {0:0.00%}", totalLongEquityWeight);
+            this.labelTotalHNW.Text = total[TOTAL, HNW].ToString("0.00%");
+            this.labelTotalAFF.Text = total[TOTAL, AFF].ToString("0.00%");
+            this.labelFIIN_HNW.Text = total[FIIN, HNW].ToString("0.00%");
+            this.labelFIIN_AFF.Text = total[FIIN, AFF].ToString("0.00%");
+            this.labelLOEQ_HNW.Text = total[LOEQ, HNW].ToString("0.00%");
+            this.labelLOEQ_AFF.Text = total[LOEQ, AFF].ToString("0.00%");
+
         }
 
     }
@@ -83,10 +99,13 @@ public partial class Pages_Model_edit : RepGenPage
         if (e.Row.RowType == DataControlRowType.DataRow)
         {
             var item = (ModelBreakdown)e.Row.DataItem;
-            fixedInterestWeight += item.Weighting;
+            fiin[HNW] += item.WeightingHNW;
+            fiin[AFF] += item.WeightingAffluent;
         } else if (e.Row.RowType == DataControlRowType.Footer)
         {
-            e.Row.Cells[1].Text = fixedInterestWeight.ToString("0.00%");
+            e.Row.Cells[1].Text = fiin[HNW].ToString("0.00%");
+            e.Row.Cells[2].Text = fiin[AFF].ToString("0.00%");
+
         }
     }
 
@@ -95,10 +114,12 @@ public partial class Pages_Model_edit : RepGenPage
         if (e.Row.RowType == DataControlRowType.DataRow)
         {
             var item = (ModelBreakdown)e.Row.DataItem;
-            longEquityWeight += item.Weighting;
+            loeq[HNW] += item.WeightingHNW;
+            loeq[AFF] += item.WeightingAffluent;
         } else if (e.Row.RowType == DataControlRowType.Footer)
         {
-            e.Row.Cells[1].Text = longEquityWeight.ToString("0.00%");
+            e.Row.Cells[1].Text = loeq[HNW].ToString("0.00%");
+            e.Row.Cells[2].Text = loeq[AFF].ToString("0.00%");
         }
     }
 
