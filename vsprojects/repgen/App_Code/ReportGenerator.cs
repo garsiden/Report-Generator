@@ -16,14 +16,14 @@ namespace RSMTenon.ReportGenerator
 {
     public class ReportGenerator
     {
-        private uint docPrId = 0U;
-
         private static string sourceDir = @"~/App_Data/";
-        private string TempDir { get; set; }
+        private uint docPrId = 100000U;
 
+        private string TempDir { get; set; }
         private string TemplateFile { get; set; }
         private string ContentXmlFile { get; set; }
         private string TempContentXmlFile { get; set; }
+        private string ReportSpecFile { get; set; }
 
         public ReportGenerator()
         {
@@ -40,10 +40,13 @@ namespace RSMTenon.ReportGenerator
                 TempDir = Environment.GetEnvironmentVariable("temp");
 
             TempContentXmlFile = tempDir + "\\content_temp.xml";
+
+            ReportSpecFile = HttpContext.Current.Server.MapPath(sourceDir + "report-spec.xml");
         }
 
         public string CreateReport(Report report)
         {
+            report.SpecFile = ReportSpecFile;
             string tempDocName = null;
             WordprocessingDocument myWordDoc = null;
             MainDocumentPart mainPart = null;
@@ -89,14 +92,13 @@ namespace RSMTenon.ReportGenerator
 
         private void AddChartsToDoc(MainDocumentPart mainPart, Report report)
         {
-
             string controlName = null;
             ChartItem chartItem = null;
-            // Drawdown
-            chartItem = report.Drawdown();
+
+            // Allocation Pie Chart
+            chartItem = report.Allocation();
             controlName = chartItem.CustomControlName;
             AddChartToDoc(mainPart, chartItem, controlName);
-
 
             // Comparison Chart
             if (report.Client.ExistingAssets)
@@ -106,6 +108,16 @@ namespace RSMTenon.ReportGenerator
                 AddChartToDoc(mainPart, chartItem, controlName);
             }
 
+            // Drawdown
+            chartItem = report.Drawdown();
+            controlName = chartItem.CustomControlName;
+            AddChartToDoc(mainPart, chartItem, controlName);
+
+            // Ten Year Return Chart
+            chartItem = report.TenYearReturn();
+            controlName = chartItem.CustomControlName;
+            AddChartToDoc(mainPart, chartItem, controlName);
+
             // Stress Test Market Rise Bar Chart
             chartItem = report.StressTestMarketRise();
             controlName = chartItem.CustomControlName;
@@ -113,11 +125,6 @@ namespace RSMTenon.ReportGenerator
 
             // Stress Test Market Crash Bar Chart
             chartItem = report.StressTestMarketCrash();
-            controlName = chartItem.CustomControlName;
-            AddChartToDoc(mainPart, chartItem, controlName);
-
-            // Allocation Pie Chart
-            chartItem = report.Allocation();
             controlName = chartItem.CustomControlName;
             AddChartToDoc(mainPart, chartItem, controlName);
 
@@ -135,11 +142,6 @@ namespace RSMTenon.ReportGenerator
             chartItem = report.RollingReturnChart(5);
             controlName = chartItem.CustomControlName;
             AddChartToDoc(mainPart, chartItem, controlName);
-
-            // Ten Year Return Chart
-            chartItem = report.TenYearReturn();
-            controlName = chartItem.CustomControlName;
-            AddChartToDoc(mainPart, chartItem, controlName);
         }
 
         private void AddChartToDoc(MainDocumentPart mainPart, ChartItem chartItem, string controlName)
@@ -150,8 +152,7 @@ namespace RSMTenon.ReportGenerator
             // generate new ChartPart and ChartSpace
             ChartPart chartPart = mainPart.AddNewPart<ChartPart>();
             string relId = mainPart.GetIdOfPart(chartPart);
-            C.ChartSpace chartSpace = GraphSpace.GenerateChartSpace(chartPart);
-            chartSpace.Append(chartItem.Chart);
+            C.ChartSpace chartSpace = GraphSpace.GenerateChartSpace(chartItem.Chart);
 
             // set ChartPart ChartSpace
             chartPart.ChartSpace = chartSpace;
