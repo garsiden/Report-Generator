@@ -20,17 +20,18 @@ namespace RSMTenon.Data
             }
         }
 
-        public static IQueryable<AssetWeighting> GetModelAllocation(string strategyId)
+        public static IQueryable<AssetWeighting> GetModelAllocation(string strategyId, bool hnw)
         {
             var ctx = new RepGenDataContext();
 
             var alloction = from model in ctx.Models
                             where model.StrategyID.Equals(strategyId)
                             group model by model.AssetClass.Name into g
+                            let weight = hnw ? g.Sum(m => m.WeightingHNW) : g.Sum(m => m.WeightingAffluent)
                             select new AssetWeighting
                             {
                                 AssetClass = g.Key,
-                                Weighting = (float)g.Sum(model => model.Weighting)
+                                Weighting = (double?)weight
                             };
 
             return alloction;
