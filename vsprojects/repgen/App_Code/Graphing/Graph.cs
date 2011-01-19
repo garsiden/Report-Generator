@@ -31,12 +31,12 @@ namespace RSMTenon.Graphing
         }
 
         // c:title (Title)
-        protected Title GenerateTitle(string text)
+        protected virtual Title GenerateTitle(string text)
         {
             return GenerateTitle(text, TITLE_FONT_SIZE);
         }
 
-        protected Title GenerateTitle(string text, Int32Value fontSize)
+        protected virtual Title GenerateTitle(string text, Int32Value fontSize)
         {
             Title title1 = new Title();
 
@@ -136,6 +136,8 @@ namespace RSMTenon.Graphing
         protected virtual Values GenerateValues(string formatCode, double[] data)
         {
             Values values1 = new Values();
+            Formula formula1 = new Formula();
+            formula1.Text = "Category Axis Data Values";
 
             uint numPoints = (uint)data.Length;
 
@@ -148,6 +150,7 @@ namespace RSMTenon.Graphing
                 numberingCache2.Append(numericPoint);
             }
 
+            numberReference2.Append(formula1);
             numberReference2.Append(numberingCache2);
             values1.Append(numberReference2);
 
@@ -157,6 +160,8 @@ namespace RSMTenon.Graphing
         protected virtual Values GenerateValues(string formatCode, List<ReturnData>data)
         {
             Values values1 = new Values();
+            Formula formula1 = new Formula();
+            formula1.Text = "Category Axis Data Values";
 
             uint numPoints = (uint)data.Count();
 
@@ -170,6 +175,7 @@ namespace RSMTenon.Graphing
                 numberingCache2.Append(numericPoint);
             }
 
+            numberReference2.Append(formula1);
             numberReference2.Append(numberingCache2);
             values1.Append(numberReference2);
 
@@ -194,6 +200,8 @@ namespace RSMTenon.Graphing
         {
             // c:tx (SeriesText)
             SeriesText seriesText1 = new SeriesText();
+            Formula formula1 = new Formula();
+            formula1.Text = "Series Text";
 
             StringReference stringReference1 = new StringReference();
 
@@ -209,6 +217,7 @@ namespace RSMTenon.Graphing
             stringCache1.Append(pointCount1);
             stringCache1.Append(stringPoint1);
 
+            stringReference1.Append(formula1);
             stringReference1.Append(stringCache1);
 
             seriesText1.Append(stringReference1);
@@ -248,6 +257,9 @@ namespace RSMTenon.Graphing
 
             uint numPoints = (uint)data.Count();
             NumberReference numberReference1 = new NumberReference();
+            Formula formula1 = new Formula();
+            formula1.Text = "Category Axis Data";
+
             NumberingCache numberingCache1 = GenerateNumberingCache(formatCode, numPoints);
 
             uint i = 0U;
@@ -257,6 +269,7 @@ namespace RSMTenon.Graphing
                 numberingCache1.Append(numericPoint);
             }
 
+            numberReference1.Append(formula1);
             numberReference1.Append(numberingCache1);
             categoryAxisData1.Append(numberReference1);
 
@@ -269,6 +282,8 @@ namespace RSMTenon.Graphing
 
             uint numPoints = (uint)data.Length;
             StringReference stringReference2 = new StringReference();
+            Formula formula1 = new Formula();
+            formula1.Text = "Category Axis Data";
 
             StringCache stringCache2 = new StringCache();
             PointCount pointCount2 = new PointCount() { Val = (UInt32Value)numPoints };
@@ -279,6 +294,7 @@ namespace RSMTenon.Graphing
                 stringCache2.Append(stringPoint2);
             }
 
+            stringReference2.Append(formula1);
             stringReference2.Append(stringCache2);
             categoryAxisData1.Append(stringReference2);
 
