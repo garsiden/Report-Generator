@@ -125,13 +125,14 @@ namespace RSMTenon.ReportGenerator
 
                 // investment rows for each asset class
                 foreach (var inv in g.Investments) {
-                    income = amount * inv.Weighting * inv.ExpectedYield;
+                    decimal weighting = Client.HighNetWorth ? inv.WeightingHNW : inv.WeightingAffluent;
+                    income = amount * weighting * inv.ExpectedYield;
                     totalIncome += income;
                     var contentCells = new List<CellProps>();
                     contentCells.Add(new CellProps { span = 2, text = inv.InvestmentName, align = JustificationValues.Left });
                     contentCells.Add(new CellProps() { span = 0 });
-                    contentCells.Add(new CellProps() { text = inv.Weighting.ToString(formats[2]) });
-                    contentCells.Add(new CellProps() { text = (amount * inv.Weighting).ToString(formats[3])});
+                    contentCells.Add(new CellProps() { text = weighting.ToString(formats[2]) });
+                    contentCells.Add(new CellProps() { text = (amount * weighting).ToString(formats[3])});
                     contentCells.Add(new CellProps() { text = inv.ExpectedYield.ToString(formats[4]) });
                     contentCells.Add(new CellProps() { text = income.ToString(formats[5]) });
                     TableRow row = modelTable.GenerateTableRow(contentCells, rowHeight);
@@ -557,7 +558,7 @@ namespace RSMTenon.ReportGenerator
                             where m.StrategyID == strategyId
                             group m by m.AssetClassID
                                 into g
-                                let weight = (status == "HNW" ? g.Sum(m => m.Weighting) : g.Sum(m => m.Weighting))
+                                let weight = (status == "HNW" ? g.Sum(m => m.WeightingHNW) : g.Sum(m => m.WeightingAffluent))
                                 select new ModelTableData {
                                     AssetClassId = g.Key,
                                     AssetClassName = g.First().AssetClass.Name,
