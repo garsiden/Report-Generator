@@ -48,7 +48,7 @@ public partial class Pages_Benchmark_upload : System.Web.UI.Page
                             }
                         }
                     }
-                    RSMTenon.Data.DataUtilities.UploadToDatabase(dt, "tblBenchmarkDataTest");
+                    RSMTenon.Data.DataUtilities.UploadToDatabase(dt, "tblBenchmarkDataTest", null);
                     lblStatus.Text = String.Format("{0:#,##0} row(s) added to database", dt.Rows.Count);
                 }
             } catch (Exception err)
