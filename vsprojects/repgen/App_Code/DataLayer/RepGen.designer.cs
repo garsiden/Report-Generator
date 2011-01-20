@@ -879,8 +879,6 @@ namespace RSMTenon.Data
 		
 		private string _AssetClassID;
 		
-		private decimal _Weighting;
-		
 		private System.Data.Linq.Binary _SSMA_TimeStamp;
 		
 		private decimal _WeightingHNW;
@@ -901,8 +899,6 @@ namespace RSMTenon.Data
     partial void OnStrategyIDChanged();
     partial void OnAssetClassIDChanging(string value);
     partial void OnAssetClassIDChanged();
-    partial void OnWeightingChanging(decimal value);
-    partial void OnWeightingChanged();
     partial void OnSSMA_TimeStampChanging(System.Data.Linq.Binary value);
     partial void OnSSMA_TimeStampChanged();
     partial void OnWeightingHNWChanging(decimal value);
@@ -982,26 +978,6 @@ namespace RSMTenon.Data
 					this._AssetClassID = value;
 					this.SendPropertyChanged("AssetClassID");
 					this.OnAssetClassIDChanged();
-				}
-			}
-		}
-		
-		[Column(Storage="_Weighting", DbType="Decimal(5,4) NOT NULL", UpdateCheck=UpdateCheck.Never)]
-		public decimal Weighting
-		{
-			get
-			{
-				return this._Weighting;
-			}
-			set
-			{
-				if ((this._Weighting != value))
-				{
-					this.OnWeightingChanging(value);
-					this.SendPropertyChanging();
-					this._Weighting = value;
-					this.SendPropertyChanged("Weighting");
-					this.OnWeightingChanged();
 				}
 			}
 		}
@@ -1169,8 +1145,6 @@ namespace RSMTenon.Data
 		
 		private string _InvestmentName;
 		
-		private decimal _Weighting;
-		
 		private decimal _ExpectedYield;
 		
 		private decimal _PurchaseCharge;
@@ -1195,8 +1169,6 @@ namespace RSMTenon.Data
     partial void OnAssetClassIDChanged();
     partial void OnInvestmentNameChanging(string value);
     partial void OnInvestmentNameChanged();
-    partial void OnWeightingChanging(decimal value);
-    partial void OnWeightingChanged();
     partial void OnExpectedYieldChanging(decimal value);
     partial void OnExpectedYieldChanged();
     partial void OnPurchaseChargeChanging(decimal value);
@@ -1215,7 +1187,7 @@ namespace RSMTenon.Data
 			OnCreated();
 		}
 		
-		[Column(Storage="_GUID", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true, UpdateCheck=UpdateCheck.Never)]
+		[Column(Storage="_GUID", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true, IsDbGenerated=true, UpdateCheck=UpdateCheck.Never)]
 		public System.Guid GUID
 		{
 			get
@@ -1295,26 +1267,6 @@ namespace RSMTenon.Data
 					this._InvestmentName = value;
 					this.SendPropertyChanged("InvestmentName");
 					this.OnInvestmentNameChanged();
-				}
-			}
-		}
-		
-		[Column(Storage="_Weighting", DbType="Decimal(5,4) NOT NULL", UpdateCheck=UpdateCheck.Never)]
-		public decimal Weighting
-		{
-			get
-			{
-				return this._Weighting;
-			}
-			set
-			{
-				if ((this._Weighting != value))
-				{
-					this.OnWeightingChanging(value);
-					this.SendPropertyChanging();
-					this._Weighting = value;
-					this.SendPropertyChanged("Weighting");
-					this.OnWeightingChanged();
 				}
 			}
 		}
