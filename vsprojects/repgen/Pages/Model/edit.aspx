@@ -126,38 +126,38 @@
         <AlternatingRowStyle CssClass="odd"></AlternatingRowStyle>
     </asp:GridView>
     <br />
-    <table>
+    <table class="listing" style="width:40%">
+    <caption>Weighting Totals</caption>
         <tr>
-            <td>
+            <td class="lnowrap" width="20%">
                 Total Weighting:&nbsp;
             </td>
-            <td>
+            <td class="right">
                 <asp:Label ID="labelTotalHNW" runat="server" 
                     Text="Total HNW"></asp:Label>
             </td>
-            <td>
+            <td class="right">
                 <asp:Label ID="labelTotalAFF" runat="server" Text="Total AFF"></asp:Label>
             </td>
         </tr>
         <tr>
-            <td>
+            <td class="lnowrap" width="20%">
                 Total Fixed Interest Weighting:&nbsp;
             </td>
-            <td>
+            <td class="right">
                 <asp:Label ID="labelFIIN_HNW" runat="server" Text="FIIN HNW"></asp:Label>
             </td>
-            <td >
+            <td  class="right">
                 <asp:Label ID="labelFIIN_AFF" runat="server" Text="FIIN AFF"></asp:Label>
             </td>
         </tr>
         <tr>
-            <td>
-                Total Long Equity Weighting&nbsp;
-            </td>
-            <td>
+            <td class="lnowrap" width="20%">
+                Total Long Equity Weighting:</td>
+            <td class="right">
                 <asp:Label ID="labelLOEQ_HNW" runat="server" Text=" LOEQ HNW"></asp:Label>
             </td>
-            <td>
+            <td class="right">
                 <asp:Label ID="labelLOEQ_AFF" runat="server" Text="LOEQ AFF"></asp:Label>
             </td>
         </tr>
