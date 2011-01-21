@@ -104,5 +104,36 @@ namespace RSMTenon.Data
                         select c;
             return match;
         }
+
+        [System.ComponentModel.DataObjectMethod(System.ComponentModel.DataObjectMethodType.Select, false)]
+        public static IQueryable<Content> GetContents()
+        {
+            var ctx = new RepGenDataContext();
+            return ctx.Contents;
+        }
+
+        public static int AddContentForStrategy(string strategyId)
+        {
+            var ctx = new RepGenDataContext();
+
+            var contents = from c in ctx.Contents
+                           where c.StrategyID == "CO"
+                           select c;
+
+            foreach (var c in contents)
+            {
+                ctx.Contents.InsertOnSubmit(new Content
+                {
+                    StrategyID = strategyId,
+                    ContentID = c.ContentID,
+                    Category = c.Category,
+                    Text = "New strategy content text"
+                });
+            }
+
+            ctx.SubmitChanges();
+
+            return contents.Count();
+        }
     }
 }
