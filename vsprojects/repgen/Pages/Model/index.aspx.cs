@@ -8,11 +8,6 @@ using RSMTenon.Data;
 
 public partial class Pages_Model_index : RepGenPage
 {
-    private decimal classWeightHNW = 0;
-    private decimal strategyWeightHNW = 0;
-    private decimal classIncomeHNW = 0;
-    private decimal strategyIncomeAff = 0;
-
     private decimal[] sub = { 0, 0, 0 };
     private decimal[] tot = { 0, 0, 0 };
     private static int HNW = 0;
