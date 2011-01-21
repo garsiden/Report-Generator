@@ -38,10 +38,25 @@ namespace RSMTenon.Data
             return strategyReturn;
         }
 
-        public static List<Strategy> GetStrategies()
+        public static IQueryable<Strategy> GetStrategies()
         {
             var ctx = new RepGenDataContext();
-            return ctx.Strategies.ToList();
+            return ctx.Strategies;
+        }
+
+        public static IQueryable<Strategy> GetStrategiesWithoutContent()
+        {
+            var ctx = new RepGenDataContext();
+
+            var match = from strategy in ctx.Strategies
+                        join content in ctx.Contents
+                        on strategy.ID equals content.StrategyID
+                        into allContent
+                        from content in allContent.DefaultIfEmpty()
+                        where content == null
+                        select strategy;
+
+            return match;
         }
     }
 }
