@@ -126,25 +126,30 @@ namespace RSMTenon.ReportGenerator
             // Stress Test Market Crash Bar Chart
             chartItem = report.StressTestMarketCrash();
             controlName = chartItem.CustomControlName;
-            AddChartToDoc(mainPart, chartItem, controlName);
+            AddChartToDoc(mainPart, chartItem, controlName, StressTestBarChart.Cx, StressTestBarChart.Cy);
 
             // Rolling Return 1 yr
             chartItem = report.RollingReturnChart(1);
             controlName = chartItem.CustomControlName;
-            AddChartToDoc(mainPart, chartItem, controlName);
+            AddChartToDoc(mainPart, chartItem, controlName, RollingReturnLineChart.Cx, RollingReturnLineChart.Cy);
 
             // Rolling Return 3 yr
             chartItem = report.RollingReturnChart(3);
             controlName = chartItem.CustomControlName;
-            AddChartToDoc(mainPart, chartItem, controlName);
+            AddChartToDoc(mainPart, chartItem, controlName, RollingReturnLineChart.Cx, RollingReturnLineChart.Cy);
 
             // Rolling Return 5 yr
             chartItem = report.RollingReturnChart(5);
             controlName = chartItem.CustomControlName;
-            AddChartToDoc(mainPart, chartItem, controlName);
+            AddChartToDoc(mainPart, chartItem, controlName, RollingReturnLineChart.Cx, RollingReturnLineChart.Cy);
         }
 
         private void AddChartToDoc(MainDocumentPart mainPart, ChartItem chartItem, string controlName)
+        {
+            AddChartToDoc(mainPart, chartItem, controlName, Graph.Cx, Graph.Cy);
+        }
+
+        private void AddChartToDoc(MainDocumentPart mainPart, ChartItem chartItem, string controlName, long Cx, long Cy)
         {
             // open Word documant and remove existing content from control
             Paragraph para = findAndRemoveContent(mainPart, controlName);
@@ -160,7 +165,7 @@ namespace RSMTenon.ReportGenerator
             // generate a new Wordprocessing Drawing, add to a new Run,
             // and relate to new ChartPart
             Run run = new Run();
-            Drawing drawing = GraphDrawing.GenerateDrawing(relId, controlName, docPrId, Graph.Cx, Graph.Cy);
+            Drawing drawing = GraphDrawing.GenerateDrawing(relId, controlName, docPrId, Cx, Cy);
             docPrId++;
             para.Append(run);
             run.Append(drawing);

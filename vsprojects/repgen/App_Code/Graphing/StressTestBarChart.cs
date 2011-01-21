@@ -13,6 +13,14 @@ namespace RSMTenon.Graphing
     {
         private string pointFormat = "0.00%";
 
+        public new  static long Cy
+        {
+            get
+            {
+                return (long)(7.00 * EMUS_PER_CENTIMETRE);
+            }
+        }
+
         public void AddBarChartSeries(Chart chart, BarGraphSeries series)
         {
             BarChartSeries barChartSeries = GenerateBarChartSeries(series.Name, series.PointNames, series.Values, series.ColourHex, pointFormat);

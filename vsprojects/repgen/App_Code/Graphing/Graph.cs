@@ -11,15 +11,16 @@ namespace RSMTenon.Graphing
 {
     public abstract class Graph
     {
-        private const Int64 EMUS_PER_CENTIMETRE = 360000L;
-        public const Int64 DEFAULT_GRAPH_X = (Int64)(14.90 * EMUS_PER_CENTIMETRE);
-        public const Int64 DEFAULT_GRAPH_Y = (Int64)(6.80 * EMUS_PER_CENTIMETRE);
+        protected const long EMUS_PER_CENTIMETRE = 360000L;
+
+        protected const long DEFAULT_GRAPH_X = (long)(14.90 * EMUS_PER_CENTIMETRE);
+        protected const long DEFAULT_GRAPH_Y = (long)(6.80 * EMUS_PER_CENTIMETRE);
         public const string DEFAULT_LANG = "en-GB";
         protected const int TITLE_FONT_SIZE = 1200;
         protected const int DEFAULT_FONT_SIZE = 1100;
 
-        public static Int64 Cx { get { return DEFAULT_GRAPH_X; } }
-        public static Int64 Cy { get { return DEFAULT_GRAPH_Y; } }
+        public static long Cx { get { return DEFAULT_GRAPH_X; } }
+        public static long Cy { get { return DEFAULT_GRAPH_Y; } }
 
         protected uint order;
         protected uint index;

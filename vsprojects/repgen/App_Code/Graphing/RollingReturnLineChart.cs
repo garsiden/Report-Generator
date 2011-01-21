@@ -11,6 +11,15 @@ namespace RSMTenon.Graphing
 {
     public class RollingReturnLineChart : LineGraph
     {
+
+        public new static long Cy
+        {
+            get
+            {
+                return (long)(6.70 * EMUS_PER_CENTIMETRE);
+            }
+        } 
+
         public RollingReturnLineChart()
         {
             this.axisFormat = "mmm\\-yy";
