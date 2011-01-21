@@ -42,7 +42,7 @@
   </Table>
   <Table Name="dbo.tblModel" Member="Models">
     <Type Name="Model">
-      <Column Name="GUID" AutoSync="Never" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="GUID" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
       <Column Name="StrategyID" Type="System.String" DbType="NChar(2) NOT NULL" CanBeNull="false" />
       <Column Name="AssetClassID" Type="System.String" DbType="NChar(4) NOT NULL" CanBeNull="false" />
       <Column Name="InvestmentName" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" />

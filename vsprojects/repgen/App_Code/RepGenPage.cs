@@ -16,7 +16,7 @@ public partial class RepGenPage : System.Web.UI.Page
 
     public List<Strategy> GetStrategies()
     {
-        return Strategy.GetStrategies();
+        return Strategy.GetStrategies().ToList();
     }
 
     public List<Benchmark> GetBenchmarks()

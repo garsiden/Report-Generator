@@ -1187,7 +1187,7 @@ namespace RSMTenon.Data
 			OnCreated();
 		}
 		
-		[Column(Storage="_GUID", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true, IsDbGenerated=true, UpdateCheck=UpdateCheck.Never)]
+		[Column(Storage="_GUID", AutoSync=AutoSync.OnInsert, DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true, IsDbGenerated=true, UpdateCheck=UpdateCheck.Never)]
 		public System.Guid GUID
 		{
 			get
