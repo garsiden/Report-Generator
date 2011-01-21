@@ -29,6 +29,7 @@ namespace RSMTenon.ReportGenerator
         public DateTime ToDate;
         private string pointName;
         private string format = "yyyy-MM-dd";
+        public bool PreDate { get; set; }
 
         public StressTest(string id, XElement reportSpec)
         {
@@ -36,6 +37,9 @@ namespace RSMTenon.ReportGenerator
             PointName = test1.Element("point-name").Value;
             var fromAttr = test1.Attribute("from");
             var toAttr = test1.Attribute("to");
+            var preDate = test1.Attribute("pre-date");
+            PreDate = (preDate.Value.ToString() == "true");
+
             if (fromAttr != null) {
                 FromDate = DateTime.ParseExact(fromAttr.Value, format, new DateTimeFormatInfo());
             }
@@ -301,7 +305,6 @@ namespace RSMTenon.ReportGenerator
             ChartItem chartItem = new ChartItem { Chart = chart, Title = title, CustomControlName = ccn };
 
             return chartItem;
-
         }
 
         public ChartItem StressTestMarketCrash()
@@ -346,7 +349,6 @@ namespace RSMTenon.ReportGenerator
             ChartItem chartItem = new ChartItem { Chart = chart, Title = title, CustomControlName = ccn };
 
             return chartItem;
-
         }
 
         public ChartItem TenYearReturn()
@@ -401,7 +403,6 @@ namespace RSMTenon.ReportGenerator
             ChartItem chartItem = new ChartItem { Chart = chart, Title = title, CustomControlName = ccn };
 
             return chartItem;
-
         }
 
         public ChartItem RollingReturnChart(int years)
@@ -538,7 +539,6 @@ namespace RSMTenon.ReportGenerator
 
             return dd.ToList();
         }
-
 
         private Dictionary<int, ReturnData> getStressTestAssetClassReturn(string assetClassId)
         {
@@ -709,12 +709,12 @@ namespace RSMTenon.ReportGenerator
 
         private BarGraphSeries stressTestMarketCrashSeries(Dictionary<int, ReturnData> pd, string seriesName, string colourHex, XElement rpt)
         {
-            var test1 = new StressTest("russian-debt-crisis", rpt);
+           // var test1 = new StressTest("russian-debt-crisis", rpt);
 
             // Russian Debt
-            var start1 = pd.TakeWhile(p => p.Key < test1.FromIntegerDate).Last();
-            var end1 = pd[test1.ToIntegerDate];
-            double return1 = (end1.Value - start1.Value.Value) / start1.Value.Value;
+            //var start1 = pd.TakeWhile(p => p.Key < test1.FromIntegerDate).Last();
+            //var end1 = pd[test1.ToIntegerDate];
+            //double return1 = (end1.Value - start1.Value.Value) / start1.Value.Value;
 
             // Economic Slowdown
             var test2 = new StressTest("economic-slowdown", rpt);
@@ -728,12 +728,24 @@ namespace RSMTenon.ReportGenerator
             var end3 = pd[test3.ToIntegerDate];
             double return3 = (end3.Value - start3.Value) / start3.Value;
 
+            // Zero's Collapse
+            var test4 = new StressTest("zeros-collapse", rpt);
+            var start4 = pd[test4.FromIntegerDate];
+            var end4 = pd[test4.ToIntegerDate];
+            double return4 = (end4.Value - start4.Value) / start4.Value;
+
+            // Credit Crunch
+            var test5 = new StressTest("credit-crunch", rpt);
+            var start5 = pd[test5.FromIntegerDate];
+            var end5 = pd[test5.ToIntegerDate];
+            double return5 = (end5.Value - start5.Value) / start5.Value;
+
             var series = new BarGraphSeries
             {
                 Name = seriesName,
                 ColourHex = colourHex,
-                PointNames = new string[] { test1.PointName, test2.PointName, test3.PointName },
-                Values = new double[] { return1, return2, return3 }
+                PointNames = new string[] { test3.PointName, test4.PointName, test2.PointName, test5.PointName },
+                Values = new double[] { return3, return4, return2, return5 }
             };
 
             return series;
@@ -747,6 +759,12 @@ namespace RSMTenon.ReportGenerator
             var start1 = pd[test1.FromIntegerDate];
             var end1 = pd[test1.ToIntegerDate];
             double return1 = (end1.Value - start1.Value) / start1.Value;
+            
+            // Bear
+            var test3 = new StressTest("bear", rpt);
+            var start3 = pd[test3.FromIntegerDate];
+            var end3 = pd[test3.ToIntegerDate];
+            double return3 = (end3.Value - start3.Value) / start3.Value;
 
             // Ten Year Return
             var test2 = new StressTest("ten-year", rpt);
@@ -761,8 +779,8 @@ namespace RSMTenon.ReportGenerator
             {
                 Name = seriesName,
                 ColourHex = colourHex,
-                PointNames = new string[] { test1.PointName, test2.PointName },
-                Values = new double[] { return1, return2 }
+                PointNames = new string[] { test1.PointName, test3.PointName, test2.PointName },
+                Values = new double[] { return1, return3, return2 }
             };
 
             return series;
