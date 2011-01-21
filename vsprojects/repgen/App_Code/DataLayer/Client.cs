@@ -165,5 +165,14 @@ namespace RSMTenon.Data
         }
 
         #endregion Data Validation
+
+        #region Events
+
+        partial void OnStrategyIDChanging(string value)
+        {
+            if (value == "TC")
+                this.HighNetWorth = true;
+        }
+        #endregion
     }
 }
