@@ -53,4 +53,19 @@ public partial class Pages_Client_edit : RepGenPage
         // set header
         this.clientHeader.InnerText = String.Format("Edit Client Details for {0}", client.Name);
     }
+    protected void listStrategy_SelectedIndexChanged(object sender, EventArgs e)
+    {
+
+        var radio = (RadioButtonList)this.formClient.Row.FindControl("radioListStatus");
+
+        if (((DropDownList)sender).SelectedValue == "TC")
+        {
+            radio.SelectedValue = "High Net Worth";
+            radio.Enabled = false;
+        } else
+        {
+            radio.Enabled = true;
+        }
+        
+    }
 }

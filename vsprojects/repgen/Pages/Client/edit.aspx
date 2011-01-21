@@ -71,7 +71,7 @@
                     <td class="left">
                         <asp:DropDownList ID="listStrategy" runat="server" DataSource="<%# GetStrategies() %>"
                             DataTextField="Name" DataValueField="ID" SelectedValue='<%# Bind("StrategyID") %>'
-                            Width="70%">
+                            Width="70%" onselectedindexchanged="listStrategy_SelectedIndexChanged" AutoPostBack="True">
                         </asp:DropDownList>
                     </td>
                 </tr>

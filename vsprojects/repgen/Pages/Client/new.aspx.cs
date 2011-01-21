@@ -25,7 +25,7 @@ public partial class Pages_Client_new : RepGenPage
             ExceptionDetails.Visible = true;
             ExceptionDetails.Text = "There was a problem inserting the client. ";
             ExceptionDetails.Text += "<br/>";
-            ExceptionDetails.Text += e.Exception.Message;
+            ExceptionDetails.Text += e.Exception.InnerException.Message;
             e.ExceptionHandled = true;
             e.KeepInInsertMode = true;
         } else
@@ -46,5 +46,22 @@ public partial class Pages_Client_new : RepGenPage
             Guid clientGuid = (Guid)rv;
             newClientGuid = clientGuid;
         }
+    }
+    protected void listStrategy_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        var radio = (RadioButtonList)this.formView.Row.FindControl("radioListStatus");
+
+        if (((DropDownList)sender).SelectedValue == "TC")
+        {
+            radio.SelectedValue = "0";
+            radio.Enabled = false;
+        } else
+        {
+            radio.Enabled = true;
+        }
+    }
+    protected void formView_ItemInserting(object sender, FormViewInsertEventArgs e)
+    {
+        e.Values["UserId"] = RSMTenon.ReportGenerator.ReportGenerator.GetUserId();
     }
 }
