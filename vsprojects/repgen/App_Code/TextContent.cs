@@ -262,7 +262,7 @@ namespace RSMTenon.ReportGenerator
 
         private double calculateModelReturn(Strategy strategy, string status)
         {
-            var prices = strategy.GetStrategyReturn(status);
+            var prices = strategy.GetStrategyPrices(status);
 
             double endPrice = prices.Last().Value.Value;
             double startPrice = prices.ElementAt(prices.Count - 121).Value.Value;
