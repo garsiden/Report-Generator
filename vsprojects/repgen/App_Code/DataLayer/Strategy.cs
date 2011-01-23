@@ -9,7 +9,7 @@ namespace RSMTenon.Data
     [System.ComponentModel.DataObject]
     public partial class Strategy
     {
-        private Dictionary<int, ReturnData> strategyReturn;
+        private Dictionary<int, ReturnData> strategyPrices;
 
         public static string GetStrategyNameFromId(string id)
         {
@@ -18,9 +18,9 @@ namespace RSMTenon.Data
             return ctx.Strategies.First(s => s.ID.Equals(id)).Name;
         }
 
-        public Dictionary<int, ReturnData> GetStrategyReturn(string status)
+        public Dictionary<int, ReturnData> GetStrategyPrices(string status)
         {
-            if (strategyReturn == null)
+            if (strategyPrices == null)
             {
                 var ctx = new RepGenDataContext();
                 var returns = ctx.ModelReturn(this.ID, status);
@@ -32,10 +32,10 @@ namespace RSMTenon.Data
                                  Value = calc.Price(p)
                              };
 
-                strategyReturn = prices.ToDictionary(p => p.Date);
+                strategyPrices = prices.ToDictionary(p => p.Date);
             }
 
-            return strategyReturn;
+            return strategyPrices;
         }
 
         public static IQueryable<Strategy> GetStrategies()
