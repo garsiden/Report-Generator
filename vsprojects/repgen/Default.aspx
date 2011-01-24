@@ -4,17 +4,23 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <asp:GridView ID="gridClient" runat="server" AutoGenerateColumns="False" DataKeyNames="GUID"
         DataSourceID="sourceClient" CssClass="listing" Caption="Recent Clients" 
-        AllowSorting="True">
+        AllowSorting="True" onrowcommand="gridClient_RowCommand" Width="60%">
         <Columns>
             <asp:HyperLinkField DataNavigateUrlFields="GUID" DataNavigateUrlFormatString="~/Pages/Client/edit.aspx?guid={0}"
                 DataTextField="Name" HeaderText="Client Name" SortExpression="Name" >
             <ItemStyle CssClass="lnowrap" />
             </asp:HyperLinkField>
             <asp:BoundField DataField="MeetingDate" DataFormatString="{0:dd/MM/yyyy}" HeaderText="Meeting Date"
-                SortExpression="MeetingDate" />
+                SortExpression="MeetingDate" >
+            <HeaderStyle Wrap="False" />
+            <ItemStyle Width="10%" />
+            </asp:BoundField>
             <asp:CommandField ShowDeleteButton="True" >
-            <ItemStyle CssClass="left" />
+            <ItemStyle CssClass="left" Width="5%" />
             </asp:CommandField>
+            <asp:ButtonField CommandName="Report" Text="Report">
+            <ItemStyle CssClass="left" Width="5%" />
+            </asp:ButtonField>
         </Columns>
         <EmptyDataTemplate>
             No clients to display.
@@ -27,7 +33,7 @@
         </asp:LinqDataSource>
 
     <br />
-    <div align="right">    
+    <div align="right" style="width:60%">    
         <asp:HyperLink ID="hyperNewClient" runat="server" NavigateUrl="Pages/Client/new.aspx">Add New Client</asp:HyperLink></div>
 
 </asp:Content>

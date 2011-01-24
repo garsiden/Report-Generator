@@ -17,4 +17,12 @@ public partial class _Default : RepGenPage
     {
         e.Result = GetRecentClients(recentClients);
     }
+    protected void gridClient_RowCommand(object sender, GridViewCommandEventArgs e)
+    {
+        if (e.CommandName == "Report")
+        {
+            var clientGuid = (Guid)gridClient.SelectedPersistedDataKey.Value;
+            DownloadReport(clientGuid);
+        }
+    }
 }
