@@ -100,21 +100,24 @@
         <AlternatingRowStyle CssClass="even" />
     </asp:GridView>
     <br />
-    <table id="tableInvestmentSummary" runat="server">
+<div style="text-align:right">
+    <asp:HyperLink ID="hyperClient" runat="server" NavigateUrl="~/Pages/Client/edit.aspx">Back to Client</asp:HyperLink>
+</div>
+    <table id="tableInvestmentSummary" runat="server" class="listing" style="width:40%">
         <tr>
-            <td>
+            <td class="lnowrap">
                 Total Assets:&nbsp;
             </td>
-            <td align="right">
+            <td class="right">
                 <asp:Label ID="labelTotalAssets" runat="server"></asp:Label>
             </td>
         </tr>
         <tr>
-            <td>
+            <td class="lnowrap">
                 Total Investment:&nbsp;
             </td>
 
-            <td align="right">
+            <td class="right">
                 <asp:Label ID="labelTotalInvestment" runat="server"></asp:Label>
             </td>
         </tr>

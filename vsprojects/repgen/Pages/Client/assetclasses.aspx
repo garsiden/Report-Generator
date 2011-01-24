@@ -284,6 +284,9 @@
         <AlternatingRowStyle CssClass="even" />
     </asp:DetailsView>
     <br />
+<div style="width:60%; text-align: right;">
+    <asp:HyperLink ID="hyperClient" runat="server" NavigateUrl="edit.aspx">Back to Client</asp:HyperLink>
+</div>
     <asp:Label ID="ExceptionDetails" runat="server"></asp:Label><br />
 
     <asp:LinqDataSource ID="sourceAssets" runat="server" ContextTypeName="RSMTenon.Data.RepGenDataContext"

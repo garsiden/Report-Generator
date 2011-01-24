@@ -24,6 +24,7 @@ public partial class Pages_Client_assets : RepGenPage
                 client = Client.GetClientByGUID(guid);
                 //gridAsset.Caption = client.Name;
                 clientAssetHeader.InnerText = "Client Assets By Class for " + client.Name;
+                hyperClient.NavigateUrl += String.Format("?guid={0}", guid);
             }
 
             gridAsset.DataBind();
