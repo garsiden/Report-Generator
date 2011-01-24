@@ -3,13 +3,14 @@
     <table-spec>
         <tables>
             <table id="model" row-height="255">
+            <!--total width: 8750-->
                 <columns>
-                    <column width="3700"></column>
-                    <column width="980" format="0.0%"></column>
-                    <column width="1180" format="0.00%">Weighting</column>
-                    <column width="1120" format="£#,##0">Amount</column>
-                    <column width="1480" format="0.00%">Expected Yield*</column>
-                    <column width="1120" format="£#,##0">Projected Income</column>
+                    <column width="930"></column>
+                    <column width="900" format="0.0%"></column>
+                    <column width="1250" format="0.00%">Weighting</column>
+                    <column width="1420" format="£#,##0">Amount</column>
+                    <column width="1150" format="0.00%">Expected Yield*</column>
+                    <column width="1100" format="£#,##0">Projected Income</column>
                 </columns>
             </table>
         </tables>
