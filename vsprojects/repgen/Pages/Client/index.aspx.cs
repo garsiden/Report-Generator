@@ -18,7 +18,11 @@ public partial class Pages_Client_index : RepGenPage
             string guid = gridClient.SelectedPersistedDataKey.Value.ToString();
             string url = String.Format( "~/Pages/Client/edit.aspx?guid={0}", guid);
             Response.Redirect(url);
+        } else if (e.CommandName == "Report")
+        {
+            Guid clientGuid = (Guid)gridClient.SelectedDataKey.Value;
+            DownloadReport(clientGuid);
         }
-            
+
     }
 }

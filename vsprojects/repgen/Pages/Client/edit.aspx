@@ -3,6 +3,7 @@
 
 <%@ Register Assembly="BasicFrame.WebControls.BasicDatePicker" Namespace="BasicFrame.WebControls"
     TagPrefix="BDP" %>
+
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <h4 id="clientHeader" runat="server">
     </h4>
@@ -377,7 +378,8 @@
     <asp:HyperLink ID="hyperClass" runat="server" NavigateUrl="~/Pages/Client/assetclasses.aspx">Add/amend client assets by class</asp:HyperLink>
     <br />
     <br />
-    <asp:Button ID="btnCreateReport" runat="server" OnClick="btnCreateReport_Click" Text="Create Report" />
+    <asp:Button ID="btnCreateReport" runat="server" OnClick="btnCreateReport_Click" 
+        Text="Create Report" CssClass="button" Width="100px" />
     <br />
     <br />
     <asp:Label ID="ExceptionDetails" runat="server"></asp:Label>

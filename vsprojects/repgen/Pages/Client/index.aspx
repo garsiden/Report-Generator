@@ -23,7 +23,7 @@
                 <ItemTemplate>
                     <asp:Label ID="Label1" runat="server" Text='<%# Bind("Strategy.Name") %>'></asp:Label>
                 </ItemTemplate>
-                <ItemStyle CssClass="left" />
+                <ItemStyle CssClass="lnowrap" />
             </asp:TemplateField>
             <asp:BoundField DataField="MeetingDate" DataFormatString="{0:d}" 
                 HeaderText="Meeting Date" SortExpression="MeetingDate" />
@@ -43,18 +43,21 @@
                 </EditItemTemplate>
                 <ItemTemplate>
                     <asp:Label ID="Label2" runat="server" 
-                        Text='<%# Eval("InvestmentAmount", "{0:c}") %>'></asp:Label>
+                        Text='<%# Eval("InvestmentAmount", "{0:C0}") %>'></asp:Label>
                 </ItemTemplate>
                 <ItemStyle CssClass="right" />
             </asp:TemplateField>
             <asp:BoundField DataField="StatusName" HeaderText="Status" 
                 SortExpression="HighNetWorth" />
             <asp:CommandField ShowDeleteButton="True" />
+            <asp:ButtonField Text="Report">
+            <ItemStyle CssClass="left" />
+            </asp:ButtonField>
         </Columns>
         <AlternatingRowStyle CssClass="odd" />
     </asp:GridView>
 <br />
-<div>
+<div style="text-align:right;" >
     <asp:HyperLink ID="hyperNewClient" runat="server" 
         NavigateUrl="~/Pages/Client/new.aspx">New Client</asp:HyperLink>
 </div>
