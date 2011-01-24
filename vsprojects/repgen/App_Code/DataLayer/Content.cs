@@ -117,7 +117,7 @@ namespace RSMTenon.Data
             var ctx = new RepGenDataContext();
 
             var contents = from c in ctx.Contents
-                           where c.StrategyID == "CO"
+                           where c.StrategyID == strategyId
                            select c;
 
             foreach (var c in contents)
