@@ -11,6 +11,9 @@
         DataTextField="Name" DataValueField="ID" AutoPostBack="True" OnSelectedIndexChanged="listStrategy_SelectedIndexChanged">
     </asp:DropDownList>
     <br />
+    <asp:Label ID="labelException" runat="server" Text=""></asp:Label>
+    <asp:ValidationSummary ID="validationSummary1" runat="server" ValidationGroup="Editing" />
+    <asp:ValidationSummary ID="validationSummary2" runat="server" ValidationGroup="Adding" />
     <br />
     <asp:GridView ID="gridModel" runat="server" AlternatingRowStyle-CssClass="odd" CssClass="listing"
         RowStyle-CssClass="even" AllowSorting="True" AutoGenerateColumns="False" DataKeyNames="GUID"
@@ -20,10 +23,15 @@
         <Columns>
             <asp:TemplateField HeaderText="Investment Name" SortExpression="InvestmentName">
                 <EditItemTemplate>
-                    <asp:TextBox ID="TextBox4" runat="server" Text='<%# Bind("InvestmentName") %>'></asp:TextBox>
+                    <asp:TextBox ID="textInvestmentNameEdit" runat="server" Text='<%# Bind("InvestmentName") %>'
+                        ValidationGroup="Editing"></asp:TextBox>
+                    <asp:RequiredFieldValidator ID="validRequiredInvestmentNameEdit" runat="server" ErrorMessage="Please enter an Investment Name."
+                        Display="None" ControlToValidate="textInvestmentNameEdit" ValidationGroup="Editing"></asp:RequiredFieldValidator>
                 </EditItemTemplate>
                 <FooterTemplate>
-                    <asp:TextBox ID="textInvestmentNameAdd" runat="server"></asp:TextBox>
+                    <asp:TextBox ID="textInvestmentNameAdd" runat="server" ValidationGroup="Adding"></asp:TextBox>
+                    <asp:RequiredFieldValidator ID="validRequiredInvestmentNameAdd" runat="server" ErrorMessage="Please enter an Investment Name."
+                        Display="None" ControlToValidate="textInvestmentNameAdd" ValidationGroup="Adding"></asp:RequiredFieldValidator>
                 </FooterTemplate>
                 <ItemTemplate>
                     <asp:Label ID="Label5" runat="server" Text='<%# Eval("InvestmentName") %>'></asp:Label>
@@ -49,10 +57,17 @@
             </asp:TemplateField>
             <asp:TemplateField HeaderText="HNW" SortExpression="WeightingHNW" ItemStyle-Width="4em">
                 <EditItemTemplate>
-                    <asp:TextBox ID="TextBox1" runat="server" Text='<%# Bind("WeightingHNW") %>' Width="4em"></asp:TextBox>
+                    <asp:TextBox ID="textWeightingHNWEdit" runat="server" Text='<%# Bind("WeightingHNW") %>'
+                        Width="4em" ValidationGroup="Editing"></asp:TextBox>
+                    <asp:RangeValidator ID="validRangeWeightingHNWEdit" runat="server" ErrorMessage="Please enter a HNW Weighting value of between 0 and 1."
+                        Type="Double" MaximumValue="1" MinimumValue="0" ControlToValidate="textWeightingHNWEdit"
+                        ValidationGroup="Editing" Display="None"></asp:RangeValidator>
                 </EditItemTemplate>
                 <FooterTemplate>
-                    <asp:TextBox ID="textWeightingHNWAdd" runat="server" Width="4em"></asp:TextBox>
+                    <asp:RangeValidator ID="validRangeWeightingHNWAdd" runat="server" ErrorMessage="Please enter a HNW Weighting value of between 0 and 1."
+                        Display="None" MaximumValue="1" MinimumValue="0" Type="Double" ValidationGroup="Adding"
+                        ControlToValidate="textWeightingHNWAdd"></asp:RangeValidator>
+                    <asp:TextBox ID="textWeightingHNWAdd" runat="server" Width="4em" ValidationGroup="Adding"></asp:TextBox>
                 </FooterTemplate>
                 <ItemTemplate>
                     <asp:Label ID="Label2" runat="server" Text='<%# Eval("WeightingHNW", "{0:0.00%}") %>'
@@ -63,11 +78,17 @@
             </asp:TemplateField>
             <asp:TemplateField HeaderText="Affluent" SortExpression="WeightingAffluent" ItemStyle-Width="4em">
                 <EditItemTemplate>
-                    <asp:TextBox ID="TextBox5" runat="server" Text='<%# Bind("WeightingAffluent") %>'
-                        Width="4em"></asp:TextBox>
+                    <asp:TextBox ID="textWeightingAffluentEdit" runat="server" Text='<%# Bind("WeightingAffluent") %>'
+                        Width="4em" ValidationGroup="Editing"></asp:TextBox>
+                    <asp:RangeValidator ID="validRangeWeightingAffluentEdit" runat="server" ErrorMessage="Please enter an Affluent Weighting of between 0 and 1."
+                        ValidationGroup="Editing" Display="None" ControlToValidate="textWeightingAffluentEdit"
+                        Type="Double" MaximumValue="1" MinimumValue="0"></asp:RangeValidator>
                 </EditItemTemplate>
                 <FooterTemplate>
-                    <asp:TextBox ID="textWeightingAffluentAdd" runat="server" Width="4em"></asp:TextBox>
+                    <asp:TextBox ID="textWeightingAffluentAdd" runat="server" Width="4em" ValidationGroup="Adding"></asp:TextBox>
+                    <asp:RangeValidator ID="validRangeWeightingAffluentAdd" runat="server" ErrorMessage="Please enter an Affluent Weighting of between 0 and 1."
+                        ValidationGroup="Adding" MaximumValue="1" MinimumValue="0" Type="Double" ControlToValidate="textWeightingAffluentAdd"
+                        Display="None" Font-Bold="False"></asp:RangeValidator>
                 </FooterTemplate>
                 <ItemTemplate>
                     <asp:Label ID="Label6" runat="server" Text='<%# Eval("WeightingAffluent", "{0:0.00%}") %>'
@@ -77,10 +98,13 @@
             </asp:TemplateField>
             <asp:TemplateField HeaderText="Expected Yield" SortExpression="ExpectedYield" ItemStyle-Width="4em">
                 <EditItemTemplate>
-                    <asp:TextBox ID="TextBox2" runat="server" Text='<%# Bind("ExpectedYield") %>' Width="4em"></asp:TextBox>
+                    <asp:TextBox ID="textExpectedYieldEdit" runat="server" Text='<%# Bind("ExpectedYield") %>'
+                        Width="4em" ValidationGroup="Editing"></asp:TextBox>
+                    <asp:RangeValidator ID="validRangeExpectedYield" runat="server" ErrorMessage="Please enter an Expected Yield of between 0 and 0.2" ValidationGroup="Editing" ControlToValidate="textExpectedYieldEdit" Type="Double" MinimumValue="0" MaximumValue="0.2" Display="None"></asp:RangeValidator>
                 </EditItemTemplate>
                 <FooterTemplate>
-                    <asp:TextBox ID="textExpectedYieldAdd" runat="server" Width="4em"></asp:TextBox>
+                    <asp:TextBox ID="textExpectedYieldAdd" runat="server" Width="4em" ValidationGroup="Adding"></asp:TextBox>
+                    <asp:RangeValidator ID="validRangeExpectedYieldAdd" runat="server" ErrorMessage="Please enter an Expected Yield of between 0 and 0.2" Display="None" ControlToValidate="textExpectedYieldAdd" ValidationGroup="Adding" MaximumValue="0.2" MinimumValue="0" Type="Double"></asp:RangeValidator>
                 </FooterTemplate>
                 <ItemTemplate>
                     <asp:Label ID="Label3" runat="server" Text='<%# Eval("ExpectedYield", "{0:0.00%}") %>'
@@ -106,12 +130,12 @@
             <asp:TemplateField ShowHeader="False" ItemStyle-Width="4em">
                 <EditItemTemplate>
                     <asp:LinkButton ID="LinkButton1" runat="server" CausesValidation="True" CommandName="Update"
-                        Text="Update"></asp:LinkButton>
+                        Text="Update" ValidationGroup="Editing"></asp:LinkButton>
                     &nbsp;<asp:LinkButton ID="LinkButton2" runat="server" CausesValidation="False" CommandName="Cancel"
                         Text="Cancel"></asp:LinkButton>
                 </EditItemTemplate>
                 <FooterTemplate>
-                    <asp:LinkButton ID="linkAdd" runat="server" CommandName="Insert">Add</asp:LinkButton>
+                    <asp:LinkButton ID="linkAdd" runat="server" CommandName="Insert" ValidationGroup="Adding">Add</asp:LinkButton>
                 </FooterTemplate>
                 <ItemTemplate>
                     <asp:LinkButton ID="LinkButton1" runat="server" CausesValidation="False" CommandName="Edit"
@@ -126,15 +150,15 @@
         <AlternatingRowStyle CssClass="odd"></AlternatingRowStyle>
     </asp:GridView>
     <br />
-    <table class="listing" style="width:40%">
-    <caption>Weighting Totals</caption>
+    <table class="listing" style="width: 40%">
+        <caption>
+            Weighting Totals</caption>
         <tr>
             <td class="lnowrap" width="20%">
                 Total Weighting:&nbsp;
             </td>
             <td class="right">
-                <asp:Label ID="labelTotalHNW" runat="server" 
-                    Text="Total HNW"></asp:Label>
+                <asp:Label ID="labelTotalHNW" runat="server" Text="Total HNW"></asp:Label>
             </td>
             <td class="right">
                 <asp:Label ID="labelTotalAFF" runat="server" Text="Total AFF"></asp:Label>
@@ -147,13 +171,14 @@
             <td class="right">
                 <asp:Label ID="labelFIIN_HNW" runat="server" Text="FIIN HNW"></asp:Label>
             </td>
-            <td  class="right">
+            <td class="right">
                 <asp:Label ID="labelFIIN_AFF" runat="server" Text="FIIN AFF"></asp:Label>
             </td>
         </tr>
         <tr>
             <td class="lnowrap" width="20%">
-                Total Long Equity Weighting:</td>
+                Total Long Equity Weighting:
+            </td>
             <td class="right">
                 <asp:Label ID="labelLOEQ_HNW" runat="server" Text=" LOEQ HNW"></asp:Label>
             </td>
@@ -187,20 +212,36 @@
                 </ItemTemplate>
                 <ItemStyle CssClass="lnowrap" Width="55%" />
             </asp:TemplateField>
-            <asp:BoundField DataField="WeightingHNW" DataFormatString="{0:0.00%}" HeaderText="Weighting HNW"
-                SortExpression="WeightingHNW">
+            <asp:TemplateField HeaderText="Weighting HNW" SortExpression="WeightingHNW">
+                <EditItemTemplate>
+                    <asp:TextBox ID="textFIINWeightingHNW" runat="server" Text='<%# Bind("WeightingHNW") %>' ValidationGroup="Editing"></asp:TextBox>
+                    <asp:RangeValidator ID="validRangeFIINWeightingHNW" runat="server" ErrorMessage="Please enter a Fixed Interest HNW Weighting of between 0 and 1." Display="None" ControlToValidate="textFIINWeightingHNW" Type="Double" MaximumValue="1" MinimumValue="0" ValidationGroup="Editing"></asp:RangeValidator>
+                </EditItemTemplate>
+                <ItemTemplate>
+                    <asp:Label ID="Label1" runat="server" 
+                        Text='<%# Eval("WeightingHNW", "{0:0.00%}") %>'></asp:Label>
+                </ItemTemplate>
                 <FooterStyle CssClass="right" />
                 <ItemStyle CssClass="right" Width="20%" />
-            </asp:BoundField>
-            <asp:BoundField DataField="WeightingAffluent" DataFormatString="{0:0.00%}" 
-                HeaderText="Weighting Affluent" SortExpression="WeightingAffluent">
-            <FooterStyle CssClass="right" />
-            <ItemStyle CssClass="right" Width="20%" />
-            </asp:BoundField>
+            </asp:TemplateField>
+            <asp:TemplateField HeaderText="Weighting Affluent" 
+                SortExpression="WeightingAffluent">
+                <EditItemTemplate>
+                    <asp:TextBox ID="textFIINWeightingAffluent" runat="server" 
+                        Text='<%# Bind("WeightingAffluent") %>' ValidationGroup="Editing"></asp:TextBox>
+                    <asp:RangeValidator ID="validRangeFIINWeightingAffluent" runat="server" ErrorMessage="Please enter a Fixed Interest Affluent Weighting of between 0 and 1." Display="None" ControlToValidate="textFIINWeightingAffluent" Type="Double" MaximumValue="1" MinimumValue="0" ValidationGroup="Editing"></asp:RangeValidator>
+                </EditItemTemplate>
+                <ItemTemplate>
+                    <asp:Label ID="Label2" runat="server" 
+                        Text='<%# Eval("WeightingAffluent", "{0:0.00%}") %>'></asp:Label>
+                </ItemTemplate>
+                <FooterStyle CssClass="right" />
+                <ItemStyle CssClass="right" Width="20%" />
+            </asp:TemplateField>
             <asp:TemplateField ShowHeader="False">
                 <EditItemTemplate>
                     <asp:LinkButton ID="LinkButton1" runat="server" CausesValidation="True" CommandName="Update"
-                        Text="Update"></asp:LinkButton>
+                        Text="Update" ValidationGroup="Editing"></asp:LinkButton>
                     &nbsp;<asp:LinkButton ID="LinkButton2" runat="server" CausesValidation="False" CommandName="Cancel"
                         Text="Cancel"></asp:LinkButton>
                 </EditItemTemplate>
@@ -208,7 +249,7 @@
                     <asp:LinkButton ID="linkEdit" runat="server" CausesValidation="False" CommandName="Edit"
                         Text="Edit"></asp:LinkButton>
                 </ItemTemplate>
-                <ItemStyle CssClass="left" />
+                <ItemStyle CssClass="lnowrap" />
             </asp:TemplateField>
         </Columns>
         <AlternatingRowStyle CssClass="even" />
@@ -217,8 +258,8 @@
         OldValuesParameterFormatString="original_{0}" SelectMethod="GetModelBreakdown"
         TypeName="RSMTenon.Data.ModelBreakdown" UpdateMethod="UpdateModelBreakdown" ConflictDetection="CompareAllValues">
         <SelectParameters>
-            <asp:ControlParameter ControlID="listStrategy" DefaultValue="CO" 
-                Name="strategyId" PropertyName="SelectedValue" Type="String" />
+            <asp:ControlParameter ControlID="listStrategy" DefaultValue="" Name="strategyId"
+                PropertyName="SelectedValue" Type="String" />
             <asp:Parameter DefaultValue="FIIN" Name="assetGroupId" Type="String" />
         </SelectParameters>
     </asp:ObjectDataSource>
@@ -237,20 +278,36 @@
                 </ItemTemplate>
                 <ItemStyle CssClass="lnowrap" Width="55%" />
             </asp:TemplateField>
-            <asp:BoundField DataField="WeightingHNW" DataFormatString="{0:0.00%}" HeaderText="Weighting HNW"
-                SortExpression="WeightingHNW">
+            <asp:TemplateField HeaderText="Weighting HNW" SortExpression="WeightingHNW">
+                <EditItemTemplate>
+                    <asp:TextBox ID="textLOEQWeightingHNW" runat="server" Text='<%# Bind("WeightingHNW") %>' ValidationGroup="Editing"></asp:TextBox>
+                    <asp:RangeValidator ID="validRangeLOEQWeightingHNW" runat="server" ErrorMessage="Please enter a Long Equity HNW Weighting value of between 0 and 1." Type="Double" MaximumValue="1" MinimumValue="0" ValidationGroup="Editing" ControlToValidate="textLOEQWeightingHNW" Display="None"></asp:RangeValidator>
+                </EditItemTemplate>
+                <ItemTemplate>
+                    <asp:Label ID="Label1" runat="server" 
+                        Text='<%# Eval("WeightingHNW", "{0:0.00%}") %>'></asp:Label>
+                </ItemTemplate>
                 <FooterStyle CssClass="right" />
                 <ItemStyle CssClass="right" Width="20%" />
-            </asp:BoundField>
-            <asp:BoundField DataField="WeightingAffluent" DataFormatString="{0:0.00%}" 
-                HeaderText="Weighting Affluent" SortExpression="WeightingAffluent">
-            <FooterStyle CssClass="right" />
-            <ItemStyle CssClass="right" Width="20%" />
-            </asp:BoundField>
+            </asp:TemplateField>
+            <asp:TemplateField HeaderText="Weighting Affluent" 
+                SortExpression="WeightingAffluent">
+                <EditItemTemplate>
+                    <asp:TextBox ID="textLOEQWeightingAffluent" runat="server" 
+                        Text='<%# Bind("WeightingAffluent") %>' ValidationGroup="Editing"></asp:TextBox>
+                    <asp:RangeValidator ID="validRangeLOEQWeightingAffluent" runat="server" ErrorMessage="Please enter a Long Equity Affluent Weighting value of between 0 and 1." Type="Double" MaximumValue="1" MinimumValue="0" ValidationGroup="Editing" Display="None" ControlToValidate="textLOEQWeightingAffluent"></asp:RangeValidator>
+                </EditItemTemplate>
+                <ItemTemplate>
+                    <asp:Label ID="Label2" runat="server" 
+                        Text='<%# Eval("WeightingAffluent", "{0:0.00%}") %>'></asp:Label>
+                </ItemTemplate>
+                <FooterStyle CssClass="right" />
+                <ItemStyle CssClass="right" Width="20%" />
+            </asp:TemplateField>
             <asp:TemplateField ShowHeader="False">
                 <EditItemTemplate>
                     <asp:LinkButton ID="LinkButton1" runat="server" CausesValidation="True" CommandName="Update"
-                        Text="Update"></asp:LinkButton>
+                        Text="Update" ValidationGroup="Editing"></asp:LinkButton>
                     &nbsp;<asp:LinkButton ID="LinkButton2" runat="server" CausesValidation="False" CommandName="Cancel"
                         Text="Cancel"></asp:LinkButton>
                 </EditItemTemplate>
@@ -258,7 +315,7 @@
                     <asp:LinkButton ID="linkEdit" runat="server" CausesValidation="False" CommandName="Edit"
                         Text="Edit"></asp:LinkButton>
                 </ItemTemplate>
-                <ItemStyle CssClass="left" />
+                <ItemStyle CssClass="lnowrap" />
             </asp:TemplateField>
         </Columns>
         <AlternatingRowStyle CssClass="even" />
@@ -269,8 +326,8 @@
         OldValuesParameterFormatString="original_{0}" SelectMethod="GetModelBreakdown"
         TypeName="RSMTenon.Data.ModelBreakdown" UpdateMethod="UpdateModelBreakdown" ConflictDetection="CompareAllValues">
         <SelectParameters>
-            <asp:ControlParameter ControlID="listStrategy" DefaultValue="CO" 
-                Name="strategyId" PropertyName="SelectedValue" Type="String" />
+            <asp:ControlParameter ControlID="listStrategy" DefaultValue="" Name="strategyId"
+                PropertyName="SelectedValue" Type="String" />
             <asp:Parameter DefaultValue="LOEQ" Name="assetGroupId" Type="String" />
         </SelectParameters>
     </asp:ObjectDataSource>

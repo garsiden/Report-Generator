@@ -22,15 +22,13 @@ public partial class Pages_Model_edit : RepGenPage
     {
         if (!IsPostBack)
         {
-            if (!IsPostBack)
-            {
-                this.DataBind();
-                string id = this.listStrategy.SelectedValue;
-                gridModel.Caption = String.Format("{0} Model", Strategy.GetStrategyNameFromId(id));
-                gridFixedInterest.Caption = AssetClass.GetAssetClassNameFromId("FIIN");
-                gridLongEquity.Caption = AssetClass.GetAssetClassNameFromId("LOEQ");
-            }
+            this.listStrategy.DataBind();
+            string id = this.listStrategy.SelectedValue;
+            gridModel.Caption = String.Format("{0} Model", Strategy.GetStrategyNameFromId(id));
+            gridFixedInterest.Caption = AssetClass.GetAssetClassNameFromId("FIIN");
+            gridLongEquity.Caption = AssetClass.GetAssetClassNameFromId("LOEQ");
         }
+        labelException.Visible = false;
     }
 
     protected void gridModel_RowCommand(object sender, GridViewCommandEventArgs e)
@@ -40,7 +38,7 @@ public partial class Pages_Model_edit : RepGenPage
             TextBox textBox = null;
             ListDictionary listDictionary = new ListDictionary();
 
-            string strategyID = sourceModel.WhereParameters[0].DefaultValue.ToString();
+            string strategyID = listStrategy.SelectedValue;
             listDictionary.Add("StrategyID", strategyID);
 
             textBox = (TextBox)gridModel.FooterRow.FindControl("textInvestmentNameAdd");
@@ -52,28 +50,30 @@ public partial class Pages_Model_edit : RepGenPage
             listDictionary.Add("AssetClassID", assetClassId);
 
             textBox = (TextBox)gridModel.FooterRow.FindControl("textWeightingHNWAdd");
-            decimal weightingHNW = Convert.ToDecimal(textBox.Text);
+            decimal weightingHNW = textBox.Text == String.Empty ? 0 : Convert.ToDecimal(textBox.Text);
             listDictionary.Add("WeightingHNW", weightingHNW);
 
             textBox = (TextBox)gridModel.FooterRow.FindControl("textWeightingAffluentAdd");
-            decimal weightingAffluent = Convert.ToDecimal(textBox.Text);
+            decimal weightingAffluent = textBox.Text == String.Empty ? 0 : Convert.ToDecimal(textBox.Text);
             listDictionary.Add("WeightingAffluent", weightingAffluent);
 
             textBox = (TextBox)gridModel.FooterRow.FindControl("textExpectedYieldAdd");
-            decimal yield = Convert.ToDecimal(textBox.Text);
+            decimal yield = textBox.Text == String.Empty ? 0 : Convert.ToDecimal(textBox.Text);
             listDictionary.Add("ExpectedYield", yield);
 
             textBox = (TextBox)gridModel.FooterRow.FindControl("textPurchaseChargeAdd");
-            decimal charge = Convert.ToDecimal(textBox.Text);
+            decimal charge = textBox.Text == String.Empty ? 0 : Convert.ToDecimal(textBox.Text);
             listDictionary.Add("PurchaseCharge", charge);
-            
+
             sourceModel.Insert(listDictionary);
             gridModel.DataBind();
         }
     }
+
     protected void gridModel_RowDataBound(object sender, GridViewRowEventArgs e)
     {
-        if (e.Row.RowType == DataControlRowType.DataRow) {
+        if (e.Row.RowType == DataControlRowType.DataRow)
+        {
             var item = (Model)e.Row.DataItem;
 
             total[TOTAL, HNW] += item.WeightingHNW;
@@ -105,7 +105,6 @@ public partial class Pages_Model_edit : RepGenPage
         {
             e.Row.Cells[1].Text = fiin[HNW].ToString("0.00%");
             e.Row.Cells[2].Text = fiin[AFF].ToString("0.00%");
-
         }
     }
 
@@ -126,5 +125,29 @@ public partial class Pages_Model_edit : RepGenPage
     protected void listStrategy_SelectedIndexChanged(object sender, EventArgs e)
     {
         this.gridModel.DataBind();
+    }
+
+    protected void gridModel_RowUpdated(object sender, GridViewUpdatedEventArgs e)
+    {
+        if (e.Exception != null)
+        {
+            labelException.Visible = true;
+            labelException.Text = "There was a problem updating the model. ";
+            labelException.Text += "<br/>";
+            labelException.Text += e.Exception.Message;
+            e.ExceptionHandled = true;
+            e.KeepInEditMode = true;
+        }
+    }
+    protected void sourceModel_Inserted(object sender, LinqDataSourceStatusEventArgs e)
+    {
+        if (e.Exception != null)
+        {
+            labelException.Visible = true;
+            labelException.Text = "There was a problem adding the model entry. ";
+            labelException.Text += "<br/>";
+            labelException.Text += e.Exception.Message;
+            e.ExceptionHandled = true;
+        }
     }
 }
