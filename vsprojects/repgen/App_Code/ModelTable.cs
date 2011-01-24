@@ -27,13 +27,15 @@ namespace RSMTenon.ReportGenerator
             Table table1 = new Table();
 
             TableProperties tableProperties1 = new TableProperties();
-            TableWidth tableWidth1 = new TableWidth() { Width = "5000", Type = TableWidthUnitValues.Dxa };
+            TableWidth tableWidth1 = new TableWidth() { Width = "8750", Type = TableWidthUnitValues.Dxa };
             TableIndentation tableIndentation1 = new TableIndentation() { Width = 108, Type = TableWidthUnitValues.Dxa };
             TableLook tableLook1 = new TableLook() { Val = "04A0" };
+            TableLayout layout = new TableLayout() { Type = TableLayoutValues.Fixed };
 
             tableProperties1.Append(tableWidth1);
             tableProperties1.Append(tableIndentation1);
             tableProperties1.Append(tableLook1);
+            tableProperties1.Append(layout);
 
             TableGrid tableGrid1 = new TableGrid();
             GridColumn gridColumn;
