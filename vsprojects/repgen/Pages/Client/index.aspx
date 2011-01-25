@@ -7,7 +7,8 @@
     <asp:GridView ID="gridClient" runat="server" AllowPaging="True" 
         AllowSorting="True" AutoGenerateColumns="False" CaptionAlign="Top" 
         CssClass="listing" DataKeyNames="GUID" DataSourceID="sourceClient" 
-        onrowcommand="gridClient_RowCommand">
+        onrowcommand="gridClient_RowCommand" 
+        onselectedindexchanged="gridClient_SelectedIndexChanged" >
         <RowStyle CssClass="even" />
         <Columns>
             <asp:HyperLinkField DataNavigateUrlFields="GUID" 
@@ -50,9 +51,9 @@
             <asp:BoundField DataField="StatusName" HeaderText="Status" 
                 SortExpression="HighNetWorth" />
             <asp:CommandField ShowDeleteButton="True" />
-            <asp:ButtonField Text="Report">
-            <ItemStyle CssClass="left" />
-            </asp:ButtonField>
+            <asp:CommandField SelectText="Report" ShowSelectButton="True">
+            <ItemStyle CssClass="left" Width="5%" />
+            </asp:CommandField>
         </Columns>
         <AlternatingRowStyle CssClass="odd" />
     </asp:GridView>
