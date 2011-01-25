@@ -53,5 +53,23 @@ namespace RSMTenon.Data
                               };
             return classes;
         }
+
+        private static bool InModel(bool status, decimal weightingHNW, decimal weightingAffluent)
+        {
+            return status ? weightingHNW > 0 : weightingAffluent > 0;
+        }
+
+        public static decimal GetModelCost(string strategyId, bool status)
+        {
+            var ctx = new RepGenDataContext();
+
+            var cost = from m in ctx.Models.Where(m => m.StrategyID == strategyId).ToList()
+                       where InModel(status, m.WeightingHNW, m.WeightingAffluent)
+                       group m by m.StrategyID
+                           into g
+                           select g.Sum(m => m.PurchaseCharge);
+
+            return cost.SingleOrDefault();
+        }
     }
 }
