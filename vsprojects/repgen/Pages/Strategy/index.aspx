@@ -59,20 +59,6 @@
                 </ItemTemplate>
                 <ItemStyle CssClass="right" />
             </asp:TemplateField>
-            <asp:TemplateField HeaderText="Cost" SortExpression="Cost">
-                <EditItemTemplate>
-                    <asp:TextBox ID="TextBoxCost" runat="server" 
-                        Text='<%# Bind("Cost", "{0:0}") %>' Width="5em"></asp:TextBox>
-                    <asp:RangeValidator ID="validRangeCost" runat="server" 
-                        ControlToValidate="TextBoxCost" Display="None" 
-                        ErrorMessage="Please enter a valid Cost" MaximumValue="5000" MinimumValue="0" 
-                        Type="Currency"></asp:RangeValidator>
-                </EditItemTemplate>
-                <ItemTemplate>
-                    <asp:Label ID="Label3" runat="server" Text='<%# Eval("Cost", "{0:C0}") %>'></asp:Label>
-                </ItemTemplate>
-                <ItemStyle CssClass="right" />
-            </asp:TemplateField>
             <asp:TemplateField HeaderText="Rolling Return" SortExpression="RollingReturn">
                 <EditItemTemplate>
                     <asp:TextBox ID="TextBoxRollingReturn" runat="server" 
