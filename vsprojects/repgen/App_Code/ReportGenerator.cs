@@ -106,6 +106,9 @@ namespace RSMTenon.ReportGenerator
                 chartItem = report.AllocationComparison();
                 controlName = chartItem.CustomControlName;
                 AddChartToDoc(mainPart, chartItem, controlName);
+            } else
+            {
+                RemoveContentControlFromBlock(mainPart, controlName);
             }
 
             // Drawdown
@@ -189,7 +192,7 @@ namespace RSMTenon.ReportGenerator
                 SdtBlock sdt = stdList.First<SdtBlock>();
                 OpenXmlElement parent = sdt.Parent;
                 parent.InsertAfter(table, sdt);
-                //sdt.Remove();
+                sdt.Remove();
             }
 
             doc.Save();
@@ -255,6 +258,43 @@ namespace RSMTenon.ReportGenerator
         public static string GetUserId()
         {
             return Environment.UserName;
+        }
+
+
+        public static bool RemoveContentControlFromRun(MainDocumentPart mainPart, string controlAlias)
+        {
+            var sdts = mainPart.Document.Descendants<SdtRun>();
+            bool removed = false;
+            foreach (var sdt in sdts)
+            {
+                var alias = sdt.Descendants<SdtAlias>().FirstOrDefault();
+                if ((alias != null) && (alias.Val != null) &&
+                  (alias.Val.HasValue) && (alias.Val.Value == controlAlias))
+                {
+                    sdt.Remove();
+                    removed = true;
+                }
+            }
+
+            return removed;
+        }
+
+        public static bool RemoveContentControlFromBlock(MainDocumentPart mainPart, string controlAlias)
+        {
+            var sdts = mainPart.Document.Descendants<SdtBlock>();
+            bool removed = false;
+            foreach (var sdt in sdts)
+            {
+                var alias = sdt.Descendants<SdtAlias>().FirstOrDefault();
+                if ((alias != null) && (alias.Val != null) &&
+                  (alias.Val.HasValue) && (alias.Val.Value == controlAlias))
+                {
+                    sdt.Remove();
+                    removed = true;
+                }
+            }
+
+            return removed;
         }
     }
 }
