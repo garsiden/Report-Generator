@@ -53,16 +53,20 @@
             </td>
             <td>
                 &nbsp;
-                <asp:Label ID="labelCount" runat="server" Text="count"></asp:Label>
+                <asp:Label ID="labelCount" runat="server" Text="count" Visible="False"></asp:Label>
             </td>
         </tr>
     </table>
+<br />
+    <asp:Label ID="labelException" runat="server" Text="Label"></asp:Label>
     <br />
     <p>
         Use <i>[Strategy]</i> to indicate where a strategy name should be placed.</p>
     <br />
     <asp:GridView ID="gridContent" runat="server" AllowSorting="True" AutoGenerateColumns="False"
-        CssClass="listing" DataKeyNames="GUID" DataSourceID="sourceContent" OnRowDataBound="gridContent_RowDataBound">
+        CssClass="listing" DataKeyNames="GUID" DataSourceID="sourceContent" 
+        OnRowDataBound="gridContent_RowDataBound" 
+        onrowdeleted="gridContent_RowDeleted" onrowupdated="gridContent_RowUpdated">
         <RowStyle CssClass="odd" />
         <Columns>
             <asp:TemplateField SortExpression="ContentID">
@@ -83,6 +87,7 @@
                     <br />
                     <br />
                     <div align="right">
+                        <asp:LinkButton ID="deleteButton" runat="server" CommandName="Delete">Delete</asp:LinkButton>&nbsp;
                         <asp:LinkButton ID="LinkButton1" runat="server" CausesValidation="False" CommandName="Edit"
                             Text="Edit"></asp:LinkButton>
                     </div>
@@ -123,7 +128,8 @@
     </asp:GridView>
     <asp:ObjectDataSource ID="sourceContent" runat="server" ConflictDetection="CompareAllValues"
         OldValuesParameterFormatString="original_{0}" SelectMethod="GetContents" TypeName="RSMTenon.Data.Content"
-        UpdateMethod="UpdateContent" DataObjectTypeName="RSMTenon.Data.Content">
+        UpdateMethod="UpdateContent" DataObjectTypeName="RSMTenon.Data.Content" 
+        DeleteMethod="DeleteClient">
         <UpdateParameters>
             <asp:Parameter Name="content" Type="Object" />
             <asp:Parameter Name="original_content" Type="Object" />
