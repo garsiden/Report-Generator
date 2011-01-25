@@ -4,8 +4,8 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Xml;
-//using System.Text.RegularExpressions
 using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Wordprocessing;
 using RSMTenon.Data;
 
 namespace RSMTenon.ReportGenerator
@@ -43,21 +43,36 @@ namespace RSMTenon.ReportGenerator
         public void GenerateTextContent(MainDocumentPart mainPart, Client client, string contentFileName, Stream tempContentFile)
         {
             Client = client;
-            GetContent(client, contentFileName, tempContentFile);
+            var contents = Data.Content.GetContents(client.StrategyID, Client.ExistingAssets).ToList();
+            GetContent(client, contentFileName, tempContentFile, contents);
 
             StreamReader sr = new StreamReader(tempContentFile, Encoding.UTF8);
             string customXml = sr.ReadToEnd();
             sr.Close();
 
             replaceCustomXML(mainPart, customXml);
+
+            // Remove unused text Content Controls
+            var all = Data.Content.GetAllContentIDs(client.StrategyID);
+            var unused = all.Except(contents.Select(c => c.ContentID));
+
+            foreach (var id in unused)
+            {
+                // try to remove from a run
+                if (! ReportGenerator.RemoveContentControlFromRun(mainPart, id))
+                    //else try block
+                     ReportGenerator.RemoveContentControlFromBlock(mainPart, id);
+            }
+
+            // Save doc
             mainPart.Document.Save();
         }
 
-        protected void GetContent(Client client, string sourceXml, Stream outputXml)
+        protected void GetContent(Client client, string sourceXml, Stream outputXml, List<Content> contents)
         {
             // get content from database
             string category = (client.ExistingAssets ? "existing-assets" : "no-existing-assets");
-            var contents = RSMTenon.Data.Content.GetContents(client.StrategyID, category).ToDictionary(c => c.ContentID);
+            //var contents = RSMTenon.Data.Content.GetContents(client.StrategyID, category).ToList();
 
             XmlDocument doc = new XmlDocument();
             outputXml.Position = 0;
@@ -131,80 +146,86 @@ namespace RSMTenon.ReportGenerator
             decimal cost = Model.GetModelCost(strategy.ID, Client.HighNetWorth);
             xmlnode.InnerText = cost.ToString("C0");
 
-            // Look up
-            // strategy.aim
-            setTextNode(root, nsmgr, "strategy.aim", contents);
+            // Look up in tblContent
 
-            // strategy.asset-classes
-            setTextNode(root, nsmgr, "strategy.asset-classes", contents);
-
-            // strategy.investor-focus
-            setTextNode(root, nsmgr, "strategy.investor-focus", contents);
-
-            // strategy.comparison-chart-header
-            setTextNode(root, nsmgr, "charts.comparison.header", contents);
-
-            // strategy.income-note1
-            setTextNode(root, nsmgr, "strategy.income-note1", contents);
-
-            // strategy.income-note2
-            setTextNode(root, nsmgr, "strategy.income-note2", contents);
-
-            // Cash or Assets
-            string allocationHeader;
-            string allocationCaption;
-            string weightingText = null;
-            string stressCrashHeader = null;
-            string stressCrashText = null;
-            string stressRiseText = null;
-
-            if (client.ExistingAssets)
+            foreach (var item in contents)
             {
-                allocationHeader = contents["charts.allocation.header"].Text;
-                allocationCaption = contents["charts.allocation.caption"].Text;
-                weightingText = contents["charts.allocation.weighting-text"].Text;
-                stressCrashHeader = contents["charts.stress-crash.header"].Text;
-                stressCrashText = contents["charts.stress-crash.text"].Text;
-                stressRiseText = contents["charts.stress-rise.text"].Text;
-            } else
-            {
-                allocationHeader = contents["charts.allocation.header"].Text;
-                allocationCaption = contents["charts.allocation.caption"].Text;
-                stressRiseText = contents["charts.stress-rise.text"].Text;
+                setTextNode(root, nsmgr, item);
             }
 
-            // charts.allocation.header [BOTH]
-            setTextNode(root, "/wmr:repgen/wmr:charts/wmr:allocation/wmr:header", nsmgr, allocationHeader);
+            //// strategy.aim
+            //setTextNode(root, nsmgr, "strategy.aim", contents);
 
-            // charts.allocation.caption [BOTH]
-            setTextNode(root, "/wmr:repgen/wmr:charts/wmr:allocation/wmr:caption", nsmgr, allocationCaption);
+            //// strategy.asset-classes
+            //setTextNode(root, nsmgr, "strategy.asset-classes", contents);
 
-            // charts.allocation.weighting-text [ASSETS]
-            if (weightingText != null)
-            {
-                setTextNode(root, "/wmr:repgen/wmr:charts/wmr:allocation/wmr:weighting-text", nsmgr, weightingText);
-            }
+            //// strategy.investor-focus
+            //setTextNode(root, nsmgr, "strategy.investor-focus", contents);
 
-            // charts.stress-crash.header [ASSETS]
-            if (stressCrashHeader != null)
-            {
-                setTextNode(root, "/wmr:repgen/wmr:charts/wmr:stress-crash/wmr:header", nsmgr, stressCrashHeader);
-            }
+            //// strategy.comparison-chart-header
+            //setTextNode(root, nsmgr, "charts.comparison.header", contents);
 
-            // charts.stress-crash.text [ASSETS]
-            if (stressCrashText != null)
-            {
-                setTextNode(root, "/wmr:repgen/wmr:charts/wmr:stress-crash/wmr:text", nsmgr, stressCrashText);
-            }
+            //// strategy.income-note1
+            //setTextNode(root, nsmgr, "strategy.income-note1", contents);
 
-            // charts.stress-rise.text [ASSETS]
-            if (stressRiseText != null)
-            {
-                setTextNode(root, "/wmr:repgen/wmr:charts/wmr:stress-rise/wmr:text", nsmgr, stressRiseText);
-            }
+            //// strategy.income-note2
+            //setTextNode(root, nsmgr, "strategy.income-note2", contents);
 
-            // charts.drawdown.text
-            setTextNode(root, nsmgr, "charts.drawdown.text", contents);
+            //// Cash or Assets
+            //string allocationHeader;
+            //string allocationCaption;
+            //string weightingText = null;
+            //string stressCrashHeader = null;
+            //string stressCrashText = null;
+            //string stressRiseText = null;
+
+            //if (client.ExistingAssets)
+            //{
+            //    allocationHeader = contents["charts.allocation.header"].Text;
+            //    allocationCaption = contents["charts.allocation.caption"].Text;
+            //    weightingText = contents["charts.allocation.weighting-text"].Text;
+            //    stressCrashHeader = contents["charts.stress-crash.header"].Text;
+            //    stressCrashText = contents["charts.stress-crash.text"].Text;
+            //    stressRiseText = contents["charts.stress-rise.text"].Text;
+            //} else
+            //{
+            //    allocationHeader = contents["charts.allocation.header"].Text;
+            //    allocationCaption = contents["charts.allocation.caption"].Text;
+            //    stressRiseText = contents["charts.stress-rise.text"].Text;
+            //}
+
+            //// charts.allocation.header [BOTH]
+            //setTextNode(root, "/wmr:repgen/wmr:charts/wmr:allocation/wmr:header", nsmgr, allocationHeader);
+
+            //// charts.allocation.caption [BOTH]
+            //setTextNode(root, "/wmr:repgen/wmr:charts/wmr:allocation/wmr:caption", nsmgr, allocationCaption);
+
+            //// charts.allocation.weighting-text [ASSETS]
+            //if (weightingText != null)
+            //{
+            //    setTextNode(root, "/wmr:repgen/wmr:charts/wmr:allocation/wmr:weighting-text", nsmgr, weightingText);
+            //}
+
+            //// charts.stress-crash.header [ASSETS]
+            //if (stressCrashHeader != null)
+            //{
+            //    setTextNode(root, "/wmr:repgen/wmr:charts/wmr:stress-crash/wmr:header", nsmgr, stressCrashHeader);
+            //}
+
+            //// charts.stress-crash.text [ASSETS]
+            //if (stressCrashText != null)
+            //{
+            //    setTextNode(root, "/wmr:repgen/wmr:charts/wmr:stress-crash/wmr:text", nsmgr, stressCrashText);
+            //}
+
+            //// charts.stress-rise.text [ASSETS]
+            //if (stressRiseText != null)
+            //{
+            //    setTextNode(root, "/wmr:repgen/wmr:charts/wmr:stress-rise/wmr:text", nsmgr, stressRiseText);
+            //}
+
+            //// charts.drawdown.text
+            //setTextNode(root, nsmgr, "charts.drawdown.text", contents);
 
             // Calculation
             // strategy.performance.return
@@ -218,6 +239,7 @@ namespace RSMTenon.ReportGenerator
             doc.Save(sw);
             outputXml.Position = 0;
         }
+
 
         private void replaceCustomXML(MainDocumentPart mainPart, string customXML)
         {
@@ -253,6 +275,14 @@ namespace RSMTenon.ReportGenerator
             contents.TryGetValue(contentId, out item);
             if (item != null)
                 xmlnode.InnerText = item.Text.Replace("[Strategy]", Client.Strategy.Name);
+        }
+
+        private void setTextNode(XmlNode root, XmlNamespaceManager nsmgr, Content content)
+        {
+            string contentPath = nsprefix + content.ContentID.Replace(".", nspace);
+
+            XmlNode xmlnode = root.SelectSingleNode(contentPath, nsmgr);
+            xmlnode.InnerText = content.Text.Replace("[Strategy]", Client.Strategy.Name);
         }
 
         private void setTextNode(XmlNode root, string contentPath, XmlNamespaceManager nsmgr, string content)
