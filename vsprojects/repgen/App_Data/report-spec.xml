@@ -5,8 +5,8 @@
             <table id="model" row-height="255">
             <!--total width: 8750-->
                 <columns>
-                    <column width="930"></column>
-                    <column width="900" format="0.0%"></column>
+                    <column width="2830"></column>
+                    <column width="1000" format="0.0%"></column>
                     <column width="1250" format="0.00%">Weighting</column>
                     <column width="1420" format="£#,##0">Amount</column>
                     <column width="1150" format="0.00%">Expected Yield*</column>
@@ -21,10 +21,10 @@
             <asset-class id="GLEQ" colour-hex="808080" />
         </asset-classes>
         <charts>
-            <chart id="weight">
-                <control-name>"WeightChart"</control-name>
-                <class>AllocationBarChart"></class>
-                <title>Current Asset Allocation vs. {0} Strategy</title>
+
+            <chart id="allocation-comparison">
+                <control-name>AllocationComparisonChart</control-name>
+                <title>Current Asset Allocation vs {0} Strategy</title>
             </chart>
 
             <chart id="allocation">
@@ -112,10 +112,6 @@
 
                     </category>
                 </categories>
-            </chart>
-            <chart id="allocation-comparison">
-                <control-name>AllocationComparisonChart</control-name>
-                <title>Current Asset Allocation vs {0} Strategy</title>
             </chart>
         </charts>
     </chart-spec>
