@@ -4,7 +4,8 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <asp:GridView ID="gridClient" runat="server" AutoGenerateColumns="False" DataKeyNames="GUID"
         DataSourceID="sourceClient" CssClass="listing" Caption="Recent Clients" 
-        AllowSorting="True" onrowcommand="gridClient_RowCommand" Width="60%">
+        AllowSorting="True"  Width="60%" 
+        onselectedindexchanged="gridClient_SelectedIndexChanged">
         <Columns>
             <asp:HyperLinkField DataNavigateUrlFields="GUID" DataNavigateUrlFormatString="~/Pages/Client/edit.aspx?guid={0}"
                 DataTextField="Name" HeaderText="Client Name" SortExpression="Name" >
@@ -18,9 +19,9 @@
             <asp:CommandField ShowDeleteButton="True" >
             <ItemStyle CssClass="left" Width="5%" />
             </asp:CommandField>
-            <asp:ButtonField CommandName="Report" Text="Report">
+            <asp:CommandField SelectText="Report" ShowSelectButton="True">
             <ItemStyle CssClass="left" Width="5%" />
-            </asp:ButtonField>
+            </asp:CommandField>
         </Columns>
         <EmptyDataTemplate>
             No clients to display.

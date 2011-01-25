@@ -13,16 +13,15 @@ public partial class _Default : RepGenPage
     {
         this.gridClient.PageSize = recentClients;
     }
+
     protected void sourceClient_Selecting(object sender, LinqDataSourceSelectEventArgs e)
     {
         e.Result = GetRecentClients(recentClients);
     }
-    protected void gridClient_RowCommand(object sender, GridViewCommandEventArgs e)
+
+    protected void gridClient_SelectedIndexChanged(object sender, EventArgs e)
     {
-        if (e.CommandName == "Report")
-        {
-            var clientGuid = (Guid)gridClient.SelectedPersistedDataKey.Value;
-            DownloadReport(clientGuid);
-        }
+        Guid guid = (Guid)gridClient.SelectedDataKey.Value;
+        DownloadReport(guid);
     }
 }
