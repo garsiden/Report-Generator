@@ -3,27 +3,39 @@
     <siteMapNode  title="Home"  description="">
         <siteMapNode url="Default.aspx" title="Home"  description="Home page">
         </siteMapNode>
+
         <siteMapNode title="Clients"  description="">
             <siteMapNode url="~/Pages/Client/new.aspx" title="Add New Client"  description="" />
             <siteMapNode url="~/Pages/Client/index.aspx" title="All Clients"  description="" />
         </siteMapNode>
+
         <siteMapNode url ="~/Pages/Model/index.aspx" title ="Models" />
+
         <siteMapNode title="Administration" description ="Administrate static data">
             <siteMapNode title="Benchmarks"  description="Manage benchmarks">
                 <siteMapNode url ="~/Pages/Benchmark/index.aspx" title="Edit" />
                 <siteMapNode url ="~/Pages/Benchmark/upload.aspx" title="Upload" />
             </siteMapNode>
+
             <siteMapNode title="Models" description="Mange Models" >
                     <siteMapNode url ="~/Pages/Model/edit.aspx" title ="Edit Models" />
                     <siteMapNode url ="~/Pages/Model/upload.aspx" title ="Upload Models" />
             </siteMapNode>
+
             <siteMapNode url ="~/Pages/Strategy/index.aspx" title ="Strategies" />
             <siteMapNode url ="~/Pages/AssetClass/index.aspx" title ="Asset Classes" />
+
             <siteMapNode title="Template" description="Manage templates">
                 <siteMapNode url="~/Pages/Template/upload.aspx" title="Upload template" />
                 <siteMapNode url="~/Pages/Template/index.aspx" title="Select template" />
             </siteMapNode>
-            <siteMapNode url ="~/Pages/Content/index.aspx" title ="Text Content" />
+
+            <siteMapNode title="Text Content" description="Manage Content">
+                <siteMapNode url ="~/Pages/Content/index.aspx" title ="Edit Content" />
+                <siteMapNode url ="~/Pages/Content/upload.aspx" title ="Upload Content XML" />
+                <siteMapNode url ="~/Pages/Content/new.aspx" title ="New Content" />
+            </siteMapNode>
+
         </siteMapNode>
         <siteMapNode title="Historic Data">
             <siteMapNode url="~/Pages/AssetClass/editA-M.aspx" title="Asset Classes A-M">
