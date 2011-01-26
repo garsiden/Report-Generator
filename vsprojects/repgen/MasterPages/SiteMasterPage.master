@@ -20,7 +20,7 @@
         <br />
         <asp:Menu ID="menuMasterPage" runat="server" DataSourceID="sourceSiteMap" Orientation="Horizontal"
             BackColor="#E3EAEB" DynamicHorizontalOffset="2" Font-Names="Verdana" Font-Size="1.0em"
-            StaticSubMenuIndent="10px" Height="22px" DynamicMenuItemStyle-BackColor="#CAD9C0" DynamicMenuItemStyle-Width="125px">
+            StaticSubMenuIndent="10px" Height="22px" DynamicMenuItemStyle-BackColor="#CAD9C0" DynamicMenuItemStyle-Width="140px">
             <StaticMenuItemStyle HorizontalPadding="8px" VerticalPadding="2px" />
             <DynamicMenuItemStyle HorizontalPadding="8px" VerticalPadding="2px" />
         </asp:Menu>
