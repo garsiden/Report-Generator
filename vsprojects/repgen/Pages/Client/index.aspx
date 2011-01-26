@@ -7,7 +7,6 @@
     <asp:GridView ID="gridClient" runat="server" AllowPaging="True" 
         AllowSorting="True" AutoGenerateColumns="False" CaptionAlign="Top" 
         CssClass="listing" DataKeyNames="GUID" DataSourceID="sourceClient" 
-        onrowcommand="gridClient_RowCommand" 
         onselectedindexchanged="gridClient_SelectedIndexChanged" >
         <RowStyle CssClass="even" />
         <Columns>
