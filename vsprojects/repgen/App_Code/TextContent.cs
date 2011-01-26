@@ -39,12 +39,18 @@ namespace RSMTenon.ReportGenerator
         private static string nsprefix = "/wmr:repgen/wmr:";
 
         public Client Client { get; set; }
+        public Report Report { get; set; }
 
-        public void GenerateTextContent(MainDocumentPart mainPart, Client client, string contentFileName, Stream tempContentFile)
+        public TextContent(Report report)
         {
-            Client = client;
-            var contents = Data.Content.GetContents(client.StrategyID, Client.ExistingAssets).ToList();
-            GetContent(client, contentFileName, tempContentFile, contents);
+            Report = report;
+            Client = Report.Client;
+        }
+
+        public void GenerateTextContent(MainDocumentPart mainPart, string contentFileName, Stream tempContentFile)
+        {
+            var contents = Data.Content.GetContents(Client.StrategyID, Client.ExistingAssets).ToList();
+            GetContent(Client, contentFileName, tempContentFile, contents);
 
             StreamReader sr = new StreamReader(tempContentFile, Encoding.UTF8);
             string customXml = sr.ReadToEnd();
@@ -53,7 +59,7 @@ namespace RSMTenon.ReportGenerator
             replaceCustomXML(mainPart, customXml);
 
             // Remove unused text Content Controls
-            var all = Data.Content.GetAllContentIDs(client.StrategyID);
+            var all = Data.Content.GetAllContentIDs(Client.StrategyID);
             var unused = all.Except(contents.Select(c => c.ContentID));
 
             foreach (var id in unused)
@@ -147,92 +153,19 @@ namespace RSMTenon.ReportGenerator
             xmlnode.InnerText = cost.ToString("C0");
 
             // Look up in tblContent
-
             foreach (var item in contents)
             {
                 setTextNode(root, nsmgr, item);
             }
 
-            //// strategy.aim
-            //setTextNode(root, nsmgr, "strategy.aim", contents);
-
-            //// strategy.asset-classes
-            //setTextNode(root, nsmgr, "strategy.asset-classes", contents);
-
-            //// strategy.investor-focus
-            //setTextNode(root, nsmgr, "strategy.investor-focus", contents);
-
-            //// strategy.comparison-chart-header
-            //setTextNode(root, nsmgr, "charts.comparison.header", contents);
-
-            //// strategy.income-note1
-            //setTextNode(root, nsmgr, "strategy.income-note1", contents);
-
-            //// strategy.income-note2
-            //setTextNode(root, nsmgr, "strategy.income-note2", contents);
-
-            //// Cash or Assets
-            //string allocationHeader;
-            //string allocationCaption;
-            //string weightingText = null;
-            //string stressCrashHeader = null;
-            //string stressCrashText = null;
-            //string stressRiseText = null;
-
-            //if (client.ExistingAssets)
-            //{
-            //    allocationHeader = contents["charts.allocation.header"].Text;
-            //    allocationCaption = contents["charts.allocation.caption"].Text;
-            //    weightingText = contents["charts.allocation.weighting-text"].Text;
-            //    stressCrashHeader = contents["charts.stress-crash.header"].Text;
-            //    stressCrashText = contents["charts.stress-crash.text"].Text;
-            //    stressRiseText = contents["charts.stress-rise.text"].Text;
-            //} else
-            //{
-            //    allocationHeader = contents["charts.allocation.header"].Text;
-            //    allocationCaption = contents["charts.allocation.caption"].Text;
-            //    stressRiseText = contents["charts.stress-rise.text"].Text;
-            //}
-
-            //// charts.allocation.header [BOTH]
-            //setTextNode(root, "/wmr:repgen/wmr:charts/wmr:allocation/wmr:header", nsmgr, allocationHeader);
-
-            //// charts.allocation.caption [BOTH]
-            //setTextNode(root, "/wmr:repgen/wmr:charts/wmr:allocation/wmr:caption", nsmgr, allocationCaption);
-
-            //// charts.allocation.weighting-text [ASSETS]
-            //if (weightingText != null)
-            //{
-            //    setTextNode(root, "/wmr:repgen/wmr:charts/wmr:allocation/wmr:weighting-text", nsmgr, weightingText);
-            //}
-
-            //// charts.stress-crash.header [ASSETS]
-            //if (stressCrashHeader != null)
-            //{
-            //    setTextNode(root, "/wmr:repgen/wmr:charts/wmr:stress-crash/wmr:header", nsmgr, stressCrashHeader);
-            //}
-
-            //// charts.stress-crash.text [ASSETS]
-            //if (stressCrashText != null)
-            //{
-            //    setTextNode(root, "/wmr:repgen/wmr:charts/wmr:stress-crash/wmr:text", nsmgr, stressCrashText);
-            //}
-
-            //// charts.stress-rise.text [ASSETS]
-            //if (stressRiseText != null)
-            //{
-            //    setTextNode(root, "/wmr:repgen/wmr:charts/wmr:stress-rise/wmr:text", nsmgr, stressRiseText);
-            //}
-
-            //// charts.drawdown.text
-            //setTextNode(root, nsmgr, "charts.drawdown.text", contents);
-
             // Calculation
             // strategy.performance.return
-            double modelReturn = calculateModelReturn(client.Strategy, client.StatusName);
+//            double modelReturn = calculateModelReturn(client.Strategy, client.StatusName);
+            double modelReturn = Report.CalculateModelReturn();
             xmlnode = root.SelectSingleNode("/wmr:repgen/wmr:strategy/wmr:performance/wmr:return", nsmgr);
             xmlnode.InnerText = modelReturn.ToString("0.0%");
 
+            // write file
             outputXml.Position = 0;
             StreamWriter sw = new StreamWriter(outputXml, Encoding.UTF8);
 

@@ -688,6 +688,17 @@ namespace RSMTenon.ReportGenerator
             return tyr;
         }
 
+        public double CalculateModelReturn()
+        {
+            var prices = calculateModelPrices();
+            double endPrice = prices.Last().Value.Value;
+            double startPrice = prices.ElementAt(prices.Count - 121).Value.Value;
+
+            double rtrn = Math.Log(endPrice / startPrice);
+
+            return rtrn;
+        }
+
         private List<ReturnData> calculateModelDrawdown(string strategyId, string status)
         {
             var returns = getModelReturn();

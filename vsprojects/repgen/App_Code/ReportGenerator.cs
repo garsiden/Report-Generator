@@ -63,8 +63,8 @@ namespace RSMTenon.ReportGenerator
                 mainPart = myWordDoc.MainDocumentPart;
 
                 // Add text content
-                TextContent tc = new TextContent();
-                tc.GenerateTextContent(mainPart, report.Client, ContentXmlFile, tempXmlStream);
+                TextContent tc = new TextContent(report);
+                tc.GenerateTextContent(mainPart, ContentXmlFile, tempXmlStream);
 
                 // Model Table
                 string controlName = null;
