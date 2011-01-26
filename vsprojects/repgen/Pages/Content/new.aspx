@@ -10,7 +10,7 @@
     <asp:FormView ID="formView" runat="server" DataKeyNames="GUID" DataSourceID="linqContent"
         OnItemInserting="formView_ItemInserting" Width="75%" 
         oniteminserted="formView_ItemInserted">
-        <EditItemTemplate>
+        <EditItemTemplate >
             ContentID:
             <asp:TextBox ID="ContentIDTextBox" runat="server" Text='<%# Bind("ContentID") %>' />
             <br />
@@ -140,7 +140,7 @@
                     </td>
                 </tr>
                 <tr class="even">
-                    <td class="lnowrap" height="150px">
+                    <td class="lnowrap" style="height:150px">
                         Text&nbsp;
                     </td>
                     <td height="150px">
