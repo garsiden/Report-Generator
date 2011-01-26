@@ -32,7 +32,7 @@
         <elementListCompartment Id="04f40d3c-46a8-4ce4-852d-2441dff41d82" absoluteBounds="0.51500000000000012, 9.46, 1.9700000000000002, 0.53615315755208326" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
-    <associationConnector edgePoints="[(8.9375 : 1.72115315755208); (8.9375 : 2.25)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+    <associationConnector edgePoints="[(8.9375 : 1.72115315755208); (8.9375 : 2.25)]" fixedFrom="NotFixed" fixedTo="NotFixed">
       <AssociationMoniker Name="/RepGenDataContext/AssetClass/AssetClass_Model" />
       <nodes>
         <classShapeMoniker Id="8dcdb6ff-e756-460a-86d7-941ad7e43132" />
@@ -57,10 +57,10 @@
         <elementListCompartment Id="2bebb730-becb-4a60-8207-5903e8ae76de" absoluteBounds="3.6399999999999997, 5.71, 1.9700000000000002, 1.19354248046875" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
-    <classShape Id="6ff63e00-fb84-4961-a3d0-eef3a0c4efdd" absoluteBounds="0.5, 2.875, 2, 1.9178898111979166">
+    <classShape Id="6ff63e00-fb84-4961-a3d0-eef3a0c4efdd" absoluteBounds="0.5, 2.875, 2, 1.7535424804687496">
       <DataClassMoniker Name="/RepGenDataContext/Strategy" />
       <nestedChildShapes>
-        <elementListCompartment Id="1416f4bc-eda2-42b3-8205-2edf4b499e19" absoluteBounds="0.51500000000000012, 3.335, 1.9700000000000002, 1.3578898111979165" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+        <elementListCompartment Id="1416f4bc-eda2-42b3-8205-2edf4b499e19" absoluteBounds="0.51500000000000012, 3.335, 1.9700000000000002, 1.19354248046875" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
     <associationConnector edgePoints="[(1.5 : 2.875); (1.5 : 2.25354248046875)]" fixedFrom="Algorithm" fixedTo="Algorithm">
@@ -70,21 +70,21 @@
         <classShapeMoniker Id="a97a07cf-21ee-42b1-b511-4718f12438ab" />
       </nodes>
     </associationConnector>
-    <associationConnector edgePoints="[(2.5 : 4.600771484375); (6.125 : 4.600771484375)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+    <associationConnector edgePoints="[(2.5 : 4.51859781901042); (5.51041666666667 : 4.51859781901042 : JumpStart); (5.67708333333333 : 4.51859781901042 : JumpEnd); (6.125 : 4.51859781901042)]" fixedFrom="Algorithm" fixedTo="Algorithm">
       <AssociationMoniker Name="/RepGenDataContext/Strategy/Strategy_Client" />
       <nodes>
         <classShapeMoniker Id="6ff63e00-fb84-4961-a3d0-eef3a0c4efdd" />
         <classShapeMoniker Id="5a08ee7a-7218-4b84-b2bf-0df2e19e83e2" />
       </nodes>
     </associationConnector>
-    <associationConnector edgePoints="[(2.5 : 3.11057657877604); (5.59375 : 3.11057657877604); (5.59375 : 5.25)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+    <associationConnector edgePoints="[(2.5 : 3.11057657877604); (5.59375 : 3.11057657877604); (5.59375 : 5.25)]" fixedFrom="Algorithm" fixedTo="Algorithm">
       <AssociationMoniker Name="/RepGenDataContext/Strategy/Strategy_Content" />
       <nodes>
         <classShapeMoniker Id="6ff63e00-fb84-4961-a3d0-eef3a0c4efdd" />
         <classShapeMoniker Id="67267aac-1bbe-4081-839d-dcecf2829e0d" />
       </nodes>
     </associationConnector>
-    <associationConnector edgePoints="[(3.5 : 3.79807657877604); (2.5 : 3.79807657877604)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+    <associationConnector edgePoints="[(3.5 : 3.79807657877604); (2.5 : 3.79807657877604)]" fixedFrom="Algorithm" fixedTo="Algorithm">
       <AssociationMoniker Name="/RepGenDataContext/Benchmark/Benchmark_Strategy" />
       <nodes>
         <classShapeMoniker Id="759d9c1f-0346-4f0a-9f6d-3ff8ab573208" />
@@ -122,21 +122,21 @@
         <classShapeMoniker Id="dd065346-1889-47a4-a109-fefbeab2f311" />
       </nodes>
     </associationConnector>
-    <associationConnector edgePoints="[(2.875 : 2.06427124023438); (2.5 : 2.06427124023438)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+    <associationConnector edgePoints="[(2.875 : 2.06427124023438); (2.5 : 2.06427124023438)]" fixedFrom="NotFixed" fixedTo="NotFixed">
       <AssociationMoniker Name="/RepGenDataContext/AssetGroupClass/AssetGroupClass_ModelBreakdown" />
       <nodes>
         <classShapeMoniker Id="dd065346-1889-47a4-a109-fefbeab2f311" />
         <classShapeMoniker Id="a97a07cf-21ee-42b1-b511-4718f12438ab" />
       </nodes>
     </associationConnector>
-    <associationConnector edgePoints="[(7.125 : 1.22215291341146); (6.67708333333333 : 1.22215291341146 : JumpStart); (6.51041666666667 : 1.22215291341146 : JumpEnd); (4.75 : 1.22215291341146)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+    <associationConnector edgePoints="[(7.125 : 1.22215291341146); (4.75 : 1.22215291341146)]" fixedFrom="NotFixed" fixedTo="NotFixed">
       <AssociationMoniker Name="/RepGenDataContext/AssetClass/AssetClass_AssetGroup" />
       <nodes>
         <classShapeMoniker Id="8dcdb6ff-e756-460a-86d7-941ad7e43132" />
         <classShapeMoniker Id="576d4f93-2dd2-44f4-ab66-402a34eedade" />
       </nodes>
     </associationConnector>
-    <associationConnector edgePoints="[(7.90625 : 1.72115315755208); (7.90625 : 2.03125); (6.67708333333333 : 2.03125 : JumpStart); (6.51041666666667 : 2.03125 : JumpEnd); (4.875 : 2.03125)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+    <associationConnector edgePoints="[(7.90625 : 1.72115315755208); (7.90625 : 2.03125); (4.875 : 2.03125)]" fixedFrom="NotFixed" fixedTo="NotFixed">
       <AssociationMoniker Name="/RepGenDataContext/AssetClass/AssetClass_AssetGroupClass" />
       <nodes>
         <classShapeMoniker Id="8dcdb6ff-e756-460a-86d7-941ad7e43132" />

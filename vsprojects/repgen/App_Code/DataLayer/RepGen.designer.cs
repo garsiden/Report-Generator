@@ -1903,8 +1903,6 @@ namespace RSMTenon.Data
 		
 		private short _ReturnOverBase;
 		
-		private decimal _Cost;
-		
 		private string _BenchmarkID;
 		
 		private decimal _RollingReturn;
@@ -1929,8 +1927,6 @@ namespace RSMTenon.Data
     partial void OnTimeHorizonChanged();
     partial void OnReturnOverBaseChanging(short value);
     partial void OnReturnOverBaseChanged();
-    partial void OnCostChanging(decimal value);
-    partial void OnCostChanged();
     partial void OnBenchmarkIDChanging(string value);
     partial void OnBenchmarkIDChanged();
     partial void OnRollingReturnChanging(decimal value);
@@ -2022,26 +2018,6 @@ namespace RSMTenon.Data
 					this._ReturnOverBase = value;
 					this.SendPropertyChanged("ReturnOverBase");
 					this.OnReturnOverBaseChanged();
-				}
-			}
-		}
-		
-		[Column(Storage="_Cost", DbType="Money NOT NULL")]
-		public decimal Cost
-		{
-			get
-			{
-				return this._Cost;
-			}
-			set
-			{
-				if ((this._Cost != value))
-				{
-					this.OnCostChanging(value);
-					this.SendPropertyChanging();
-					this._Cost = value;
-					this.SendPropertyChanged("Cost");
-					this.OnCostChanged();
 				}
 			}
 		}

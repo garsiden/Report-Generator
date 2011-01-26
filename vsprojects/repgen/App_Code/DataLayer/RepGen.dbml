@@ -92,7 +92,6 @@
       <Column Name="Name" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
       <Column Name="TimeHorizon" Type="System.Int16" DbType="SmallInt NOT NULL" CanBeNull="false" />
       <Column Name="ReturnOverBase" Type="System.Int16" DbType="SmallInt NOT NULL" CanBeNull="false" />
-      <Column Name="Cost" Type="System.Decimal" DbType="Money NOT NULL" CanBeNull="false" />
       <Column Name="BenchmarkID" Type="System.String" DbType="NChar(4) NOT NULL" CanBeNull="false" />
       <Column Name="RollingReturn" Type="System.Decimal" DbType="Decimal(5,1) NOT NULL" CanBeNull="false" />
       <Association Name="Strategy_Client" Member="Clients" ThisKey="ID" OtherKey="StrategyID" Type="Client" />
