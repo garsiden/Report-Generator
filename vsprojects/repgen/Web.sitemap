@@ -33,7 +33,7 @@
             <siteMapNode title="Text Content" description="Manage Content">
                 <siteMapNode url ="~/Pages/Content/index.aspx" title ="Edit Content" />
                 <siteMapNode url ="~/Pages/Content/upload.aspx" title ="Upload Content XML" />
-                <siteMapNode url ="~/Pages/Content/new.aspx" title ="New Content" />
+                <siteMapNode url ="~/Pages/Content/add.aspx" title ="New Content" />
             </siteMapNode>
 
         </siteMapNode>
