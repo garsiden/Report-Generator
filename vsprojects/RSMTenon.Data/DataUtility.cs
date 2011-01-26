@@ -9,9 +9,17 @@ namespace RSMTenon.Data
 {
     public class DataUtilities
     {
-        public static int UploadToDatabase(DataTable dt, string tableName)
+        public static int UploadToDatabase(DataTable dt, string tableName, string where)
         {
-            string sql = String.Format("DELETE FROM {0}", tableName);
+            string sql;
+
+            if (where == null)
+            {
+                sql = String.Format("DELETE FROM {0}", tableName);
+            } else
+            {
+                sql = string.Format("DELETE FROM {0} WHERE {1}", tableName, where);
+            }
             int deleted = -1;
 
             using (SqlConnection cn = ConnectionFactory.CreateSqlConnection())

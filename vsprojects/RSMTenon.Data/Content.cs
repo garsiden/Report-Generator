@@ -93,6 +93,15 @@ namespace RSMTenon.Data
             ctx.SubmitChanges();
         }
 
+        [System.ComponentModel.DataObjectMethod(System.ComponentModel.DataObjectMethodType.Delete, true)]
+        public static void DeleteClient(Content content)
+        {
+            var ctx = new RepGenDataContext();
+            ctx.Contents.Attach(content);
+            ctx.Contents.DeleteOnSubmit(content);
+            ctx.SubmitChanges();
+        }
+
         [System.ComponentModel.DataObjectMethod(System.ComponentModel.DataObjectMethodType.Select, false)]
         public static IQueryable<Content> GetContents(string strategyId, string category)
         {
@@ -103,6 +112,55 @@ namespace RSMTenon.Data
                           (c.Category.Equals(category) || c.Category.Equals(null))
                         select c;
             return match;
+        }
+
+        [System.ComponentModel.DataObjectMethod(System.ComponentModel.DataObjectMethodType.Select, false)]
+        public static IQueryable<Content> GetContents(string strategyId, bool assets)
+        {
+            string existing = assets ? "existing-assets" : "no-existing-assets";
+            return GetContents(strategyId, existing);
+        }
+
+        [System.ComponentModel.DataObjectMethod(System.ComponentModel.DataObjectMethodType.Select, false)]
+        public static IQueryable<Content> GetContents()
+        {
+            var ctx = new RepGenDataContext();
+            return ctx.Contents;
+        }
+
+        [System.ComponentModel.DataObjectMethod(System.ComponentModel.DataObjectMethodType.Select, false)]
+        public static List<String> GetAllContentIDs(string strategyId)
+        {
+            var ctx = new RepGenDataContext();
+            var match = from c in ctx.Contents
+                        group c by c.ContentID
+                            into g
+                            select g.Key;
+            return match.ToList();
+        }
+
+        public static int AddContentForStrategy(string strategyId)
+        {
+            var ctx = new RepGenDataContext();
+
+            var contents = from c in ctx.Contents
+                           where c.StrategyID == strategyId
+                           select c;
+
+            foreach (var c in contents)
+            {
+                ctx.Contents.InsertOnSubmit(new Content
+                {
+                    StrategyID = strategyId,
+                    ContentID = c.ContentID,
+                    Category = c.Category,
+                    Text = "New strategy content text"
+                });
+            }
+
+            ctx.SubmitChanges();
+
+            return contents.Count();
         }
     }
 }

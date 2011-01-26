@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Database Name="RepGen" EntityNamespace="RSMTenon.Data" ContextNamespace="RSMTenon.Data" Class="RepGenDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
-  <Connection Mode="AppSettings" ConnectionString="Data Source=.\SQLEXPRESS;AttachDbFilename=&quot;C:\Program Files\Microsoft SQL Server\MSSQL.1\MSSQL\Backup\RepGen.mdf&quot;;Integrated Security=True;Connect Timeout=30;User Instance=True" SettingsObjectName="RSMTenon.Data.Properties.Settings" SettingsPropertyName="RepGenConnectionString" Provider="System.Data.SqlClient" />
+  <Connection Mode="WebSettings" ConnectionString="Data Source=ARTHUR;Initial Catalog=RepGen;Persist Security Info=True;User ID=RepGenASP" SettingsObjectName="System.Configuration.ConfigurationManager.ConnectionStrings" SettingsPropertyName="RSMTenon.Data.Properties.Settings.RepGenConnectionString" Provider="System.Data.SqlClient" />
   <Table Name="dbo.tblAssetClass" Member="AssetClasses">
     <Type Name="AssetClass">
       <Column Name="ID" Type="System.String" DbType="NChar(4) NOT NULL" IsPrimaryKey="true" CanBeNull="false" UpdateCheck="Never" />
@@ -33,22 +33,24 @@
       <Column Name="GUID" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
       <Column Name="StrategyID" Type="System.String" DbType="NChar(2) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
       <Column Name="AssetClassID" Type="System.String" DbType="NChar(4) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
-      <Column Name="Weighting" Type="System.Decimal" DbType="Decimal(5,4) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
       <Column Name="SSMA_TimeStamp" Type="System.Data.Linq.Binary" DbType="rowversion NOT NULL" IsDbGenerated="true" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="WeightingHNW" Type="System.Decimal" DbType="Decimal(5,4)" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="WeightingAffluent" Type="System.Decimal" DbType="Decimal(5,4) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
       <Association Name="Strategy_ModelBreakdown" Member="Strategy" ThisKey="StrategyID" OtherKey="ID" Type="Strategy" IsForeignKey="true" />
       <Association Name="AssetGroupClass_ModelBreakdown" Member="AssetGroupClass" ThisKey="AssetClassID" OtherKey="AssetClassID" Type="AssetGroupClass" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.tblModel" Member="Models">
     <Type Name="Model">
-      <Column Name="GUID" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="GUID" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
       <Column Name="StrategyID" Type="System.String" DbType="NChar(2) NOT NULL" CanBeNull="false" />
       <Column Name="AssetClassID" Type="System.String" DbType="NChar(4) NOT NULL" CanBeNull="false" />
       <Column Name="InvestmentName" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" />
-      <Column Name="Weighting" Type="System.Decimal" DbType="Decimal(5,4) NOT NULL" CanBeNull="false" />
       <Column Name="ExpectedYield" Type="System.Decimal" DbType="Decimal(5,4) NOT NULL" CanBeNull="false" />
       <Column Name="PurchaseCharge" Type="System.Decimal" DbType="Money NOT NULL" CanBeNull="false" />
       <Column Name="SSMA_TimeStamp" Type="System.Data.Linq.Binary" DbType="rowversion NOT NULL" CanBeNull="false" IsVersion="true" />
+      <Column Name="WeightingHNW" Type="System.Decimal" DbType="Decimal(5,4)" CanBeNull="false" />
+      <Column Name="WeightingAffluent" Type="System.Decimal" DbType="Decimal(5,4)" CanBeNull="false" />
       <Association Name="AssetClass_Model" Member="AssetClass" ThisKey="AssetClassID" OtherKey="ID" Type="AssetClass" IsForeignKey="true" />
     </Type>
   </Table>
@@ -59,10 +61,11 @@
     </Type>
   </Table>
   <Table Name="" Member="ClientWeightingDifferences">
-    <Type Name="ClientWeightingDifference" Id="ID2">
+    <Type Name="ClientWeightingDifference" Id="ID3">
       <Column Name="AssetClassID" Type="System.String" DbType="NChar(4) NOT NULL" CanBeNull="false" />
       <Column Name="AssetClassName" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
-      <Column Name="WeightingDifference" Type="System.Double" DbType="Float NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="WeightingDifferenceHNW" Storage="_WeightingDifference" Type="System.Double" DbType="Float NOT NULL" CanBeNull="false" />
+      <Column Name="WeightingDifferenceAffluent" AutoSync="Never" Type="System.Double" DbType="Float NOT NULL" IsDbGenerated="true" CanBeNull="false" />
     </Type>
   </Table>
   <Table Name="dbo.tblBenchmark" Member="Benchmarks">
@@ -89,7 +92,6 @@
       <Column Name="Name" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
       <Column Name="TimeHorizon" Type="System.Int16" DbType="SmallInt NOT NULL" CanBeNull="false" />
       <Column Name="ReturnOverBase" Type="System.Int16" DbType="SmallInt NOT NULL" CanBeNull="false" />
-      <Column Name="Cost" Type="System.Decimal" DbType="Money NOT NULL" CanBeNull="false" />
       <Column Name="BenchmarkID" Type="System.String" DbType="NChar(4) NOT NULL" CanBeNull="false" />
       <Column Name="RollingReturn" Type="System.Decimal" DbType="Decimal(5,1) NOT NULL" CanBeNull="false" />
       <Association Name="Strategy_Client" Member="Clients" ThisKey="ID" OtherKey="StrategyID" Type="Client" />
@@ -184,10 +186,10 @@
       <Association Name="Client_ClientAssetClass" Member="Client" ThisKey="ClientGUID" OtherKey="GUID" Type="Client" IsForeignKey="true" DeleteRule="CASCADE" DeleteOnNull="true" />
     </Type>
   </Table>
-  <Table Name="dbo.vwClientAssetWeighting" Member="AssetWeightings">
-    <Type Name="AssetWeighting" Id="ID3">
+  <Table Name="" Member="AssetWeightings">
+    <Type Name="AssetWeighting" Id="ID2">
       <Column Name="AssetClass" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
-      <Column Name="Weighting" Type="System.Decimal" DbType="Decimal(38,3)" CanBeNull="true" />
+      <Column Name="Weighting" Type="System.Double" DbType="Float" CanBeNull="true" />
     </Type>
   </Table>
   <Function Name="dbo.spRollingReturn" Method="RollingReturn">
@@ -195,37 +197,34 @@
     <Parameter Name="assetClassID" Type="System.String" DbType="NChar(4)" />
     <ElementType IdRef="ID1" />
   </Function>
-  <Function Name="dbo.spAssetClassReturn" Method="AssetClassReturn">
-    <Parameter Name="startDate" Type="System.DateTime" DbType="DateTime" />
-    <Parameter Name="assetClassID" Type="System.String" DbType="NChar(4)" />
-    <ElementType IdRef="ID1" />
-  </Function>
   <Function Name="dbo.spHistoricPrice" Method="HistoricPrice">
     <Parameter Name="assetClassID" Type="System.String" DbType="NChar(4)" />
     <ElementType IdRef="ID1" />
   </Function>
-  <Function Name="dbo.spClientWeightingComparison" Method="ClientWeightingComparison">
-    <Parameter Name="clientGUID" Type="System.Guid" DbType="UniqueIdentifier" />
-    <Parameter Name="strategyID" Type="System.String" DbType="NChar(2)" />
+  <Function Name="dbo.spClientAssetWeighting" Method="ClientAssetWeighting">
+    <Parameter Name="ClientGUID" Parameter="clientGUID" Type="System.Guid" DbType="UniqueIdentifier" />
     <ElementType IdRef="ID2" />
   </Function>
+  <Function Name="dbo.spModelReturn" Method="ModelReturn">
+    <Parameter Name="StrategyID" Parameter="strategyID" Type="System.String" DbType="NChar(2)" />
+    <Parameter Name="ModelType" Parameter="modelType" Type="System.String" DbType="NChar(3)" />
+    <ElementType IdRef="ID1" />
+  </Function>
+  <Function Name="dbo.spClientWeightingComparison" Method="ClientWeightingComparison">
+    <Parameter Name="ClientGUID" Parameter="clientGUID" Type="System.Guid" DbType="UniqueIdentifier" />
+    <Parameter Name="StrategyID" Parameter="strategyID" Type="System.String" DbType="NChar(2)" />
+    <ElementType IdRef="ID3" />
+  </Function>
+  <Function Name="dbo.spAssetClassReturn" Method="AssetClassReturn">
+    <Parameter Name="AssetClassID" Parameter="assetClassID" Type="System.String" DbType="NChar(4)" />
+    <ElementType IdRef="ID1" />
+  </Function>
   <Function Name="dbo.spBenchmarkPrice" Method="BenchmarkPrice">
-    <Parameter Name="startDate" Type="System.DateTime" DbType="DateTime" />
-    <Parameter Name="benchmarkID" Type="System.String" DbType="NChar(4)" />
+    <Parameter Name="BenchmarkID" Parameter="benchmarkID" Type="System.String" DbType="NChar(4)" />
     <ElementType IdRef="ID1" />
   </Function>
   <Function Name="dbo.spClientAssetReturn" Method="ClientAssetReturn">
-    <Parameter Name="startDate" Type="System.DateTime" DbType="DateTime" />
     <Parameter Name="ClientGUID" Parameter="clientGUID" Type="System.Guid" DbType="UniqueIdentifier" />
-    <ElementType IdRef="ID1" />
-  </Function>
-  <Function Name="dbo.spClientAssetWeighting" Method="ClientAssetWeighting">
-    <Parameter Name="ClientGUID" Parameter="clientGUID" Type="System.Guid" DbType="UniqueIdentifier" />
-    <ElementType IdRef="ID3" />
-  </Function>
-  <Function Name="dbo.spModelReturn" Method="ModelReturn">
-    <Parameter Name="startDate" Type="System.DateTime" DbType="DateTime" />
-    <Parameter Name="strategyId" Type="System.String" DbType="NChar(2)" />
     <ElementType IdRef="ID1" />
   </Function>
 </Database>
