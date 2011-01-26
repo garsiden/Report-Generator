@@ -5,7 +5,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
-public partial class Pages_Content_new : RepGenPage
+public partial class Pages_Content_add : RepGenPage
 {
     protected void Page_Load(object sender, EventArgs e)
     {

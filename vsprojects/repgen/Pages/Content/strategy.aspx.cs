@@ -6,7 +6,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using RSMTenon.Data;
 
-public partial class Pages_Content_new : RepGenPage
+public partial class Pages_Content_strategy : RepGenPage
 {
     protected void Page_Load(object sender, EventArgs e)
     {

@@ -1,5 +1,5 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/MasterPages/SiteMasterPage.master"
-    AutoEventWireup="true" CodeFile="new.aspx.cs" Inherits="Pages_Content_new" %>
+    AutoEventWireup="true" CodeFile="add.aspx.cs" Inherits="Pages_Content_add" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
 </asp:Content>
@@ -143,7 +143,7 @@
                     <td class="lnowrap" style="height:150px">
                         Text&nbsp;
                     </td>
-                    <td height="150px">
+                    <td  style="height:150px">
                         &nbsp;
                     </td>
                 </tr>
