@@ -12,28 +12,14 @@ namespace RSMTenon.Graphing
 {
     public class AllocationComparisonBarChart : BarGraph
     {
-        public  Chart GenerateChart(string title, List<ClientWeightingDifference>data)
+        public  Chart GenerateChart(string title, List<AssetWeighting>data)
         {
-            double[] vals3 = { 0.11768250185249102D, -6.1324324147486134E-2D, 4.7902237547416453E-2D, 3.846389646333704E-2F, 0.0D, -6.8212317552127408E-2D, -0.2D, -0.15D, 0.27375221930876331D, 1.7357865276057976E-3D, 0.0D, 0.0D };
-            string[] pointNames3 = {"Cash",
-            "UK Gov Bonds",
-            "UK Corp Bonds",
-            "UK HY Bonds",
-            "Global Bonds",
-            "Real Estate",
-            "Hedge Funds",
-            "L/S Equity",
-            "UK Equity",
-            "Global Equity",
-            "Private Equity",
-            "Commodities"};
-
             string[] pointNames = new string[data.Count];
             double[] vals = new double[data.Count];
             int i = 0;
             foreach (var item in data) {
-                pointNames[i] = item.AssetClassName;
-                vals[i++] = item.WeightingDifference;
+                pointNames[i] = item.AssetClass;
+                vals[i++] = (double)item.Weighting;
             }
             Chart chart1 = new Chart();
 
@@ -185,5 +171,30 @@ namespace RSMTenon.Graphing
 
             return categoryAxis1;
         }
+
+        protected override BarChartSeries GenerateBarChartSeries(string seriesName, string[] pointNames, double[] vals, string colourHex, string valueFormat)
+        {
+            BarChartSeries barChartSeries1 = new BarChartSeries();
+            Index index1 = new Index() { Val = (UInt32Value)index };
+            Order order1 = new Order() { Val = (UInt32Value)order };
+
+            //SeriesText seriesText = GenerateSeriesText(seriesName);
+            ChartShapeProperties chartShapeProperties2 = GenerateChartShapeProperties(colourHex, 12700);
+            CategoryAxisData categoryAxisData1 = GenerateCategoryAxisData(pointNames);
+            Values values1 = GenerateValues(valueFormat, vals);
+
+            barChartSeries1.Append(index1);
+            barChartSeries1.Append(order1);
+            //barChartSeries1.Append(seriesText);
+            barChartSeries1.Append(chartShapeProperties2);
+            barChartSeries1.Append(categoryAxisData1);
+            barChartSeries1.Append(values1);
+
+            this.index++;
+            this.order++;
+
+            return barChartSeries1;
+        }
+
     }
 }

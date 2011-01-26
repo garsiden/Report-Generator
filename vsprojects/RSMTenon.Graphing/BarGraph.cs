@@ -43,7 +43,7 @@ namespace RSMTenon.Graphing
             return chartShapeProperties2;
         }
 
-        protected BarChartSeries GenerateBarChartSeries(string seriesName, string[] pointNames, double[] vals, string colourHex, string valueFormat)
+        protected virtual BarChartSeries GenerateBarChartSeries(string seriesName, string[] pointNames, double[] vals, string colourHex, string valueFormat)
         {
             BarChartSeries barChartSeries1 = new BarChartSeries();
             Index index1 = new Index() { Val = (UInt32Value)index };

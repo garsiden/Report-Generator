@@ -9,12 +9,14 @@ namespace RSMTenon.Graphing
 {
     public class GraphSpace
     {
-        public static C.ChartSpace GenerateChartSpace(ChartPart part)
+
+        //public static C.ChartSpace GenerateChartSpace(ChartPart part)
+        public static C.ChartSpace GenerateChartSpace(C.Chart chart)
         {
-            return GenerateChartSpace(part, false);
+            return GenerateChartSpace(chart, false);
         }
 
-        public static C.ChartSpace GenerateChartSpace(ChartPart part, bool withDate1904)
+        public static C.ChartSpace GenerateChartSpace(C.Chart chart, bool withDate1904)
         {
             // c:chartSpace (ChartSpace)            
             C.ChartSpace chartSpace1 = new C.ChartSpace();
@@ -30,21 +32,22 @@ namespace RSMTenon.Graphing
             // c:lang (EditingLanguage)
             C.EditingLanguage editingLanguage1 = new C.EditingLanguage() { Val = Graph.DEFAULT_LANG };
 
-            // c:printSettings (PrintSettings)
-            C.PrintSettings printSettings1 = new C.PrintSettings();
-            C.HeaderFooter headerFooter1 = new C.HeaderFooter();
-            C.PageMargins pageMargins1 = new C.PageMargins() { Left = 0.70D, Right = 0.70D, Top = 0.75D, Bottom = 0.75D, Header = 0.30D, Footer = 0.30D };
-            C.PageSetup pageSetup1 = new C.PageSetup();
+            //// c:printSettings (PrintSettings)
+            //C.PrintSettings printSettings1 = new C.PrintSettings();
+            //C.HeaderFooter headerFooter1 = new C.HeaderFooter();
+            //C.PageMargins pageMargins1 = new C.PageMargins() { Left = 0.70D, Right = 0.70D, Top = 0.75D, Bottom = 0.75D, Header = 0.30D, Footer = 0.30D };
+            //C.PageSetup pageSetup1 = new C.PageSetup();
 
-            printSettings1.Append(headerFooter1);
-            printSettings1.Append(pageMargins1);
-            printSettings1.Append(pageSetup1);
+            //printSettings1.Append(headerFooter1);
+            //printSettings1.Append(pageMargins1);
+            //printSettings1.Append(pageSetup1);
 
             if (date1904 != null) {
                 chartSpace1.Append(date1904);
             }
             chartSpace1.Append(editingLanguage1);
-            chartSpace1.Append(printSettings1);
+            chartSpace1.Append(chart);
+            //chartSpace1.Append(printSettings1);
 
             return chartSpace1;
         }
