@@ -76,7 +76,10 @@ table.listing tfoot td {
   vertical-align: bottom;
 }
 table.listing td {
-  text-align: center;
+  text-align: left;
+}
+table.listing td.center {
+text-align: center;
 }
 table.listing td.left {
   text-align: left;
