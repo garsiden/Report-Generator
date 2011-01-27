@@ -32,7 +32,6 @@ public partial class Pages_Template_index : System.Web.UI.Page
 
     public string GetSelectedTemplate()
     {
-        string path = Server.MapPath(Request.CurrentExecutionFilePath);
         Configuration config = WebConfigurationManager.OpenWebConfiguration("~/");
 
         string template = config.AppSettings.Settings["TemplateFile"].Value;
@@ -40,6 +39,7 @@ public partial class Pages_Template_index : System.Web.UI.Page
         return template;
 
     }
+
     protected void btnSetTemplate_Click(object sender, EventArgs e)
     {
         Configuration config = WebConfigurationManager.OpenWebConfiguration("~/");
