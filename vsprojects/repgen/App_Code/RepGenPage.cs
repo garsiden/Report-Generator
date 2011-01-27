@@ -136,4 +136,18 @@ public partial class RepGenPage : System.Web.UI.Page
 
         return tags.Distinct().ToList();
     }
+
+    protected void showException(Exception ex, Label label, string text)
+    {
+        string msg = String.Empty;
+        label.Visible = true;
+        label.Text = String.Format("There was a problem {0}.", text);
+        label.Text += "<br/>";
+        if (ex.InnerException != null)
+            msg = ex.InnerException.Message;
+        else
+            msg = ex.Message;
+
+        label.Text += msg;
+    }
 }
