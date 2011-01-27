@@ -4,12 +4,13 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
-<h4>Edit Asset Class Historic Data (N - Z)</h4>
-<br />
+    <h4>
+        Edit Asset Class Historic Data (N - Z)</h4>
+    <br />
     <asp:GridView ID="gridHistoricData" runat="server" AllowPaging="True" AutoGenerateColumns="False"
         CssClass="listing" DataKeyNames="Date" DataSourceID="sourceHistoricData" ShowFooter="True"
-        OnRowCommand="gridHistoricData_RowCommand" UseAccessibleHeader="False" 
-        Width="5em" AllowSorting="True">
+        OnRowCommand="gridHistoricData_RowCommand" UseAccessibleHeader="False" Width="5em"
+        AllowSorting="True">
         <RowStyle CssClass="odd" />
         <Columns>
             <asp:TemplateField ShowHeader="False" ItemStyle-CssClass="lnowrap">
@@ -41,6 +42,8 @@
                 <ItemTemplate>
                     <asp:Label ID="Label1" runat="server" Text='<%# Bind("Date", "{0:d}") %>'></asp:Label>
                 </ItemTemplate>
+                <HeaderStyle CssClass="center" />
+                <ItemStyle CssClass="center" />
             </asp:TemplateField>
             <asp:TemplateField HeaderText="Private Equity">
                 <EditItemTemplate>
@@ -54,6 +57,7 @@
                     <asp:Label ID="Label2" runat="server" Text='<%# Bind("PREQ", "{0:0.00}") %>'></asp:Label>
                 </ItemTemplate>
                 <FooterStyle CssClass="right" />
+                <HeaderStyle CssClass="center" />
                 <ItemStyle CssClass="right" Width="12%" />
             </asp:TemplateField>
             <asp:TemplateField HeaderText="UK Corp Bonds">
@@ -68,6 +72,7 @@
                     <asp:Label ID="Label3" runat="server" Text='<%# Bind("UKCB", "{0:0.00}") %>'></asp:Label>
                 </ItemTemplate>
                 <FooterStyle CssClass="right" />
+                <HeaderStyle CssClass="center" />
                 <ItemStyle CssClass="right" Width="12%" />
             </asp:TemplateField>
             <asp:TemplateField HeaderText="UK Govt Bonds">
@@ -82,6 +87,7 @@
                     <asp:Label ID="Label4" runat="server" Text='<%# Bind("UKGB", "{0:0.00}") %>'></asp:Label>
                 </ItemTemplate>
                 <FooterStyle CssClass="right" />
+                <HeaderStyle CssClass="center" />
                 <ItemStyle CssClass="right" Width="12%" />
             </asp:TemplateField>
             <asp:TemplateField HeaderText="UK High Yield">
@@ -96,6 +102,7 @@
                     <asp:Label ID="Label5" runat="server" Text='<%# Bind("UKHY", "{0:0.00}") %>'></asp:Label>
                 </ItemTemplate>
                 <FooterStyle CssClass="right" />
+                <HeaderStyle CssClass="center" />
                 <ItemStyle CssClass="right" Width="12%" />
             </asp:TemplateField>
             <asp:TemplateField HeaderText="UK Equities">
@@ -110,6 +117,7 @@
                     <asp:Label ID="Label6" runat="server" Text='<%# Bind("UKEQ", "{0:0.00}") %>'></asp:Label>
                 </ItemTemplate>
                 <FooterStyle CssClass="right" />
+                <HeaderStyle CssClass="center" />
                 <ItemStyle CssClass="right" Width="12%" />
             </asp:TemplateField>
             <asp:TemplateField HeaderText="World Bonds">
@@ -124,15 +132,16 @@
                     <asp:Label ID="Label7" runat="server" Text='<%# Bind("WOBO", "{0:0.00}") %>'></asp:Label>
                 </ItemTemplate>
                 <FooterStyle CssClass="right" HorizontalAlign="Right" />
+                <HeaderStyle CssClass="center" />
                 <ItemStyle CssClass="right" Width="12%" />
             </asp:TemplateField>
         </Columns>
         <AlternatingRowStyle CssClass="even" />
     </asp:GridView>
     <br />
-<p align="right">
-    <asp:HyperLink ID="linkAM" runat="server" NavigateUrl="~/Pages/AssetClass/editA-M.aspx">A - M</asp:HyperLink>
-</p>
+    <p align="right">
+        <asp:HyperLink ID="linkAM" runat="server" NavigateUrl="~/Pages/AssetClass/editA-M.aspx">A - M</asp:HyperLink>
+    </p>
     <asp:LinqDataSource ID="sourceHistoricData" runat="server" ContextTypeName="RSMTenon.Data.RepGenDataContext"
         EnableDelete="True" EnableInsert="True" EnableUpdate="True" OrderBy="Date desc"
         TableName="HistoricDatas">

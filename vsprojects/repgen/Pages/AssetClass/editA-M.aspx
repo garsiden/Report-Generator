@@ -1,14 +1,16 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/MasterPages/SiteMasterPage.master" AutoEventWireup="true" CodeFile="editA-M.aspx.cs" Inherits="Pages_AssetClass_editA_M" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/MasterPages/SiteMasterPage.master"
+    AutoEventWireup="true" CodeFile="editA-M.aspx.cs" Inherits="Pages_AssetClass_editA_M" %>
 
-<asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
+<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
 </asp:Content>
-<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
-<h4>Edit Asset Class Historic Data (A - M)</h4>
-<br />
+<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
+    <h4>
+        Edit Asset Class Historic Data (A - M)</h4>
+    <br />
     <asp:GridView ID="gridHistoricData" runat="server" AllowPaging="True" AutoGenerateColumns="False"
         CssClass="listing" DataKeyNames="Date" DataSourceID="sourceHistoricData" ShowFooter="True"
-        OnRowCommand="gridHistoricData_RowCommand" UseAccessibleHeader="False" 
-        Width="100%" AllowSorting="True">
+        OnRowCommand="gridHistoricData_RowCommand" UseAccessibleHeader="False" Width="100%"
+        AllowSorting="True">
         <RowStyle CssClass="odd" />
         <Columns>
             <asp:TemplateField ShowHeader="False" ItemStyle-CssClass="lnowrap">
@@ -30,7 +32,7 @@
                 <FooterStyle CssClass="left" />
                 <ItemStyle CssClass="lnowrap"></ItemStyle>
             </asp:TemplateField>
-            <asp:TemplateField HeaderText="Date" SortExpression="Date">
+            <asp:TemplateField HeaderText="Date" SortExpression="Date" ItemStyle-CssClass="center">
                 <EditItemTemplate>
                     <asp:Label ID="Label1" runat="server" Text='<%# Eval("Date", "{0:d}") %>'></asp:Label>
                 </EditItemTemplate>
@@ -40,6 +42,8 @@
                 <ItemTemplate>
                     <asp:Label ID="Label1" runat="server" Text='<%# Bind("Date", "{0:d}") %>'></asp:Label>
                 </ItemTemplate>
+                <HeaderStyle CssClass="center" />
+                <ItemStyle CssClass="center"></ItemStyle>
             </asp:TemplateField>
             <asp:TemplateField HeaderText="Cash">
                 <EditItemTemplate>
@@ -53,6 +57,7 @@
                     <asp:Label ID="Label2" runat="server" Text='<%# Bind("CASH", "{0:0.00}") %>'></asp:Label>
                 </ItemTemplate>
                 <FooterStyle CssClass="right" />
+                <HeaderStyle CssClass="center" />
                 <ItemStyle CssClass="right" Width="12%" />
             </asp:TemplateField>
             <asp:TemplateField HeaderText="Comm. Property">
@@ -67,6 +72,7 @@
                     <asp:Label ID="Label3" runat="server" Text='<%# Bind("COPR", "{0:0.00}") %>'></asp:Label>
                 </ItemTemplate>
                 <FooterStyle CssClass="right" />
+                <HeaderStyle CssClass="center" />
                 <ItemStyle CssClass="right" Width="12%" />
             </asp:TemplateField>
             <asp:TemplateField HeaderText="Commod- ities">
@@ -81,6 +87,7 @@
                     <asp:Label ID="Label4" runat="server" Text='<%# Bind("COMM", "{0:0.00}") %>'></asp:Label>
                 </ItemTemplate>
                 <FooterStyle CssClass="right" />
+                <HeaderStyle CssClass="center" />
                 <ItemStyle CssClass="right" Width="12%" />
             </asp:TemplateField>
             <asp:TemplateField HeaderText="Global Equities">
@@ -95,6 +102,7 @@
                     <asp:Label ID="Label5" runat="server" Text='<%# Bind("GLEQ", "{0:0.00}") %>'></asp:Label>
                 </ItemTemplate>
                 <FooterStyle CssClass="right" />
+                <HeaderStyle CssClass="center" />
                 <ItemStyle CssClass="right" Width="12%" />
             </asp:TemplateField>
             <asp:TemplateField HeaderText="Hedge">
@@ -109,6 +117,7 @@
                     <asp:Label ID="Label6" runat="server" Text='<%# Bind("HEDG", "{0:0.00}") %>'></asp:Label>
                 </ItemTemplate>
                 <FooterStyle CssClass="right" />
+                <HeaderStyle CssClass="center" />
                 <ItemStyle CssClass="right" Width="12%" />
             </asp:TemplateField>
             <asp:TemplateField HeaderText="Long Short">
@@ -123,20 +132,18 @@
                     <asp:Label ID="Label7" runat="server" Text='<%# Bind("LOSH", "{0:0.00}") %>'></asp:Label>
                 </ItemTemplate>
                 <FooterStyle CssClass="right" HorizontalAlign="Right" />
+                <HeaderStyle CssClass="center" />
                 <ItemStyle CssClass="right" Width="12%" />
             </asp:TemplateField>
         </Columns>
         <AlternatingRowStyle CssClass="even" />
     </asp:GridView>
-    <asp:LinqDataSource ID="sourceHistoricData" runat="server" 
-        ContextTypeName="RSMTenon.Data.RepGenDataContext" EnableDelete="True" 
-        EnableInsert="True" EnableUpdate="True" OrderBy="Date desc" 
+    <asp:LinqDataSource ID="sourceHistoricData" runat="server" ContextTypeName="RSMTenon.Data.RepGenDataContext"
+        EnableDelete="True" EnableInsert="True" EnableUpdate="True" OrderBy="Date desc"
         TableName="HistoricDatas">
     </asp:LinqDataSource>
-<br />
-<p align="right" >
-    <asp:HyperLink ID="linkNZ" runat="server" 
-        NavigateUrl="~/Pages/AssetClass/editN-Z.aspx">N - Z</asp:HyperLink>
-</p>
+    <br />
+    <p align="right">
+        <asp:HyperLink ID="linkNZ" runat="server" NavigateUrl="~/Pages/AssetClass/editN-Z.aspx">N - Z</asp:HyperLink>
+    </p>
 </asp:Content>
-
