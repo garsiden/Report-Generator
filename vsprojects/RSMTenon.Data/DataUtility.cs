@@ -18,7 +18,7 @@ namespace RSMTenon.Data
                 sql = String.Format("DELETE FROM {0}", tableName);
             } else
             {
-                sql = string.Format("DELETE FROM {0} WHERE {1}", tableName, where);
+                sql = String.Format("DELETE FROM {0} WHERE {1}", tableName, where);
             }
             int deleted = -1;
 
