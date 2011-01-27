@@ -53,8 +53,7 @@ namespace RSMTenon.ReportGenerator
             MainDocumentPart mainPart = null;
             MemoryStream tempXmlStream = null;
 
-            try
-            {
+            try {
                 // create temp files/streams
                 tempDocName = createTempDocFile(TemplateFile, TempDir);
                 tempXmlStream = createTempXmlStream(ContentXmlFile);
@@ -75,8 +74,7 @@ namespace RSMTenon.ReportGenerator
 
                 // Charts
                 AddChartsToDoc(mainPart, report);
-            } finally
-            {
+            } finally {
                 // save and close document
                 if (tempXmlStream != null)
                     tempXmlStream.Close();
@@ -98,65 +96,55 @@ namespace RSMTenon.ReportGenerator
 
             // Allocation Pie Chart
             chartItem = report.Allocation();
-            controlName = chartItem.CustomControlName;
-            AddChartToDoc(mainPart, chartItem, controlName);
+            AddChartToDoc(mainPart, chartItem);
 
             // Comparison Chart
-            controlName = chartItem.CustomControlName;
-            if (report.Client.ExistingAssets)
-            {
+            if (report.Client.ExistingAssets) {
                 chartItem = report.AllocationComparison();
-                AddChartToDoc(mainPart, chartItem, controlName);
-            } else
-            {
+                AddChartToDoc(mainPart, chartItem);
+            } else {
+                controlName = report.GetContentControlNameForChart("allocation-comparison");
                 RemoveContentControlFromBlock(mainPart, controlName);
             }
 
             // Drawdown
             chartItem = report.Drawdown();
-            controlName = chartItem.CustomControlName;
-            AddChartToDoc(mainPart, chartItem, controlName);
+            AddChartToDoc(mainPart, chartItem);
 
             // Ten Year Return Chart
             chartItem = report.TenYearReturn();
-            controlName = chartItem.CustomControlName;
-            AddChartToDoc(mainPart, chartItem, controlName);
+            AddChartToDoc(mainPart, chartItem);
 
             // Stress Test Market Rise Bar Chart
             chartItem = report.StressTestMarketRise();
-            controlName = chartItem.CustomControlName;
-            AddChartToDoc(mainPart, chartItem, controlName);
+            AddChartToDoc(mainPart, chartItem);
 
             // Stress Test Market Crash Bar Chart
             chartItem = report.StressTestMarketCrash();
-            controlName = chartItem.CustomControlName;
-            AddChartToDoc(mainPart, chartItem, controlName, StressTestBarChart.Cx, StressTestBarChart.Cy);
+            AddChartToDoc(mainPart, chartItem, StressTestBarChart.Cx, StressTestBarChart.Cy);
 
             // Rolling Return 1 yr
             chartItem = report.RollingReturnChart(1);
-            controlName = chartItem.CustomControlName;
-            AddChartToDoc(mainPart, chartItem, controlName, RollingReturnLineChart.Cx, RollingReturnLineChart.Cy);
+            AddChartToDoc(mainPart, chartItem, RollingReturnLineChart.Cx, RollingReturnLineChart.Cy);
 
             // Rolling Return 3 yr
             chartItem = report.RollingReturnChart(3);
-            controlName = chartItem.CustomControlName;
-            AddChartToDoc(mainPart, chartItem, controlName, RollingReturnLineChart.Cx, RollingReturnLineChart.Cy);
+            AddChartToDoc(mainPart, chartItem, RollingReturnLineChart.Cx, RollingReturnLineChart.Cy);
 
             // Rolling Return 5 yr
             chartItem = report.RollingReturnChart(5);
-            controlName = chartItem.CustomControlName;
-            AddChartToDoc(mainPart, chartItem, controlName, RollingReturnLineChart.Cx, RollingReturnLineChart.Cy);
+            AddChartToDoc(mainPart, chartItem, RollingReturnLineChart.Cx, RollingReturnLineChart.Cy);
         }
 
-        private void AddChartToDoc(MainDocumentPart mainPart, ChartItem chartItem, string controlName)
+        private void AddChartToDoc(MainDocumentPart mainPart, ChartItem chartItem)
         {
-            AddChartToDoc(mainPart, chartItem, controlName, Graph.Cx, Graph.Cy);
+            AddChartToDoc(mainPart, chartItem, Graph.Cx, Graph.Cy);
         }
 
-        private void AddChartToDoc(MainDocumentPart mainPart, ChartItem chartItem, string controlName, long Cx, long Cy)
+        private void AddChartToDoc(MainDocumentPart mainPart, ChartItem chartItem, long Cx, long Cy)
         {
             // open Word documant and remove existing content from control
-            Paragraph para = findAndRemoveContent(mainPart, controlName);
+            Paragraph para = findAndRemoveContent(mainPart, chartItem.CustomControlName);
 
             // generate new ChartPart and ChartSpace
             ChartPart chartPart = mainPart.AddNewPart<ChartPart>();
@@ -169,7 +157,7 @@ namespace RSMTenon.ReportGenerator
             // generate a new Wordprocessing Drawing, add to a new Run,
             // and relate to new ChartPart
             Run run = new Run();
-            Drawing drawing = GraphDrawing.GenerateDrawing(relId, controlName, docPrId, Cx, Cy);
+            Drawing drawing = GraphDrawing.GenerateDrawing(relId, chartItem.CustomControlName, docPrId, Cx, Cy);
             docPrId++;
             para.Append(run);
             run.Append(drawing);
@@ -188,8 +176,7 @@ namespace RSMTenon.ReportGenerator
                 .Contains
                 (s.SdtProperties.GetFirstChild<SdtAlias>().Val.Value)).ToList();
 
-            if (stdList.Count != 0)
-            {
+            if (stdList.Count != 0) {
                 SdtBlock sdt = stdList.First<SdtBlock>();
                 OpenXmlElement parent = sdt.Parent;
                 parent.InsertAfter(table, sdt);
@@ -204,8 +191,7 @@ namespace RSMTenon.ReportGenerator
             SdtBlock sdt = main.Document.Descendants<SdtBlock>().Where(
                  s => s.SdtProperties.GetFirstChild<SdtAlias>().Val.Value.Equals(blockName)).First();
 
-            if (sdt != null)
-            {
+            if (sdt != null) {
                 Paragraph para = sdt.SdtContentBlock.GetFirstChild<Paragraph>();
                 para.RemoveAllChildren();
                 return para;
@@ -226,13 +212,11 @@ namespace RSMTenon.ReportGenerator
             int buflen = 16384;
             MemoryStream output = null;
 
-            using (FileStream input = new FileStream(source, FileMode.Open, FileAccess.Read, FileShare.Read))
-            {
+            using (FileStream input = new FileStream(source, FileMode.Open, FileAccess.Read, FileShare.Read)) {
                 output = new MemoryStream(buflen);
                 byte[] buffer = new byte[buflen];
                 int len;
-                while ((len = input.Read(buffer, 0, buffer.Length)) > 0)
-                {
+                while ((len = input.Read(buffer, 0, buffer.Length)) > 0) {
                     output.Write(buffer, 0, len);
                 }
             }
@@ -242,14 +226,11 @@ namespace RSMTenon.ReportGenerator
 
         private static void copyFile(string source, string destination)
         {
-            using (FileStream input = new FileStream(source, FileMode.Open, FileAccess.Read, FileShare.Read))
-            {
-                using (FileStream output = new FileStream(destination, FileMode.Create, FileAccess.Write))
-                {
+            using (FileStream input = new FileStream(source, FileMode.Open, FileAccess.Read, FileShare.Read)) {
+                using (FileStream output = new FileStream(destination, FileMode.Create, FileAccess.Write)) {
                     byte[] buffer = new byte[16384];
                     int len;
-                    while ((len = input.Read(buffer, 0, buffer.Length)) > 0)
-                    {
+                    while ((len = input.Read(buffer, 0, buffer.Length)) > 0) {
                         output.Write(buffer, 0, len);
                     }
                 }
@@ -265,12 +246,10 @@ namespace RSMTenon.ReportGenerator
         {
             var sdts = mainPart.Document.Descendants<SdtRun>();
             bool removed = false;
-            foreach (var sdt in sdts)
-            {
+            foreach (var sdt in sdts) {
                 var alias = sdt.Descendants<SdtAlias>().FirstOrDefault();
                 if ((alias != null) && (alias.Val != null) &&
-                  (alias.Val.HasValue) && (alias.Val.Value == controlAlias))
-                {
+                  (alias.Val.HasValue) && (alias.Val.Value == controlAlias)) {
                     sdt.Remove();
                     removed = true;
                 }
@@ -283,12 +262,10 @@ namespace RSMTenon.ReportGenerator
         {
             var sdts = mainPart.Document.Descendants<SdtBlock>();
             bool removed = false;
-            foreach (var sdt in sdts)
-            {
+            foreach (var sdt in sdts) {
                 var alias = sdt.Descendants<SdtAlias>().FirstOrDefault();
                 if ((alias != null) && (alias.Val != null) &&
-                  (alias.Val.HasValue) && (alias.Val.Value == controlAlias))
-                {
+                  (alias.Val.HasValue) && (alias.Val.Value == controlAlias)) {
                     sdt.Remove();
                     removed = true;
                 }
