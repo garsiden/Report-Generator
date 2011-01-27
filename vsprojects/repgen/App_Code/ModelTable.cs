@@ -28,18 +28,18 @@ namespace RSMTenon.ReportGenerator
 
             TableProperties tableProperties1 = new TableProperties();
             TableWidth tableWidth1 = new TableWidth() { Width = "8750", Type = TableWidthUnitValues.Dxa };
+            TableLayout tableLayout1 = new TableLayout() { Type = TableLayoutValues.Fixed };
             TableIndentation tableIndentation1 = new TableIndentation() { Width = 108, Type = TableWidthUnitValues.Dxa };
             TableLook tableLook1 = new TableLook() { Val = "04A0" };
-            TableLayout layout = new TableLayout() { Type = TableLayoutValues.Fixed };
 
             tableProperties1.Append(tableWidth1);
             tableProperties1.Append(tableIndentation1);
+            tableProperties1.Append(tableLayout1);
             tableProperties1.Append(tableLook1);
-            tableProperties1.Append(layout);
 
             TableGrid tableGrid1 = new TableGrid();
             GridColumn gridColumn;
-            
+
             foreach (string cw in colwidths) {
                 gridColumn = new GridColumn() { Width = cw };
                 tableGrid1.Append(gridColumn);
@@ -63,8 +63,7 @@ namespace RSMTenon.ReportGenerator
             return tableRowProperties1;
         }
 
-
-        public TableRow GenerateTableHeaderRow( List<CellProps> cellProps, UInt32Value height)
+        public TableRow GenerateTableHeaderRow(List<CellProps> cellProps, UInt32Value height)
         {
             TableRow tableRow1 = new TableRow();
             TableRowProperties tableRowProperties1 = generateTableRowProperties(height);
@@ -145,7 +144,8 @@ namespace RSMTenon.ReportGenerator
             tableRow1.Append(tableRowProperties1);
 
             foreach (CellProps cp in cellProps) {
-                if (cp.span == 0) continue;
+                if (cp.span == 0)
+                    continue;
                 TableCell tableCell1 = new TableCell();
                 TableCellProperties tableCellProperties1 = new TableCellProperties();
                 TableCellBorders tableCellBorders1 = null;
@@ -221,7 +221,8 @@ namespace RSMTenon.ReportGenerator
             tableRow1.Append(tableRowProperties1);
 
             foreach (CellProps cp in cellProps) {
-                if (cp.span == 0) continue;
+                if (cp.span == 0)
+                    continue;
                 TableCell tableCell1 = new TableCell();
                 TableCellProperties tableCellProperties1 = new TableCellProperties();
                 TableCellBorders tableCellBorders1;
@@ -291,7 +292,7 @@ namespace RSMTenon.ReportGenerator
 
                 tableCell1.Append(tableCellProperties1);
                 tableCell1.Append(paragraph1);
-                tableRow1.Append(tableCell1);                
+                tableRow1.Append(tableCell1);
             }
             return tableRow1;
         }
@@ -345,7 +346,6 @@ namespace RSMTenon.ReportGenerator
             TableRow header = GenerateTableHeaderRow(cellProps, 465U);
 
             return header;
-
         }
     }
 }
