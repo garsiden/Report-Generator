@@ -66,7 +66,6 @@
                 <title>Ten Year Return</title>
                 <asset-class id="GLEQ" colour-hex="808080" />
                 <asset-class id="CASH" colour-hex="000000" />
-                <ima id="IMACautious" colour-hex="C0C0C0"/>
             </chart>
 
             <chart id="stress-test-market-rise">
@@ -109,7 +108,6 @@
 
                     <category id="russian-debt-crisis" from="1998-08-31" to="1998-09-30" pre-date="false">
                         <point-name>Russian Debt Crisis &amp; LTCM Collapse {0} - {1}</point-name>
-
                     </category>
                 </categories>
             </chart>
