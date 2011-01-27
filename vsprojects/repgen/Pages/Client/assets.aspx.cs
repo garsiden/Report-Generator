@@ -22,7 +22,6 @@ public partial class Pages_Client_assets : RepGenPage
             {
                 Guid guid = new Guid(guidString);
                 client = Client.GetClientByGUID(guid);
-                //gridAsset.Caption = client.Name;
                 clientAssetHeader.InnerText = "Client Assets By Class for " + client.Name;
                 hyperClient.NavigateUrl += String.Format("?guid={0}", guid);
             }
@@ -30,7 +29,7 @@ public partial class Pages_Client_assets : RepGenPage
             gridAsset.DataBind();
         }
 
-        labelExceptionDetails.Visible = labelException.Visible = false;
+        labelException.Visible = labelExceptionDetails.Visible = false;
     }
 
     protected void detailsView_DataBound(object sender, EventArgs e)
@@ -61,7 +60,6 @@ public partial class Pages_Client_assets : RepGenPage
             if ((string)e.CommandArgument == "AllNew")
             {
                 Table tbl = (Table)gridAsset.Controls[0];
-                //var tbl2 = gridAsset.Controls[1];
                 GridViewRow gvr = (GridViewRow)tbl.Controls[0];
                 textName = (TextBox)gvr.FindControl("textAssetNameAddAllNew");
                 textAmount = (TextBox)gvr.FindControl("textAmountAddAllNew");
@@ -96,16 +94,13 @@ public partial class Pages_Client_assets : RepGenPage
             else
                 gridAsset.SelectedIndex = -1;
         }
-
     }
+
     protected void detailsView_ItemUpdated(object sender, DetailsViewUpdatedEventArgs e)
     {
         if (e.Exception != null)
         {
-            labelExceptionDetails.Visible = true;
-            labelExceptionDetails.Text = "There was a problem updating the client assets. ";
-            labelExceptionDetails.Text += "<br/>";
-            labelExceptionDetails.Text += e.Exception.InnerException.Message;
+            showException(e.Exception, labelExceptionDetails, "updating the client assets");
             e.ExceptionHandled = true;
             e.KeepInEditMode = true;
         }
@@ -115,7 +110,6 @@ public partial class Pages_Client_assets : RepGenPage
     {
         if (e.InputParameters[0] == null)
             e.InputParameters[0] = Guid.Empty;
-            //e.Cancel = true;
     }
 
     protected void sourceDetails_Updating(object sender, ObjectDataSourceMethodEventArgs e)
@@ -177,13 +171,9 @@ public partial class Pages_Client_assets : RepGenPage
     {
         if (e.Exception != null)
         {
-            labelExceptionDetails.Visible = true;
-            labelExceptionDetails.Text = "There was a problem updating the client assets. ";
-            labelExceptionDetails.Text += "<br/>";
-            labelExceptionDetails.Text += e.Exception.InnerException.Message;
+            showException(e.Exception, labelException, "updating the client assets");
             e.ExceptionHandled = true;
             e.KeepInEditMode = true;
         }
-
     }
 }

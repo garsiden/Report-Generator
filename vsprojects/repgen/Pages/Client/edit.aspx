@@ -126,8 +126,8 @@
                 Display="None"></asp:CompareValidator>
             <asp:RequiredFieldValidator ID="validRequiredInitialFee" runat="server" ErrorMessage="Please enter an Initial Fee."
                 ControlToValidate="InitialFeeTextBox" Display="None"></asp:RequiredFieldValidator>
-            <asp:RangeValidator ID="validRangeInitialFee" runat="server" ErrorMessage="Please enter a valid Initial Fee."
-                Type="Currency" MaximumValue="5" MinimumValue="0.25" ControlToValidate="InitialFeeTextBox"
+            <asp:RangeValidator ID="validRangeInitialFee" runat="server" ErrorMessage="Please enter an Initial Fee of between 0 and 5."
+                Type="Currency" MaximumValue="5" MinimumValue="0" ControlToValidate="InitialFeeTextBox"
                 Display="None"></asp:RangeValidator>
         </EditItemTemplate>
         <InsertItemTemplate>
@@ -382,7 +382,7 @@
         Text="Create Report" CssClass="button" Width="100px" />
     <br />
     <br />
-    <asp:Label ID="ExceptionDetails" runat="server"></asp:Label>
+    <asp:Label ID="labelException" runat="server"></asp:Label>
     <br />
     <br />
     <asp:ObjectDataSource ID="sourceClient" runat="server" ConflictDetection="CompareAllValues"

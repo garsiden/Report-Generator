@@ -35,10 +35,7 @@ public partial class Pages_Content_index : RepGenPage
     {
         if (e.Exception != null)
         {
-            labelException.Visible = true;
-            labelException.Text = "There was a problem deleteing the Text Content. ";
-            labelException.Text += "<br/>";
-            labelException.Text += e.Exception.InnerException.Message;
+            showException(e.Exception, labelException, "deleting the Text Content");
             e.ExceptionHandled = true;
         }
     }
@@ -47,13 +44,9 @@ public partial class Pages_Content_index : RepGenPage
     {
         if (e.Exception != null)
         {
-            labelException.Visible = true;
-            labelException.Text = "There was a problem updating the Text Content. ";
-            labelException.Text += "<br/>";
-            labelException.Text += e.Exception.InnerException.Message;
+            showException(e.Exception, labelException, "updating the Text Content");
             e.ExceptionHandled = true;
             e.KeepInEditMode = true;
         }
-
     }
 }

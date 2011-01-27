@@ -92,8 +92,8 @@ public partial class Pages_Model_edit : RepGenPage
             this.labelLOEQ_AFF.Text = total[LOEQ, AFF].ToString("0.00%");
 
         }
-
     }
+
     protected void gridFixedInterest_RowDataBound(object sender, GridViewRowEventArgs e)
     {
         if (e.Row.RowType == DataControlRowType.DataRow)
@@ -131,21 +131,18 @@ public partial class Pages_Model_edit : RepGenPage
     {
         if (e.Exception != null)
         {
-            labelException.Visible = true;
-            labelException.Text = "There was a problem updating the model. ";
-            labelException.Text += "<br/>";
-            labelException.Text += e.Exception.Message;
+            showException(e.Exception, labelException, "updating the model");
+
             e.ExceptionHandled = true;
             e.KeepInEditMode = true;
         }
     }
+
     protected void sourceModel_Inserted(object sender, LinqDataSourceStatusEventArgs e)
     {
         if (e.Exception != null)
         {
-            labelException.Visible = true;
-            labelException.Text = "There was a problem adding the model entry. ";
-            labelException.Text += "<br/>";
+            showException(e.Exception, labelException, "adding the model entry");
             labelException.Text += e.Exception.Message;
             e.ExceptionHandled = true;
         }
