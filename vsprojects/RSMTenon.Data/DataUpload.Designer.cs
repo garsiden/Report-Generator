@@ -29,6 +29,8 @@ namespace RSMTenon.Data {
         
         private BenchmarkDataTable tableBenchmark;
         
+        private ModelDataTable tableModel;
+        
         private global::System.Data.SchemaSerializationMode _schemaSerializationMode = global::System.Data.SchemaSerializationMode.IncludeSchema;
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -60,6 +62,9 @@ namespace RSMTenon.Data {
                 }
                 if ((ds.Tables["Benchmark"] != null)) {
                     base.Tables.Add(new BenchmarkDataTable(ds.Tables["Benchmark"]));
+                }
+                if ((ds.Tables["Model"] != null)) {
+                    base.Tables.Add(new ModelDataTable(ds.Tables["Model"]));
                 }
                 this.DataSetName = ds.DataSetName;
                 this.Prefix = ds.Prefix;
@@ -94,6 +99,15 @@ namespace RSMTenon.Data {
         public BenchmarkDataTable Benchmark {
             get {
                 return this.tableBenchmark;
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.ComponentModel.Browsable(false)]
+        [global::System.ComponentModel.DesignerSerializationVisibility(global::System.ComponentModel.DesignerSerializationVisibility.Content)]
+        public ModelDataTable Model {
+            get {
+                return this.tableModel;
             }
         }
         
@@ -162,6 +176,9 @@ namespace RSMTenon.Data {
                 if ((ds.Tables["Benchmark"] != null)) {
                     base.Tables.Add(new BenchmarkDataTable(ds.Tables["Benchmark"]));
                 }
+                if ((ds.Tables["Model"] != null)) {
+                    base.Tables.Add(new ModelDataTable(ds.Tables["Model"]));
+                }
                 this.DataSetName = ds.DataSetName;
                 this.Prefix = ds.Prefix;
                 this.Namespace = ds.Namespace;
@@ -204,6 +221,12 @@ namespace RSMTenon.Data {
                     this.tableBenchmark.InitVars();
                 }
             }
+            this.tableModel = ((ModelDataTable)(base.Tables["Model"]));
+            if ((initTable == true)) {
+                if ((this.tableModel != null)) {
+                    this.tableModel.InitVars();
+                }
+            }
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -217,6 +240,8 @@ namespace RSMTenon.Data {
             base.Tables.Add(this.tableHistoric);
             this.tableBenchmark = new BenchmarkDataTable();
             base.Tables.Add(this.tableBenchmark);
+            this.tableModel = new ModelDataTable();
+            base.Tables.Add(this.tableModel);
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -226,6 +251,11 @@ namespace RSMTenon.Data {
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         private bool ShouldSerializeBenchmark() {
+            return false;
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        private bool ShouldSerializeModel() {
             return false;
         }
         
@@ -285,6 +315,8 @@ namespace RSMTenon.Data {
         public delegate void HistoricRowChangeEventHandler(object sender, HistoricRowChangeEvent e);
         
         public delegate void BenchmarkRowChangeEventHandler(object sender, BenchmarkRowChangeEvent e);
+        
+        public delegate void ModelRowChangeEventHandler(object sender, ModelRowChangeEvent e);
         
         /// <summary>
         ///Represents the strongly named DataTable class.
@@ -1019,6 +1051,359 @@ namespace RSMTenon.Data {
         }
         
         /// <summary>
+        ///Represents the strongly named DataTable class.
+        ///</summary>
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "2.0.0.0")]
+        [global::System.Serializable()]
+        [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")]
+        public partial class ModelDataTable : global::System.Data.TypedTableBase<ModelRow> {
+            
+            private global::System.Data.DataColumn columnGUID;
+            
+            private global::System.Data.DataColumn columnSEDOL;
+            
+            private global::System.Data.DataColumn columnStrategyID;
+            
+            private global::System.Data.DataColumn columnAssetClassID;
+            
+            private global::System.Data.DataColumn columnInvestmentName;
+            
+            private global::System.Data.DataColumn columnWeightingHNW;
+            
+            private global::System.Data.DataColumn columnWeightingAffluent;
+            
+            private global::System.Data.DataColumn columnExpectedYield;
+            
+            private global::System.Data.DataColumn columnPurchaseCharge;
+            
+            private global::System.Data.DataColumn columnSSMA_TimeStamp;
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public ModelDataTable() {
+                this.TableName = "Model";
+                this.BeginInit();
+                this.InitClass();
+                this.EndInit();
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            internal ModelDataTable(global::System.Data.DataTable table) {
+                this.TableName = table.TableName;
+                if ((table.CaseSensitive != table.DataSet.CaseSensitive)) {
+                    this.CaseSensitive = table.CaseSensitive;
+                }
+                if ((table.Locale.ToString() != table.DataSet.Locale.ToString())) {
+                    this.Locale = table.Locale;
+                }
+                if ((table.Namespace != table.DataSet.Namespace)) {
+                    this.Namespace = table.Namespace;
+                }
+                this.Prefix = table.Prefix;
+                this.MinimumCapacity = table.MinimumCapacity;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            protected ModelDataTable(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
+                    base(info, context) {
+                this.InitVars();
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public global::System.Data.DataColumn GUIDColumn {
+                get {
+                    return this.columnGUID;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public global::System.Data.DataColumn SEDOLColumn {
+                get {
+                    return this.columnSEDOL;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public global::System.Data.DataColumn StrategyIDColumn {
+                get {
+                    return this.columnStrategyID;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public global::System.Data.DataColumn AssetClassIDColumn {
+                get {
+                    return this.columnAssetClassID;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public global::System.Data.DataColumn InvestmentNameColumn {
+                get {
+                    return this.columnInvestmentName;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public global::System.Data.DataColumn WeightingHNWColumn {
+                get {
+                    return this.columnWeightingHNW;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public global::System.Data.DataColumn WeightingAffluentColumn {
+                get {
+                    return this.columnWeightingAffluent;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public global::System.Data.DataColumn ExpectedYieldColumn {
+                get {
+                    return this.columnExpectedYield;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public global::System.Data.DataColumn PurchaseChargeColumn {
+                get {
+                    return this.columnPurchaseCharge;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public global::System.Data.DataColumn SSMA_TimeStampColumn {
+                get {
+                    return this.columnSSMA_TimeStamp;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.ComponentModel.Browsable(false)]
+            public int Count {
+                get {
+                    return this.Rows.Count;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public ModelRow this[int index] {
+                get {
+                    return ((ModelRow)(this.Rows[index]));
+                }
+            }
+            
+            public event ModelRowChangeEventHandler ModelRowChanging;
+            
+            public event ModelRowChangeEventHandler ModelRowChanged;
+            
+            public event ModelRowChangeEventHandler ModelRowDeleting;
+            
+            public event ModelRowChangeEventHandler ModelRowDeleted;
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public void AddModelRow(ModelRow row) {
+                this.Rows.Add(row);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public ModelRow AddModelRow(System.Guid GUID, string SEDOL, string StrategyID, string AssetClassID, string InvestmentName, decimal WeightingHNW, decimal WeightingAffluent, decimal ExpectedYield, decimal PurchaseCharge, byte[] SSMA_TimeStamp) {
+                ModelRow rowModelRow = ((ModelRow)(this.NewRow()));
+                object[] columnValuesArray = new object[] {
+                        GUID,
+                        SEDOL,
+                        StrategyID,
+                        AssetClassID,
+                        InvestmentName,
+                        WeightingHNW,
+                        WeightingAffluent,
+                        ExpectedYield,
+                        PurchaseCharge,
+                        SSMA_TimeStamp};
+                rowModelRow.ItemArray = columnValuesArray;
+                this.Rows.Add(rowModelRow);
+                return rowModelRow;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public override global::System.Data.DataTable Clone() {
+                ModelDataTable cln = ((ModelDataTable)(base.Clone()));
+                cln.InitVars();
+                return cln;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            protected override global::System.Data.DataTable CreateInstance() {
+                return new ModelDataTable();
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            internal void InitVars() {
+                this.columnGUID = base.Columns["GUID"];
+                this.columnSEDOL = base.Columns["SEDOL"];
+                this.columnStrategyID = base.Columns["StrategyID"];
+                this.columnAssetClassID = base.Columns["AssetClassID"];
+                this.columnInvestmentName = base.Columns["InvestmentName"];
+                this.columnWeightingHNW = base.Columns["WeightingHNW"];
+                this.columnWeightingAffluent = base.Columns["WeightingAffluent"];
+                this.columnExpectedYield = base.Columns["ExpectedYield"];
+                this.columnPurchaseCharge = base.Columns["PurchaseCharge"];
+                this.columnSSMA_TimeStamp = base.Columns["SSMA_TimeStamp"];
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            private void InitClass() {
+                this.columnGUID = new global::System.Data.DataColumn("GUID", typeof(global::System.Guid), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnGUID);
+                this.columnSEDOL = new global::System.Data.DataColumn("SEDOL", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnSEDOL);
+                this.columnStrategyID = new global::System.Data.DataColumn("StrategyID", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnStrategyID);
+                this.columnAssetClassID = new global::System.Data.DataColumn("AssetClassID", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnAssetClassID);
+                this.columnInvestmentName = new global::System.Data.DataColumn("InvestmentName", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnInvestmentName);
+                this.columnWeightingHNW = new global::System.Data.DataColumn("WeightingHNW", typeof(decimal), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnWeightingHNW);
+                this.columnWeightingAffluent = new global::System.Data.DataColumn("WeightingAffluent", typeof(decimal), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnWeightingAffluent);
+                this.columnExpectedYield = new global::System.Data.DataColumn("ExpectedYield", typeof(decimal), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnExpectedYield);
+                this.columnPurchaseCharge = new global::System.Data.DataColumn("PurchaseCharge", typeof(decimal), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnPurchaseCharge);
+                this.columnSSMA_TimeStamp = new global::System.Data.DataColumn("SSMA_TimeStamp", typeof(byte[]), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnSSMA_TimeStamp);
+                this.columnGUID.AllowDBNull = false;
+                this.columnSEDOL.MaxLength = 50;
+                this.columnStrategyID.AllowDBNull = false;
+                this.columnStrategyID.MaxLength = 2;
+                this.columnAssetClassID.AllowDBNull = false;
+                this.columnAssetClassID.MaxLength = 4;
+                this.columnInvestmentName.AllowDBNull = false;
+                this.columnInvestmentName.MaxLength = 100;
+                this.columnWeightingHNW.AllowDBNull = false;
+                this.columnWeightingAffluent.AllowDBNull = false;
+                this.columnExpectedYield.AllowDBNull = false;
+                this.columnPurchaseCharge.AllowDBNull = false;
+                this.columnSSMA_TimeStamp.ReadOnly = true;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public ModelRow NewModelRow() {
+                return ((ModelRow)(this.NewRow()));
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            protected override global::System.Data.DataRow NewRowFromBuilder(global::System.Data.DataRowBuilder builder) {
+                return new ModelRow(builder);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            protected override global::System.Type GetRowType() {
+                return typeof(ModelRow);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            protected override void OnRowChanged(global::System.Data.DataRowChangeEventArgs e) {
+                base.OnRowChanged(e);
+                if ((this.ModelRowChanged != null)) {
+                    this.ModelRowChanged(this, new ModelRowChangeEvent(((ModelRow)(e.Row)), e.Action));
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            protected override void OnRowChanging(global::System.Data.DataRowChangeEventArgs e) {
+                base.OnRowChanging(e);
+                if ((this.ModelRowChanging != null)) {
+                    this.ModelRowChanging(this, new ModelRowChangeEvent(((ModelRow)(e.Row)), e.Action));
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            protected override void OnRowDeleted(global::System.Data.DataRowChangeEventArgs e) {
+                base.OnRowDeleted(e);
+                if ((this.ModelRowDeleted != null)) {
+                    this.ModelRowDeleted(this, new ModelRowChangeEvent(((ModelRow)(e.Row)), e.Action));
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            protected override void OnRowDeleting(global::System.Data.DataRowChangeEventArgs e) {
+                base.OnRowDeleting(e);
+                if ((this.ModelRowDeleting != null)) {
+                    this.ModelRowDeleting(this, new ModelRowChangeEvent(((ModelRow)(e.Row)), e.Action));
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public void RemoveModelRow(ModelRow row) {
+                this.Rows.Remove(row);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public static global::System.Xml.Schema.XmlSchemaComplexType GetTypedTableSchema(global::System.Xml.Schema.XmlSchemaSet xs) {
+                global::System.Xml.Schema.XmlSchemaComplexType type = new global::System.Xml.Schema.XmlSchemaComplexType();
+                global::System.Xml.Schema.XmlSchemaSequence sequence = new global::System.Xml.Schema.XmlSchemaSequence();
+                DataUpload ds = new DataUpload();
+                global::System.Xml.Schema.XmlSchemaAny any1 = new global::System.Xml.Schema.XmlSchemaAny();
+                any1.Namespace = "http://www.w3.org/2001/XMLSchema";
+                any1.MinOccurs = new decimal(0);
+                any1.MaxOccurs = decimal.MaxValue;
+                any1.ProcessContents = global::System.Xml.Schema.XmlSchemaContentProcessing.Lax;
+                sequence.Items.Add(any1);
+                global::System.Xml.Schema.XmlSchemaAny any2 = new global::System.Xml.Schema.XmlSchemaAny();
+                any2.Namespace = "urn:schemas-microsoft-com:xml-diffgram-v1";
+                any2.MinOccurs = new decimal(1);
+                any2.ProcessContents = global::System.Xml.Schema.XmlSchemaContentProcessing.Lax;
+                sequence.Items.Add(any2);
+                global::System.Xml.Schema.XmlSchemaAttribute attribute1 = new global::System.Xml.Schema.XmlSchemaAttribute();
+                attribute1.Name = "namespace";
+                attribute1.FixedValue = ds.Namespace;
+                type.Attributes.Add(attribute1);
+                global::System.Xml.Schema.XmlSchemaAttribute attribute2 = new global::System.Xml.Schema.XmlSchemaAttribute();
+                attribute2.Name = "tableTypeName";
+                attribute2.FixedValue = "ModelDataTable";
+                type.Attributes.Add(attribute2);
+                type.Particle = sequence;
+                global::System.Xml.Schema.XmlSchema dsSchema = ds.GetSchemaSerializable();
+                if (xs.Contains(dsSchema.TargetNamespace)) {
+                    global::System.IO.MemoryStream s1 = new global::System.IO.MemoryStream();
+                    global::System.IO.MemoryStream s2 = new global::System.IO.MemoryStream();
+                    try {
+                        global::System.Xml.Schema.XmlSchema schema = null;
+                        dsSchema.Write(s1);
+                        for (global::System.Collections.IEnumerator schemas = xs.Schemas(dsSchema.TargetNamespace).GetEnumerator(); schemas.MoveNext(); ) {
+                            schema = ((global::System.Xml.Schema.XmlSchema)(schemas.Current));
+                            s2.SetLength(0);
+                            schema.Write(s2);
+                            if ((s1.Length == s2.Length)) {
+                                s1.Position = 0;
+                                s2.Position = 0;
+                                for (; ((s1.Position != s1.Length) 
+                                            && (s1.ReadByte() == s2.ReadByte())); ) {
+                                    ;
+                                }
+                                if ((s1.Position == s1.Length)) {
+                                    return type;
+                                }
+                            }
+                        }
+                    }
+                    finally {
+                        if ((s1 != null)) {
+                            s1.Close();
+                        }
+                        if ((s2 != null)) {
+                            s2.Close();
+                        }
+                    }
+                }
+                xs.Add(dsSchema);
+                return type;
+            }
+        }
+        
+        /// <summary>
         ///Represents strongly named DataRow class.
         ///</summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "2.0.0.0")]
@@ -1289,6 +1674,151 @@ namespace RSMTenon.Data {
         }
         
         /// <summary>
+        ///Represents strongly named DataRow class.
+        ///</summary>
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "2.0.0.0")]
+        public partial class ModelRow : global::System.Data.DataRow {
+            
+            private ModelDataTable tableModel;
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            internal ModelRow(global::System.Data.DataRowBuilder rb) : 
+                    base(rb) {
+                this.tableModel = ((ModelDataTable)(this.Table));
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public System.Guid GUID {
+                get {
+                    return ((global::System.Guid)(this[this.tableModel.GUIDColumn]));
+                }
+                set {
+                    this[this.tableModel.GUIDColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public string SEDOL {
+                get {
+                    try {
+                        return ((string)(this[this.tableModel.SEDOLColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'SEDOL\' in table \'Model\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableModel.SEDOLColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public string StrategyID {
+                get {
+                    return ((string)(this[this.tableModel.StrategyIDColumn]));
+                }
+                set {
+                    this[this.tableModel.StrategyIDColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public string AssetClassID {
+                get {
+                    return ((string)(this[this.tableModel.AssetClassIDColumn]));
+                }
+                set {
+                    this[this.tableModel.AssetClassIDColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public string InvestmentName {
+                get {
+                    return ((string)(this[this.tableModel.InvestmentNameColumn]));
+                }
+                set {
+                    this[this.tableModel.InvestmentNameColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public decimal WeightingHNW {
+                get {
+                    return ((decimal)(this[this.tableModel.WeightingHNWColumn]));
+                }
+                set {
+                    this[this.tableModel.WeightingHNWColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public decimal WeightingAffluent {
+                get {
+                    return ((decimal)(this[this.tableModel.WeightingAffluentColumn]));
+                }
+                set {
+                    this[this.tableModel.WeightingAffluentColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public decimal ExpectedYield {
+                get {
+                    return ((decimal)(this[this.tableModel.ExpectedYieldColumn]));
+                }
+                set {
+                    this[this.tableModel.ExpectedYieldColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public decimal PurchaseCharge {
+                get {
+                    return ((decimal)(this[this.tableModel.PurchaseChargeColumn]));
+                }
+                set {
+                    this[this.tableModel.PurchaseChargeColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public byte[] SSMA_TimeStamp {
+                get {
+                    try {
+                        return ((byte[])(this[this.tableModel.SSMA_TimeStampColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'SSMA_TimeStamp\' in table \'Model\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableModel.SSMA_TimeStampColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public bool IsSEDOLNull() {
+                return this.IsNull(this.tableModel.SEDOLColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public void SetSEDOLNull() {
+                this[this.tableModel.SEDOLColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public bool IsSSMA_TimeStampNull() {
+                return this.IsNull(this.tableModel.SSMA_TimeStampColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public void SetSSMA_TimeStampNull() {
+                this[this.tableModel.SSMA_TimeStampColumn] = global::System.Convert.DBNull;
+            }
+        }
+        
+        /// <summary>
         ///Row event argument class
         ///</summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "2.0.0.0")]
@@ -1337,6 +1867,37 @@ namespace RSMTenon.Data {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             public BenchmarkRow Row {
+                get {
+                    return this.eventRow;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public global::System.Data.DataRowAction Action {
+                get {
+                    return this.eventAction;
+                }
+            }
+        }
+        
+        /// <summary>
+        ///Row event argument class
+        ///</summary>
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "2.0.0.0")]
+        public class ModelRowChangeEvent : global::System.EventArgs {
+            
+            private ModelRow eventRow;
+            
+            private global::System.Data.DataRowAction eventAction;
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public ModelRowChangeEvent(ModelRow row, global::System.Data.DataRowAction action) {
+                this.eventRow = row;
+                this.eventAction = action;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public ModelRow Row {
                 get {
                     return this.eventRow;
                 }
@@ -2017,6 +2578,260 @@ SELECT Date, STBO, CAMA, BAMA, ACMA, GLGR, SSMA_TimeStamp FROM tblBenchmarkData 
     }
     
     /// <summary>
+    ///Represents the connection and commands used to retrieve and save data.
+    ///</summary>
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "2.0.0.0")]
+    [global::System.ComponentModel.DesignerCategoryAttribute("code")]
+    [global::System.ComponentModel.ToolboxItem(true)]
+    [global::System.ComponentModel.DataObjectAttribute(true)]
+    [global::System.ComponentModel.DesignerAttribute("Microsoft.VSDesigner.DataSource.Design.TableAdapterDesigner, Microsoft.VSDesigner" +
+        ", Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a")]
+    [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
+    public partial class ModelTableAdapter : global::System.ComponentModel.Component {
+        
+        private global::System.Data.SqlClient.SqlDataAdapter _adapter;
+        
+        private global::System.Data.SqlClient.SqlConnection _connection;
+        
+        private global::System.Data.SqlClient.SqlTransaction _transaction;
+        
+        private global::System.Data.SqlClient.SqlCommand[] _commandCollection;
+        
+        private bool _clearBeforeFill;
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public ModelTableAdapter() {
+            this.ClearBeforeFill = true;
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        protected internal global::System.Data.SqlClient.SqlDataAdapter Adapter {
+            get {
+                if ((this._adapter == null)) {
+                    this.InitAdapter();
+                }
+                return this._adapter;
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        internal global::System.Data.SqlClient.SqlConnection Connection {
+            get {
+                if ((this._connection == null)) {
+                    this.InitConnection();
+                }
+                return this._connection;
+            }
+            set {
+                this._connection = value;
+                if ((this.Adapter.InsertCommand != null)) {
+                    this.Adapter.InsertCommand.Connection = value;
+                }
+                if ((this.Adapter.DeleteCommand != null)) {
+                    this.Adapter.DeleteCommand.Connection = value;
+                }
+                if ((this.Adapter.UpdateCommand != null)) {
+                    this.Adapter.UpdateCommand.Connection = value;
+                }
+                for (int i = 0; (i < this.CommandCollection.Length); i = (i + 1)) {
+                    if ((this.CommandCollection[i] != null)) {
+                        ((global::System.Data.SqlClient.SqlCommand)(this.CommandCollection[i])).Connection = value;
+                    }
+                }
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        internal global::System.Data.SqlClient.SqlTransaction Transaction {
+            get {
+                return this._transaction;
+            }
+            set {
+                this._transaction = value;
+                for (int i = 0; (i < this.CommandCollection.Length); i = (i + 1)) {
+                    this.CommandCollection[i].Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.DeleteCommand != null))) {
+                    this.Adapter.DeleteCommand.Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.InsertCommand != null))) {
+                    this.Adapter.InsertCommand.Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.UpdateCommand != null))) {
+                    this.Adapter.UpdateCommand.Transaction = this._transaction;
+                }
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        protected global::System.Data.SqlClient.SqlCommand[] CommandCollection {
+            get {
+                if ((this._commandCollection == null)) {
+                    this.InitCommandCollection();
+                }
+                return this._commandCollection;
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public bool ClearBeforeFill {
+            get {
+                return this._clearBeforeFill;
+            }
+            set {
+                this._clearBeforeFill = value;
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        private void InitAdapter() {
+            this._adapter = new global::System.Data.SqlClient.SqlDataAdapter();
+            global::System.Data.Common.DataTableMapping tableMapping = new global::System.Data.Common.DataTableMapping();
+            tableMapping.SourceTable = "Table";
+            tableMapping.DataSetTable = "Model";
+            tableMapping.ColumnMappings.Add("GUID", "GUID");
+            tableMapping.ColumnMappings.Add("SEDOL", "SEDOL");
+            tableMapping.ColumnMappings.Add("StrategyID", "StrategyID");
+            tableMapping.ColumnMappings.Add("AssetClassID", "AssetClassID");
+            tableMapping.ColumnMappings.Add("InvestmentName", "InvestmentName");
+            tableMapping.ColumnMappings.Add("WeightingHNW", "WeightingHNW");
+            tableMapping.ColumnMappings.Add("WeightingAffluent", "WeightingAffluent");
+            tableMapping.ColumnMappings.Add("ExpectedYield", "ExpectedYield");
+            tableMapping.ColumnMappings.Add("PurchaseCharge", "PurchaseCharge");
+            tableMapping.ColumnMappings.Add("SSMA_TimeStamp", "SSMA_TimeStamp");
+            this._adapter.TableMappings.Add(tableMapping);
+            this._adapter.InsertCommand = new global::System.Data.SqlClient.SqlCommand();
+            this._adapter.InsertCommand.Connection = this.Connection;
+            this._adapter.InsertCommand.CommandText = @"INSERT INTO [dbo].[tblModel] ([GUID], [SEDOL], [StrategyID], [AssetClassID], [InvestmentName], [WeightingHNW], [WeightingAffluent], [ExpectedYield], [PurchaseCharge]) VALUES (@GUID, @SEDOL, @StrategyID, @AssetClassID, @InvestmentName, @WeightingHNW, @WeightingAffluent, @ExpectedYield, @PurchaseCharge)";
+            this._adapter.InsertCommand.CommandType = global::System.Data.CommandType.Text;
+            this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@GUID", global::System.Data.SqlDbType.UniqueIdentifier, 0, global::System.Data.ParameterDirection.Input, 0, 0, "GUID", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@SEDOL", global::System.Data.SqlDbType.NVarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "SEDOL", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@StrategyID", global::System.Data.SqlDbType.NChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "StrategyID", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@AssetClassID", global::System.Data.SqlDbType.NChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "AssetClassID", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@InvestmentName", global::System.Data.SqlDbType.NVarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "InvestmentName", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@WeightingHNW", global::System.Data.SqlDbType.Decimal, 0, global::System.Data.ParameterDirection.Input, 5, 4, "WeightingHNW", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@WeightingAffluent", global::System.Data.SqlDbType.Decimal, 0, global::System.Data.ParameterDirection.Input, 5, 4, "WeightingAffluent", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@ExpectedYield", global::System.Data.SqlDbType.Decimal, 0, global::System.Data.ParameterDirection.Input, 5, 4, "ExpectedYield", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@PurchaseCharge", global::System.Data.SqlDbType.Money, 0, global::System.Data.ParameterDirection.Input, 0, 0, "PurchaseCharge", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        private void InitConnection() {
+            this._connection = new global::System.Data.SqlClient.SqlConnection();
+            this._connection.ConnectionString = global::RSMTenon.Data.Properties.Settings.Default.RepGenConnectionString;
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        private void InitCommandCollection() {
+            this._commandCollection = new global::System.Data.SqlClient.SqlCommand[1];
+            this._commandCollection[0] = new global::System.Data.SqlClient.SqlCommand();
+            this._commandCollection[0].Connection = this.Connection;
+            this._commandCollection[0].CommandText = "SELECT GUID, SEDOL, StrategyID, AssetClassID, InvestmentName, WeightingHNW, Weigh" +
+                "tingAffluent, ExpectedYield, PurchaseCharge, SSMA_TimeStamp FROM dbo.tblModel";
+            this._commandCollection[0].CommandType = global::System.Data.CommandType.Text;
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
+        [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Fill, true)]
+        public virtual int Fill(DataUpload.ModelDataTable dataTable) {
+            this.Adapter.SelectCommand = this.CommandCollection[0];
+            if ((this.ClearBeforeFill == true)) {
+                dataTable.Clear();
+            }
+            int returnValue = this.Adapter.Fill(dataTable);
+            return returnValue;
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
+        [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Select, true)]
+        public virtual DataUpload.ModelDataTable GetData() {
+            this.Adapter.SelectCommand = this.CommandCollection[0];
+            DataUpload.ModelDataTable dataTable = new DataUpload.ModelDataTable();
+            this.Adapter.Fill(dataTable);
+            return dataTable;
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
+        public virtual int Update(DataUpload.ModelDataTable dataTable) {
+            return this.Adapter.Update(dataTable);
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
+        public virtual int Update(DataUpload dataSet) {
+            return this.Adapter.Update(dataSet, "Model");
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
+        public virtual int Update(global::System.Data.DataRow dataRow) {
+            return this.Adapter.Update(new global::System.Data.DataRow[] {
+                        dataRow});
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
+        public virtual int Update(global::System.Data.DataRow[] dataRows) {
+            return this.Adapter.Update(dataRows);
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
+        [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Insert, true)]
+        public virtual int Insert(System.Guid GUID, string SEDOL, string StrategyID, string AssetClassID, string InvestmentName, decimal WeightingHNW, decimal WeightingAffluent, decimal ExpectedYield, decimal PurchaseCharge) {
+            this.Adapter.InsertCommand.Parameters[0].Value = ((System.Guid)(GUID));
+            if ((SEDOL == null)) {
+                this.Adapter.InsertCommand.Parameters[1].Value = global::System.DBNull.Value;
+            }
+            else {
+                this.Adapter.InsertCommand.Parameters[1].Value = ((string)(SEDOL));
+            }
+            if ((StrategyID == null)) {
+                throw new global::System.ArgumentNullException("StrategyID");
+            }
+            else {
+                this.Adapter.InsertCommand.Parameters[2].Value = ((string)(StrategyID));
+            }
+            if ((AssetClassID == null)) {
+                throw new global::System.ArgumentNullException("AssetClassID");
+            }
+            else {
+                this.Adapter.InsertCommand.Parameters[3].Value = ((string)(AssetClassID));
+            }
+            if ((InvestmentName == null)) {
+                throw new global::System.ArgumentNullException("InvestmentName");
+            }
+            else {
+                this.Adapter.InsertCommand.Parameters[4].Value = ((string)(InvestmentName));
+            }
+            this.Adapter.InsertCommand.Parameters[5].Value = ((decimal)(WeightingHNW));
+            this.Adapter.InsertCommand.Parameters[6].Value = ((decimal)(WeightingAffluent));
+            this.Adapter.InsertCommand.Parameters[7].Value = ((decimal)(ExpectedYield));
+            this.Adapter.InsertCommand.Parameters[8].Value = ((decimal)(PurchaseCharge));
+            global::System.Data.ConnectionState previousConnectionState = this.Adapter.InsertCommand.Connection.State;
+            if (((this.Adapter.InsertCommand.Connection.State & global::System.Data.ConnectionState.Open) 
+                        != global::System.Data.ConnectionState.Open)) {
+                this.Adapter.InsertCommand.Connection.Open();
+            }
+            try {
+                int returnValue = this.Adapter.InsertCommand.ExecuteNonQuery();
+                return returnValue;
+            }
+            finally {
+                if ((previousConnectionState == global::System.Data.ConnectionState.Closed)) {
+                    this.Adapter.InsertCommand.Connection.Close();
+                }
+            }
+        }
+    }
+    
+    /// <summary>
     ///TableAdapterManager is used to coordinate TableAdapters in the dataset to enable Hierarchical Update scenarios
     ///</summary>
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "2.0.0.0")]
@@ -2032,6 +2847,8 @@ SELECT Date, STBO, CAMA, BAMA, ACMA, GLGR, SSMA_TimeStamp FROM tblBenchmarkData 
         private HistoricTableAdapter _historicTableAdapter;
         
         private BenchmarkTableAdapter _benchmarkTableAdapter;
+        
+        private ModelTableAdapter _modelTableAdapter;
         
         private bool _backupDataSetBeforeUpdate;
         
@@ -2074,6 +2891,19 @@ SELECT Date, STBO, CAMA, BAMA, ACMA, GLGR, SSMA_TimeStamp FROM tblBenchmarkData 
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.ComponentModel.EditorAttribute("Microsoft.VSDesigner.DataSource.Design.TableAdapterManagerPropertyEditor, Microso" +
+            "ft.VSDesigner, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" +
+            "", "System.Drawing.Design.UITypeEditor")]
+        public ModelTableAdapter ModelTableAdapter {
+            get {
+                return this._modelTableAdapter;
+            }
+            set {
+                this._modelTableAdapter = value;
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         public bool BackupDataSetBeforeUpdate {
             get {
                 return this._backupDataSetBeforeUpdate;
@@ -2098,6 +2928,10 @@ SELECT Date, STBO, CAMA, BAMA, ACMA, GLGR, SSMA_TimeStamp FROM tblBenchmarkData 
                             && (this._benchmarkTableAdapter.Connection != null))) {
                     return this._benchmarkTableAdapter.Connection;
                 }
+                if (((this._modelTableAdapter != null) 
+                            && (this._modelTableAdapter.Connection != null))) {
+                    return this._modelTableAdapter.Connection;
+                }
                 return null;
             }
             set {
@@ -2116,6 +2950,9 @@ SELECT Date, STBO, CAMA, BAMA, ACMA, GLGR, SSMA_TimeStamp FROM tblBenchmarkData 
                 if ((this._benchmarkTableAdapter != null)) {
                     count = (count + 1);
                 }
+                if ((this._modelTableAdapter != null)) {
+                    count = (count + 1);
+                }
                 return count;
             }
         }
@@ -2126,6 +2963,15 @@ SELECT Date, STBO, CAMA, BAMA, ACMA, GLGR, SSMA_TimeStamp FROM tblBenchmarkData 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         private int UpdateUpdatedRows(DataUpload dataSet, global::System.Collections.Generic.List<global::System.Data.DataRow> allChangedRows, global::System.Collections.Generic.List<global::System.Data.DataRow> allAddedRows) {
             int result = 0;
+            if ((this._modelTableAdapter != null)) {
+                global::System.Data.DataRow[] updatedRows = dataSet.Model.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
+                updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
+                if (((updatedRows != null) 
+                            && (0 < updatedRows.Length))) {
+                    result = (result + this._modelTableAdapter.Update(updatedRows));
+                    allChangedRows.AddRange(updatedRows);
+                }
+            }
             if ((this._benchmarkTableAdapter != null)) {
                 global::System.Data.DataRow[] updatedRows = dataSet.Benchmark.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
                 updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
@@ -2153,6 +2999,14 @@ SELECT Date, STBO, CAMA, BAMA, ACMA, GLGR, SSMA_TimeStamp FROM tblBenchmarkData 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         private int UpdateInsertedRows(DataUpload dataSet, global::System.Collections.Generic.List<global::System.Data.DataRow> allAddedRows) {
             int result = 0;
+            if ((this._modelTableAdapter != null)) {
+                global::System.Data.DataRow[] addedRows = dataSet.Model.Select(null, null, global::System.Data.DataViewRowState.Added);
+                if (((addedRows != null) 
+                            && (0 < addedRows.Length))) {
+                    result = (result + this._modelTableAdapter.Update(addedRows));
+                    allAddedRows.AddRange(addedRows);
+                }
+            }
             if ((this._benchmarkTableAdapter != null)) {
                 global::System.Data.DataRow[] addedRows = dataSet.Benchmark.Select(null, null, global::System.Data.DataViewRowState.Added);
                 if (((addedRows != null) 
@@ -2191,6 +3045,14 @@ SELECT Date, STBO, CAMA, BAMA, ACMA, GLGR, SSMA_TimeStamp FROM tblBenchmarkData 
                 if (((deletedRows != null) 
                             && (0 < deletedRows.Length))) {
                     result = (result + this._benchmarkTableAdapter.Update(deletedRows));
+                    allChangedRows.AddRange(deletedRows);
+                }
+            }
+            if ((this._modelTableAdapter != null)) {
+                global::System.Data.DataRow[] deletedRows = dataSet.Model.Select(null, null, global::System.Data.DataViewRowState.Deleted);
+                if (((deletedRows != null) 
+                            && (0 < deletedRows.Length))) {
+                    result = (result + this._modelTableAdapter.Update(deletedRows));
                     allChangedRows.AddRange(deletedRows);
                 }
             }
@@ -2238,6 +3100,11 @@ SELECT Date, STBO, CAMA, BAMA, ACMA, GLGR, SSMA_TimeStamp FROM tblBenchmarkData 
             }
             if (((this._benchmarkTableAdapter != null) 
                         && (this.MatchTableAdapterConnection(this._benchmarkTableAdapter.Connection) == false))) {
+                throw new global::System.ArgumentException("All TableAdapters managed by a TableAdapterManager must use the same connection s" +
+                        "tring.");
+            }
+            if (((this._modelTableAdapter != null) 
+                        && (this.MatchTableAdapterConnection(this._modelTableAdapter.Connection) == false))) {
                 throw new global::System.ArgumentException("All TableAdapters managed by a TableAdapterManager must use the same connection s" +
                         "tring.");
             }
@@ -2289,6 +3156,15 @@ SELECT Date, STBO, CAMA, BAMA, ACMA, GLGR, SSMA_TimeStamp FROM tblBenchmarkData 
                     if (this._benchmarkTableAdapter.Adapter.AcceptChangesDuringUpdate) {
                         this._benchmarkTableAdapter.Adapter.AcceptChangesDuringUpdate = false;
                         adaptersWithAcceptChangesDuringUpdate.Add(this._benchmarkTableAdapter.Adapter);
+                    }
+                }
+                if ((this._modelTableAdapter != null)) {
+                    revertConnections.Add(this._modelTableAdapter, this._modelTableAdapter.Connection);
+                    this._modelTableAdapter.Connection = ((global::System.Data.SqlClient.SqlConnection)(workConnection));
+                    this._modelTableAdapter.Transaction = ((global::System.Data.SqlClient.SqlTransaction)(workTransaction));
+                    if (this._modelTableAdapter.Adapter.AcceptChangesDuringUpdate) {
+                        this._modelTableAdapter.Adapter.AcceptChangesDuringUpdate = false;
+                        adaptersWithAcceptChangesDuringUpdate.Add(this._modelTableAdapter.Adapter);
                     }
                 }
                 // 
@@ -2356,6 +3232,10 @@ SELECT Date, STBO, CAMA, BAMA, ACMA, GLGR, SSMA_TimeStamp FROM tblBenchmarkData 
                 if ((this._benchmarkTableAdapter != null)) {
                     this._benchmarkTableAdapter.Connection = ((global::System.Data.SqlClient.SqlConnection)(revertConnections[this._benchmarkTableAdapter]));
                     this._benchmarkTableAdapter.Transaction = null;
+                }
+                if ((this._modelTableAdapter != null)) {
+                    this._modelTableAdapter.Connection = ((global::System.Data.SqlClient.SqlConnection)(revertConnections[this._modelTableAdapter]));
+                    this._modelTableAdapter.Transaction = null;
                 }
                 if ((0 < adaptersWithAcceptChangesDuringUpdate.Count)) {
                     global::System.Data.Common.DataAdapter[] adapters = new System.Data.Common.DataAdapter[adaptersWithAcceptChangesDuringUpdate.Count];
