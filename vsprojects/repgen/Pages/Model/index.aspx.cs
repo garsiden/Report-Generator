@@ -18,11 +18,10 @@ public partial class Pages_Model_index : RepGenPage
     {
         if (!IsPostBack)
         {
-            //this.listStrategy.DataBind();
-            //this.gridModel.DataBind();
             this.DataBind();
         }
     }
+
     protected void gridModel_RowDataBound(object sender, GridViewRowEventArgs e)
     {
         if (e.Row.RowType == DataControlRowType.DataRow)
@@ -52,6 +51,7 @@ public partial class Pages_Model_index : RepGenPage
         return Model.GetAssetClasses(strategyId);
 
     }
+
     protected void gridChild_RowDataBound(object sender, GridViewRowEventArgs e)
     {
         if (e.Row.RowType == DataControlRowType.DataRow)
