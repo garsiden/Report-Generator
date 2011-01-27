@@ -6,7 +6,7 @@
 <h4>Upload Template</h4>
 <br />
 <div>
-    <asp:FileUpload ID="uploader" runat="server" Width="476px" />
+    <asp:FileUpload ID="uploader" runat="server" Width="90%" />
 <br />
 <br />
     <asp:Button ID="btnUpload" runat="server" Text="Upload" 
