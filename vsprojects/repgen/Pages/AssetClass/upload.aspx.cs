@@ -11,48 +11,41 @@ using RSMTenon.Data;
 
 public partial class Pages_AssetClass_upload : System.Web.UI.Page
 {
+    private static string tbl = "tblHistoricData";
+
     protected void Page_Load(object sender, EventArgs e)
     {
-        if (IsPostBack)
-        {
+        if (IsPostBack) {
             lblStatus.Text = "";
         }
     }
+
     protected void btnUpload_Click(object sender, EventArgs e)
     {
         var dt = new DataUpload.HistoricDataTable();
 
-        if (uploader.PostedFile.ContentLength != 0)
-        {
-            try
-            {
-                if (uploader.PostedFile.ContentLength > 100000)
-                {
+        if (uploader.PostedFile.ContentLength != 0) {
+            try {
+                if (uploader.PostedFile.ContentLength > 100000) {
                     lblStatus.Text = "File is too large for upload";
-                } else
-                {
-                    using (StreamReader sr = new StreamReader(uploader.PostedFile.InputStream))
-                    {
+                } else {
+                    using (StreamReader sr = new StreamReader(uploader.PostedFile.InputStream)) {
                         string line = null;
                         string[] split = null;
                         char[] sep = { ',' };
-                        while ((line = sr.ReadLine()) != null)
-                        {
-                            if (line.Contains("Date"))
-                            {
+                        while ((line = sr.ReadLine()) != null) {
+                            if (line.Contains("Date")) {
                                 continue;
-                            } else
-                            {
+                            } else {
                                 split = line.Split(sep);
                                 addToTypedTable(dt, split);
                             }
                         }
                     }
-                    RSMTenon.Data.DataUtilities.UploadToDatabase(dt, "tblHistoricData", null);
+                    RSMTenon.Data.DataUtilities.UploadToDatabase(dt, tbl, null);
                     lblStatus.Text = String.Format("{0:#,##0} row(s) added to database", dt.Rows.Count);
                 }
-            } catch (Exception err)
-            {
+            } catch (Exception err) {
                 lblStatus.Text = err.Message;
             }
         }
@@ -78,6 +71,4 @@ public partial class Pages_AssetClass_upload : System.Web.UI.Page
         row.WOBO = Convert.ToDouble(fields[12]);
         dt.AddHistoricRow(row);
     }
-
-
 }

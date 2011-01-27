@@ -11,48 +11,41 @@ using RSMTenon.Data;
 
 public partial class Pages_Benchmark_upload : System.Web.UI.Page
 {
+    private static string tbl = "tblBenchmarkData";
+
     protected void Page_Load(object sender, EventArgs e)
     {
-        if (IsPostBack)
-        {
-            lblStatus.Text = "";
+        if (IsPostBack) {
+            lblStatus.Text = String.Empty;
         }
     }
+
     protected void btnUpload_Click(object sender, EventArgs e)
     {
         var dt = new DataUpload.BenchmarkDataTable();
 
-        if (uploader.PostedFile.ContentLength != 0)
-        {
-            try
-            {
-                if (uploader.PostedFile.ContentLength > 100000)
-                {
+        if (uploader.PostedFile.ContentLength != 0) {
+            try {
+                if (uploader.PostedFile.ContentLength > 100000) {
                     lblStatus.Text = "File is too large for upload";
-                } else
-                {
-                    using (StreamReader sr = new StreamReader(uploader.PostedFile.InputStream))
-                    {
+                } else {
+                    using (StreamReader sr = new StreamReader(uploader.PostedFile.InputStream)) {
                         string line = null;
                         string[] split = null;
                         char[] sep = { ',' };
-                        while ((line = sr.ReadLine()) != null)
-                        {
-                            if (line.StartsWith("Date"))
-                            {
+                        while ((line = sr.ReadLine()) != null) {
+                            if (line.StartsWith("Date")) {
                                 continue;
-                            } else
-                            {
+                            } else {
                                 split = line.Split(sep);
                                 addToTypedTable(dt, split);
                             }
                         }
                     }
-                    RSMTenon.Data.DataUtilities.UploadToDatabase(dt, "tblBenchmarkDataTest", null);
+                    RSMTenon.Data.DataUtilities.UploadToDatabase(dt, tbl, null);
                     lblStatus.Text = String.Format("{0:#,##0} row(s) added to database", dt.Rows.Count);
                 }
-            } catch (Exception err)
-            {
+            } catch (Exception err) {
                 lblStatus.Text = err.Message;
             }
         }
@@ -71,6 +64,4 @@ public partial class Pages_Benchmark_upload : System.Web.UI.Page
         row.GLGR = Convert.ToDouble(fields[5]);
         dt.AddBenchmarkRow(row);
     }
-
-
 }
