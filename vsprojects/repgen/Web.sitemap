@@ -3,48 +3,51 @@
     <siteMapNode  title="Home"  description="">
         <siteMapNode url="Default.aspx" title="Home"  description="Home page">
         </siteMapNode>
-
+        <!--Clients-->
         <siteMapNode title="Clients"  description="">
-            <siteMapNode url="~/Pages/Client/new.aspx" title="Add New Client"  description="" />
+            <siteMapNode url="~/Pages/Client/new.aspx" title="New Client"  description="" />
             <siteMapNode url="~/Pages/Client/index.aspx" title="All Clients"  description="" />
         </siteMapNode>
 
+        <!--Models-->
         <siteMapNode url ="~/Pages/Model/index.aspx" title ="Models" />
 
-        <siteMapNode title="Administration" description ="Administrate static data">
+        <!--Administration-->
+        <siteMapNode title="Administration" description ="Manage static data">
+            <!--Models-->
+            <siteMapNode title="Models" description="Manage Models" >
+                <siteMapNode url ="~/Pages/Model/edit.aspx" title ="Edit" />
+                <siteMapNode url ="~/Pages/Model/upload.aspx" title ="Upload" />
+            </siteMapNode>
+            <!--Strategies-->
+            <siteMapNode url ="~/Pages/Strategy/index.aspx" title ="Strategies" />
+            <!--Asset Classes-->
+            <siteMapNode title="Asset Classes" description="Manange Asset Classes">
+                <siteMapNode url ="~/Pages/AssetClass/index.aspx" title ="Edit" />
+                <siteMapNode url="~/Pages/AssetClass/editA-M.aspx" title="Prices A-M">
+
+                </siteMapNode>
+                <siteMapNode url="~/Pages/AssetClass/editN-Z.aspx" title="Prices N-Z">
+                </siteMapNode>
+                <siteMapNode url ="~/Pages/AssetClass/upload.aspx" title="Upload" />
+            </siteMapNode>
+            <!--Benchmarks-->
             <siteMapNode title="Benchmarks"  description="Manage benchmarks">
                 <siteMapNode url ="~/Pages/Benchmark/index.aspx" title="Edit" />
                 <siteMapNode url ="~/Pages/Benchmark/upload.aspx" title="Upload" />
             </siteMapNode>
-
-            <siteMapNode title="Models" description="Mange Models" >
-                    <siteMapNode url ="~/Pages/Model/edit.aspx" title ="Edit Models" />
-                    <siteMapNode url ="~/Pages/Model/upload.aspx" title ="Upload Models" />
+            <!--Text Content-->
+            <siteMapNode title="Text Content" description="Manage content">
+                <siteMapNode url ="~/Pages/Content/index.aspx" title ="Edit" />
+                <siteMapNode url ="~/Pages/Content/add.aspx" title ="New" />
+                <siteMapNode url ="~/Pages/Content/upload.aspx" title ="Upload XML file" />
             </siteMapNode>
-
-            <siteMapNode url ="~/Pages/Strategy/index.aspx" title ="Strategies" />
-            <siteMapNode url ="~/Pages/AssetClass/index.aspx" title ="Asset Classes" />
-
+            <!--Templates-->
             <siteMapNode title="Template" description="Manage templates">
-                <siteMapNode url="~/Pages/Template/upload.aspx" title="Upload template" />
-                <siteMapNode url="~/Pages/Template/index.aspx" title="Select template" />
+                <siteMapNode url="~/Pages/Template/index.aspx" title="Select" />
+                <siteMapNode url="~/Pages/Template/upload.aspx" title="Upload" />
             </siteMapNode>
 
-            <siteMapNode title="Text Content" description="Manage Content">
-                <siteMapNode url ="~/Pages/Content/index.aspx" title ="Edit Content" />
-                <siteMapNode url ="~/Pages/Content/upload.aspx" title ="Upload Content XML" />
-                <siteMapNode url ="~/Pages/Content/add.aspx" title ="New Content" />
-            </siteMapNode>
-
-        </siteMapNode>
-        <siteMapNode title="Historic Data">
-            <siteMapNode url="~/Pages/AssetClass/editA-M.aspx" title="Asset Classes A-M">
-            </siteMapNode>
-            <siteMapNode url="~/Pages/AssetClass/editN-Z.aspx" title="Asset Classes N-Z">
-            </siteMapNode>
-            <siteMapNode url ="~/Pages/AssetClass/upload.aspx" title="Upload" />
-            <siteMapNode url="~/Pages/Benchmark/edit.aspx" title="Benchmarks">
-            </siteMapNode>
         </siteMapNode>
     </siteMapNode>
 </siteMap>
