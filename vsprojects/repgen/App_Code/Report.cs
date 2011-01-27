@@ -204,7 +204,7 @@ namespace RSMTenon.ReportGenerator
             }
 
             AllocationPieChart pie = new AllocationPieChart();
-            C.Chart chart = pie.GenerateChart(title, data.ToList());
+            C.Chart chart = pie.GenerateChart(title, data);
 
             string ccn = rpt.Element("control-name").Value;
             ChartItem chartItem = new ChartItem { Chart = chart, Title = title, CustomControlName = ccn };
