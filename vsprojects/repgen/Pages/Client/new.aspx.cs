@@ -15,17 +15,14 @@ public partial class Pages_Client_new : RepGenPage
         {
             formView.ChangeMode(FormViewMode.Insert);
         }
-        ExceptionDetails.Visible = false;
+        labelException.Visible = false;
     }
 
     protected void formView_ItemInserted(object sender, FormViewInsertedEventArgs e)
     {
         if (e.Exception != null)
         {
-            ExceptionDetails.Visible = true;
-            ExceptionDetails.Text = "There was a problem inserting the client. ";
-            ExceptionDetails.Text += "<br/>";
-            ExceptionDetails.Text += e.Exception.InnerException.Message;
+            showException(e.Exception, labelException, "adding the client");
             e.ExceptionHandled = true;
             e.KeepInInsertMode = true;
         } else
@@ -38,6 +35,7 @@ public partial class Pages_Client_new : RepGenPage
             }
         }
     }
+
     protected void sourceClient_Inserted(object sender, ObjectDataSourceStatusEventArgs e)
     {
         var rv = e.ReturnValue;

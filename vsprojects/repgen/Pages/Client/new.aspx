@@ -161,8 +161,8 @@
                 Display="None"></asp:CompareValidator>
             <asp:RequiredFieldValidator ID="validRequiredInitialFee" runat="server" ErrorMessage="Please enter an Initial Fee."
                 ControlToValidate="InitialFeeTextBox" Display="None"></asp:RequiredFieldValidator>
-            <asp:RangeValidator ID="validRangeInitialFee" runat="server" ErrorMessage="Please enter a valid Initial Fee."
-                Type="Currency" MaximumValue="5" MinimumValue="0.25" ControlToValidate="InitialFeeTextBox"
+            <asp:RangeValidator ID="validRangeInitialFee" runat="server" ErrorMessage="Please enter an Initial Fee of between 0 and 5."
+                Type="Currency" MaximumValue="5" MinimumValue="0" ControlToValidate="InitialFeeTextBox"
                 Display="None"></asp:RangeValidator>
             <asp:RequiredFieldValidator ID="validRequiredStatus" runat="server" ErrorMessage="Please select a client Status."
                 Display="None" ControlToValidate="radioListStatus"></asp:RequiredFieldValidator>
@@ -320,7 +320,7 @@
         </EmptyDataTemplate>
     </asp:FormView>
     <br />
-    <asp:Label ID="ExceptionDetails" runat="server"></asp:Label><br />
+    <asp:Label ID="labelException" runat="server"></asp:Label><br />
     <br />
     <asp:ObjectDataSource ID="sourceClient" runat="server" DataObjectTypeName="RSMTenon.Data.Client"
         DeleteMethod="DeleteClient" InsertMethod="InsertClient" OldValuesParameterFormatString="original_{0}"
