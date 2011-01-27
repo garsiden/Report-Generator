@@ -10,17 +10,13 @@
     <asp:DetailsView ID="detailsView" runat="server" AutoGenerateRows="False" DataSourceID="sourceAssets"
         CaptionAlign="Top" CssClass="listing" DataKeyNames="ClientGUID" Width="60%" OnItemInserted="detailsView_ItemInserted"
         OnItemUpdated="detailsView_ItemUpdated">
-        <RowStyle CssClass="odd" />
+        <RowStyle CssClass="odd" HorizontalAlign="Left" />
         <EmptyDataTemplate>
-            <tr class="odd">
-                <td class="lnowrap">
-                    <%# GetAssetClassName("CASH") %>
-                    &nbsp;
-                </td>
-                <td>
-                    &nbsp;
-                </td>
-            </tr>
+            <%# GetAssetClassName("CASH") %>
+            &nbsp; </td>
+            <td>
+                &nbsp;
+            </td>
             <tr class="even">
                 <td class="lnowrap">
                     <%# GetAssetClassName("COMM") %>
