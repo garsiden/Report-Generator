@@ -38,7 +38,8 @@ namespace RSMTenon.ReportGenerator
             var fromAttr = test1.Attribute("from");
             var toAttr = test1.Attribute("to");
             var preDate = test1.Attribute("pre-date");
-            PreDate = (preDate.Value.ToString() == "true");
+
+            PreDate = preDate == null ? false : (preDate.Value.ToString() == "true");
 
             if (fromAttr != null) {
                 FromDate = DateTime.ParseExact(fromAttr.Value, format, new DateTimeFormatInfo());
@@ -269,7 +270,6 @@ namespace RSMTenon.ReportGenerator
             lc.AddLineChartSeries(chart, data4, StrategyName + " Strategy", strategyColourHex);
 
             string ccn = rpt.Element("control-name").Value;
-
             ChartItem chartItem = new ChartItem { Chart = chart, Title = title, CustomControlName = ccn };
 
             return chartItem;
@@ -549,7 +549,6 @@ namespace RSMTenon.ReportGenerator
             return modelData;
         }
 
-
         private List<AssetClass> getAssetClasses(XElement rpt)
         {
             var ctx = DataContext;
@@ -776,67 +775,57 @@ namespace RSMTenon.ReportGenerator
 
         private BarGraphSeries stressTestMarketCrashSeries(Dictionary<int, ReturnData> prices, string seriesName, string colourHex, XElement rpt)
         {
-            // var test1 = new StressTest("russian-debt-crisis", rpt);
+            //new StressTest("russian-debt-crisis", rpt);
 
-            // Russian Debt
-            //var start1 = pd.TakeWhile(p => p.Key < test1.FromIntegerDate).Last();
-            //var end1 = pd[test1.ToIntegerDate];
-            //double return1 = (end1.Value - start1.Value.Value) / start1.Value.Value;
+            var tests = new StressTest[]  {
+                new StressTest("economic-slowdown", rpt),
+                new StressTest("technology-bubble-burst", rpt),
+                new StressTest("zeros-collapse", rpt),
+                new StressTest("credit-crunch", rpt)
+            };
 
-            // Economic Slowdown
-            var test2 = new StressTest("economic-slowdown", rpt);
-            var start2 = prices[test2.FromIntegerDate];
-            var end2 = prices[test2.ToIntegerDate];
-            double return2 = (end2.Value - start2.Value) / start2.Value;
+            var pointNames = new string[tests.Length];
+            var values = new double[tests.Length];
 
-            // Technology Bubble
-            var test3 = new StressTest("technology-bubble-burst", rpt);
-            var start3 = prices[test3.FromIntegerDate];
-            var end3 = prices[test3.ToIntegerDate];
-            double return3 = (end3.Value - start3.Value) / start3.Value;
-
-            // Zero's Collapse
-            var test4 = new StressTest("zeros-collapse", rpt);
-            var start4 = prices[test4.FromIntegerDate];
-            var end4 = prices[test4.ToIntegerDate];
-            double return4 = (end4.Value - start4.Value) / start4.Value;
-
-            // Credit Crunch
-            var test5 = new StressTest("credit-crunch", rpt);
-            var start5 = prices[test5.FromIntegerDate];
-            var end5 = prices[test5.ToIntegerDate];
-            double return5 = (end5.Value - start5.Value) / start5.Value;
+            for (int i = 0; i < tests.Length; i++) {
+                var t = tests[i];
+                var start = t.PreDate ? prices.Last(p => p.Key < t.FromIntegerDate).Value : prices[t.FromIntegerDate];
+                var end = prices[t.ToIntegerDate];
+                double rtrn = (end.Value - start.Value) / start.Value;
+                pointNames[i] = t.PointName;
+                values[i] = rtrn;
+            }
 
             var series = new BarGraphSeries
             {
                 Name = seriesName,
                 ColourHex = colourHex,
-                PointNames = new string[] { test3.PointName, test4.PointName, test2.PointName, test5.PointName },
-                Values = new double[] { return3, return4, return2, return5 }
+                PointNames = pointNames,
+                Values = values
             };
 
             return series;
         }
 
-        private BarGraphSeries stressTestMarketRiseSeries(Dictionary<int, ReturnData> pd, string seriesName, string colourHex, XElement rpt)
+        private BarGraphSeries stressTestMarketRiseSeries(Dictionary<int, ReturnData> prices, string seriesName, string colourHex, XElement rpt)
         {
             var test1 = new StressTest("bull", rpt);
 
             // Bull
-            var start1 = pd[test1.FromIntegerDate];
-            var end1 = pd[test1.ToIntegerDate];
+            var start1 = test1.PreDate ? prices.Last(p => p.Key < test1.FromIntegerDate).Value : prices[test1.FromIntegerDate];
+            var end1 = prices[test1.ToIntegerDate];
             double return1 = (end1.Value - start1.Value) / start1.Value;
 
             // Bear
             var test3 = new StressTest("bear", rpt);
-            var start3 = pd[test3.FromIntegerDate];
-            var end3 = pd[test3.ToIntegerDate];
+            var start3 = test3.PreDate ? prices.Last(p => p.Key < test3.FromIntegerDate).Value : prices[test3.FromIntegerDate];
+            var end3 = prices[test3.ToIntegerDate];
             double return3 = (end3.Value - start3.Value) / start3.Value;
 
             // Ten Year Return
             var test2 = new StressTest("ten-year", rpt);
-            var start2 = pd.ElementAt(pd.Count() - 121);
-            var end2 = pd.Last();
+            var start2 = prices.ElementAt(prices.Count() - 121);
+            var end2 = prices.Last();
 
             double return2 = Math.Log(end2.Value.Value / start2.Value.Value);
             test2.FromDate = start2.Value.DateFromInteger;
