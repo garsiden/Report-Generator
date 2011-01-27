@@ -12,23 +12,25 @@ public partial class Pages_Client_edit : RepGenPage
 {
     protected void Page_Load(object sender, EventArgs e)
     {
-        ExceptionDetails.Visible = false;
+        if (!IsPostBack)
+        {
+            string guid = this.Request.QueryString["guid"];
+
+            // set link urls
+            string qs = String.Format("?guid={0}", guid);
+            hyperAsset.NavigateUrl += qs;
+            hyperClass.NavigateUrl += qs;
+        }
+
+        labelException.Visible = false;
     }
 
     protected void formClient_ItemUpdated(object sender, FormViewUpdatedEventArgs e)
     {
         if (e.Exception != null)
         {
-            // Display a user-friendly message
-            ExceptionDetails.Visible = true;
-            ExceptionDetails.Text = "There was a problem updating the client. ";
-            ExceptionDetails.Text += "<br/>";
-            ExceptionDetails.Text += e.Exception.Message;
-
-            // Indicate that the exception has been handled
+            showException(e.Exception, labelException, "updating the client");
             e.ExceptionHandled = true;
-
-            // Keep the row in edit mode
             e.KeepInEditMode = true;
         }
     }
@@ -44,12 +46,6 @@ public partial class Pages_Client_edit : RepGenPage
         FormView form = (FormView)sender;
         var client = (Client)form.DataItem;
 
-        // set link urls
-        string qs = String.Format("?guid={0}", client.GUID);
-
-        hyperAsset.NavigateUrl += qs;
-        hyperClass.NavigateUrl += qs;
-    
         // set header
         this.clientHeader.InnerText = String.Format("Edit Client Details for {0}", client.Name);
     }
