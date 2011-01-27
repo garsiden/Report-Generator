@@ -4,9 +4,10 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Web;
 using System.Configuration;
+using System.IO;
+
 using RSMTenon.Graphing;
 
-using System.IO;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
@@ -101,10 +102,10 @@ namespace RSMTenon.ReportGenerator
             AddChartToDoc(mainPart, chartItem, controlName);
 
             // Comparison Chart
+            controlName = chartItem.CustomControlName;
             if (report.Client.ExistingAssets)
             {
                 chartItem = report.AllocationComparison();
-                controlName = chartItem.CustomControlName;
                 AddChartToDoc(mainPart, chartItem, controlName);
             } else
             {
@@ -257,9 +258,8 @@ namespace RSMTenon.ReportGenerator
 
         public static string GetUserId()
         {
-            return Environment.UserName;
+            return System.Security.Principal.WindowsIdentity.GetCurrent().Name;
         }
-
 
         public static bool RemoveContentControlFromRun(MainDocumentPart mainPart, string controlAlias)
         {
