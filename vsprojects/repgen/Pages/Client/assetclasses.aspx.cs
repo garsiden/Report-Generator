@@ -26,7 +26,8 @@ public partial class Pages_Client_assetclasses : RepGenPage
                 }
             }
         }
-        ExceptionDetails.Visible = false;
+
+        labelException.Visible = false;
     }
 
     protected void sourceAssets_Inserting(object sender, LinqDataSourceInsertEventArgs e)
@@ -34,7 +35,6 @@ public partial class Pages_Client_assetclasses : RepGenPage
         var asset = (ClientAssetClass)e.NewObject;
 
         string guidString = ViewState["ClientAssetClass_ClientGUID"].ToString();
-        //Request.QueryString["guid"];
         Guid guid = new Guid(guidString);
         asset.ClientGUID = guid;
     }
@@ -42,46 +42,28 @@ public partial class Pages_Client_assetclasses : RepGenPage
     protected void sourceAssetObject_Inserting(object sender, ObjectDataSourceMethodEventArgs e)
     {
         string guidString = ViewState["ClientAssetClass_ClientGUID"].ToString();
-        //Request.QueryString["guid"];
         Guid guid = new Guid(guidString);
-
         var asset = (ClientAssetClass)e.InputParameters["clientAsset"];
         asset.ClientGUID = guid;
     }
+
     protected void detailsView_ItemUpdated(object sender, DetailsViewUpdatedEventArgs e)
     {
         if (e.Exception != null)
         {
-            // Display a user-friendly message
-            ExceptionDetails.Visible = true;
-            ExceptionDetails.Text = "There was a problem updating the client assets. ";
-            ExceptionDetails.Text += "<br/>";
-            ExceptionDetails.Text += e.Exception.Message;
-
-            // Indicate that the exception has been handled
+            showException(e.Exception, labelException, "updating the client");
             e.ExceptionHandled = true;
-
-            // Keep the row in edit mode
             e.KeepInEditMode = true;
         }
-
     }
+
     protected void detailsView_ItemInserted(object sender, DetailsViewInsertedEventArgs e)
     {
         if (e.Exception != null)
         {
-            // Display a user-friendly message
-            ExceptionDetails.Visible = true;
-            ExceptionDetails.Text = "There was a problem inserting the client assets. ";
-            ExceptionDetails.Text += "<br/>";
-            ExceptionDetails.Text += e.Exception.Message;
-
-            // Indicate that the exception has been handled
+            showException(e.Exception, labelException, "adding the client");
             e.ExceptionHandled = true;
-
-            // Keep the row in edit mode
             e.KeepInInsertMode = true;
         }
-
     }
 }
