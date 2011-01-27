@@ -19,5 +19,11 @@ namespace RSMTenon.Data
             else
                 return null;
         }
+
+        public static IQueryable<AssetClass> GetAssetClasses()
+        {
+            var ctx = new RepGenDataContext();
+            return ctx.AssetClasses;
+        }
     }
 }
