@@ -40,12 +40,10 @@ namespace RSMTenon.ReportGenerator
             var preDate = test1.Attribute("pre-date");
             PreDate = (preDate.Value.ToString() == "true");
 
-            if (fromAttr != null)
-            {
+            if (fromAttr != null) {
                 FromDate = DateTime.ParseExact(fromAttr.Value, format, new DateTimeFormatInfo());
             }
-            if (toAttr != null)
-            {
+            if (toAttr != null) {
                 ToDate = DateTime.ParseExact(toAttr.Value, format, new DateTimeFormatInfo());
             }
         }
@@ -92,6 +90,16 @@ namespace RSMTenon.ReportGenerator
         private string clientColourHex = "98CC00";
         private string benchmarkColourHex = "C0C0C0";
 
+        public string GetContentControlNameForChart(string chartId)
+        {
+            XElement rpt = chartSpec(chartId);
+
+            if (rpt == null)
+                return null;
+            else
+                return rpt.Element("control-name").Value;
+        }
+
         #region Text
 
 
@@ -110,8 +118,7 @@ namespace RSMTenon.ReportGenerator
             var formats = new List<string>();
             var colHeaders = new List<string>();
 
-            foreach (var c in cols)
-            {
+            foreach (var c in cols) {
                 colwidths.Add(c.Attribute("width").Value);
                 var fmt = c.Attributes("format").SingleOrDefault();
                 formats.Add(fmt == null ? "" : fmt.Value);
@@ -128,22 +135,19 @@ namespace RSMTenon.ReportGenerator
             decimal totalIncome = 0;
             decimal income = 0;
 
-            foreach (var g in model)
-            {
+            foreach (var g in model) {
                 // Asset Class sub-headings
                 var headerCells = new List<CellProps>();
                 headerCells.Add(new CellProps { text = g.AssetClassName, align = JustificationValues.Left });
                 headerCells.Add(new CellProps { text = g.Weighting.ToString(formats[1]) });
-                for (int i = 2; i < 6; i++)
-                {
+                for (int i = 2; i < 6; i++) {
                     headerCells.Add(new CellProps());
                 }
                 var header = modelTable.GenerateTableHeaderRow(headerCells, rowHeight);
                 table1.Append(header);
 
                 // investment rows for each asset class
-                foreach (var inv in g.Investments)
-                {
+                foreach (var inv in g.Investments) {
                     decimal weighting = Client.HighNetWorth ? inv.WeightingHNW : inv.WeightingAffluent;
                     income = amount * weighting * inv.ExpectedYield;
                     totalIncome += income;
@@ -185,21 +189,17 @@ namespace RSMTenon.ReportGenerator
             string title = null;
 
             // set title
-            if (Client.ExistingAssets)
-            {
+            if (Client.ExistingAssets) {
                 title = rpt.Element("title").Element("existing-assets").Value;
-            } else
-            {
+            } else {
                 title = String.Format(rpt.Element("title").Element("cash").Value, StrategyName);
             }
 
             List<AssetWeighting> data;
 
-            if (Client.ExistingAssets)
-            {
+            if (Client.ExistingAssets) {
                 data = ClientAssetClass.GetClientAssetWeighting(Client.GUID);
-            } else
-            {
+            } else {
                 data = Model.GetModelAllocation(Client.StrategyID, Client.HighNetWorth).ToList();
             }
 
@@ -251,8 +251,7 @@ namespace RSMTenon.ReportGenerator
             C.Chart chart = lc.GenerateChart(title);
 
             // client assets
-            if (Client.ExistingAssets)
-            {
+            if (Client.ExistingAssets) {
                 var data1 = calculateClientAssetDrawdown();
                 lc.AddLineChartSeries(chart, data1, "Current", clientColourHex);
             }
@@ -292,8 +291,7 @@ namespace RSMTenon.ReportGenerator
             StressTestBarChart bc = new StressTestBarChart();
             C.Chart chart = bc.GenerateChart(title);
 
-            if (Client.ExistingAssets)
-            {
+            if (Client.ExistingAssets) {
                 var prices1 = calculateClientAssetPrices();
                 var series1 = stressTestMarketRiseSeries(prices1, "Current", clientColourHex, rpt);
                 bc.AddBarChartSeries(chart, series1);
@@ -336,8 +334,7 @@ namespace RSMTenon.ReportGenerator
             StressTestBarChart bc = new StressTestBarChart();
             C.Chart chart = bc.GenerateChart(title);
 
-            if (Client.ExistingAssets)
-            {
+            if (Client.ExistingAssets) {
                 var returns1 = calculateClientAssetPrices();
                 var series1 = stressTestMarketCrashSeries(returns1, "Current", clientColourHex, rpt);
                 bc.AddBarChartSeries(chart, series1);
@@ -380,8 +377,7 @@ namespace RSMTenon.ReportGenerator
             TenYearLineChart lc = new TenYearLineChart();
             C.Chart chart = lc.GenerateChart(null);
 
-            if (Client.ExistingAssets)
-            {
+            if (Client.ExistingAssets) {
                 var rtrn1 = getClientAssetReturn();
                 var data1 = calculateTenYearReturn(rtrn1);
                 string dataKey1 = "Current";
@@ -422,8 +418,7 @@ namespace RSMTenon.ReportGenerator
         {
             string id = null;
 
-            switch (years)
-            {
+            switch (years) {
                 case 1:
                     id = "rolling-return-1yr";
                     break;
@@ -451,8 +446,7 @@ namespace RSMTenon.ReportGenerator
             RollingReturnLineChart lc = new RollingReturnLineChart();
             C.Chart chart = lc.GenerateChart(title);
 
-            if (Client.ExistingAssets)
-            {
+            if (Client.ExistingAssets) {
                 string dataKey1 = "Current";
                 var data1 = getClientAssetReturn();
                 var rrex = calulateRollingReturn(data1, years);
@@ -489,8 +483,7 @@ namespace RSMTenon.ReportGenerator
         {
             get
             {
-                if (context == null)
-                {
+                if (context == null) {
                     context = new RepGenDataContext();
                 }
 
@@ -502,8 +495,7 @@ namespace RSMTenon.ReportGenerator
         {
             List<ReturnData> prices = null;
             assetClassPricesDictionary.TryGetValue(assetClassId, out prices);
-            if (prices == null)
-            {
+            if (prices == null) {
                 prices = DataContext.HistoricPrice(assetClassId).ToList();
                 assetClassPricesDictionary[assetClassId] = prices;
             }
@@ -515,8 +507,7 @@ namespace RSMTenon.ReportGenerator
         {
             List<ReturnData> returns = null;
             assetClassReturnDictionary.TryGetValue(assetClassId, out returns);
-            if (returns == null)
-            {
+            if (returns == null) {
                 returns = DataContext.AssetClassReturn(assetClassId).ToList();
                 assetClassReturnDictionary[assetClassId] = returns;
             }
@@ -567,8 +558,7 @@ namespace RSMTenon.ReportGenerator
                          select spec;
 
             var classes = new List<AssetClass>();
-            foreach (var a in assets)
-            {
+            foreach (var a in assets) {
                 classes.Add(new AssetClass()
                 {
                     ID = a.Attribute("id").Value,
@@ -583,16 +573,14 @@ namespace RSMTenon.ReportGenerator
 
         private List<AssetClass> getAssetClasses()
         {
-            if (assetClasses == null)
-            {
+            if (assetClasses == null) {
                 var ctx = DataContext;
                 var allClasses = ctx.AssetClasses.ToDictionary(a => a.ID);
                 var assets = from spec in ReportSpec.Descendants("asset-class")
                              select spec;
 
                 var classes = new List<AssetClass>();
-                foreach (var a in assets)
-                {
+                foreach (var a in assets) {
                     classes.Add(new AssetClass()
                     {
                         ID = a.Attribute("id").Value,
@@ -626,8 +614,7 @@ namespace RSMTenon.ReportGenerator
 
         private Dictionary<int, ReturnData> calculateModelPrices()
         {
-            if (modelPrices == null)
-            {
+            if (modelPrices == null) {
                 var returns = getModelReturn();
                 var calc = new ReturnCalculation();
                 var prices = from p in returns
@@ -775,8 +762,7 @@ namespace RSMTenon.ReportGenerator
             var rv = new List<ReturnData>();
             int i = 0;
 
-            foreach (var item in to)
-            {
+            foreach (var item in to) {
                 var rd = new ReturnData
                 {
                     Value = calc.RollingReturn(item, from.ElementAt(i++), years),
@@ -875,8 +861,7 @@ namespace RSMTenon.ReportGenerator
         {
             get
             {
-                if (reportSpec == null)
-                {
+                if (reportSpec == null) {
                     reportSpec = XElement.Load(SpecFile);
                 }
                 return reportSpec;
@@ -911,8 +896,7 @@ namespace RSMTenon.ReportGenerator
         {
             get
             {
-                if (strategyName == null)
-                {
+                if (strategyName == null) {
                     strategyName = Strategy.GetStrategyNameFromId(Client.StrategyID);
                 }
                 return strategyName;
