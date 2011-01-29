@@ -9,8 +9,7 @@
     <br />
     <asp:GridView ID="gridAsset" runat="server" AutoGenerateColumns="False" CssClass="listing"
         DataKeyNames="GUID" DataSourceID="sourceAssetsObject" AllowSorting="True" OnRowCommand="gridAsset_RowCommand"
-        ShowFooter="True" OnRowDataBound="gridAsset_RowDataBound" 
-        onrowupdated="gridAsset_RowUpdated">
+        ShowFooter="True" OnRowDataBound="gridAsset_RowDataBound" OnRowUpdated="gridAsset_RowUpdated">
         <RowStyle CssClass="odd" />
         <Columns>
             <asp:TemplateField HeaderText="Asset Name">
@@ -66,44 +65,35 @@
             </asp:CommandField>
         </Columns>
         <EmptyDataTemplate>
+            <span style="width: 70%;">Asset Name</span> <span style="width: 30%; float: right;">
+                Amount</span> </td> </tr>
             <tr>
-                <td>
-                    Asset Name
-                </td>
-                <td>
-                    Amount
-                </td>
-                <td>
-                    &nbsp;
-                </td>
-            </tr>
-            <tr>
-                <td class="lnowrap" width="70%">
+                <td class="lnowrap" width="70%" colspan="3">
                     <asp:TextBox ID="textAssetNameAddAllNew" runat="server" Width="100%" ValidationGroup="Investment"></asp:TextBox>
-                    <asp:RequiredFieldValidator ID="validRequiredAssetName" runat="server" ErrorMessage="Please enter an Investment Name."
-                        ControlToValidate="textAssetNameAddAllNew" Display="None" ValidationGroup="Investment"></asp:RequiredFieldValidator>
                 </td>
                 <td class="right" width="20%">
                     <asp:TextBox ID="textAmountAddAllNew" runat="server" ValidationGroup="Investment"></asp:TextBox>
-                    <asp:RequiredFieldValidator ID="validRequiredAmount" runat="server" ErrorMessage="Please enter an Investment Amount."
-                        ControlToValidate="textAmountAddAllNew" Display="None" ValidationGroup="Investment"></asp:RequiredFieldValidator>
-                    <asp:CompareValidator ID="validCompareAmountAdd" runat="server" ErrorMessage="Please enter a valid Investment Amount."
-                        ControlToValidate="textAmountAddAllNew" Display="None" ValidationGroup="Investment"
-                        ValueToCompare="0" Operator="GreaterThan" Type="Currency"></asp:CompareValidator>
                 </td>
                 <td class="right">
                     <asp:LinkButton ID="linkAdd" runat="server" CommandName="Insert" CommandArgument="AllNew"
                         ValidationGroup="Investment">Add</asp:LinkButton>
                 </td>
+                <asp:RequiredFieldValidator ID="validRequiredAssetName" runat="server" ControlToValidate="textAssetNameAddAllNew"
+                    Display="None" ErrorMessage="Please enter an Investment Name." ValidationGroup="Investment"></asp:RequiredFieldValidator>
+                <asp:RequiredFieldValidator ID="validRequiredAmount" runat="server" ControlToValidate="textAmountAddAllNew"
+                    Display="None" ErrorMessage="Please enter an Investment Amount." ValidationGroup="Investment"></asp:RequiredFieldValidator>
+                <asp:CompareValidator ID="validCompareAmountAdd" runat="server" ControlToValidate="textAmountAddAllNew"
+                    Display="None" ErrorMessage="Please enter a valid Investment Amount." Operator="GreaterThan"
+                    Type="Currency" ValidationGroup="Investment" ValueToCompare="0"></asp:CompareValidator>
             </tr>
         </EmptyDataTemplate>
         <AlternatingRowStyle CssClass="even" />
     </asp:GridView>
     <br />
-<div style="text-align:right">
-    <asp:HyperLink ID="hyperClient" runat="server" NavigateUrl="~/Pages/Client/edit.aspx">Back to Client</asp:HyperLink>
-</div>
-    <table id="tableInvestmentSummary" runat="server" class="listing" style="width:40%">
+    <div style="text-align: right">
+        <asp:HyperLink ID="hyperClient" runat="server" NavigateUrl="~/Pages/Client/edit.aspx">Back to Client</asp:HyperLink>
+    </div>
+    <table id="tableInvestmentSummary" runat="server" class="listing" style="width: 40%">
         <tr>
             <td class="lnowrap">
                 Total Assets:&nbsp;
@@ -116,7 +106,6 @@
             <td class="lnowrap">
                 Total Investment:&nbsp;
             </td>
-
             <td class="right">
                 <asp:Label ID="labelTotalInvestment" runat="server"></asp:Label>
             </td>
@@ -126,7 +115,7 @@
     <br />
     <asp:ValidationSummary ID="validationSummary1" runat="server" ValidationGroup="Investment" />
     <asp:ValidationSummary ID="validationSummary2" runat="server" ValidationGroup="InvestmentEdit" />
-<br />
+    <br />
     <asp:LinqDataSource ID="sourceAssets" runat="server" ContextTypeName="RSMTenon.Data.RepGenDataContext"
         EnableDelete="True" EnableInsert="True" EnableUpdate="True" TableName="ClientAssets"
         Where="ClientGUID == @ClientGUID" OrderBy="AssetName">

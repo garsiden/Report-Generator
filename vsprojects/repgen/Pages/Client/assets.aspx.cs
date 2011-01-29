@@ -15,11 +15,9 @@ public partial class Pages_Client_assets : RepGenPage
 
     protected void Page_Load(object sender, EventArgs e)
     {
-        if (!IsPostBack)
-        {
+        if (!IsPostBack) {
             var guidString = Request.QueryString["guid"];
-            if (guidString != null)
-            {
+            if (guidString != null) {
                 Guid guid = new Guid(guidString);
                 client = Client.GetClientByGUID(guid);
                 clientAssetHeader.InnerText = "Client Assets By Class for " + client.Name;
@@ -36,20 +34,17 @@ public partial class Pages_Client_assets : RepGenPage
     {
         var asset = (ClientAsset)((DetailsView)sender).DataItem;
 
-        if (asset != null)
-        {
+        if (asset != null) {
             string name = asset.AssetName;
             this.detailsView.Caption = name;
-        } else
-        {
+        } else {
             detailsView.Caption = null;
         }
     }
 
     protected void gridAsset_RowCommand(object sender, GridViewCommandEventArgs e)
     {
-        if (e.CommandName == "Insert")
-        {
+        if (e.CommandName == "Insert") {
             TextBox textName = null;
             TextBox textAmount = null;
 
@@ -57,14 +52,12 @@ public partial class Pages_Client_assets : RepGenPage
             Guid clientGuid = new Guid(guidString);
             var source = e.CommandSource;
 
-            if ((string)e.CommandArgument == "AllNew")
-            {
+            if ((string)e.CommandArgument == "AllNew") {
                 Table tbl = (Table)gridAsset.Controls[0];
                 GridViewRow gvr = (GridViewRow)tbl.Controls[0];
                 textName = (TextBox)gvr.FindControl("textAssetNameAddAllNew");
                 textAmount = (TextBox)gvr.FindControl("textAmountAddAllNew");
-            } else
-            {
+            } else {
                 textName = (TextBox)gridAsset.FooterRow.FindControl("textAssetNameAdd");
                 textAmount = (TextBox)gridAsset.FooterRow.FindControl("textAmountAdd");
             }
@@ -80,13 +73,15 @@ public partial class Pages_Client_assets : RepGenPage
                 AssetName = name,
                 Amount = amount
             };
+
             var guid = ClientAsset.InsertClientAsset(asset);
             gridAsset.DataBind();
             int nrows = gridAsset.Rows.Count;
+
             if (nrows >= 1)
                 gridAsset.SelectedIndex = nrows - 1;
-        } else if (e.CommandName == "Delete")
-        {
+
+        } else if (e.CommandName == "Delete") {
             gridAsset.DataBind();
             int nrows = gridAsset.Rows.Count;
             if (nrows > 1)
@@ -98,8 +93,7 @@ public partial class Pages_Client_assets : RepGenPage
 
     protected void detailsView_ItemUpdated(object sender, DetailsViewUpdatedEventArgs e)
     {
-        if (e.Exception != null)
-        {
+        if (e.Exception != null) {
             showException(e.Exception, labelExceptionDetails, "updating the client assets");
             e.ExceptionHandled = true;
             e.KeepInEditMode = true;
@@ -123,8 +117,7 @@ public partial class Pages_Client_assets : RepGenPage
     private Guid getClientGuidFromQueryString()
     {
         string guidString = Request.QueryString["guid"].ToString();
-        if (guidString != null)
-        {
+        if (guidString != null) {
             Guid guid = new Guid(guidString);
             return guid;
         }
@@ -133,20 +126,17 @@ public partial class Pages_Client_assets : RepGenPage
 
     protected void gridAsset_RowDataBound(object sender, GridViewRowEventArgs e)
     {
-        if (e.Row.RowType == DataControlRowType.DataRow)
-        {
-            var item = (ClientAsset)e.Row.DataItem;            
+        if (e.Row.RowType == DataControlRowType.DataRow) {
+            var item = (ClientAsset)e.Row.DataItem;
             totalAssets += item.Amount;
-        } else if (e.Row.RowType == DataControlRowType.Footer)
-        {
-            if (totalAssets > 0)
-            {
+        } else if (e.Row.RowType == DataControlRowType.Footer) {
+            if (totalAssets > 0) {
                 labelTotalAssets.Text = totalAssets.ToString("C0");
                 labelTotalInvestment.Text = Client.InvestmentAmount.ToString("C0");
-                tableInvestmentSummary.Visible = true;                
+                tableInvestmentSummary.Visible = true;
                 totalAssets = 0;
             }
-            
+
         } else if (e.Row.RowType == DataControlRowType.EmptyDataRow) {
             totalAssets = 0;
             tableInvestmentSummary.Visible = false;
@@ -157,8 +147,7 @@ public partial class Pages_Client_assets : RepGenPage
     {
         get
         {
-            if (client == null)
-            {
+            if (client == null) {
                 Guid clientGuid = getClientGuidFromQueryString();
                 if (clientGuid != Guid.Empty)
                     client = Client.GetClientByGUID(clientGuid);
@@ -169,8 +158,7 @@ public partial class Pages_Client_assets : RepGenPage
 
     protected void gridAsset_RowUpdated(object sender, GridViewUpdatedEventArgs e)
     {
-        if (e.Exception != null)
-        {
+        if (e.Exception != null) {
             showException(e.Exception, labelException, "updating the client assets");
             e.ExceptionHandled = true;
             e.KeepInEditMode = true;
