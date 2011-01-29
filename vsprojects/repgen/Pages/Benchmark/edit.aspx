@@ -40,6 +40,8 @@
                 <ItemTemplate>
                     <asp:Label ID="Label1" runat="server" Text='<%# Bind("Date", "{0:d}") %>'></asp:Label>
                 </ItemTemplate>
+                <HeaderStyle CssClass="center" />
+                <ItemStyle CssClass="center" />
             </asp:TemplateField>
             <asp:TemplateField HeaderText="Active Managed">
                 <EditItemTemplate>
@@ -53,6 +55,7 @@
                     <asp:Label ID="Label2" runat="server" Text='<%# Bind("ACMA", "{0:0.00}") %>'></asp:Label>
                 </ItemTemplate>
                 <FooterStyle CssClass="right" />
+                <HeaderStyle CssClass="center" />
                 <ItemStyle CssClass="right" Width="12%" />
             </asp:TemplateField>
             <asp:TemplateField HeaderText="Balanced Managed">
@@ -67,6 +70,7 @@
                     <asp:Label ID="Label3" runat="server" Text='<%# Bind("BAMA", "{0:0.00}") %>'></asp:Label>
                 </ItemTemplate>
                 <FooterStyle CssClass="right" />
+                <HeaderStyle CssClass="center" />
                 <ItemStyle CssClass="right" Width="12%" />
             </asp:TemplateField>
             <asp:TemplateField HeaderText="Cautious Managed">
@@ -81,6 +85,7 @@
                     <asp:Label ID="Label4" runat="server" Text='<%# Bind("CAMA", "{0:0.00}") %>'></asp:Label>
                 </ItemTemplate>
                 <FooterStyle CssClass="right" />
+                <HeaderStyle CssClass="center" />
                 <ItemStyle CssClass="right" Width="12%" />
             </asp:TemplateField>
             <asp:TemplateField HeaderText="Global Growth">
@@ -95,6 +100,7 @@
                     <asp:Label ID="Label5" runat="server" Text='<%# Bind("GLGR", "{0:0.00}") %>'></asp:Label>
                 </ItemTemplate>
                 <FooterStyle CssClass="right" />
+                <HeaderStyle CssClass="center" />
                 <ItemStyle CssClass="right" Width="12%" />
             </asp:TemplateField>
             <asp:TemplateField HeaderText="Strategic Bonds £">
@@ -109,6 +115,7 @@
                     <asp:Label ID="Label6" runat="server" Text='<%# Bind("STBO", "{0:0.00}") %>'></asp:Label>
                 </ItemTemplate>
                 <FooterStyle CssClass="right" />
+                <HeaderStyle CssClass="center" />
                 <ItemStyle CssClass="right" Width="12%" />
             </asp:TemplateField>
         </Columns>
