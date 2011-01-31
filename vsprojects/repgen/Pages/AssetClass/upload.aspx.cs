@@ -15,9 +15,7 @@ public partial class Pages_AssetClass_upload : System.Web.UI.Page
 
     protected void Page_Load(object sender, EventArgs e)
     {
-        if (IsPostBack) {
-            lblStatus.Text = "";
-        }
+        lblStatus.Text = String.Empty;
     }
 
     protected void btnUpload_Click(object sender, EventArgs e)

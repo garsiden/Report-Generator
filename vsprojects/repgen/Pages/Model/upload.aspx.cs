@@ -19,9 +19,8 @@ public partial class Pages_Model_upload : RepGenPage
     {
         if (!IsPostBack) {
             this.listModel.DataBind();
-        } else {
-            lblStatus.Text = String.Empty;
         }
+        lblStatus.Text = String.Empty;
     }
 
     protected void btnUpload_Click(object sender, EventArgs e)

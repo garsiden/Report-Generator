@@ -15,9 +15,7 @@ public partial class Pages_Benchmark_upload : System.Web.UI.Page
 
     protected void Page_Load(object sender, EventArgs e)
     {
-        if (IsPostBack) {
-            lblStatus.Text = String.Empty;
-        }
+        lblStatus.Text = String.Empty;
     }
 
     protected void btnUpload_Click(object sender, EventArgs e)
