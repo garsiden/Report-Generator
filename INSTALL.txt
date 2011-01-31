@@ -1,0 +1,4 @@
+1. A new SQL Server user RepGenASP
+2. New database RepGen with user RepGenASp as owner (attached from MDL file or a backup file, whichever is preferable)
+3. Unzip a file containing the ASP.Net application tree into the Inetpub/wwwroot folder or web server
+4. Set the SQL Server connection string in the web.config file in the root application directory.
