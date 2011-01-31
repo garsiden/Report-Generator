@@ -1,22 +1,17 @@
 -- =============================================
--- Author:		Nigel Garside
--- Create date: 15/12/2010
--- Description:	Get Client's Asset returns by asset class
+-- Author:		nigel.garside@gmail.com
+-- Create date: 11/12/2010
+-- Description:	Get Model reurn for strategy and HNW client status
 -- =============================================
-ALTER PROCEDURE [dbo].[spClientAssetClassReturn] 
 
-	@ClientGUID uniqueidentifier
-
+ALTER PROCEDURE [dbo].[spModelReturnHNW]
+(
+	@strategyID nchar(2)
+)
 AS
 
-BEGIN
-
-SET NOCOUNT ON;
-
-WITH c AS
-(
-SELECT * FROM tblClientAssetClass WHERE ClientGUID = @ClientGUID
-)
+WITH hnw AS
+(SELECT * FROM vwModelAllocationHNW WHERE StrategyID=@StrategyID)
 
 SELECT   CAST([Date] AS INT) AS [Date],
 COALESCE((r.CASH * rr.CASH), 0) +
@@ -32,8 +27,7 @@ COALESCE((r.UKGB * rr.UKGB), 0) +
 COALESCE((r.UKHY * rr.UKHY), 0) +
 COALESCE((r.WOBO * rr.WOBO), 0)
 AS [Value] FROM
-(SELECT * FROM c) r,
+(SELECT * FROM hnw ) r,
 (SELECT * FROM vwRawReturn) rr
 
-
-END
+	RETURN

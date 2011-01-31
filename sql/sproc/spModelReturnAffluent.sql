@@ -1,18 +1,16 @@
 -- =============================================
 -- Author:		nigel.garside@gmail.com
 -- Create date: 11/12/2010
--- Description:	
 -- =============================================
 
-ALTER PROCEDURE [dbo].[spModelReturn]
-
-	(
-	@strategyId nchar(2) = 'CO',
-	@startDate datetime = '1996-12-31'
-	)
-
+ALTER PROCEDURE [dbo].[spModelReturnAffluent]
+(
+	@StrategyID nchar(2)
+)
 AS
-	/* SET NOCOUNT ON */
+
+WITH aff AS
+(SELECT * FROM vwModelAllocationAffluent WHERE StrategyID=@StrategyID)
 
 SELECT   CAST([Date] AS INT) AS [Date],
 COALESCE((r.CASH * rr.CASH), 0) +
@@ -28,8 +26,7 @@ COALESCE((r.UKGB * rr.UKGB), 0) +
 COALESCE((r.UKHY * rr.UKHY), 0) +
 COALESCE((r.WOBO * rr.WOBO), 0)
 AS [Value] FROM
-(SELECT * FROM vwModelAllocation WHERE strategyId=@strategyId) r,
+(SELECT * FROM aff ) r,
 (SELECT * FROM vwRawReturn) rr
-WHERE rr.Date >= CAST(@startDate AS INT)
 
 	RETURN

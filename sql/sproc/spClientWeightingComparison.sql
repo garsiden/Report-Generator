@@ -1,34 +1,39 @@
 -- Author:		nigel.garside@gmail.com
 -- Create date: 19/12/2010
--- Description:	Compares asset weightings from tblClientAssetClass
--- and selected Model
+-- Description:	Compares asset weightings from vwClientAssetClassWeighting
+-- or vwClientAssetWeighting and selected Model
 -- =============================================
+
 ALTER PROCEDURE [dbo].[spClientWeightingComparison] 
 
-	@clientGUID uniqueidentifier = '1426a508-fc66-4e2d-b3cc-b3e1e1240a0e',
-	@strategyID nchar(2) = 'CO'
+	@ClientGUID uniqueidentifier,
+	@StrategyID nchar(2)
 AS
 BEGIN
-	-- SET NOCOUNT ON added to prevent extra result sets from
-	-- interfering with SELECT statements.
+
 SET NOCOUNT ON;
 
-WITH cw
-AS
-(
-SELECT ID, [Name], COALESCE(c.Weighting,0) AS Weighting FROM tblAssetClass
- LEFT OUTER JOIN
-(SELECT * FROM tblClientAssetClass WHERE ClientGUID=@clientGUID) c
- ON tblAssetClass.ID = c.AssetClassID
- WHERE IsGroup = 0
-)
+DECLARE @assetCount int;
 
-SELECT cw.ID AS AssetClassID, cw.Name AS AssetClassName, CAST((cw.Weighting - mw.Weighting) AS FLOAT) AS WeightingDifference FROM cw,
-(SELECT ID, [Name], COALESCE(m.Weighting,0) AS Weighting FROM tblAssetClass
- LEFT OUTER JOIN
-(SELECT * FROM vwModel WHERE StrategyID=@strategyID) m
- ON tblAssetClass.ID = m.AssetClassID
- WHERE IsGroup = 0) mw
-WHERE cw.ID = mw.ID
+SET @assetCount = (SELECT COUNT(Amount) FROM tblClientAsset WHERE ClientGUID=@ClientGuid);
+
+IF @assetCount = 0
+	SELECT c.AssetClassID, c.AssetClass AS AssetClassName,
+		CAST(c.Weighting - COALESCE(m.WeightingHNW,0) AS FLOAT) AS WeightingDifferenceHNW,
+		CAST(c.Weighting - COALESCE(m.WeightingAffluent,0) AS FLOAT) AS WeightingDifferenceAffluent
+		FROM   vwClientAssetClassWeighting c
+			LEFT OUTER JOIN
+		(SELECT * FROM vwModel WHERE StrategyID=@StrategyID) m ON c.AssetClassID = m.AssetClassID
+		WHERE ClientGUID=@ClientGUID
+ELSE
+
+	SELECT c.AssetClassID, c.AssetClass AS AssetClassName,
+		CAST(c.Weighting - COALESCE(m.WeightingHNW,0) AS FLOAT) AS WeightingDifferenceHNW,
+		CAST(c.Weighting - COALESCE(m.WeightingAffluent,0) AS FLOAT) AS WeightingDifferenceAffluent
+		FROM   vwClientAssetWeighting c
+			LEFT OUTER JOIN
+		(SELECT * FROM vwModel WHERE StrategyID=@StrategyID) m ON c.AssetClassID = m.AssetClassID
+		WHERE ClientGUID=@ClientGUID
+
 
 END

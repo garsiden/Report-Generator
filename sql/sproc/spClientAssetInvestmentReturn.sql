@@ -1,26 +1,30 @@
 -- =============================================
 -- Author:		Nigel Garside
 -- Create date: 15/12/2010
--- Description:	
+-- Description:	Get Client's Asset return by investment
 -- =============================================
 ALTER PROCEDURE [dbo].[spClientAssetInvestmentReturn] 
-	@startDate datetime = null,
-	@ClientGUID uniqueidentifier = '979de312-8e99-49d3-9d41-54ecae0cad5c'
+
+	@ClientGUID uniqueidentifier
 
 AS
 BEGIN
 SET NOCOUNT ON;
 
--- get pivoted client asset weightings
+DECLARE @tamnt money
+
+SET @tamnt = (SELECT SUM(Amount) FROM tblClientAsset WHERE ClientGUID = @ClientGUID);
+
 WITH c AS
 (
-SELECT CASH, COMM, COPR, GLEQ, HEDG, LOSH, PREQ, UKCB, UKEQ, UKGB, UKHY, WOBO
-
-FROM (SELECT AssetClassId, 
-SUM(Amount) / (SELECT SUM(Amount) FROM tblClientAsset WHERE ClientGUID = @ClientGUID) AS [Weighting]
-FROM  tblClientAsset WHERE ClientGUID=@ClientGUID GROUP BY AssetClassId ) piv
- PIVOT ( SUM(Weighting)
-FOR AssetClassID IN (CASH, COMM, COPR, GLEQ, HEDG, LOSH, PREQ, UKCB, UKEQ, UKGB, UKHY, WOBO)) AS chld
+SELECT
+ SUM(CASH*Amount)/@tamnt AS CASH, SUM(COMM*Amount)/@tamnt AS COMM, SUM(COPR*Amount)/@tamnt AS COPR,
+ SUM(GLEQ*Amount)/@tamnt AS GLEQ, SUM(HEDG*Amount)/@tamnt AS HEDG, SUM(LOSH*Amount)/@tamnt AS LOSH,
+ SUM(PREQ*Amount)/@tamnt AS PREQ, SUM(UKCB*Amount)/@tamnt AS UKCB, SUM(UKEQ*Amount)/@tamnt AS UKEQ,
+ SUM(UKGB*Amount)/@tamnt AS UKGB, SUM(UKHY*Amount)/@tamnt AS UKHY, SUM(WOBO*Amount)/@tamnt AS WOBO
+FROM  tblClientAsset
+WHERE ClientGUID=@ClientGUID
+GROUP BY ClientGUID
 )
 
 SELECT   CAST([Date] AS INT) AS [Date],
@@ -38,6 +42,6 @@ COALESCE((r.UKHY * rr.UKHY), 0) +
 COALESCE((r.WOBO * rr.WOBO), 0)
 AS [Value] FROM
 (SELECT * FROM c) r,
-(SELECT * FROM vwRawReturn WHERE [Date] >= @startDate OR @startDate IS NULL) rr
+(SELECT * FROM vwRawReturn) rr
 
 END
