@@ -131,8 +131,8 @@ namespace RSMTenon.ReportGenerator
             xmlnode.InnerText = (strategy.RollingReturn / 100).ToString("0.0%");
 
             // strategy.cost
-            xmlnode = root.SelectSingleNode("/wmr:repgen/wmr:strategy/wmr:cost", nsmgr);
-            xmlnode.InnerText = strategy.Cost.ToString("£#,##0");
+            //xmlnode = root.SelectSingleNode("/wmr:repgen/wmr:strategy/wmr:cost", nsmgr);
+            //xmlnode.InnerText = strategy.Cost.ToString("£#,##0");
 
             // Look up
             // strategy.aim
@@ -287,12 +287,12 @@ content.Single(c => c.ContentID == "charts.stress-crash.text" && c.StrategyID ==
 
         private double calculateModelReturn(Strategy strategy)
         {
-            var prices = strategy.GetStrategyReturn();
+            //var prices = strategy.GetStrategyReturn();
 
-            double endPrice = prices.Last().Value.Value;
-            double startPrice = prices.ElementAt(prices.Count - 121).Value.Value;
+            //double endPrice = prices.Last().Value.Value;
+            //double startPrice = prices.ElementAt(prices.Count - 121).Value.Value;
 
-            double rtrn = Math.Log(endPrice / startPrice);
+            double rtrn = 0;// = Math.Log(endPrice / startPrice);
 
             return rtrn;
         }

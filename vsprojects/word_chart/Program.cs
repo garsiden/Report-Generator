@@ -135,13 +135,13 @@ namespace RSMTenon.ReportGenerator
                                 AssetClassId = g.Key,
                                 AssetClassName = g.First().AssetClass.Name,
                                 Investments = g,
-                                Weighting = g.Sum(m => m.Weighting)
+                                WeightingHNW = g.Sum(m => m.WeightingHNW)
                             };
 
             foreach (var g in model) {
-                Console.WriteLine("{0}\t{1}", g.AssetClassId, g.Weighting);
+                Console.WriteLine("{0}\t{1}", g.AssetClassId, g.WeightingHNW);
                 foreach (var m in g.Investments) {
-                    Console.WriteLine("\t{0}\t{1}\t{2}\t{3}", m.AssetClass.Name, m.InvestmentName, m.Weighting, m.ExpectedYield);
+                    Console.WriteLine("\t{0}\t{1}\t{2}\t{3}", m.AssetClass.Name, m.InvestmentName, m.WeightingHNW, m.ExpectedYield);
                 }
             }
 
@@ -170,7 +170,7 @@ namespace RSMTenon.ReportGenerator
             double bull = (end.Value - start.Value) / start.Value;
 
             // Model
-            var returns = ctx.ModelReturn("CO");
+            var returns = ctx.ModelReturn("CO", "HNW");
             var calc = new ReturnCalculation();
             int rn = 0;
             var prices = from p in returns
@@ -201,8 +201,8 @@ namespace RSMTenon.ReportGenerator
             ReturnCalculation calc = new ReturnCalculation();
 
             // calculate prices
-            ctx.ModelReturn("CO");
-            var data = ctx.ModelReturn("CO");
+            //ctx.ModelReturn("CO");
+            var data = ctx.ModelReturn("CO", "HNW");
 
             var prices = from d in data
                          select new ReturnData {
@@ -232,7 +232,7 @@ namespace RSMTenon.ReportGenerator
         private void TenYearTest()
         {
             var ctx = new RepGenDataContext();
-            var data = ctx.ModelReturn("CO", new DateTime(1999, 9, 30));
+            var data = ctx.ModelReturn("CO", "HNW");
             //            var data = ctx.AssetClassReturn(new DateTime(1999, 9, 30), "GLEQ");
 
             ReturnCalculation calc = new ReturnCalculation();
@@ -251,7 +251,7 @@ namespace RSMTenon.ReportGenerator
         private void TenYearBenchTest()
         {
             var ctx = new RepGenDataContext();
-            var prices = ctx.BenchmarkPrice(new DateTime(1999, 9, 30), "CAMA");
+            var prices = ctx.BenchmarkPrice("CAMA");
 
             ReturnCalculation cr = new ReturnCalculation();
             ReturnCalculation cp = new ReturnCalculation();
@@ -272,8 +272,8 @@ namespace RSMTenon.ReportGenerator
         {
 
             var ctx = new RepGenDataContext();
-            ctx.ModelReturn("CO");
-            var data = ctx.ModelReturn("CO");
+            //ctx.ModelReturn("CO");
+            var data = ctx.ModelReturn("CO", "HNW");
 
             ReturnCalculation calc = new ReturnCalculation();
             var match = from d in data
@@ -293,7 +293,7 @@ namespace RSMTenon.ReportGenerator
         {
 
             var ctx = new RepGenDataContext();
-            var data = ctx.ModelReturn("CO");
+            var data = ctx.ModelReturn("CO", "HNW");
 
             ReturnCalculation calcPrice = new ReturnCalculation();
             ReturnCalculation calcDrawdown = new ReturnCalculation();
@@ -338,12 +338,16 @@ namespace RSMTenon.ReportGenerator
             // generate new ChartPart and ChartSpace
             ChartPart chartPart = mainPart.AddNewPart<ChartPart>();
             string relId = mainPart.GetIdOfPart(chartPart);
-            C.ChartSpace chartSpace = GraphSpace.GenerateChartSpace(chartPart);
+
+            AllocationComparisonBarChart bc = new AllocationComparisonBarChart();
+            C.Chart chart = bc.GenerateChart(title, null);
+            C.ChartSpace chartSpace = GraphSpace.GenerateChartSpace(chart);
+
+            // set ChartPart ChartSpace
+            chartPart.ChartSpace = chartSpace;
 
             // generate Pie Chart and add to ChartSpace
             //StressBarChart bc = new StressBarChart();
-            AllocationComparisonBarChart bc = new AllocationComparisonBarChart();
-            C.Chart chart = bc.GenerateChart(title, null);
             chartSpace.Append(chart);
 
             // set ChartPart ChartSpace
@@ -383,7 +387,7 @@ namespace RSMTenon.ReportGenerator
             // generate new ChartPart and ChartSpace
             ChartPart chartPart = mainPart.AddNewPart<ChartPart>();
             string relId = mainPart.GetIdOfPart(chartPart);
-            C.ChartSpace chartSpace = GraphSpace.GenerateChartSpace(chartPart);
+            C.ChartSpace chartSpace = GraphSpace.GenerateChartSpace(chartItem.Chart);
             chartSpace.Append(chartItem.Chart);
 
             // set ChartPart ChartSpace
