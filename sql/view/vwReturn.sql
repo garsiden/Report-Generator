@@ -1,4 +1,4 @@
-CREATE VIEW vwReturn AS
+ALTER VIEW [dbo].[vwReturn] AS
 SELECT StrategyId, CASH, COMM, COPR, GLEQ, HEDG, LOSH, PREQ, UKCB, UKEQ, UKGB, UKHY, WOBO
 FROM (SELECT StrategyId, AssetClassId, Weighting
 FROM  tblModel) piv
