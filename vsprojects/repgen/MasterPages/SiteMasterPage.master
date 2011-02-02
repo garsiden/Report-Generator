@@ -10,6 +10,12 @@
     <link href="../css/common.css" rel="stylesheet" type="text/css" />
     <link href="../css/tables.css" rel="stylesheet" type="text/css" />
     <link href="../css/report.css" rel="stylesheet" type="text/css" />
+    <style type="text/css">
+        .IE8Fix
+        {
+            z-index: 100;
+        }
+    </style>
     <asp:ContentPlaceHolder ID="head" runat="server">
     </asp:ContentPlaceHolder>
 </head>
@@ -20,7 +26,8 @@
         <br />
         <asp:Menu ID="menuMasterPage" runat="server" DataSourceID="sourceSiteMap" Orientation="Horizontal"
             BackColor="#E3EAEB" DynamicHorizontalOffset="2" Font-Names="Verdana" Font-Size="1.0em"
-            StaticSubMenuIndent="10px" Height="22px" DynamicMenuItemStyle-BackColor="#CAD9C0" DynamicMenuItemStyle-Width="140px">
+            StaticSubMenuIndent="10px" Height="22px" DynamicMenuItemStyle-BackColor="#CAD9C0"
+            DynamicMenuItemStyle-Width="140px" DynamicMenuStyle-CssClass="IE8Fix">
             <StaticMenuItemStyle HorizontalPadding="8px" VerticalPadding="2px" />
             <DynamicMenuItemStyle HorizontalPadding="8px" VerticalPadding="2px" />
         </asp:Menu>
