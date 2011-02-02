@@ -13,11 +13,9 @@ namespace RSMTenon.Data
         public static Client GetClientByGUID(Guid? clientGuid)
         {
 
-            if (clientGuid == null)
-            {
+            if (clientGuid == null) {
                 return null;
-            } else
-            {
+            } else {
                 var ctx = new RepGenDataContext();
                 return ctx.Clients.SingleOrDefault(c => c.GUID == clientGuid);
             }
@@ -26,12 +24,21 @@ namespace RSMTenon.Data
         [System.ComponentModel.DataObjectMethod(System.ComponentModel.DataObjectMethodType.Select, false)]
         public static IQueryable<Client> GetRecentClients(int number)
         {
-            if (number > 0)
-            {
+            if (number > 0) {
                 var ctx = new RepGenDataContext();
                 return ctx.Clients.OrderByDescending(c => c.MeetingDate).Take(number);
-            } else
-            {
+            } else {
+                return null;
+            }
+        }
+
+        [System.ComponentModel.DataObjectMethod(System.ComponentModel.DataObjectMethodType.Select, false)]
+        public static IQueryable<Client> GetRecentClients(int number, string userId)
+        {
+            if (number > 0) {
+                var ctx = new RepGenDataContext();
+                return ctx.Clients.Where(c => c.UserID == userId).OrderByDescending(c => c.MeetingDate).Take(number);
+            } else {
                 return null;
             }
         }
@@ -87,11 +94,9 @@ namespace RSMTenon.Data
         {
             get
             {
-                if (this.InvestmentAmount >= 1000000)
-                {
+                if (this.InvestmentAmount >= 1000000) {
                     return "quarterly";
-                } else
-                {
+                } else {
                     return "half-yearly";
                 }
             }
@@ -137,29 +142,56 @@ namespace RSMTenon.Data
             }
         }
 
+        public void ValidateClientAssets()
+        {
+            if (!ExistingAssets)
+                return;
+
+            // check for client investments first
+            var assets = this.ClientAssets.ToList();
+
+            if (assets != null && assets.Count > 0) {
+                // check investment amount
+                if (assets.Sum(a => a.Amount) != InvestmentAmount)
+                    throw new Exception("Client assets do not equal the Investment Amount");
+                // check individual allocations
+                foreach (var item in assets) {
+                    if (item.TotalAssetAllocation != 1) {
+                        string msg = String.Format("Allocations of client investment {0} to asset classes do not total 100%", item.AssetName);
+                        throw new Exception(msg);
+                    }
+                }
+                return;
+            }
+            
+           // Or check assets by class 
+            if (ClientAssetClass == null)
+                throw new Exception(@"No client assets entered.<br/>Please add client's assets or uncheck 'Use Existing Assets'.");
+
+            if (ClientAssetClass.TotalAssetAllocation != 1)
+                throw new Exception("Client assets by class allocation does not total 100%.");
+        }
+
         #endregion
 
         #region Data Validation
         partial void OnInitialFeeChanging(decimal value)
         {
-            if ((value < 0 || value > 5))
-            {
+            if ((value < 0 || value > 5)) {
                 throw new ArgumentException("Initial Fee Percent must be between 0 and 5");
             }
         }
 
         partial void OnInvestmentAmountChanging(decimal value)
         {
-            if (value <= 0)
-            {
+            if (value <= 0) {
                 throw new ArgumentException("Investment Amount must be greater than 0");
             }
         }
 
         partial void OnMeetingDateChanging(System.DateTime value)
         {
-            if (value != null && value > DateTime.Today)
-            {
+            if (value != null && value > DateTime.Today) {
                 throw new ArgumentException("Meeting Date must be less than or equal to today");
             }
         }
