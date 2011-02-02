@@ -20,20 +20,21 @@
                 <siteMapNode url ="~/Pages/Model/upload.aspx" title ="Upload" />
             </siteMapNode>
             <!--Strategies-->
-            <siteMapNode url ="~/Pages/Strategy/index.aspx" title ="Strategies" />
+            <siteMapNode title="Strategies" description="Manage Strategies" >
+                <siteMapNode url ="~/Pages/Strategy/index.aspx" title ="Edit" />
+                <siteMapNode url ="~/Pages/Strategy/new.aspx" title ="New" />
+            </siteMapNode>
             <!--Asset Classes-->
             <siteMapNode title="Asset Classes" description="Manange Asset Classes">
                 <siteMapNode url ="~/Pages/AssetClass/index.aspx" title ="Edit" />
-                <siteMapNode url="~/Pages/AssetClass/editA-M.aspx" title="Prices A-M">
-
-                </siteMapNode>
-                <siteMapNode url="~/Pages/AssetClass/editN-Z.aspx" title="Prices N-Z">
-                </siteMapNode>
+                <siteMapNode url="~/Pages/AssetClass/editA-M.aspx" title="Prices A-M" />
+                <siteMapNode url="~/Pages/AssetClass/editN-Z.aspx" title="Prices N-Z" />
                 <siteMapNode url ="~/Pages/AssetClass/upload.aspx" title="Upload" />
             </siteMapNode>
             <!--Benchmarks-->
             <siteMapNode title="Benchmarks"  description="Manage benchmarks">
                 <siteMapNode url ="~/Pages/Benchmark/index.aspx" title="Edit" />
+                <siteMapNode url ="~/Pages/Benchmark/edit.aspx" title="Prices" />
                 <siteMapNode url ="~/Pages/Benchmark/upload.aspx" title="Upload" />
             </siteMapNode>
             <!--Text Content-->
