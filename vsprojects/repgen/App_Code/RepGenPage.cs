@@ -126,6 +126,11 @@ public partial class RepGenPage : System.Web.UI.Page
         return Client.GetRecentClients(number);
     }
 
+    public IQueryable<Client> GetRecentClients(int number, string userId)
+    {
+        return Client.GetRecentClients(number, userId);
+    }
+
     public List<string> GetContentTags()
     {
         var contents = DataContext.Contents;
