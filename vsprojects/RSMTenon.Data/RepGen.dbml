@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Database Name="RepGen" EntityNamespace="RSMTenon.Data" ContextNamespace="RSMTenon.Data" Class="RepGenDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
-  <Connection Mode="WebSettings" ConnectionString="Data Source=ARTHUR;Initial Catalog=RepGen;Persist Security Info=True;User ID=RepGenASP" SettingsObjectName="System.Configuration.ConfigurationManager.ConnectionStrings" SettingsPropertyName="RSMTenon.Data.Properties.Settings.RepGenConnectionString" Provider="System.Data.SqlClient" />
+  <Connection Mode="AppSettings" ConnectionString="Data Source=.\SQLEXPRESS;AttachDbFilename=&quot;C:\Program Files\Microsoft SQL Server\MSSQL.1\MSSQL\Backup\RepGen.mdf&quot;;Integrated Security=True;Connect Timeout=30;User Instance=True" SettingsObjectName="RSMTenon.Data.Properties.Settings" SettingsPropertyName="RepGenConnectionString" Provider="System.Data.SqlClient" />
   <Table Name="dbo.tblAssetClass" Member="AssetClasses">
     <Type Name="AssetClass">
-      <Column Name="ID" Type="System.String" DbType="NChar(4) NOT NULL" IsPrimaryKey="true" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="ID" Type="System.String" DbType="NChar(4) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
       <Column Name="Name" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
       <Association Name="AssetClass_Model" Member="Models" ThisKey="ID" OtherKey="AssetClassID" Type="Model" />
       <Association Name="AssetClass_AssetGroup" Member="AssetGroup" ThisKey="ID" OtherKey="ID" Type="AssetGroup" Cardinality="One" />
@@ -42,7 +42,7 @@
   </Table>
   <Table Name="dbo.tblModel" Member="Models">
     <Type Name="Model">
-      <Column Name="GUID" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="GUID" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" UpdateCheck="Always" />
       <Column Name="StrategyID" Type="System.String" DbType="NChar(2) NOT NULL" CanBeNull="false" />
       <Column Name="AssetClassID" Type="System.String" DbType="NChar(4) NOT NULL" CanBeNull="false" />
       <Column Name="InvestmentName" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" />
@@ -52,6 +52,7 @@
       <Column Name="WeightingHNW" Type="System.Decimal" DbType="Decimal(5,4)" CanBeNull="false" />
       <Column Name="WeightingAffluent" Type="System.Decimal" DbType="Decimal(5,4)" CanBeNull="false" />
       <Association Name="AssetClass_Model" Member="AssetClass" ThisKey="AssetClassID" OtherKey="ID" Type="AssetClass" IsForeignKey="true" />
+      <Association Name="Strategy_Model" Member="Strategy" ThisKey="StrategyID" OtherKey="ID" Type="Strategy" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.vwReturnData" Member="ReturnDatas">
@@ -71,7 +72,7 @@
   <Table Name="dbo.tblBenchmark" Member="Benchmarks">
     <Type Name="Benchmark">
       <Column Name="ID" Type="System.String" DbType="NChar(4) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
-      <Column Name="Name" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="Name" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
       <Association Name="Benchmark_Strategy" Member="Strategies" ThisKey="ID" OtherKey="BenchmarkID" Type="Strategy" />
     </Type>
   </Table>
@@ -89,44 +90,45 @@
   <Table Name="dbo.tblStrategy" Member="Strategies">
     <Type Name="Strategy">
       <Column Name="ID" Type="System.String" DbType="NChar(2) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
-      <Column Name="Name" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
-      <Column Name="TimeHorizon" Type="System.Int16" DbType="SmallInt NOT NULL" CanBeNull="false" />
-      <Column Name="ReturnOverBase" Type="System.Int16" DbType="SmallInt NOT NULL" CanBeNull="false" />
-      <Column Name="BenchmarkID" Type="System.String" DbType="NChar(4) NOT NULL" CanBeNull="false" />
-      <Column Name="RollingReturn" Type="System.Decimal" DbType="Decimal(5,1) NOT NULL" CanBeNull="false" />
+      <Column Name="Name" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="TimeHorizon" Type="System.Int16" DbType="SmallInt NOT NULL" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="ReturnOverBase" Type="System.Int16" DbType="SmallInt NOT NULL" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="BenchmarkID" Type="System.String" DbType="NChar(4) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="RollingReturn" Type="System.Decimal" DbType="Decimal(5,1) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
       <Association Name="Strategy_Client" Member="Clients" ThisKey="ID" OtherKey="StrategyID" Type="Client" />
       <Association Name="Strategy_ModelBreakdown" Member="ModelBreakdowns" ThisKey="ID" OtherKey="StrategyID" Type="ModelBreakdown" />
+      <Association Name="Strategy_Model" Member="Models" ThisKey="ID" OtherKey="StrategyID" Type="Model" />
       <Association Name="Strategy_Content" Member="Contents" ThisKey="ID" OtherKey="StrategyID" Type="Content" />
       <Association Name="Benchmark_Strategy" Member="Benchmark" ThisKey="BenchmarkID" OtherKey="ID" Type="Benchmark" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.tblHistoricData" Member="HistoricDatas">
     <Type Name="HistoricData">
-      <Column Name="Date" Type="System.DateTime" DbType="DateTime NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
-      <Column Name="CASH" Type="System.Double" DbType="Float NOT NULL" CanBeNull="false" />
-      <Column Name="UKGB" Type="System.Double" DbType="Float NOT NULL" CanBeNull="false" />
-      <Column Name="UKCB" Type="System.Double" DbType="Float NOT NULL" CanBeNull="false" />
-      <Column Name="COPR" Type="System.Double" DbType="Float NOT NULL" CanBeNull="false" />
-      <Column Name="UKHY" Type="System.Double" DbType="Float NOT NULL" CanBeNull="false" />
-      <Column Name="WOBO" Type="System.Double" DbType="Float NOT NULL" CanBeNull="false" />
-      <Column Name="HEDG" Type="System.Double" DbType="Float NOT NULL" CanBeNull="false" />
-      <Column Name="GLEQ" Type="System.Double" DbType="Float NOT NULL" CanBeNull="false" />
-      <Column Name="LOSH" Type="System.Double" DbType="Float NOT NULL" CanBeNull="false" />
-      <Column Name="UKEQ" Type="System.Double" DbType="Float NOT NULL" CanBeNull="false" />
-      <Column Name="PREQ" Type="System.Double" DbType="Float NOT NULL" CanBeNull="false" />
-      <Column Name="COMM" Type="System.Double" DbType="Float NOT NULL" CanBeNull="false" />
-      <Column Name="SSMA_TimeStamp" Type="System.Data.Linq.Binary" DbType="rowversion NOT NULL" CanBeNull="false" IsVersion="true" />
+      <Column Name="Date" Type="System.DateTime" DbType="DateTime NOT NULL" IsPrimaryKey="true" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="CASH" Type="System.Double" DbType="Float NOT NULL" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="UKGB" Type="System.Double" DbType="Float NOT NULL" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="UKCB" Type="System.Double" DbType="Float NOT NULL" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="COPR" Type="System.Double" DbType="Float NOT NULL" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="UKHY" Type="System.Double" DbType="Float NOT NULL" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="WOBO" Type="System.Double" DbType="Float NOT NULL" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="HEDG" Type="System.Double" DbType="Float NOT NULL" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="GLEQ" Type="System.Double" DbType="Float NOT NULL" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="LOSH" Type="System.Double" DbType="Float NOT NULL" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="UKEQ" Type="System.Double" DbType="Float NOT NULL" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="PREQ" Type="System.Double" DbType="Float NOT NULL" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="COMM" Type="System.Double" DbType="Float NOT NULL" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="SSMA_TimeStamp" Type="System.Data.Linq.Binary" DbType="rowversion NOT NULL" IsDbGenerated="true" CanBeNull="false" UpdateCheck="Never" />
     </Type>
   </Table>
   <Table Name="dbo.tblBenchmarkData" Member="BenchmarkDatas">
     <Type Name="BenchmarkData">
       <Column Name="Date" Type="System.DateTime" DbType="DateTime NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
-      <Column Name="STBO" Type="System.Double" DbType="Float NOT NULL" CanBeNull="false" />
-      <Column Name="CAMA" Type="System.Double" DbType="Float NOT NULL" CanBeNull="false" />
-      <Column Name="BAMA" Type="System.Double" DbType="Float NOT NULL" CanBeNull="false" />
-      <Column Name="ACMA" Type="System.Double" DbType="Float NOT NULL" CanBeNull="false" />
-      <Column Name="GLGR" Type="System.Double" DbType="Float NOT NULL" CanBeNull="false" />
-      <Column Name="SSMA_TimeStamp" Type="System.Data.Linq.Binary" DbType="rowversion NOT NULL" CanBeNull="false" IsVersion="true" />
+      <Column Name="STBO" Type="System.Double" DbType="Float NOT NULL" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="CAMA" Type="System.Double" DbType="Float NOT NULL" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="BAMA" Type="System.Double" DbType="Float NOT NULL" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="ACMA" Type="System.Double" DbType="Float NOT NULL" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="GLGR" Type="System.Double" DbType="Float NOT NULL" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="SSMA_TimeStamp" Type="System.Data.Linq.Binary" DbType="rowversion NOT NULL" IsDbGenerated="true" CanBeNull="false" UpdateCheck="Never" />
     </Type>
   </Table>
   <Table Name="dbo.tblAssetGroup" Member="AssetGroups">
@@ -138,7 +140,7 @@
   </Table>
   <Table Name="dbo.tblAssetGroupClass" Member="AssetGroupClasses">
     <Type Name="AssetGroupClass">
-      <Column Name="AssetGroupID" Type="System.String" DbType="NChar(4) NOT NULL" CanBeNull="false" />
+      <Column Name="AssetGroupID" Type="System.String" DbType="NChar(4) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
       <Column Name="AssetClassID" Type="System.String" DbType="NChar(4) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
       <Association Name="AssetGroupClass_ModelBreakdown" Member="ModelBreakdowns" ThisKey="AssetClassID" OtherKey="AssetClassID" Type="ModelBreakdown" />
       <Association Name="AssetClass_AssetGroupClass" Member="AssetClass" ThisKey="AssetClassID" OtherKey="ID" Type="AssetClass" IsForeignKey="true" />
@@ -169,7 +171,7 @@
   </Table>
   <Table Name="dbo.tblClientAssetClass" Member="ClientAssetClasses">
     <Type Name="ClientAssetClass">
-      <Column Name="ClientGUID" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="ClientGUID" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
       <Column Name="CASH" Type="System.Decimal" DbType="Decimal(4,3) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
       <Column Name="COMM" Type="System.Decimal" DbType="Decimal(4,3) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
       <Column Name="COPR" Type="System.Decimal" DbType="Decimal(4,3) NOT NULL" CanBeNull="false" UpdateCheck="Never" />

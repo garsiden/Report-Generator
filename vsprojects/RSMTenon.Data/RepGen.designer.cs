@@ -72,7 +72,7 @@ namespace RSMTenon.Data
     #endregion
 		
 		public RepGenDataContext() : 
-				base(global::System.Configuration.ConfigurationManager.ConnectionStrings["RSMTenon.Data.Properties.Settings.RepGenConnectionString"].ConnectionString, mappingSource)
+				base(global::RSMTenon.Data.Properties.Settings.Default.RepGenConnectionString, mappingSource)
 		{
 			OnCreated();
 		}
@@ -320,7 +320,7 @@ namespace RSMTenon.Data
 			OnCreated();
 		}
 		
-		[Column(Storage="_ID", DbType="NChar(4) NOT NULL", CanBeNull=false, IsPrimaryKey=true, UpdateCheck=UpdateCheck.Never)]
+		[Column(Storage="_ID", DbType="NChar(4) NOT NULL", CanBeNull=false, IsPrimaryKey=true)]
 		public string ID
 		{
 			get
@@ -1157,6 +1157,8 @@ namespace RSMTenon.Data
 		
 		private EntityRef<AssetClass> _AssetClass;
 		
+		private EntityRef<Strategy> _Strategy;
+		
     #region Extensibility Method Definitions
     partial void OnLoaded();
     partial void OnValidate(System.Data.Linq.ChangeAction action);
@@ -1184,10 +1186,11 @@ namespace RSMTenon.Data
 		public Model()
 		{
 			this._AssetClass = default(EntityRef<AssetClass>);
+			this._Strategy = default(EntityRef<Strategy>);
 			OnCreated();
 		}
 		
-		[Column(Storage="_GUID", AutoSync=AutoSync.OnInsert, DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true, IsDbGenerated=true, UpdateCheck=UpdateCheck.Never)]
+		[Column(Storage="_GUID", AutoSync=AutoSync.OnInsert, DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true, IsDbGenerated=true)]
 		public System.Guid GUID
 		{
 			get
@@ -1218,6 +1221,10 @@ namespace RSMTenon.Data
 			{
 				if ((this._StrategyID != value))
 				{
+					if (this._Strategy.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
 					this.OnStrategyIDChanging(value);
 					this.SendPropertyChanging();
 					this._StrategyID = value;
@@ -1401,6 +1408,40 @@ namespace RSMTenon.Data
 						this._AssetClassID = default(string);
 					}
 					this.SendPropertyChanged("AssetClass");
+				}
+			}
+		}
+		
+		[Association(Name="Strategy_Model", Storage="_Strategy", ThisKey="StrategyID", OtherKey="ID", IsForeignKey=true)]
+		public Strategy Strategy
+		{
+			get
+			{
+				return this._Strategy.Entity;
+			}
+			set
+			{
+				Strategy previousValue = this._Strategy.Entity;
+				if (((previousValue != value) 
+							|| (this._Strategy.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Strategy.Entity = null;
+						previousValue.Models.Remove(this);
+					}
+					this._Strategy.Entity = value;
+					if ((value != null))
+					{
+						value.Models.Add(this);
+						this._StrategyID = value.ID;
+					}
+					else
+					{
+						this._StrategyID = default(string);
+					}
+					this.SendPropertyChanged("Strategy");
 				}
 			}
 		}
@@ -1600,7 +1641,7 @@ namespace RSMTenon.Data
 			}
 		}
 		
-		[Column(Storage="_Name", DbType="NVarChar(50) NOT NULL", CanBeNull=false)]
+		[Column(Storage="_Name", DbType="NVarChar(50) NOT NULL", CanBeNull=false, UpdateCheck=UpdateCheck.Never)]
 		public string Name
 		{
 			get
@@ -1911,6 +1952,8 @@ namespace RSMTenon.Data
 		
 		private EntitySet<ModelBreakdown> _ModelBreakdowns;
 		
+		private EntitySet<Model> _Models;
+		
 		private EntitySet<Content> _Contents;
 		
 		private EntityRef<Benchmark> _Benchmark;
@@ -1937,6 +1980,7 @@ namespace RSMTenon.Data
 		{
 			this._Clients = new EntitySet<Client>(new Action<Client>(this.attach_Clients), new Action<Client>(this.detach_Clients));
 			this._ModelBreakdowns = new EntitySet<ModelBreakdown>(new Action<ModelBreakdown>(this.attach_ModelBreakdowns), new Action<ModelBreakdown>(this.detach_ModelBreakdowns));
+			this._Models = new EntitySet<Model>(new Action<Model>(this.attach_Models), new Action<Model>(this.detach_Models));
 			this._Contents = new EntitySet<Content>(new Action<Content>(this.attach_Contents), new Action<Content>(this.detach_Contents));
 			this._Benchmark = default(EntityRef<Benchmark>);
 			OnCreated();
@@ -1962,7 +2006,7 @@ namespace RSMTenon.Data
 			}
 		}
 		
-		[Column(Storage="_Name", DbType="NVarChar(50) NOT NULL", CanBeNull=false)]
+		[Column(Storage="_Name", DbType="NVarChar(50) NOT NULL", CanBeNull=false, UpdateCheck=UpdateCheck.Never)]
 		public string Name
 		{
 			get
@@ -1982,7 +2026,7 @@ namespace RSMTenon.Data
 			}
 		}
 		
-		[Column(Storage="_TimeHorizon", DbType="SmallInt NOT NULL")]
+		[Column(Storage="_TimeHorizon", DbType="SmallInt NOT NULL", UpdateCheck=UpdateCheck.Never)]
 		public short TimeHorizon
 		{
 			get
@@ -2002,7 +2046,7 @@ namespace RSMTenon.Data
 			}
 		}
 		
-		[Column(Storage="_ReturnOverBase", DbType="SmallInt NOT NULL")]
+		[Column(Storage="_ReturnOverBase", DbType="SmallInt NOT NULL", UpdateCheck=UpdateCheck.Never)]
 		public short ReturnOverBase
 		{
 			get
@@ -2022,7 +2066,7 @@ namespace RSMTenon.Data
 			}
 		}
 		
-		[Column(Storage="_BenchmarkID", DbType="NChar(4) NOT NULL", CanBeNull=false)]
+		[Column(Storage="_BenchmarkID", DbType="NChar(4) NOT NULL", CanBeNull=false, UpdateCheck=UpdateCheck.Never)]
 		public string BenchmarkID
 		{
 			get
@@ -2046,7 +2090,7 @@ namespace RSMTenon.Data
 			}
 		}
 		
-		[Column(Storage="_RollingReturn", DbType="Decimal(5,1) NOT NULL")]
+		[Column(Storage="_RollingReturn", DbType="Decimal(5,1) NOT NULL", UpdateCheck=UpdateCheck.Never)]
 		public decimal RollingReturn
 		{
 			get
@@ -2089,6 +2133,19 @@ namespace RSMTenon.Data
 			set
 			{
 				this._ModelBreakdowns.Assign(value);
+			}
+		}
+		
+		[Association(Name="Strategy_Model", Storage="_Models", ThisKey="ID", OtherKey="StrategyID")]
+		public EntitySet<Model> Models
+		{
+			get
+			{
+				return this._Models;
+			}
+			set
+			{
+				this._Models.Assign(value);
 			}
 		}
 		
@@ -2178,6 +2235,18 @@ namespace RSMTenon.Data
 		}
 		
 		private void detach_ModelBreakdowns(ModelBreakdown entity)
+		{
+			this.SendPropertyChanging();
+			entity.Strategy = null;
+		}
+		
+		private void attach_Models(Model entity)
+		{
+			this.SendPropertyChanging();
+			entity.Strategy = this;
+		}
+		
+		private void detach_Models(Model entity)
 		{
 			this.SendPropertyChanging();
 			entity.Strategy = null;
@@ -2529,7 +2598,7 @@ namespace RSMTenon.Data
 			}
 		}
 		
-		[Column(Storage="_SSMA_TimeStamp", AutoSync=AutoSync.Always, DbType="rowversion NOT NULL", CanBeNull=false, IsDbGenerated=true, IsVersion=true, UpdateCheck=UpdateCheck.Never)]
+		[Column(Storage="_SSMA_TimeStamp", AutoSync=AutoSync.Always, DbType="rowversion NOT NULL", CanBeNull=false, IsDbGenerated=true, UpdateCheck=UpdateCheck.Never)]
 		public System.Data.Linq.Binary SSMA_TimeStamp
 		{
 			get
@@ -2615,7 +2684,7 @@ namespace RSMTenon.Data
 			OnCreated();
 		}
 		
-		[Column(Storage="_Date", DbType="DateTime NOT NULL", IsPrimaryKey=true, UpdateCheck=UpdateCheck.Never)]
+		[Column(Storage="_Date", DbType="DateTime NOT NULL", IsPrimaryKey=true)]
 		public System.DateTime Date
 		{
 			get
@@ -2735,7 +2804,7 @@ namespace RSMTenon.Data
 			}
 		}
 		
-		[Column(Storage="_SSMA_TimeStamp", AutoSync=AutoSync.Always, DbType="rowversion NOT NULL", CanBeNull=false, IsDbGenerated=true, IsVersion=true, UpdateCheck=UpdateCheck.Never)]
+		[Column(Storage="_SSMA_TimeStamp", AutoSync=AutoSync.Always, DbType="rowversion NOT NULL", CanBeNull=false, IsDbGenerated=true, UpdateCheck=UpdateCheck.Never)]
 		public System.Data.Linq.Binary SSMA_TimeStamp
 		{
 			get
@@ -2941,7 +3010,7 @@ namespace RSMTenon.Data
 			OnCreated();
 		}
 		
-		[Column(Storage="_AssetGroupID", DbType="NChar(4) NOT NULL", CanBeNull=false)]
+		[Column(Storage="_AssetGroupID", DbType="NChar(4) NOT NULL", CanBeNull=false, UpdateCheck=UpdateCheck.Never)]
 		public string AssetGroupID
 		{
 			get
@@ -3666,7 +3735,7 @@ namespace RSMTenon.Data
 			OnCreated();
 		}
 		
-		[Column(Storage="_ClientGUID", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true, UpdateCheck=UpdateCheck.Never)]
+		[Column(Storage="_ClientGUID", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true)]
 		public System.Guid ClientGUID
 		{
 			get
