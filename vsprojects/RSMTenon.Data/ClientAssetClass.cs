@@ -15,7 +15,6 @@ namespace RSMTenon.Data
         {
             var ctx = new RepGenDataContext();
             return ctx.ClientAssetClasses.SingleOrDefault(a => a.ClientGUID == clientGuid);
-
         }
 
         [System.ComponentModel.DataObjectMethod(System.ComponentModel.DataObjectMethodType.Select, false)]
@@ -23,7 +22,6 @@ namespace RSMTenon.Data
         {
             var ctx = new RepGenDataContext();
             return ctx.ClientAssetClasses;
-
         }
 
         [System.ComponentModel.DataObjectMethod(System.ComponentModel.DataObjectMethodType.Update, true)]
@@ -62,11 +60,8 @@ namespace RSMTenon.Data
 
         partial void OnValidate(System.Data.Linq.ChangeAction action)
         {
-
-            if (action == ChangeAction.Insert || action == ChangeAction.Update)
-            {
-                if (TotalAssetAllocation != 1)
-                {
+            if (action == ChangeAction.Insert || action == ChangeAction.Update) {
+                if (TotalAssetAllocation != 1) {
                     string msg = String.Format("Asset allocations must total 100% (currently {0:0.0%})", TotalAssetAllocation);
                     throw new ArgumentException(msg);
                 }
@@ -86,16 +81,7 @@ namespace RSMTenon.Data
         public static List<AssetWeighting> GetClientAssetWeighting(Guid clientGuid)
         {
             var ctx = new RepGenDataContext();
-            //var assets = ctx.ClientAssetClasses;
-
-            //var weighting = from asset in assets
-            //                where asset.ClientGUID.Equals(clientGuid)
-            //                //group asset by asset.AssetClass.Name  into g
-            //                //select new AssetWeighting { AssetClass = g.Key, Allocation = g.Sum(asset => asset.Weighting) };
-            //                select new AssetWeighting { AssetClass = asset.AssetClass.Name, Weighting = asset.Weighting };
-            //return weighting;
             return ctx.ClientAssetWeighting(clientGuid).ToList();
-
         }
     }
 }
