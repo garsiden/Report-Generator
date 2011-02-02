@@ -9,13 +9,16 @@ public partial class Pages_Client_index : RepGenPage
 {
     protected void Page_Load(object sender, EventArgs e)
     {
-
+        labelException.Visible = false;
     }
 
     protected void gridClient_SelectedIndexChanged(object sender, EventArgs e)
     {
-        Guid guid = (Guid)gridClient.SelectedDataKey.Value;
-
-        DownloadReport(guid);
+        try {
+            Guid guid = (Guid)gridClient.SelectedDataKey.Value;
+            DownloadReport(guid);
+        } catch (Exception ex) {
+            showException(ex, labelException, "generating a report");
+        }
     }
 }

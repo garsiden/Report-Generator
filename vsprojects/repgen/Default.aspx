@@ -26,6 +26,9 @@
             No clients to display.
         </EmptyDataTemplate>
     </asp:GridView>
+<br />
+<br />
+    <asp:Label ID="labelException" runat="server" Text=""></asp:Label>
     <asp:LinqDataSource ID="sourceClient" runat="server" ContextTypeName="RSMTenon.Data.RepGenDataContext"
         OrderBy="MeetingDate desc, Name" TableName="Clients" EnableDelete="True" OnSelecting="sourceClient_Selecting">
     </asp:LinqDataSource>

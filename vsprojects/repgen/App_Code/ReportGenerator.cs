@@ -47,6 +47,9 @@ namespace RSMTenon.ReportGenerator
 
         public string CreateReport(Report report)
         {
+            // check client assets; throw error on failure
+            report.Client.ValidateClientAssets();
+
             report.SpecFile = ReportSpecFile;
             string tempDocName = null;
             WordprocessingDocument myWordDoc = null;

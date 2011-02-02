@@ -7,21 +7,29 @@ using System.Web.UI.WebControls;
 
 public partial class _Default : RepGenPage
 {
-    private static int recentClients = 10;
+    private static int numClients = 10;
 
     protected void Page_Load(object sender, EventArgs e)
     {
-        this.gridClient.PageSize = recentClients;
+        if (!IsPostBack)
+            this.gridClient.PageSize = numClients;
+
+        labelException.Visible = false;
     }
 
     protected void sourceClient_Selecting(object sender, LinqDataSourceSelectEventArgs e)
     {
-        e.Result = GetRecentClients(recentClients);
+        string userId = RSMTenon.ReportGenerator.ReportGenerator.GetUserId();
+        e.Result = GetRecentClients(numClients, userId);
     }
 
     protected void gridClient_SelectedIndexChanged(object sender, EventArgs e)
     {
-        Guid guid = (Guid)gridClient.SelectedDataKey.Value;
-        DownloadReport(guid);
+        try {
+            Guid guid = (Guid)gridClient.SelectedDataKey.Value;
+            DownloadReport(guid);
+        } catch (Exception ex) {
+            showException(ex, labelException, "generating a report");
+        }
     }
 }

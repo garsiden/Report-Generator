@@ -77,15 +77,14 @@
                 <td class="right">
                     <asp:LinkButton ID="linkAdd" runat="server" CommandName="Insert" CommandArgument="AllNew"
                         ValidationGroup="Investment">Add</asp:LinkButton>
-                </td>
-                <asp:RequiredFieldValidator ID="validRequiredAssetName" runat="server" ControlToValidate="textAssetNameAddAllNew"
-                    Display="None" ErrorMessage="Please enter an Investment Name." ValidationGroup="Investment"></asp:RequiredFieldValidator>
-                <asp:RequiredFieldValidator ID="validRequiredAmount" runat="server" ControlToValidate="textAmountAddAllNew"
-                    Display="None" ErrorMessage="Please enter an Investment Amount." ValidationGroup="Investment"></asp:RequiredFieldValidator>
-                <asp:CompareValidator ID="validCompareAmountAdd" runat="server" ControlToValidate="textAmountAddAllNew"
-                    Display="None" ErrorMessage="Please enter a valid Investment Amount." Operator="GreaterThan"
-                    Type="Currency" ValidationGroup="Investment" ValueToCompare="0"></asp:CompareValidator>
-            </tr>
+
+            <asp:RequiredFieldValidator ID="validRequiredAssetName" runat="server" ControlToValidate="textAssetNameAddAllNew"
+                Display="None" ErrorMessage="Please enter an Investment Name." ValidationGroup="Investment"></asp:RequiredFieldValidator>
+            <asp:RequiredFieldValidator ID="validRequiredAmount" runat="server" ControlToValidate="textAmountAddAllNew"
+                Display="None" ErrorMessage="Please enter an Investment Amount." ValidationGroup="Investment"></asp:RequiredFieldValidator>
+            <asp:CompareValidator ID="validCompareAmountAdd" runat="server" ControlToValidate="textAmountAddAllNew"
+                Display="None" ErrorMessage="Please enter a valid Investment Amount." Operator="GreaterThan"
+                Type="Currency" ValidationGroup="Investment" ValueToCompare="0"></asp:CompareValidator>
         </EmptyDataTemplate>
         <AlternatingRowStyle CssClass="even" />
     </asp:GridView>

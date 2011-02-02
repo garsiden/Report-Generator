@@ -23,7 +23,9 @@
                 <ItemStyle CssClass="lnowrap" />
             </asp:TemplateField>
             <asp:BoundField DataField="MeetingDate" DataFormatString="{0:d}" HeaderText="Meeting Date"
-                SortExpression="MeetingDate" ItemStyle-CssClass="center" />
+                SortExpression="MeetingDate" ItemStyle-CssClass="center">
+                <ItemStyle CssClass="center"></ItemStyle>
+            </asp:BoundField>
             <asp:BoundField DataField="InitialFee" DataFormatString="{0:0.00}" HeaderText="Initial Fee"
                 SortExpression="InitialFee">
                 <ItemStyle CssClass="right" />
@@ -41,18 +43,25 @@
                 <ItemStyle CssClass="right" />
             </asp:TemplateField>
             <asp:BoundField DataField="StatusName" HeaderText="Status" SortExpression="HighNetWorth"
-                ItemStyle-CssClass="center" />
+                ItemStyle-CssClass="center">
+                <ItemStyle CssClass="center"></ItemStyle>
+            </asp:BoundField>
             <asp:CommandField ShowDeleteButton="True" />
             <asp:CommandField SelectText="Report" ShowSelectButton="True">
                 <ItemStyle CssClass="left" Width="5%" />
             </asp:CommandField>
         </Columns>
+        <EmptyDataTemplate>
+            No clients to display.
+        </EmptyDataTemplate>
         <AlternatingRowStyle CssClass="odd" />
     </asp:GridView>
     <br />
     <div style="text-align: right;">
         <asp:HyperLink ID="hyperNewClient" runat="server" NavigateUrl="~/Pages/Client/new.aspx">New Client</asp:HyperLink>
     </div>
+    <br />
+    <asp:Label ID="labelException" runat="server" Text=""></asp:Label>
     <asp:LinqDataSource ID="sourceClient" runat="server" ContextTypeName="RSMTenon.Data.RepGenDataContext"
         EnableDelete="True" EnableInsert="True" EnableUpdate="True" OrderBy="Name" TableName="Clients">
     </asp:LinqDataSource>

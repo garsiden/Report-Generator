@@ -38,7 +38,12 @@ public partial class Pages_Client_edit : RepGenPage
     protected void btnCreateReport_Click(object sender, EventArgs e)
     {
         Guid clientGuid = new Guid(this.Request.QueryString["guid"]);
-        DownloadReport(clientGuid);
+
+        try {
+            DownloadReport(clientGuid);
+        } catch (Exception ex) {
+            showException(ex, labelException, "generating a report");
+        }
     }
 
     protected void formClient_DataBound(object sender, EventArgs e)

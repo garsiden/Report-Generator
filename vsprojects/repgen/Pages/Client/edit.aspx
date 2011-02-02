@@ -3,13 +3,13 @@
 
 <%@ Register Assembly="BasicFrame.WebControls.BasicDatePicker" Namespace="BasicFrame.WebControls"
     TagPrefix="BDP" %>
-
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <h4 id="clientHeader" runat="server">
     </h4>
     <br />
     <asp:FormView ID="formClient" runat="server" DataKeyNames="GUID" DataSourceID="sourceClient"
-        OnItemUpdated="formClient_ItemUpdated" EnableModelValidation="True" OnDataBound="formClient_DataBound">
+        OnItemUpdated="formClient_ItemUpdated" EnableModelValidation="True" OnDataBound="formClient_DataBound"
+        Width="50%">
         <EditItemTemplate>
             <table class="listing">
                 <tr class="odd">
@@ -72,7 +72,7 @@
                     <td class="left">
                         <asp:DropDownList ID="listStrategy" runat="server" DataSource="<%# GetStrategies() %>"
                             DataTextField="Name" DataValueField="ID" SelectedValue='<%# Bind("StrategyID") %>'
-                            Width="70%" onselectedindexchanged="listStrategy_SelectedIndexChanged" AutoPostBack="True">
+                            Width="70%" OnSelectedIndexChanged="listStrategy_SelectedIndexChanged" AutoPostBack="True">
                         </asp:DropDownList>
                     </td>
                 </tr>
@@ -244,12 +244,13 @@
                         Time Horizon
                     </td>
                     <td class="lnowrap">
-                        <asp:Label ID="TimeHorizonLabel" runat="server" Text='<%# Eval("TimeHorizon") + " years(s)" %>' />
+                        <asp:Label ID="TimeHorizonLabel" runat="server" Text='<%# Eval("TimeHorizon") + " year(s)" %>' />
                     </td>
                 </tr>
                 <tr class="even">
                     <td class="lnowrap">
-                        Use Existing Assets</td>
+                        Use Existing Assets
+                    </td>
                     <td class="lnowrap">
                         <asp:CheckBox ID="ExistingAssetsCheckBox" runat="server" Checked='<%# Bind("ExistingAssets") %>'
                             Enabled="False" />
@@ -292,7 +293,6 @@
                     </td>
                 </tr>
             </table>
-            <br />
             <br />
             <div align="right">
                 <asp:LinkButton ID="linkEdit" runat="server" CommandName="Edit">Edit</asp:LinkButton>
@@ -373,13 +373,17 @@
         </EmptyDataTemplate>
     </asp:FormView>
     <br />
-    <asp:HyperLink ID="hyperAsset" runat="server" NavigateUrl="~/Pages/Client/assets.aspx">Add/amend client assets by investment</asp:HyperLink>
-    <br />
     <asp:HyperLink ID="hyperClass" runat="server" NavigateUrl="~/Pages/Client/assetclasses.aspx">Add/amend client assets by class</asp:HyperLink>
     <br />
+    <asp:HyperLink ID="hyperAsset" runat="server" NavigateUrl="~/Pages/Client/assets.aspx">Add/amend client assets by investment</asp:HyperLink>
     <br />
-    <asp:Button ID="btnCreateReport" runat="server" OnClick="btnCreateReport_Click" 
-        Text="Create Report" CssClass="button" Width="100px" />
+    <br />
+    <asp:HyperLink ID="hyperClients" runat="server" NavigateUrl="~/Pages/Client/index.aspx">All Clients</asp:HyperLink>
+    <br />
+    <div style="width: 50%" align="right">
+        <asp:Button ID="btnCreateReport" runat="server" OnClick="btnCreateReport_Click" Text="Report"
+            CssClass="button" Width="90px" />
+    </div>
     <br />
     <br />
     <asp:Label ID="labelException" runat="server"></asp:Label>
