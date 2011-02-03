@@ -1,4 +1,35 @@
-1. A new SQL Server user RepGenASP
-2. New database RepGen with user RepGenASp as owner (attached from MDL file or a backup file, whichever is preferable)
-3. Unzip a file containing the ASP.Net application tree into the Inetpub/wwwroot folder or web server
-4. Set the SQL Server connection string in the web.config file in the root application directory.
+Report Generator Installation
+
+SQL Server
+==========
+
+1. Create a new SQL server user RepGenASP
+2. Attach unzipped RepGen.mdf as database RepGen
+3. Set database owner as RepGenASP
+
+
+IIS Server
+==========
+
+1. Unzip repgen_asp_yyyymmdd to a suitable location on server
+
+2. Using the IIS Virtual Directory Wizard create a virtual directory:
+   - Virtual Directory Alias:      repgen
+   - Web Site Content Directory:   [directory as chosen in step 1]
+   - Access Permissions:           Read, Run scripts (defaults) + Write     
+
+3. Edit the SQL Server connection string in the <connectionStrings>
+   section of the web.config file located in the root of the
+   application directory, changing the following attributes
+
+   Data Source=[SQL Server name]
+   Password=[as per RepGenASP user]
+
+4. Optionally uncomment the TempDir section in the the <appSettings>
+   of web.config and set required path. If not set the directory named
+   in the 'temp' environment variable will be used.
+
+
+Contact Information:
+nigel.garside@gmail.com
+Telephone: 029 2079 5779
