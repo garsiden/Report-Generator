@@ -10,30 +10,58 @@ public partial class Pages_AssetClass_editA_M : RepGenPage
 {
     protected void Page_Load(object sender, EventArgs e)
     {
-
+        labelException.Visible = false;
     }
+
     protected void gridHistoricData_RowCommand(object sender, GridViewCommandEventArgs e)
     {
-        if (e.CommandName == "Insert") {
+        try {
+            if (e.CommandName == "Insert") {
+                string[] fields = { "Date", "CASH", "COPR", "COMM", "GLEQ", "HEDG", "LOSH" };
+                ListDictionary listDictionary = new ListDictionary();
 
-            string[] fields = { "Date", "PREQ", "UKCB", "UKGB", "UKHY", "UKEQ", "WOBO" };
-            ListDictionary listDictionary = new ListDictionary();
-
-            foreach (var f in fields) {
-                string boxName = "text" + f + "Add";
-                TextBox textBox = (TextBox)gridHistoricData.FooterRow.FindControl(boxName);
-                if (f == "Date") {
-                    DateTime dt = DateTime.Parse(textBox.Text);
-                    listDictionary.Add(f, dt);
-                } else {
-                    double db = Double.Parse(textBox.Text);
-                    listDictionary.Add(f, db);
+                foreach (var f in fields) {
+                    string boxName = "text" + f + "Add";
+                    TextBox textBox = (TextBox)gridHistoricData.FooterRow.FindControl(boxName);
+                    if (f == "Date") {
+                        DateTime dt = DateTime.Parse(textBox.Text);
+                        listDictionary.Add(f, dt);
+                    } else {
+                        double db = Double.Parse(textBox.Text);
+                        listDictionary.Add(f, db);
+                    }
+                    textBox.Text = String.Empty;
                 }
-                textBox.Text = String.Empty;
-            }
 
-            sourceHistoricData.Insert(listDictionary);
-            gridHistoricData.DataBind();
+                sourceHistoricData.Insert(listDictionary);
+                gridHistoricData.DataBind();
+            }
+        } catch (Exception ex) {
+            showException(ex, labelException, "adding the asset class prices");
+        }
+
+    }
+    protected void sourceHistoricData_Inserted(object sender, LinqDataSourceStatusEventArgs e)
+    {
+        if (e.Exception != null) {
+            showException(e.Exception, labelException, "adding assets class prices");
+            e.ExceptionHandled = true;
+        }
+    }
+    protected void gridHistoricData_RowDeleted(object sender, GridViewDeletedEventArgs e)
+    {
+        if (e.Exception != null) {
+            showException(e.Exception, labelException, "deleting the asset class prices");
+            e.ExceptionHandled = true;
+        }
+    }
+
+    protected void gridHistoricData_RowUpdated(object sender, GridViewUpdatedEventArgs e)
+    {
+        if (e.Exception != null) {
+            showException(e.Exception, labelException, "updating the asset class prices");
+            e.ExceptionHandled = true;
+            e.KeepInEditMode = true;
         }
     }
 }

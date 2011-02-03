@@ -8,7 +8,8 @@
         Edit Strategies</h4>
     <br />
     <asp:GridView ID="gridStrategy" runat="server" AutoGenerateColumns="False" CssClass="listing"
-        DataKeyNames="ID" DataSourceID="sourceStrategy">
+        DataKeyNames="ID" DataSourceID="sourceStrategy" 
+        onrowupdated="gridStrategy_RowUpdated">
         <RowStyle CssClass="odd" />
         <Columns>
             <asp:BoundField DataField="Name" HeaderText="Strategy Name" SortExpression="Name">
@@ -91,6 +92,8 @@
     </asp:GridView>
 <br />
     <asp:ValidationSummary ID="validationSummary" runat="server" />
+    <br />
+    <asp:Label ID="labelException" runat="server" Text=""></asp:Label>
     <asp:LinqDataSource ID="sourceStrategy" runat="server" ContextTypeName="RSMTenon.Data.RepGenDataContext"
         EnableUpdate="True" TableName="Strategies">
     </asp:LinqDataSource>

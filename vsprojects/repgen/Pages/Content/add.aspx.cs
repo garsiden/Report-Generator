@@ -9,9 +9,8 @@ public partial class Pages_Content_add : RepGenPage
 {
     protected void Page_Load(object sender, EventArgs e)
     {
-        if (!IsPostBack)
-        {
-           formView.ChangeMode(FormViewMode.Insert);
+        if (!IsPostBack) {
+            formView.ChangeMode(FormViewMode.Insert);
         }
 
         labelException.Visible = false;
@@ -27,8 +26,7 @@ public partial class Pages_Content_add : RepGenPage
 
     protected void formView_ItemInserted(object sender, FormViewInsertedEventArgs e)
     {
-        if (e.Exception != null)
-        {
+        if (e.Exception != null) {
             showException(e.Exception, labelException, "inserting the client");
             e.ExceptionHandled = true;
             e.KeepInInsertMode = true;
