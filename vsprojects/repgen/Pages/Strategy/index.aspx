@@ -9,7 +9,8 @@
     <br />
     <asp:GridView ID="gridStrategy" runat="server" AutoGenerateColumns="False" CssClass="listing"
         DataKeyNames="ID" DataSourceID="sourceStrategy" 
-        onrowupdated="gridStrategy_RowUpdated">
+        onrowupdated="gridStrategy_RowUpdated" 
+        onrowdeleted="gridStrategy_RowDeleted">
         <RowStyle CssClass="odd" />
         <Columns>
             <asp:BoundField DataField="Name" HeaderText="Strategy Name" SortExpression="Name">
@@ -86,6 +87,9 @@
                 </ItemTemplate>
                 <ItemStyle CssClass="lnowrap" />
             </asp:TemplateField>
+            <asp:CommandField ShowDeleteButton="True">
+            <ItemStyle Width="4em" />
+            </asp:CommandField>
             <asp:CommandField ShowEditButton="True" />
         </Columns>
         <AlternatingRowStyle CssClass="even" />
@@ -95,6 +99,6 @@
     <br />
     <asp:Label ID="labelException" runat="server" Text=""></asp:Label>
     <asp:LinqDataSource ID="sourceStrategy" runat="server" ContextTypeName="RSMTenon.Data.RepGenDataContext"
-        EnableUpdate="True" TableName="Strategies">
+        EnableUpdate="True" TableName="Strategies" EnableDelete="True">
     </asp:LinqDataSource>
 </asp:Content>

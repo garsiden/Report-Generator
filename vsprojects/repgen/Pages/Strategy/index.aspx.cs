@@ -20,4 +20,12 @@ public partial class Pages_Strategy_index : RepGenPage
             e.KeepInEditMode = true;
         }
     }
+
+    protected void gridStrategy_RowDeleted(object sender, GridViewDeletedEventArgs e)
+    {
+        if (e.Exception != null) {
+            showException(e.Exception, labelException, "deleting the strategy");
+            e.ExceptionHandled = true;
+        }
+    }
 }
