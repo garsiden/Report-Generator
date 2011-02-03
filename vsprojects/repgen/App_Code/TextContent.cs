@@ -62,12 +62,11 @@ namespace RSMTenon.ReportGenerator
             var all = Data.Content.GetAllContentIDs(Client.StrategyID);
             var unused = all.Except(contents.Select(c => c.ContentID));
 
-            foreach (var id in unused)
-            {
+            foreach (var id in unused) {
                 // try to remove from a run
-                if (! ReportGenerator.RemoveContentControlFromRun(mainPart, id))
+                if (!ReportGenerator.RemoveContentControlFromRun(mainPart, id))
                     //else try block
-                     ReportGenerator.RemoveContentControlFromBlock(mainPart, id);
+                    ReportGenerator.RemoveContentControlFromBlock(mainPart, id);
             }
 
             // Save doc
@@ -153,14 +152,12 @@ namespace RSMTenon.ReportGenerator
             xmlnode.InnerText = cost.ToString("C0");
 
             // Look up in tblContent
-            foreach (var item in contents)
-            {
+            foreach (var item in contents) {
                 setTextNode(root, nsmgr, item);
             }
 
             // Calculation
             // strategy.performance.return
-//            double modelReturn = calculateModelReturn(client.Strategy, client.StatusName);
             double modelReturn = Report.CalculateModelReturn();
             xmlnode = root.SelectSingleNode("/wmr:repgen/wmr:strategy/wmr:performance/wmr:return", nsmgr);
             xmlnode.InnerText = modelReturn.ToString("0.0%");
@@ -182,8 +179,7 @@ namespace RSMTenon.ReportGenerator
             CustomXmlPart customXmlPart = mainPart.AddCustomXmlPart(CustomXmlPartType.CustomXml);
 
             //copy the XML into the new part...
-            using (StreamWriter ts = new StreamWriter(customXmlPart.GetStream()))
-            {
+            using (StreamWriter ts = new StreamWriter(customXmlPart.GetStream())) {
                 ts.Write(customXML);
             }
         }
@@ -194,7 +190,6 @@ namespace RSMTenon.ReportGenerator
 
             double endPrice = prices.Last().Value.Value;
             double startPrice = prices.ElementAt(prices.Count - 121).Value.Value;
-
             double rtrn = Math.Log(endPrice / startPrice);
 
             return rtrn;
@@ -223,6 +218,5 @@ namespace RSMTenon.ReportGenerator
             XmlNode xmlnode = root.SelectSingleNode(contentPath, nsmgr);
             xmlnode.InnerText = content.Replace("[Strategy]", Client.Strategy.Name);
         }
-
     }
 }
