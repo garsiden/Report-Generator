@@ -72,7 +72,7 @@
                     <td class="left">
                         <asp:DropDownList ID="listStrategy" runat="server" DataSource="<%# GetStrategies() %>"
                             DataTextField="Name" DataValueField="ID" SelectedValue='<%# Bind("StrategyID") %>'
-                            Width="70%" OnSelectedIndexChanged="listStrategy_SelectedIndexChanged" AutoPostBack="True">
+                            Width="70%" onchange='setClientStatus();'>
                         </asp:DropDownList>
                     </td>
                 </tr>
@@ -382,7 +382,7 @@
     <br />
     <div style="width: 50%" align="right">
         <asp:Button ID="btnCreateReport" runat="server" OnClick="btnCreateReport_Click" Text="Report"
-            CssClass="button" Width="90px" />
+            CssClass="button" Width="90px" OnClientClick="hideException('labelException');" />
     </div>
     <br />
     <br />
@@ -401,4 +401,20 @@
             <asp:QueryStringParameter DbType="Guid" DefaultValue="null" Name="clientGuid" QueryStringField="guid" />
         </SelectParameters>
     </asp:ObjectDataSource>
+
+    <script type="text/javascript">
+        function setClientStatus() {
+            var list = document.getElementById("ctl00_ContentPlaceHolder1_formClient_listStrategy");
+            var opts = document.getElementsByName("ctl00$ContentPlaceHolder1$formClient$radioListStatus");
+            var disable = true;
+            if (list.options[list.selectedIndex].value == "TC") {
+                opts[0].checked = true;
+            } else {
+                disable = false;
+            }
+            for (var i = 0; i < opts.length; i++)
+                opts[i].disabled = disable;
+        }
+    </script>
+
 </asp:Content>

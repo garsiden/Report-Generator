@@ -15,6 +15,7 @@ public partial class _Default : RepGenPage
             this.gridClient.PageSize = numClients;
 
         labelException.Visible = false;
+        
     }
 
     protected void sourceClient_Selecting(object sender, LinqDataSourceSelectEventArgs e)

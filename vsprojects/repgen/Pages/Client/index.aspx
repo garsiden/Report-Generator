@@ -47,9 +47,13 @@
                 <ItemStyle CssClass="center"></ItemStyle>
             </asp:BoundField>
             <asp:CommandField ShowDeleteButton="True" />
-            <asp:CommandField SelectText="Report" ShowSelectButton="True">
+            <asp:TemplateField ShowHeader="False">
+                <ItemTemplate>
+                    <asp:LinkButton ID="linkReport" runat="server" CausesValidation="False" 
+                        CommandName="Select" Text="Report"  OnClientClick="hideException('labelException');"></asp:LinkButton>
+                </ItemTemplate>
                 <ItemStyle CssClass="left" Width="5%" />
-            </asp:CommandField>
+            </asp:TemplateField>
         </Columns>
         <EmptyDataTemplate>
             No clients to display.

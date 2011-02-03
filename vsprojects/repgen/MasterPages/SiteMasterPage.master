@@ -16,6 +16,28 @@
             z-index: 100;
         }
     </style>
+    <%--    <script type="text/javascript" language="javascript" src='<%=ResolveUrl("~/scripts/repgen.js")%>' />--%>
+
+    <script type="text/javascript">
+        function hideException(controlId) {
+            var fullname = "ctl00_ContentPlaceHolder1_" + controlId;
+            var label = document.getElementById(fullname);
+            if (label != null) {
+                label.innerText = "";
+            }
+        }
+
+        function scrollToElement(elementID, hrefName) {
+            var elem = document.getElementById(elementID);
+            if (elem == null)
+                return;
+            elem.scrollIntoView(true);
+            if (hrefName != null)
+                window.scrollTo(0, 0);
+            //location.href(hrefName);
+        }
+    </script>
+
     <asp:ContentPlaceHolder ID="head" runat="server">
     </asp:ContentPlaceHolder>
 </head>

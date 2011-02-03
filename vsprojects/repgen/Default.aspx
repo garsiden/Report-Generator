@@ -18,9 +18,14 @@
             <asp:CommandField ShowDeleteButton="True">
                 <ItemStyle CssClass="left" Width="5%" />
             </asp:CommandField>
-            <asp:CommandField SelectText="Report" ShowSelectButton="True">
+            <asp:TemplateField ShowHeader="False">
+                <ItemTemplate>
+                    <asp:LinkButton ID="linkReport" runat="server" CausesValidation="False" 
+                        CommandName="Select" Text="Report" OnClientClick="hideException('labelException');"
+                        ></asp:LinkButton>
+                </ItemTemplate>
                 <ItemStyle CssClass="left" Width="5%" />
-            </asp:CommandField>
+            </asp:TemplateField>
         </Columns>
         <EmptyDataTemplate>
             No clients to display.
@@ -28,11 +33,11 @@
     </asp:GridView>
 <br />
 <br />
-    <asp:Label ID="labelException" runat="server" Text=""></asp:Label>
+    <asp:Label ID="labelException" runat="server" Visible="False"></asp:Label>
     <asp:LinqDataSource ID="sourceClient" runat="server" ContextTypeName="RSMTenon.Data.RepGenDataContext"
         OrderBy="MeetingDate desc, Name" TableName="Clients" EnableDelete="True" OnSelecting="sourceClient_Selecting">
     </asp:LinqDataSource>
     <br />
     <div align="right" style="width: 60%">
-        <asp:HyperLink ID="hyperNewClient" runat="server" NavigateUrl="Pages/Client/new.aspx">Add New Client</asp:HyperLink></div>
+        <asp:HyperLink ID="hyperNewClient" runat="server" NavigateUrl="Pages/Client/new.aspx">New Client</asp:HyperLink></div>
 </asp:Content>
