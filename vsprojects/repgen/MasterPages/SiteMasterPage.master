@@ -54,8 +54,6 @@
             <DynamicMenuItemStyle HorizontalPadding="8px" VerticalPadding="2px" />
         </asp:Menu>
         <asp:SiteMapDataSource ID="sourceSiteMap" runat="server" ShowStartingNode="False" />
-        <br />
-        <br />
         <div id="content">
             <div id="content-inner">
                 <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
