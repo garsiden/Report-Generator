@@ -162,7 +162,7 @@ namespace RSMTenon.ReportGenerator
                 }
                 // empty row after last investment
                 var emptyCells = new List<CellProps>();
-                for (int i = 0; i < ncols; i++) 
+                for (int i = 0; i < ncols; i++)
                     emptyCells.Add(new CellProps() { text = String.Empty });
                 TableRow emptyRow = modelTable.GenerateTableRow(emptyCells, rowHeight);
                 table1.Append(emptyRow);
@@ -203,9 +203,9 @@ namespace RSMTenon.ReportGenerator
             List<AssetWeighting> data;
 
             if (Client.ExistingAssets) {
-                data = ClientAssetClass.GetClientAssetWeighting(Client.GUID);
+                data = ClientAssetClass.GetClientAssetWeighting(Client.GUID).Where(a => a.Weighting > 0).ToList();
             } else {
-                data = Model.GetModelAllocation(Client.StrategyID, Client.HighNetWorth).ToList();
+                data = Model.GetModelAllocation(Client.StrategyID, Client.HighNetWorth).Where(a => a.Weighting > 0).ToList();
             }
 
             AllocationPieChart pie = new AllocationPieChart();
