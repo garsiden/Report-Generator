@@ -12,13 +12,14 @@ using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
 using C = DocumentFormat.OpenXml.Drawing.Charts;
+using W = DocumentFormat.OpenXml.Drawing.Wordprocessing;
 
 namespace RSMTenon.ReportGenerator
 {
     public class ReportGenerator
     {
         private static string sourceDir = @"~/App_Data/";
-        private uint docPrId = 100000U;
+        private uint docPrId = 0;
 
         private string TempDir { get; set; }
         private string TemplateFile { get; set; }
@@ -28,11 +29,15 @@ namespace RSMTenon.ReportGenerator
 
         public ReportGenerator()
         {
+            // get values from web.config
+            // template
             NameValueCollection appSettings = (NameValueCollection)ConfigurationManager.GetSection("appSettings");
             string templateFile = appSettings["TemplateFile"];
             TemplateFile = HttpContext.Current.Server.MapPath(sourceDir + "templates\\" + templateFile);
+            //content file
             string contentFile = appSettings["ContentFile"];
             ContentXmlFile = HttpContext.Current.Server.MapPath(sourceDir + contentFile);
+            //temp directory
             string tempDir = appSettings["TempDir"];
 
             if (tempDir != null && Directory.Exists(tempDir))
@@ -40,8 +45,8 @@ namespace RSMTenon.ReportGenerator
             else
                 TempDir = Environment.GetEnvironmentVariable("temp");
 
+            // source files
             TempContentXmlFile = tempDir + "\\content_temp.xml";
-
             ReportSpecFile = HttpContext.Current.Server.MapPath(sourceDir + "report-spec.xml");
         }
 
@@ -160,7 +165,9 @@ namespace RSMTenon.ReportGenerator
             // generate a new Wordprocessing Drawing, add to a new Run,
             // and relate to new ChartPart
             Run run = new Run();
-            Drawing drawing = GraphDrawing.GenerateDrawing(relId, chartItem.CustomControlName, docPrId, Cx, Cy);
+            uint prId = getNextDocPrId(mainPart);
+
+            Drawing drawing = GraphDrawing.GenerateDrawing(relId, chartItem.CustomControlName, prId, Cx, Cy);
             docPrId++;
             para.Append(run);
             run.Append(drawing);
@@ -275,6 +282,14 @@ namespace RSMTenon.ReportGenerator
             }
 
             return removed;
+        }
+
+        private uint getNextDocPrId(MainDocumentPart mainPart)
+        {
+            if (docPrId == 0)
+                docPrId = mainPart.Document.Descendants<W.DocProperties>().Max(dp => dp.Id.Value);
+
+            return ++docPrId;
         }
     }
 }
