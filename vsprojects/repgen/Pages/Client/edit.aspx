@@ -129,6 +129,8 @@
             <asp:RangeValidator ID="validRangeInitialFee" runat="server" ErrorMessage="Please enter an Initial Fee of between 0 and 5."
                 Type="Currency" MaximumValue="5" MinimumValue="0" ControlToValidate="InitialFeeTextBox"
                 Display="None"></asp:RangeValidator>
+            <asp:CustomValidator ID="validCustomClientTimeHorizon" runat="server" OnServerValidate="TimeHorizonServerValidate"
+                    ErrorMessage="Client's Time Horizon is less than Strategy's." Display="None"></asp:CustomValidator>
         </EditItemTemplate>
         <InsertItemTemplate>
             <table class="listing">

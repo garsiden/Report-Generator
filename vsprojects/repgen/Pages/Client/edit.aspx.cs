@@ -68,4 +68,17 @@ public partial class Pages_Client_edit : RepGenPage
             radio.Enabled = true;
         }
     }
+
+    public void TimeHorizonServerValidate(object sender, ServerValidateEventArgs args)
+    {
+        try {
+            var listStrategy = (DropDownList)formClient.Row.FindControl("listStrategy");
+            Strategy strategy = Strategy.GetStrategies().Single(s => s.ID == listStrategy.SelectedValue);
+            var listClient = (DropDownList)formClient.Row.FindControl("listTimeHorizonEdit");
+            int clientTH = Int32.Parse(listClient.SelectedValue);
+            args.IsValid = (clientTH >= strategy.TimeHorizon);
+        } catch {
+            args.IsValid = false;
+        }
+    }
 }

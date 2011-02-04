@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using RSMTenon.Data;
 
 public partial class Pages_Client_new : RepGenPage
 {
@@ -45,6 +46,7 @@ public partial class Pages_Client_new : RepGenPage
             newClientGuid = clientGuid;
         }
     }
+
     protected void listStrategy_SelectedIndexChanged(object sender, EventArgs e)
     {
         var radio = (RadioButtonList)this.formView.Row.FindControl("radioListStatus");
@@ -58,8 +60,28 @@ public partial class Pages_Client_new : RepGenPage
             radio.Enabled = true;
         }
     }
+
     protected void formView_ItemInserting(object sender, FormViewInsertEventArgs e)
     {
         e.Values["UserId"] = RSMTenon.ReportGenerator.ReportGenerator.GetUserId();
     }
+
+    public void TimeHorizonServerValidate(object sender, ServerValidateEventArgs args)
+    {
+        try {
+            var listStrategy = (DropDownList)formView.Row.FindControl("listStrategy");
+            string strategyId = listStrategy.SelectedValue;
+            if (strategyId == "XX") {
+                args.IsValid = false;
+            } else {
+                Strategy strategy = Strategy.GetStrategy(strategyId);
+                var listClient = (DropDownList)formView.Row.FindControl("listTimeHorizonEdit");
+                int clientTH = Int32.Parse(listClient.SelectedValue);
+                args.IsValid = (clientTH >= strategy.TimeHorizon);
+            }
+        } catch {
+            args.IsValid = false;
+        }
+    }
+
 }

@@ -7,8 +7,7 @@
     <h4>
         Add New Client</h4>
     <asp:FormView ID="formView" runat="server" DataKeyNames="GUID" DataSourceID="sourceClient"
-        OnItemInserted="formView_ItemInserted" 
-        oniteminserting="formView_ItemInserting">
+        OnItemInserted="formView_ItemInserted" OnItemInserting="formView_ItemInserting">
         <EditItemTemplate>
             ReportingFrequency:
             <br />
@@ -103,8 +102,7 @@
                     <td class="lnowrap">
                         <asp:DropDownList ID="listStrategy" runat="server" DataSource="<%# GetStrategies() %>"
                             DataTextField="Name" DataValueField="ID" DataMember="StrategyID" SelectedValue='<%# Bind("StrategyID") %>'
-                            AppendDataBoundItems="True" AutoPostBack="True" 
-                            onselectedindexchanged="listStrategy_SelectedIndexChanged">
+                            AppendDataBoundItems="True" AutoPostBack="True" OnSelectedIndexChanged="listStrategy_SelectedIndexChanged">
                             <asp:ListItem Value="XX">-- Select Strategy --</asp:ListItem>
                         </asp:DropDownList>
                     </td>
@@ -166,6 +164,8 @@
                 Display="None"></asp:RangeValidator>
             <asp:RequiredFieldValidator ID="validRequiredStatus" runat="server" ErrorMessage="Please select a client Status."
                 Display="None" ControlToValidate="radioListStatus"></asp:RequiredFieldValidator>
+            <asp:CustomValidator ID="validCustomTimeHorizon" runat="server" ErrorMessage="Client's Time Horizon is less than Strategy's."
+                OnServerValidate="TimeHorizonServerValidate" Display="None"></asp:CustomValidator>
         </InsertItemTemplate>
         <ItemTemplate>
             <table class="listing">
