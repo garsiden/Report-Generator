@@ -4,6 +4,8 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
+<br />
+<br />
     <asp:GridView ID="gridClient" runat="server" AllowPaging="True" AllowSorting="True"
         AutoGenerateColumns="False" CaptionAlign="Top" CssClass="listing" DataKeyNames="GUID"
         DataSourceID="sourceClient" OnSelectedIndexChanged="gridClient_SelectedIndexChanged">
