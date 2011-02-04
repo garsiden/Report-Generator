@@ -2,6 +2,8 @@
     MasterPageFile="~/MasterPages/SiteMasterPage.master" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+<br />
+<br />
     <asp:GridView ID="gridClient" runat="server" AutoGenerateColumns="False" DataKeyNames="GUID"
         DataSourceID="sourceClient" CssClass="listing" Caption="Recent Clients" AllowSorting="True"
         Width="60%" OnSelectedIndexChanged="gridClient_SelectedIndexChanged">
@@ -20,9 +22,8 @@
             </asp:CommandField>
             <asp:TemplateField ShowHeader="False">
                 <ItemTemplate>
-                    <asp:LinkButton ID="linkReport" runat="server" CausesValidation="False" 
-                        CommandName="Select" Text="Report" OnClientClick="hideException('labelException');"
-                        ></asp:LinkButton>
+                    <asp:LinkButton ID="linkReport" runat="server" CausesValidation="False" CommandName="Select"
+                        Text="Report" OnClientClick="hideException('labelException');"></asp:LinkButton>
                 </ItemTemplate>
                 <ItemStyle CssClass="left" Width="5%" />
             </asp:TemplateField>
@@ -31,13 +32,12 @@
             No clients to display.
         </EmptyDataTemplate>
     </asp:GridView>
-<br />
-<br />
+    <br />
+    <br />
+    <div align="right" style="width: 60%">
+        <asp:HyperLink ID="hyperNewClient" runat="server" NavigateUrl="Pages/Client/new.aspx">New Client</asp:HyperLink></div>
     <asp:Label ID="labelException" runat="server" Visible="False"></asp:Label>
     <asp:LinqDataSource ID="sourceClient" runat="server" ContextTypeName="RSMTenon.Data.RepGenDataContext"
         OrderBy="MeetingDate desc, Name" TableName="Clients" EnableDelete="True" OnSelecting="sourceClient_Selecting">
     </asp:LinqDataSource>
-    <br />
-    <div align="right" style="width: 60%">
-        <asp:HyperLink ID="hyperNewClient" runat="server" NavigateUrl="Pages/Client/new.aspx">New Client</asp:HyperLink></div>
 </asp:Content>
