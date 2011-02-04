@@ -37,9 +37,7 @@ namespace RSMTenon.ReportGenerator
             PointName = test1.Element("point-name").Value;
             var fromAttr = test1.Attribute("from");
             var toAttr = test1.Attribute("to");
-            var preDate = test1.Attribute("pre-date");
-
-            PreDate = preDate == null ? false : (preDate.Value.ToString() == "true");
+            PreDate = (bool?)test1.Attribute("pre-date") ?? false;
 
             if (fromAttr != null) {
                 FromDate = DateTime.ParseExact(fromAttr.Value, format, new DateTimeFormatInfo());
@@ -113,16 +111,16 @@ namespace RSMTenon.ReportGenerator
 
             // get table specifications
             var tspec = tableSpec("model");
-            uint rowHeight = UInt32.Parse(tspec.Attribute("row-height").Value);
+            uint rowHeight = (uint)tspec.Attribute("row-height");
             var cols = tspec.Element("columns").Elements("column").ToList();
+            int ncols = cols.Count;
             var colwidths = new List<string>();
             var formats = new List<string>();
             var colHeaders = new List<string>();
 
             foreach (var c in cols) {
                 colwidths.Add(c.Attribute("width").Value);
-                var fmt = c.Attributes("format").SingleOrDefault();
-                formats.Add(fmt == null ? "" : fmt.Value);
+                formats.Add((string)c.Attribute("format") ?? String.Empty);
                 colHeaders.Add(c.Value);
             }
 
@@ -141,7 +139,7 @@ namespace RSMTenon.ReportGenerator
                 var headerCells = new List<CellProps>();
                 headerCells.Add(new CellProps { text = g.AssetClassName, align = JustificationValues.Left });
                 headerCells.Add(new CellProps { text = g.Weighting.ToString(formats[1]) });
-                for (int i = 2; i < 6; i++) {
+                for (int i = 2; i < ncols; i++) {
                     headerCells.Add(new CellProps());
                 }
                 var header = modelTable.GenerateTableHeaderRow(headerCells, rowHeight);
@@ -162,6 +160,12 @@ namespace RSMTenon.ReportGenerator
                     TableRow row = modelTable.GenerateTableRow(contentCells, rowHeight);
                     table1.Append(row);
                 }
+                // empty row after last investment
+                var emptyCells = new List<CellProps>();
+                for (int i = 0; i < ncols; i++) 
+                    emptyCells.Add(new CellProps() { text = String.Empty });
+                TableRow emptyRow = modelTable.GenerateTableRow(emptyCells, rowHeight);
+                table1.Append(emptyRow);
             }
 
             // create a footer row with totals for asset class weighting, investment amount and total income
@@ -176,7 +180,7 @@ namespace RSMTenon.ReportGenerator
 
             //decimal totalWeighting = model.Aggregate(0M, (accum, each) => accum + each.Weighting);
 
-            TableRow footer = modelTable.GenerateTableFooterRow(footerCells, 255U);
+            TableRow footer = modelTable.GenerateTableFooterRow(footerCells, rowHeight);
             table1.Append(footer);
 
             return table1;
