@@ -11,6 +11,11 @@ namespace RSMTenon.Data
     {
         private Dictionary<int, ReturnData> strategyPrices;
 
+        public static Strategy GetStrategy(string strategyId)
+        {
+            return GetStrategies().SingleOrDefault(s => s.ID == strategyId);
+        }
+
         public static string GetStrategyNameFromId(string id)
         {
             var ctx = new RepGenDataContext();
