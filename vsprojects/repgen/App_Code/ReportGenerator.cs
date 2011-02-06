@@ -285,10 +285,10 @@ namespace RSMTenon.ReportGenerator
 
         private uint getNextDocPrId(MainDocumentPart mainPart)
         {
-            //if (docPrId == 0)
-                uint docp = mainPart.Document.Descendants<W.DocProperties>().Max(dp => dp.Id.Value);
-                return docp + 1;
-            //return ++docPrId;
+            if (docPrId == 0)
+                docPrId = mainPart.Document.Descendants<W.DocProperties>().Max(dp => dp.Id.Value);
+
+            return ++docPrId;
         }
     }
 }
