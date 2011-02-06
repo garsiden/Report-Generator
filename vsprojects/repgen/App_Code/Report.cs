@@ -22,8 +22,8 @@ namespace RSMTenon.ReportGenerator
         public string CustomControlName { get; set; }
         public decimal SizeX { get; set; }
         public decimal SizeY { get; set; }
-        public long Cx { get { return (long)SizeX * Graph.EMUS_PER_CENTIMETRE; } }
-        public long Cy { get { return (long)SizeY * Graph.EMUS_PER_CENTIMETRE; } }
+        public long Cx { get { return (long)(SizeX * Graph.EMUS_PER_CENTIMETRE); } }
+        public long Cy { get { return (long)(SizeY * Graph.EMUS_PER_CENTIMETRE); } }
     }
 
     public class StressTest
