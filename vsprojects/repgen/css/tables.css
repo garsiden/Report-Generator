@@ -19,9 +19,14 @@ table.listing th {
   padding: 0 1em 0.1em 0;
   font-size: 12px;
 }
-table.listing thead {
+table.listing thead th {
   background: #eae0d3;
 }
+
+table.listing tr th {
+  font-weight: bold;
+}
+
 table.listing thead th {
   border: 1px solid #ded0bf;
   border-bottom-color: #8c8296;
