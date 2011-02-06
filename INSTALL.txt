@@ -3,7 +3,7 @@ Report Generator Installation
 SQL Server
 ==========
 
-1. Create a new SQL server user RepGenASP
+1. Create a new SQL Server user RepGenASP
 2. Attach unzipped RepGen.mdf as database RepGen
 3. Set database owner as RepGenASP
 
