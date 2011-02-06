@@ -158,28 +158,10 @@ p.reportnote {
   color: #88837c;
 }
 
-dl.whatsnew {
-  margin: 1em 0;
-  padding: 0;
-}
-dl.whatsnew dt {
-  position: relative;
-  left: 0;
-  top: 1.2em;
-  width: 6em;
-  font-weight: bold;
-  white-space: nowrap;
-}
-dl.whatsnew dd {
-  margin: 0 0 0 7em;
-  padding: 0 0 0.5em 0.5em;
-}
-
 .button
 {
 	font-weight: bold;
 	color: #290d45;
-/*#2f5a11; */
 	border: #58545c 1px solid;
 	background-color: #cdd9c4;
 	cursor:hand;
