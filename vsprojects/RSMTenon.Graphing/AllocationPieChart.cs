@@ -24,7 +24,6 @@ namespace RSMTenon.Graphing
             view3D1.Append(perspective1);
 
             PlotArea plotArea1 = new PlotArea();
-            Layout layout2 = new Layout();
 
             Pie3DChart pie3DChart1 = new Pie3DChart();
             VaryColors varyColors1 = new VaryColors() { Val = true };
@@ -43,6 +42,10 @@ namespace RSMTenon.Graphing
 
             StringLiteral stringLiteral1 = new StringLiteral();
             NumberLiteral numberLiteral1 = new NumberLiteral();
+
+            FormatCode formatCode1 = new FormatCode();
+            formatCode1.Text = "General";
+            numberLiteral1.Append(formatCode1);
 
             UInt32 numPoints = (UInt32)model.Count();
             PointCount pointCount1 = new PointCount() { Val = (UInt32Value)numPoints };
@@ -63,9 +66,6 @@ namespace RSMTenon.Graphing
             categoryAxisData1.Append(stringLiteral1);
 
             Values values1 = new Values();
-            //FormatCode formatCode1 = new FormatCode();
-            //formatCode1.Text = "General";
-            //numberLiteral1.Append(formatCode1);
             values1.Append(numberLiteral1);
 
             pieChartSeries1.Append(index1);
@@ -77,7 +77,6 @@ namespace RSMTenon.Graphing
             pie3DChart1.Append(varyColors1);
             pie3DChart1.Append(pieChartSeries1);
 
-            plotArea1.Append(layout2);
             plotArea1.Append(pie3DChart1);
 
             Legend legend1 = GenerateLegend(LegendPositionValues.Right);
