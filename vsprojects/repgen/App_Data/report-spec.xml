@@ -33,7 +33,7 @@
                     <cash>{0} Model Allocation</cash>
                 </title>
             </chart>
-            <chart id="drawdown">
+            <chart id="drawdown" size-x="14.90" size-y="7.00">
                 <control-name>DrawdownChart</control-name>
                 <class>DrawdownLineChart</class>
                 <title>Drawdown</title>
@@ -53,7 +53,7 @@
                 <class>RollingReturnLineChart</class>
                 <title>5yr Rolling return</title>
             </chart>
-            <chart id="ten-year-return" size-x="15.25" size-y="8.9">
+            <chart id="ten-year-return" size-x="15.00" size-y="7.50">
                 <control-name>TenYearReturnChart</control-name>
                 <class>TenYearReturnLineChart</class>
                 <title>Ten Year Return</title>
