@@ -6,6 +6,7 @@ using System.Web;
 using System.Configuration;
 using System.IO;
 
+using RSMTenon.Data;
 using RSMTenon.Graphing;
 
 using DocumentFormat.OpenXml;
@@ -26,9 +27,12 @@ namespace RSMTenon.ReportGenerator
         private string ContentXmlFile { get; set; }
         private string TempContentXmlFile { get; set; }
         private string ReportSpecFile { get; set; }
+        public Client Client { get; set; }
+        public Report Report { get; set; }
 
-        public ReportGenerator()
+        public ReportGenerator(Client client)
         {
+
             // get values from web.config
             // template
             NameValueCollection appSettings = (NameValueCollection)ConfigurationManager.GetSection("appSettings");
@@ -48,14 +52,15 @@ namespace RSMTenon.ReportGenerator
             // source files
             TempContentXmlFile = tempDir + "\\content_temp.xml";
             ReportSpecFile = HttpContext.Current.Server.MapPath(sourceDir + "report-spec.xml");
+            Client = client;
+            Report = new Report(ReportSpecFile) { Client = Client };
         }
 
-        public string CreateReport(Report report)
+        public string CreateReport()
         {
             // check client assets; throw error on failure
-            report.Client.ValidateClientAssets();
+            Report.Client.ValidateClientAssets();
 
-            report.SpecFile = ReportSpecFile;
             string tempDocName = null;
             WordprocessingDocument myWordDoc = null;
             MainDocumentPart mainPart = null;
@@ -71,17 +76,17 @@ namespace RSMTenon.ReportGenerator
                 mainPart = myWordDoc.MainDocumentPart;
 
                 // Add text content
-                TextContent tc = new TextContent(report);
+                TextContent tc = new TextContent(Report);
                 tc.GenerateTextContent(mainPart, ContentXmlFile, tempXmlStream);
 
                 // Model Table
                 string controlName = null;
-                Table table = report.ModelTable();
+                Table table = Report.ModelTable();
                 controlName = "ModelTable";
                 AddTableToDoc(mainPart, table, controlName);
 
                 // Charts
-                AddChartsToDoc(mainPart, report);
+                AddChartsToDoc(mainPart, Report);
             } finally {
                 // save and close document
                 if (tempXmlStream != null)
@@ -129,27 +134,22 @@ namespace RSMTenon.ReportGenerator
 
             // Stress Test Market Crash Bar Chart
             chartItem = report.StressTestMarketCrash();
-            AddChartToDoc(mainPart, chartItem, StressTestBarChart.Cx, StressTestBarChart.Cy);
+            AddChartToDoc(mainPart, chartItem);
 
             // Rolling Return 1 yr
             chartItem = report.RollingReturnChart(1);
-            AddChartToDoc(mainPart, chartItem, RollingReturnLineChart.Cx, RollingReturnLineChart.Cy);
+            AddChartToDoc(mainPart, chartItem);
 
             // Rolling Return 3 yr
             chartItem = report.RollingReturnChart(3);
-            AddChartToDoc(mainPart, chartItem, RollingReturnLineChart.Cx, RollingReturnLineChart.Cy);
+            AddChartToDoc(mainPart, chartItem);
 
             // Rolling Return 5 yr
             chartItem = report.RollingReturnChart(5);
-            AddChartToDoc(mainPart, chartItem, RollingReturnLineChart.Cx, RollingReturnLineChart.Cy);
+            AddChartToDoc(mainPart, chartItem);
         }
 
         private void AddChartToDoc(MainDocumentPart mainPart, ChartItem chartItem)
-        {
-            AddChartToDoc(mainPart, chartItem, Graph.Cx, Graph.Cy);
-        }
-
-        private void AddChartToDoc(MainDocumentPart mainPart, ChartItem chartItem, long Cx, long Cy)
         {
             // open Word documant and remove existing content from control
             Paragraph para = findAndRemoveContent(mainPart, chartItem.CustomControlName);
@@ -167,8 +167,7 @@ namespace RSMTenon.ReportGenerator
             Run run = new Run();
             uint prId = getNextDocPrId(mainPart);
 
-            Drawing drawing = GraphDrawing.GenerateDrawing(relId, chartItem.CustomControlName, prId, Cx, Cy);
-            docPrId++;
+            Drawing drawing = GraphDrawing.GenerateDrawing(relId, chartItem.CustomControlName, prId, chartItem.Cx, chartItem.Cy);
             para.Append(run);
             run.Append(drawing);
         }
@@ -286,10 +285,10 @@ namespace RSMTenon.ReportGenerator
 
         private uint getNextDocPrId(MainDocumentPart mainPart)
         {
-            if (docPrId == 0)
-                docPrId = mainPart.Document.Descendants<W.DocProperties>().Max(dp => dp.Id.Value);
-
-            return ++docPrId;
+            //if (docPrId == 0)
+                uint docp = mainPart.Document.Descendants<W.DocProperties>().Max(dp => dp.Id.Value);
+                return docp + 1;
+            //return ++docPrId;
         }
     }
 }

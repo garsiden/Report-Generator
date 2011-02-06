@@ -65,9 +65,8 @@ public partial class RepGenPage : System.Web.UI.Page
     protected void DownloadReport(Guid clientGuid)
     {
         Client client = Client.GetClientByGUID(clientGuid);
-        Report report = new Report() { Client = client };
-        var repgen = new ReportGenerator();
-        string tempDocName = repgen.CreateReport(report);
+        var repgen = new ReportGenerator(client);
+        string tempDocName = repgen.CreateReport();
 
         try
         {

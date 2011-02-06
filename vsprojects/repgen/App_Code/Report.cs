@@ -20,6 +20,10 @@ namespace RSMTenon.ReportGenerator
         public C.Chart Chart { get; set; }
         public string Title { get; set; }
         public string CustomControlName { get; set; }
+        public decimal SizeX { get; set; }
+        public decimal SizeY { get; set; }
+        public long Cx { get { return (long)SizeX * Graph.EMUS_PER_CENTIMETRE; } }
+        public long Cy { get { return (long)SizeY * Graph.EMUS_PER_CENTIMETRE; } }
     }
 
     public class StressTest
@@ -71,6 +75,8 @@ namespace RSMTenon.ReportGenerator
         private RepGenDataContext context;
         private XElement reportSpec = null;
         public string SpecFile { get; set; }
+        public decimal DefaultSizeX { get; set; }
+        public decimal DefaultSizeY { get; set; }
 
         // Return variables
         private List<ReturnData> modelReturn = null;
@@ -88,6 +94,19 @@ namespace RSMTenon.ReportGenerator
         private string strategyColourHex = "0066CC";
         private string clientColourHex = "98CC00";
         private string benchmarkColourHex = "C0C0C0";
+
+        public Report(string specFile)
+        {
+            SpecFile = specFile;
+            setDefaultChartSize();
+        }
+
+        private void setDefaultChartSize()
+        {
+            var spec = ReportSpec.Element("chart-spec");
+            DefaultSizeX = (decimal?)spec.Attribute("size-x") ?? Graph.DEFAULT_SIZE_X;
+            DefaultSizeY = (decimal?)spec.Attribute("size-y") ?? Graph.DEFAULT_SIZE_Y;
+        }
 
         public string GetContentControlNameForChart(string chartId)
         {
@@ -191,6 +210,8 @@ namespace RSMTenon.ReportGenerator
         public ChartItem Allocation()
         {
             XElement rpt = chartSpec("allocation");
+            decimal x = (decimal?)rpt.Attribute("size-x") ?? DefaultSizeX;
+            decimal y = (decimal?)rpt.Attribute("size-y") ?? DefaultSizeY;
             string title = null;
 
             // set title
@@ -212,7 +233,14 @@ namespace RSMTenon.ReportGenerator
             C.Chart chart = pie.GenerateChart(title, data);
 
             string ccn = rpt.Element("control-name").Value;
-            ChartItem chartItem = new ChartItem { Chart = chart, Title = title, CustomControlName = ccn };
+            ChartItem chartItem = new ChartItem
+            {
+                Chart = chart,
+                Title = title,
+                CustomControlName = ccn,
+                SizeX = x,
+                SizeY = y
+            };
 
             return chartItem;
         }
@@ -221,6 +249,8 @@ namespace RSMTenon.ReportGenerator
         {
             // get chart specs
             XElement rpt = chartSpec("allocation-comparison");
+            decimal x = (decimal?)rpt.Attribute("size-x") ?? DefaultSizeX;
+            decimal y = (decimal?)rpt.Attribute("size-y") ?? DefaultSizeY;
 
             // set title
             string title = String.Format(rpt.Element("title").Value, StrategyName);
@@ -235,7 +265,14 @@ namespace RSMTenon.ReportGenerator
             C.Chart chart = bc.GenerateChart(title, data);
 
             string ccn = rpt.Element("control-name").Value;
-            ChartItem chartItem = new ChartItem { Chart = chart, Title = title, CustomControlName = ccn };
+            ChartItem chartItem = new ChartItem
+            {
+                Chart = chart,
+                Title = title,
+                CustomControlName = ccn,
+                SizeX = x,
+                SizeY = y
+            };
 
             return chartItem;
         }
@@ -244,6 +281,8 @@ namespace RSMTenon.ReportGenerator
         {
             // get chart specs
             XElement rpt = chartSpec("drawdown");
+            decimal x = (decimal?)rpt.Attribute("size-x") ?? DefaultSizeX;
+            decimal y = (decimal?)rpt.Attribute("size-y") ?? DefaultSizeY;
 
             // set title
             string title = rpt.Element("title").Value;
@@ -274,7 +313,13 @@ namespace RSMTenon.ReportGenerator
             lc.AddLineChartSeries(chart, data4, StrategyName + " Strategy", strategyColourHex);
 
             string ccn = rpt.Element("control-name").Value;
-            ChartItem chartItem = new ChartItem { Chart = chart, Title = title, CustomControlName = ccn };
+            ChartItem chartItem = new ChartItem {
+                Chart = chart,
+                Title = title,
+                CustomControlName = ccn,
+                SizeX = x,
+                SizeY = y
+            };
 
             return chartItem;
         }
@@ -283,6 +328,8 @@ namespace RSMTenon.ReportGenerator
         {
             // get chart specs
             XElement rpt = chartSpec("stress-test-market-rise");
+            decimal x = (decimal?)rpt.Attribute("size-x") ?? DefaultSizeX;
+            decimal y = (decimal?)rpt.Attribute("size-y") ?? DefaultSizeY;
 
             // set title
             string title = rpt.Element("title").Value;
@@ -317,7 +364,13 @@ namespace RSMTenon.ReportGenerator
             bc.AddBarChartSeries(chart, series4);
 
             string ccn = rpt.Element("control-name").Value;
-            ChartItem chartItem = new ChartItem { Chart = chart, Title = title, CustomControlName = ccn };
+            ChartItem chartItem = new ChartItem {
+                Chart = chart,
+                Title = title,
+                CustomControlName = ccn,
+                SizeX = x,
+                SizeY = y
+            };
 
             return chartItem;
         }
@@ -326,6 +379,8 @@ namespace RSMTenon.ReportGenerator
         {
             // get chart specs
             XElement rpt = chartSpec("stress-test-market-crash");
+            decimal x = (decimal?)rpt.Attribute("size-x") ?? DefaultSizeX;
+            decimal y = (decimal?)rpt.Attribute("size-y") ?? DefaultSizeY;
 
             // set title
             string title = rpt.Element("title").Value;
@@ -360,7 +415,13 @@ namespace RSMTenon.ReportGenerator
             bc.AddBarChartSeries(chart, series4);
 
             string ccn = rpt.Element("control-name").Value;
-            ChartItem chartItem = new ChartItem { Chart = chart, Title = title, CustomControlName = ccn };
+            ChartItem chartItem = new ChartItem {
+                Chart = chart,
+                Title = title,
+                CustomControlName = ccn,
+                SizeX = x,
+                SizeY = y
+            };
 
             return chartItem;
         }
@@ -369,6 +430,8 @@ namespace RSMTenon.ReportGenerator
         {
             // get chart specs
             XElement rpt = chartSpec("ten-year-return");
+            decimal x = (decimal?)rpt.Attribute("size-x") ?? DefaultSizeX;
+            decimal y = (decimal?)rpt.Attribute("size-y") ?? DefaultSizeY;
 
             // set title
             string title = rpt.Element("title").Value;
@@ -413,7 +476,13 @@ namespace RSMTenon.ReportGenerator
             lc.AddLineChartSeries(chart, data4, dataKey4, strategyColourHex);
 
             string ccn = rpt.Element("control-name").Value;
-            ChartItem chartItem = new ChartItem { Chart = chart, Title = title, CustomControlName = ccn };
+            ChartItem chartItem = new ChartItem {
+                Chart = chart,
+                Title = title,
+                CustomControlName = ccn,
+                SizeX = x,
+                SizeY = y
+            };
 
             return chartItem;
         }
@@ -438,6 +507,8 @@ namespace RSMTenon.ReportGenerator
 
             // get chart specs
             XElement rpt = chartSpec(id);
+            decimal x = (decimal?)rpt.Attribute("size-x") ?? DefaultSizeX;
+            decimal y = (decimal?)rpt.Attribute("size-y") ?? DefaultSizeY;
 
             // set title
             string title = rpt.Element("title").Value;
@@ -474,7 +545,13 @@ namespace RSMTenon.ReportGenerator
             lc.AddLineChartSeries(chart, rr, dataKey4, strategyColourHex);
 
             string ccn = rpt.Element("control-name").Value;
-            ChartItem chartItem = new ChartItem { Chart = chart, Title = title, CustomControlName = ccn };
+            ChartItem chartItem = new ChartItem {
+                Chart = chart,
+                Title = title,
+                CustomControlName = ccn,
+                SizeX = x,
+                SizeY = y
+            };
 
             return chartItem;
         }

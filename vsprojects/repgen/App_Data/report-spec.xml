@@ -15,7 +15,7 @@
             </table>
         </tables>
     </table-spec>
-    <chart-spec>
+    <chart-spec size-x="14.90" size-y="6.80">
         <asset-classes>
             <asset-class id="UKGB" colour-hex="C0C0C0" />
             <asset-class id="GLEQ" colour-hex="808080" />
@@ -42,19 +42,19 @@
                 <title>Drawdown</title>
             </chart>
 
-            <chart id="rolling-return-1yr">
+            <chart id="rolling-return-1yr" size-x="14.90" size-y="6.70">
                 <control-name>RollingReturn1YrChart</control-name>
                 <class>=RollingReturnLineChart</class>
                 <title>1yr Rolling return</title>
             </chart>
 
-            <chart id="rolling-return-3yr">
+            <chart id="rolling-return-3yr" size-x="14.90" size-y="6.70">
                 <control-name>RollingReturn3YrChart</control-name>
                 <class>RollingReturnLineChart</class>
                 <title>3yr Rolling return</title>
             </chart>
 
-            <chart id="rolling-return-5yr">
+            <chart id="rolling-return-5yr" size-x="14.90" size-y="6.70">
                 <control-name>RollingReturn5YrChart</control-name>
                 <class>RollingReturnLineChart</class>
                 <title>5yr Rolling return</title>
@@ -85,7 +85,7 @@
                 </categories>
             </chart>
 
-            <chart id="stress-test-market-crash">
+            <chart id="stress-test-market-crash" size-x="14.90" size-y="7.00">
                 <control-name>StressTestMarketCrashChart</control-name>
                 <class>StressTestBarChart</class>
                 <title>Stress Test - Market Crashes</title>
