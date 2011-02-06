@@ -48,6 +48,8 @@
                 <siteMapNode url="~/Pages/Template/index.aspx" title="Select" />
                 <siteMapNode url="~/Pages/Template/upload.aspx" title="Upload" />
             </siteMapNode>
+            <!--Report Spec-->
+            <siteMapNode url ="~/Pages/ReportSpec/upload.aspx" title ="Report-Spec" />
 
         </siteMapNode>
     </siteMapNode>
