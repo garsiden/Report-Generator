@@ -11,10 +11,11 @@ namespace RSMTenon.Graphing
 {
     public abstract class Graph
     {
-        protected const long EMUS_PER_CENTIMETRE = 360000L;
-
-        protected const long DEFAULT_GRAPH_X = (long)(14.90 * EMUS_PER_CENTIMETRE);
-        protected const long DEFAULT_GRAPH_Y = (long)(6.80 * EMUS_PER_CENTIMETRE);
+        public const long EMUS_PER_CENTIMETRE = 360000L;
+        public const decimal DEFAULT_SIZE_X = 14.90M;
+        public const decimal DEFAULT_SIZE_Y = 6.80M;
+        protected const long DEFAULT_GRAPH_X = (long)(DEFAULT_SIZE_X * EMUS_PER_CENTIMETRE);
+        protected const long DEFAULT_GRAPH_Y = (long)(DEFAULT_SIZE_Y * EMUS_PER_CENTIMETRE);
         public const string DEFAULT_LANG = "en-GB";
         protected const int TITLE_FONT_SIZE = 1200;
         protected const int DEFAULT_FONT_SIZE = 1100;
