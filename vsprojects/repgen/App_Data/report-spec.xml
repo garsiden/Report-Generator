@@ -1,12 +1,12 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <report-spec>
     <table-spec>
         <tables>
             <table id="model" row-height="255">
-            <!--total width: 8750-->
+                <!--total width: 8750-->
                 <columns>
-                    <column width="2830"></column>
-                    <column width="1000" format="0.0%"></column>
+                    <column width="2830" />
+                    <column width="1000" format="0.0%" />
                     <column width="1250" format="0.00%">Weighting</column>
                     <column width="1420" format="£#,##0">Amount</column>
                     <column width="1150" format="0.00%">Expected Yield*</column>
@@ -21,12 +21,10 @@
             <asset-class id="GLEQ" colour-hex="808080" />
         </asset-classes>
         <charts>
-
             <chart id="allocation-comparison">
                 <control-name>AllocationComparisonChart</control-name>
                 <title>Current Asset Allocation vs {0} Strategy</title>
             </chart>
-
             <chart id="allocation">
                 <control-name>AllocationChart</control-name>
                 <class>AllocationPieChart</class>
@@ -35,31 +33,26 @@
                     <cash>{0} Model Allocation</cash>
                 </title>
             </chart>
-
             <chart id="drawdown">
                 <control-name>DrawdownChart</control-name>
-                <class>DrawdownLineChart"></class>
+                <class>DrawdownLineChart</class>
                 <title>Drawdown</title>
             </chart>
-
             <chart id="rolling-return-1yr" size-x="14.90" size-y="6.70">
                 <control-name>RollingReturn1YrChart</control-name>
                 <class>=RollingReturnLineChart</class>
                 <title>1yr Rolling return</title>
             </chart>
-
             <chart id="rolling-return-3yr" size-x="14.90" size-y="6.70">
                 <control-name>RollingReturn3YrChart</control-name>
                 <class>RollingReturnLineChart</class>
                 <title>3yr Rolling return</title>
             </chart>
-
             <chart id="rolling-return-5yr" size-x="14.90" size-y="6.70">
                 <control-name>RollingReturn5YrChart</control-name>
                 <class>RollingReturnLineChart</class>
                 <title>5yr Rolling return</title>
             </chart>
-
             <chart id="ten-year-return" size-x="15.25" size-y="8.9">
                 <control-name>TenYearReturnChart</control-name>
                 <class>TenYearReturnLineChart</class>
@@ -67,7 +60,6 @@
                 <asset-class id="GLEQ" colour-hex="808080" />
                 <asset-class id="CASH" colour-hex="000000" />
             </chart>
-
             <chart id="stress-test-market-rise">
                 <control-name>StressTestMarketRiseChart</control-name>
                 <class>StressTestBarChart</class>
@@ -84,7 +76,6 @@
                     </category>
                 </categories>
             </chart>
-
             <chart id="stress-test-market-crash" size-x="14.90" size-y="7.00">
                 <control-name>StressTestMarketCrashChart</control-name>
                 <class>StressTestBarChart</class>
@@ -93,19 +84,15 @@
                     <category id="technology-bubble-burst" from="2000-04-28" to="2001-09-28" pre-date="false">
                         <point-name>Technology Bubble Bursting {0} - {1}</point-name>
                     </category>
-
                     <category id="zeros-collapse" from="2001-05-31" to="2002-10-31" pre-date="false">
                         <point-name>Zero's Collapse {0} - {1}</point-name>
                     </category>
-
                     <category id="credit-crunch" from="2007-12-31" to="2009-02-27" pre-date="false">
                         <point-name>Credit Crunch &amp; Global Economic Crisis {0} - {1}</point-name>
                     </category>
-
                     <category id="economic-slowdown" from="2002-05-31" to="2002-09-30" pre-date="false">
                         <point-name>Recession Fears {0} - {1}</point-name>
                     </category>
-
                     <category id="russian-debt-crisis" from="1998-08-31" to="1998-09-30" pre-date="false">
                         <point-name>Russian Debt Crisis &amp; LTCM Collapse {0} - {1}</point-name>
                     </category>
