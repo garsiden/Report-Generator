@@ -23,7 +23,7 @@ public partial class Pages_Content_upload : System.Web.UI.Page
                 if (uploader.PostedFile.ContentLength > 1000000) {
                     lblStatus.Text = "File is too large for upload";
                 } else {
-                    string destPath = Server.MapPath(String.Format("~/App_Data/", content));
+                    string destPath = Server.MapPath(String.Format("~/App_Data/{0}", content));
 
                     // try opening as Xml file
                     using (StreamReader sr = new StreamReader(uploader.PostedFile.InputStream)) {
