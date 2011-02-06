@@ -24,7 +24,7 @@ public partial class Pages_Template_index : System.Web.UI.Page
     {
         string templateDir = Server.MapPath("~/App_Data/templates");
         DirectoryInfo info = new DirectoryInfo(templateDir);
-        FileInfo[] templates = info.GetFiles("*.dotx");
+        FileInfo[] templates = info.GetFiles("*.docx");
 
         return templates;
 

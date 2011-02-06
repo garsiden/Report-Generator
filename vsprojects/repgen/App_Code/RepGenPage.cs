@@ -72,7 +72,7 @@ public partial class RepGenPage : System.Web.UI.Page
         {
             Response.ClearContent();
             Response.ClearHeaders();
-            Response.AppendHeader("Content-Disposition", "attachment; filename=repgen.dotx");
+            Response.AppendHeader("Content-Disposition", "attachment; filename=repgen.docx");
             Response.AppendHeader("Content-Type", "application/msword");
             Response.ContentEncoding = System.Text.Encoding.UTF8;
             Response.TransmitFile(tempDocName);
