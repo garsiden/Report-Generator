@@ -29,6 +29,7 @@ IIS Server
    of web.config and set required path. If not set the directory named
    in the 'temp' environment variable will be used.
 
+5. To turn on security uncomment the <deny users="?"/> section of web.config
 
 Contact Information:
 nigel.garside@gmail.com
