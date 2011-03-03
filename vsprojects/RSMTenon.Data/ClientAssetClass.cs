@@ -61,8 +61,8 @@ namespace RSMTenon.Data
         partial void OnValidate(System.Data.Linq.ChangeAction action)
         {
             if (action == ChangeAction.Insert || action == ChangeAction.Update) {
-                if (TotalAssetAllocation != 1) {
-                    string msg = String.Format("Asset allocations must total 100% (currently {0:0.0%})", TotalAssetAllocation);
+                if (TotalAssetAllocation != 100) {
+                    string msg = String.Format("Asset allocations must total 100% (currently {0:0.0}%)", TotalAssetAllocation);
                     throw new ArgumentException(msg);
                 }
             }
@@ -73,7 +73,7 @@ namespace RSMTenon.Data
         {
             get
             {
-                return CASH + COMM + COPR + GLEQ + HEDG + +LOSH + PREQ + UKCB + UKEQ + UKGB + UKHY + WOBO;
+                return rnd(CASH) + rnd(COMM) + rnd(COPR) + rnd(GLEQ) + rnd(HEDG) + rnd(LOSH) + rnd(PREQ) + rnd(UKCB) + rnd(UKEQ) + rnd(UKGB) + rnd(UKHY) + rnd(WOBO);
             }
         }
         #endregion
@@ -83,5 +83,7 @@ namespace RSMTenon.Data
             var ctx = new RepGenDataContext();
             return ctx.ClientAssetWeighting(clientGuid).ToList();
         }
+
+        private decimal rnd(decimal d) { return Math.Round(d, 1); }
     }
 }

@@ -76,9 +76,9 @@ namespace RSMTenon.Data
         {
             if (action == ChangeAction.Update)
             {
-                if (TotalAssetAllocation != 1 && ClientGUID != Guid.Empty)
+                if (TotalAssetAllocation != 100 && ClientGUID != Guid.Empty)
                 {
-                    string msg = String.Format("Asset allocations must total 100% (currently {0:0.0%})", TotalAssetAllocation);
+                    string msg = String.Format("Asset allocations must total 100% (currently {0:0.0}%)", TotalAssetAllocation);
                     throw new ArgumentException(msg);
                 }
             }
