@@ -3344,7 +3344,7 @@ namespace RSMTenon.Data
 			}
 		}
 		
-		[Column(Storage="_CASH", DbType="Decimal(4,3) NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		[Column(Storage="_CASH", DbType="Decimal(4,1) NOT NULL", UpdateCheck=UpdateCheck.Never)]
 		public decimal CASH
 		{
 			get
@@ -3364,7 +3364,7 @@ namespace RSMTenon.Data
 			}
 		}
 		
-		[Column(Storage="_COMM", DbType="Decimal(4,3) NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		[Column(Storage="_COMM", DbType="Decimal(4,1) NOT NULL", UpdateCheck=UpdateCheck.Never)]
 		public decimal COMM
 		{
 			get
@@ -3384,7 +3384,7 @@ namespace RSMTenon.Data
 			}
 		}
 		
-		[Column(Storage="_COPR", DbType="Decimal(4,3) NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		[Column(Storage="_COPR", DbType="Decimal(4,1) NOT NULL", UpdateCheck=UpdateCheck.Never)]
 		public decimal COPR
 		{
 			get
@@ -3404,7 +3404,7 @@ namespace RSMTenon.Data
 			}
 		}
 		
-		[Column(Storage="_GLEQ", DbType="Decimal(4,3) NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		[Column(Storage="_GLEQ", DbType="Decimal(4,1) NOT NULL", UpdateCheck=UpdateCheck.Never)]
 		public decimal GLEQ
 		{
 			get
@@ -3424,7 +3424,7 @@ namespace RSMTenon.Data
 			}
 		}
 		
-		[Column(Storage="_HEDG", DbType="Decimal(4,3) NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		[Column(Storage="_HEDG", DbType="Decimal(4,1) NOT NULL", UpdateCheck=UpdateCheck.Never)]
 		public decimal HEDG
 		{
 			get
@@ -3444,7 +3444,7 @@ namespace RSMTenon.Data
 			}
 		}
 		
-		[Column(Storage="_LOSH", DbType="Decimal(4,3) NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		[Column(Storage="_LOSH", DbType="Decimal(4,1) NOT NULL", UpdateCheck=UpdateCheck.Never)]
 		public decimal LOSH
 		{
 			get
@@ -3464,7 +3464,7 @@ namespace RSMTenon.Data
 			}
 		}
 		
-		[Column(Storage="_PREQ", DbType="Decimal(4,3) NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		[Column(Storage="_PREQ", DbType="Decimal(4,1) NOT NULL", UpdateCheck=UpdateCheck.Never)]
 		public decimal PREQ
 		{
 			get
@@ -3484,7 +3484,7 @@ namespace RSMTenon.Data
 			}
 		}
 		
-		[Column(Storage="_UKCB", DbType="Decimal(4,3) NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		[Column(Storage="_UKCB", DbType="Decimal(4,1) NOT NULL", UpdateCheck=UpdateCheck.Never)]
 		public decimal UKCB
 		{
 			get
@@ -3504,7 +3504,7 @@ namespace RSMTenon.Data
 			}
 		}
 		
-		[Column(Storage="_UKEQ", DbType="Decimal(4,3) NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		[Column(Storage="_UKEQ", DbType="Decimal(4,1) NOT NULL", UpdateCheck=UpdateCheck.Never)]
 		public decimal UKEQ
 		{
 			get
@@ -3524,7 +3524,7 @@ namespace RSMTenon.Data
 			}
 		}
 		
-		[Column(Storage="_UKGB", DbType="Decimal(4,3) NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		[Column(Storage="_UKGB", DbType="Decimal(4,1) NOT NULL", UpdateCheck=UpdateCheck.Never)]
 		public decimal UKGB
 		{
 			get
@@ -3544,7 +3544,7 @@ namespace RSMTenon.Data
 			}
 		}
 		
-		[Column(Storage="_UKHY", DbType="Decimal(4,3) NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		[Column(Storage="_UKHY", DbType="Decimal(4,1) NOT NULL", UpdateCheck=UpdateCheck.Never)]
 		public decimal UKHY
 		{
 			get
@@ -3564,7 +3564,7 @@ namespace RSMTenon.Data
 			}
 		}
 		
-		[Column(Storage="_WOBO", DbType="Decimal(4,3) NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		[Column(Storage="_WOBO", DbType="Decimal(4,1) NOT NULL", UpdateCheck=UpdateCheck.Never)]
 		public decimal WOBO
 		{
 			get
@@ -3759,7 +3759,7 @@ namespace RSMTenon.Data
 			}
 		}
 		
-		[Column(Storage="_CASH", DbType="Decimal(4,3) NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		[Column(Storage="_CASH", DbType="Decimal(4,1) NOT NULL", UpdateCheck=UpdateCheck.Never)]
 		public decimal CASH
 		{
 			get
@@ -3779,7 +3779,7 @@ namespace RSMTenon.Data
 			}
 		}
 		
-		[Column(Storage="_COMM", DbType="Decimal(4,3) NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		[Column(Storage="_COMM", DbType="Decimal(4,1) NOT NULL", UpdateCheck=UpdateCheck.Never)]
 		public decimal COMM
 		{
 			get
@@ -3799,7 +3799,7 @@ namespace RSMTenon.Data
 			}
 		}
 		
-		[Column(Storage="_COPR", DbType="Decimal(4,3) NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		[Column(Storage="_COPR", DbType="Decimal(4,1) NOT NULL", UpdateCheck=UpdateCheck.Never)]
 		public decimal COPR
 		{
 			get
@@ -3819,7 +3819,7 @@ namespace RSMTenon.Data
 			}
 		}
 		
-		[Column(Storage="_GLEQ", DbType="Decimal(4,3) NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		[Column(Storage="_GLEQ", DbType="Decimal(4,1) NOT NULL", UpdateCheck=UpdateCheck.Never)]
 		public decimal GLEQ
 		{
 			get
@@ -3839,7 +3839,7 @@ namespace RSMTenon.Data
 			}
 		}
 		
-		[Column(Storage="_HEDG", DbType="Decimal(4,3) NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		[Column(Storage="_HEDG", DbType="Decimal(4,1) NOT NULL", UpdateCheck=UpdateCheck.Never)]
 		public decimal HEDG
 		{
 			get
@@ -3859,7 +3859,7 @@ namespace RSMTenon.Data
 			}
 		}
 		
-		[Column(Storage="_LOSH", DbType="Decimal(4,3) NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		[Column(Storage="_LOSH", DbType="Decimal(4,1) NOT NULL", UpdateCheck=UpdateCheck.Never)]
 		public decimal LOSH
 		{
 			get
@@ -3879,7 +3879,7 @@ namespace RSMTenon.Data
 			}
 		}
 		
-		[Column(Storage="_PREQ", DbType="Decimal(4,3) NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		[Column(Storage="_PREQ", DbType="Decimal(4,1) NOT NULL", UpdateCheck=UpdateCheck.Never)]
 		public decimal PREQ
 		{
 			get
@@ -3899,7 +3899,7 @@ namespace RSMTenon.Data
 			}
 		}
 		
-		[Column(Storage="_UKCB", DbType="Decimal(4,3) NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		[Column(Storage="_UKCB", DbType="Decimal(4,1) NOT NULL", UpdateCheck=UpdateCheck.Never)]
 		public decimal UKCB
 		{
 			get
@@ -3919,7 +3919,7 @@ namespace RSMTenon.Data
 			}
 		}
 		
-		[Column(Storage="_UKEQ", DbType="Decimal(4,3) NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		[Column(Storage="_UKEQ", DbType="Decimal(4,1) NOT NULL", UpdateCheck=UpdateCheck.Never)]
 		public decimal UKEQ
 		{
 			get
@@ -3939,7 +3939,7 @@ namespace RSMTenon.Data
 			}
 		}
 		
-		[Column(Storage="_UKGB", DbType="Decimal(4,3) NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		[Column(Storage="_UKGB", DbType="Decimal(4,1) NOT NULL", UpdateCheck=UpdateCheck.Never)]
 		public decimal UKGB
 		{
 			get
@@ -3959,7 +3959,7 @@ namespace RSMTenon.Data
 			}
 		}
 		
-		[Column(Storage="_UKHY", DbType="Decimal(4,3) NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		[Column(Storage="_UKHY", DbType="Decimal(4,1) NOT NULL", UpdateCheck=UpdateCheck.Never)]
 		public decimal UKHY
 		{
 			get
@@ -3979,7 +3979,7 @@ namespace RSMTenon.Data
 			}
 		}
 		
-		[Column(Storage="_WOBO", DbType="Decimal(4,3) NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		[Column(Storage="_WOBO", DbType="Decimal(4,1) NOT NULL", UpdateCheck=UpdateCheck.Never)]
 		public decimal WOBO
 		{
 			get

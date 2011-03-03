@@ -153,18 +153,18 @@
       <Column Name="ClientGUID" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" UpdateCheck="Never" />
       <Column Name="AssetName" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
       <Column Name="Amount" Type="System.Decimal" DbType="Money NOT NULL" CanBeNull="false" UpdateCheck="Never" />
-      <Column Name="CASH" Type="System.Decimal" DbType="Decimal(4,3) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
-      <Column Name="COMM" Type="System.Decimal" DbType="Decimal(4,3) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
-      <Column Name="COPR" Type="System.Decimal" DbType="Decimal(4,3) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
-      <Column Name="GLEQ" Type="System.Decimal" DbType="Decimal(4,3) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
-      <Column Name="HEDG" Type="System.Decimal" DbType="Decimal(4,3) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
-      <Column Name="LOSH" Type="System.Decimal" DbType="Decimal(4,3) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
-      <Column Name="PREQ" Type="System.Decimal" DbType="Decimal(4,3) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
-      <Column Name="UKCB" Type="System.Decimal" DbType="Decimal(4,3) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
-      <Column Name="UKEQ" Type="System.Decimal" DbType="Decimal(4,3) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
-      <Column Name="UKGB" Type="System.Decimal" DbType="Decimal(4,3) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
-      <Column Name="UKHY" Type="System.Decimal" DbType="Decimal(4,3) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
-      <Column Name="WOBO" Type="System.Decimal" DbType="Decimal(4,3) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="CASH" Type="System.Decimal" DbType="Decimal(4,1) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="COMM" Type="System.Decimal" DbType="Decimal(4,1) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="COPR" Type="System.Decimal" DbType="Decimal(4,1) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="GLEQ" Type="System.Decimal" DbType="Decimal(4,1) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="HEDG" Type="System.Decimal" DbType="Decimal(4,1) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="LOSH" Type="System.Decimal" DbType="Decimal(4,1) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="PREQ" Type="System.Decimal" DbType="Decimal(4,1) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="UKCB" Type="System.Decimal" DbType="Decimal(4,1) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="UKEQ" Type="System.Decimal" DbType="Decimal(4,1) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="UKGB" Type="System.Decimal" DbType="Decimal(4,1) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="UKHY" Type="System.Decimal" DbType="Decimal(4,1) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="WOBO" Type="System.Decimal" DbType="Decimal(4,1) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
       <Column Name="SSMA_TimeStamp" Type="System.Data.Linq.Binary" DbType="rowversion NOT NULL" IsDbGenerated="true" CanBeNull="false" UpdateCheck="Never" />
       <Association Name="Client_ClientAsset" Member="Client" ThisKey="ClientGUID" OtherKey="GUID" Type="Client" IsForeignKey="true" DeleteRule="CASCADE" DeleteOnNull="true" />
     </Type>
@@ -172,18 +172,18 @@
   <Table Name="dbo.tblClientAssetClass" Member="ClientAssetClasses">
     <Type Name="ClientAssetClass">
       <Column Name="ClientGUID" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
-      <Column Name="CASH" Type="System.Decimal" DbType="Decimal(4,3) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
-      <Column Name="COMM" Type="System.Decimal" DbType="Decimal(4,3) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
-      <Column Name="COPR" Type="System.Decimal" DbType="Decimal(4,3) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
-      <Column Name="GLEQ" Type="System.Decimal" DbType="Decimal(4,3) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
-      <Column Name="HEDG" Type="System.Decimal" DbType="Decimal(4,3) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
-      <Column Name="LOSH" Type="System.Decimal" DbType="Decimal(4,3) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
-      <Column Name="PREQ" Type="System.Decimal" DbType="Decimal(4,3) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
-      <Column Name="UKCB" Type="System.Decimal" DbType="Decimal(4,3) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
-      <Column Name="UKEQ" Type="System.Decimal" DbType="Decimal(4,3) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
-      <Column Name="UKGB" Type="System.Decimal" DbType="Decimal(4,3) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
-      <Column Name="UKHY" Type="System.Decimal" DbType="Decimal(4,3) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
-      <Column Name="WOBO" Type="System.Decimal" DbType="Decimal(4,3) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="CASH" Type="System.Decimal" DbType="Decimal(4,1) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="COMM" Type="System.Decimal" DbType="Decimal(4,1) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="COPR" Type="System.Decimal" DbType="Decimal(4,1) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="GLEQ" Type="System.Decimal" DbType="Decimal(4,1) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="HEDG" Type="System.Decimal" DbType="Decimal(4,1) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="LOSH" Type="System.Decimal" DbType="Decimal(4,1) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="PREQ" Type="System.Decimal" DbType="Decimal(4,1) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="UKCB" Type="System.Decimal" DbType="Decimal(4,1) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="UKEQ" Type="System.Decimal" DbType="Decimal(4,1) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="UKGB" Type="System.Decimal" DbType="Decimal(4,1) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="UKHY" Type="System.Decimal" DbType="Decimal(4,1) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="WOBO" Type="System.Decimal" DbType="Decimal(4,1) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
       <Column Name="SSMA_TimeStamp" Type="System.Data.Linq.Binary" DbType="rowversion NOT NULL" IsDbGenerated="true" CanBeNull="false" UpdateCheck="Never" />
       <Association Name="Client_ClientAssetClass" Member="Client" ThisKey="ClientGUID" OtherKey="GUID" Type="Client" IsForeignKey="true" DeleteRule="CASCADE" DeleteOnNull="true" />
     </Type>
