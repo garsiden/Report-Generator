@@ -26,7 +26,6 @@ public partial class Pages_Client_assetclasses : RepGenPage
                 }
             }
         }
-
         labelException.Visible = false;
     }
 
@@ -65,5 +64,11 @@ public partial class Pages_Client_assetclasses : RepGenPage
             e.ExceptionHandled = true;
             e.KeepInInsertMode = true;
         }
+    }
+
+    protected void detailsView_ModeChanged(object sender, EventArgs e)
+    {
+        var mode = detailsView.CurrentMode;
+        labelInstruction.Visible = mode == DetailsViewMode.Edit || mode == DetailsViewMode.Insert;
     }
 }
