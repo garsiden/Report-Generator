@@ -248,7 +248,7 @@ namespace RSMTenon.ReportGenerator
 
         public static string GetUserId()
         {
-            return System.Security.Principal.WindowsIdentity.GetCurrent().Name;
+            return HttpContext.Current.User.Identity.Name;
         }
 
         public static bool RemoveContentControlFromRun(MainDocumentPart mainPart, string controlAlias)
