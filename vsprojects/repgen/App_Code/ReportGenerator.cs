@@ -290,5 +290,13 @@ namespace RSMTenon.ReportGenerator
 
             return ++docPrId;
         }
+
+        public static string AdminGroup
+        {
+            get
+            {
+                return ConfigurationManager.AppSettings["AdminGroup"];
+            }
+        }
     }
 }
