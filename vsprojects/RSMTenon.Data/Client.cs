@@ -142,6 +142,22 @@ namespace RSMTenon.Data
             }
         }
 
+        public bool HasAssetsByClass
+        {
+            get
+            {
+                return this.ClientAssetClass != null;
+            }
+        }
+
+        public bool HasAssetsByInvestment
+        {
+            get
+            {
+                return this.ClientAssets.Count > 0;
+            }
+        }
+
         public void ValidateClientAssets()
         {
             if (!ExistingAssets)
@@ -156,7 +172,7 @@ namespace RSMTenon.Data
                     throw new Exception("Client assets do not equal the Investment Amount");
                 // check individual allocations
                 foreach (var item in assets) {
-                    if (item.TotalAssetAllocation != 1) {
+                    if (item.TotalAssetAllocation != 100) {
                         string msg = String.Format("Allocations of client investment {0} to asset classes do not total 100%", item.AssetName);
                         throw new Exception(msg);
                     }
@@ -168,8 +184,8 @@ namespace RSMTenon.Data
             if (ClientAssetClass == null)
                 throw new Exception(@"No client assets entered.<br/>Please add client's assets or uncheck 'Use Existing Assets'.");
 
-            if (ClientAssetClass.TotalAssetAllocation != 1)
-                throw new Exception("Client assets by class allocation does not total 100%.");
+            if (ClientAssetClass.TotalAssetAllocation != 100)
+                throw new Exception("Client assets by class do not total 100%.");
         }
 
         #endregion
