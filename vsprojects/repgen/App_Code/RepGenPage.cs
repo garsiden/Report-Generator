@@ -54,8 +54,7 @@ public partial class RepGenPage : System.Web.UI.Page
     {
         get
         {
-            if (context == null)
-            {
+            if (context == null) {
                 context = new RepGenDataContext();
             }
             return context;
@@ -68,8 +67,7 @@ public partial class RepGenPage : System.Web.UI.Page
         var repgen = new ReportGenerator(client);
         string tempDocName = repgen.CreateReport();
 
-        try
-        {
+        try {
             Response.ClearContent();
             Response.ClearHeaders();
             Response.AppendHeader("Content-Disposition", "attachment; filename=repgen.docx");
@@ -78,8 +76,7 @@ public partial class RepGenPage : System.Web.UI.Page
             Response.TransmitFile(tempDocName);
             Response.Flush();
             Response.Close();
-        } finally
-        {
+        } finally {
             if (File.Exists(tempDocName))
                 File.Delete(tempDocName);
         }
@@ -89,16 +86,13 @@ public partial class RepGenPage : System.Web.UI.Page
     {
         var listDictionary = new ListDictionary();
 
-        foreach (var f in fields)
-        {
+        foreach (var f in fields) {
             string boxName = "text" + f + "Add";
             TextBox textBox = (TextBox)gridView.FooterRow.FindControl(boxName);
-            if (f == "Date")
-            {
+            if (f == "Date") {
                 DateTime dt = DateTime.Parse(textBox.Text);
                 listDictionary.Add(f, dt);
-            } else
-            {
+            } else {
                 double db = Double.Parse(textBox.Text);
                 listDictionary.Add(f, db);
             }
