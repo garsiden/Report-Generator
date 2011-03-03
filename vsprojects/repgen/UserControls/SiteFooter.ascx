@@ -7,8 +7,8 @@
         <td align="center">
             <em>Copyright © 2010 RSM Tenon</em><br />
             <asp:HyperLink ID="homeLink" runat="server" NavigateUrl="~/Default.aspx">Home</asp:HyperLink>|
-            Support | FAQ | Administration |
-            <asp:LinkButton ID="logoutLinkBtn" runat="server" CommandName="Logout" CausesValidation="False">Log out</asp:LinkButton>
+            Support | FAQ | Administration
+<%--            <asp:LinkButton ID="logoutLinkBtn" runat="server" CommandName="Logout" CausesValidation="False">Log out</asp:LinkButton>--%>
         </td>
         <td width="5%">
             &nbsp;
