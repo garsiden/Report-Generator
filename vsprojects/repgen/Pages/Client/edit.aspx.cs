@@ -20,9 +20,19 @@ public partial class Pages_Client_edit : RepGenPage
             string qs = String.Format("?guid={0}", guid);
             hyperAsset.NavigateUrl += qs;
             hyperClass.NavigateUrl += qs;
+            DataBind();
+            Client client = (Client)formClient.DataItem;
+            // set header
+            this.clientHeader.InnerText = String.Format("Edit Client Details for {0}", client.Name);
+            if (client.HasAssetsByClass)
+                hyperClass.Text = hyperClass.Text.Replace("Add", "Amend");
+            if (client.HasAssetsByInvestment)
+                hyperAsset.Text = hyperAsset.Text.Replace("Add", "Amend");
+            
         }
 
         labelException.Visible = false;
+        noteList.Visible = false;
     }
 
     protected void formClient_ItemUpdated(object sender, FormViewUpdatedEventArgs e)
@@ -44,15 +54,6 @@ public partial class Pages_Client_edit : RepGenPage
         } catch (Exception ex) {
             showException(ex, labelException, "generating a report");
         }
-    }
-
-    protected void formClient_DataBound(object sender, EventArgs e)
-    {
-        FormView form = (FormView)sender;
-        var client = (Client)form.DataItem;
-
-        // set header
-        this.clientHeader.InnerText = String.Format("Edit Client Details for {0}", client.Name);
     }
 
     protected void listStrategy_SelectedIndexChanged(object sender, EventArgs e)
@@ -80,5 +81,10 @@ public partial class Pages_Client_edit : RepGenPage
         } catch {
             args.IsValid = false;
         }
+    }
+
+    protected void formClient_ModeChanging(object sender, FormViewModeEventArgs e)
+    {
+        this.noteList.Visible = (e.NewMode == FormViewMode.Edit);
     }
 }

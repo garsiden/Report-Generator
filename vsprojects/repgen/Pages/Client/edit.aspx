@@ -8,12 +8,12 @@
     </h4>
     <br />
     <asp:FormView ID="formClient" runat="server" DataKeyNames="GUID" DataSourceID="sourceClient"
-        OnItemUpdated="formClient_ItemUpdated" EnableModelValidation="True" OnDataBound="formClient_DataBound"
-        Width="50%">
+        OnItemUpdated="formClient_ItemUpdated" EnableModelValidation="True"
+        Width="60%" OnModeChanging="formClient_ModeChanging">
         <EditItemTemplate>
             <table class="listing">
                 <tr class="odd">
-                    <td class="left">
+                    <td class="left" width="30%">
                         Name
                     </td>
                     <td class="lnowrap">
@@ -31,7 +31,7 @@
                 </tr>
                 <tr>
                     <td class="lnowrap">
-                        Time Horizon
+                        Time Horizon (years)
                     </td>
                     <td class="left">
                         <asp:DropDownList ID="listTimeHorizonEdit" runat="server" SelectedValue='<%# Bind("TimeHorizon") %>'>
@@ -78,7 +78,7 @@
                 </tr>
                 <tr class="even">
                     <td class="lnowrap">
-                        Investment Amount
+                        Investment Amount (£)
                     </td>
                     <td class="left">
                         <asp:TextBox ID="InvestmentAmountTextBox" runat="server" Text='<%# Bind("InvestmentAmount", "{0:0}") %>' />
@@ -86,7 +86,7 @@
                 </tr>
                 <tr>
                     <td class="lnowrap">
-                        Initial Fee %
+                        Initial Fee (%)
                     </td>
                     <td class="left">
                         <asp:TextBox ID="InitialFeeTextBox" runat="server" Text='<%# Bind("InitialFee", "{0:N}") %>' />
@@ -94,7 +94,7 @@
                 </tr>
                 <tr class="even">
                     <td class="lnowrap">
-                        Status
+                        Status*
                     </td>
                     <td class="left">
                         <asp:RadioButtonList ID="radioListStatus" runat="server" SelectedIndex='<%# Bind("Status") %>'
@@ -105,7 +105,6 @@
                     </td>
                 </tr>
             </table>
-            <br />
             <br />
             <div align="right">
                 <asp:LinkButton ID="UpdateButton" runat="server" CausesValidation="True" CommandName="Update"
@@ -130,7 +129,7 @@
                 Type="Currency" MaximumValue="5" MinimumValue="0" ControlToValidate="InitialFeeTextBox"
                 Display="None"></asp:RangeValidator>
             <asp:CustomValidator ID="validCustomClientTimeHorizon" runat="server" OnServerValidate="TimeHorizonServerValidate"
-                    ErrorMessage="Client's Time Horizon is less than Strategy's." Display="None"></asp:CustomValidator>
+                ErrorMessage="Client's Time Horizon is less than Strategy's." Display="None"></asp:CustomValidator>
         </EditItemTemplate>
         <InsertItemTemplate>
             <table class="listing">
@@ -216,7 +215,6 @@
                 </tr>
             </table>
             <br />
-            <br />
             <div align="right">
                 <asp:LinkButton ID="InsertButton" runat="server" CausesValidation="True" CommandName="Insert"
                     Text="Insert" />&nbsp; &nbsp;<asp:LinkButton ID="InsertCancelButton" runat="server"
@@ -284,7 +282,7 @@
                 </tr>
                 <tr class="even">
                     <td class="lnowrap">
-                        Status
+                        Status*
                     </td>
                     <td class="lnowrap">
                         <asp:RadioButtonList ID="radioListStatus" runat="server" SelectedIndex='<%# Bind("Status") %>'
@@ -344,7 +342,7 @@
                 </tr>
                 <tr>
                     <td class="lnowrap">
-                        Investment Amount
+                        Investment Amount &nbsp;
                     </td>
                     <td>
                         &nbsp;
@@ -360,7 +358,7 @@
                 </tr>
                 <tr>
                     <td class="lnowrap">
-                        Status
+                        Status*
                     </td>
                     <td>
                         &nbsp;
@@ -375,21 +373,27 @@
         </EmptyDataTemplate>
     </asp:FormView>
     <br />
-    <asp:HyperLink ID="hyperClass" runat="server" NavigateUrl="~/Pages/Client/assetclasses.aspx">Add/amend client assets by class</asp:HyperLink>
+    <asp:HyperLink ID="hyperClass" runat="server" NavigateUrl="~/Pages/Client/assetclasses.aspx">Add client assets by class</asp:HyperLink>
     <br />
-    <asp:HyperLink ID="hyperAsset" runat="server" NavigateUrl="~/Pages/Client/assets.aspx">Add/amend client assets by investment</asp:HyperLink>
+    <asp:HyperLink ID="hyperAsset" runat="server" NavigateUrl="~/Pages/Client/assets.aspx">Add client assets by investment</asp:HyperLink>
     <br />
     <br />
     <asp:HyperLink ID="hyperClients" runat="server" NavigateUrl="~/Pages/Client/index.aspx">All Clients</asp:HyperLink>
-    <br />
-    <div style="width: 50%" align="right">
+    <div style="width: 60%" align="right">
         <asp:Button ID="btnCreateReport" runat="server" OnClick="btnCreateReport_Click" Text="Report"
             CssClass="button" Width="90px" OnClientClick="hideException('labelException');" />
     </div>
     <br />
-    <br />
     <asp:Label ID="labelException" runat="server"></asp:Label>
-    <br />
+    <div id="textnote">
+        <ul runat="server" id="noteList" style="width: 60%">
+            <li><b>* Note</b></li>
+            <li>Clients with portfolios under £250,000 <u>OR</u> that require ISA-eligible funds
+                only should be categorised as Affluent. </li>
+            <li>Clients with no requirement for ISA-eligibility <u>AND</u> have a portfolio of over
+                £250,000 should be categorised as High Net Worth. </li>
+        </ul>
+    </div>
     <br />
     <asp:ObjectDataSource ID="sourceClient" runat="server" ConflictDetection="CompareAllValues"
         DataObjectTypeName="RSMTenon.Data.Client" DeleteMethod="DeleteClient" InsertMethod="InsertClient"
