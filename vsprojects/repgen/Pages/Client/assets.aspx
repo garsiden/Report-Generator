@@ -12,7 +12,7 @@
         ShowFooter="True" OnRowDataBound="gridAsset_RowDataBound" OnRowUpdated="gridAsset_RowUpdated">
         <RowStyle CssClass="odd" />
         <Columns>
-            <asp:TemplateField HeaderText="Asset Name">
+            <asp:TemplateField HeaderText="Fund Name">
                 <EditItemTemplate>
                     <asp:TextBox ID="textBoxAssetName" runat="server" Text='<%# Bind("AssetName") %>'
                         Width="100%" CausesValidation="True" ValidationGroup="InvestmentEdit"></asp:TextBox>
@@ -29,7 +29,7 @@
                 </ItemTemplate>
                 <ItemStyle CssClass="lnowrap" />
             </asp:TemplateField>
-            <asp:TemplateField HeaderText="Amount">
+            <asp:TemplateField HeaderText="Amount £">
                 <EditItemTemplate>
                     <asp:TextBox ID="TextBox1" runat="server" Text='<%# Bind("Amount", "{0:0}") %>'></asp:TextBox>
                 </EditItemTemplate>
@@ -42,7 +42,7 @@
                         ValueToCompare="0" Operator="GreaterThan" Type="Currency"></asp:CompareValidator>
                 </FooterTemplate>
                 <ItemTemplate>
-                    <asp:Label ID="Label1" runat="server" Text='<%# Eval("Amount", "{0:C0}") %>'></asp:Label>
+                    <asp:Label ID="Label1" runat="server" Text='<%# Eval("Amount", "{0:#,##0}") %>'></asp:Label>
                 </ItemTemplate>
                 <ItemStyle CssClass="right" Width="20%" />
             </asp:TemplateField>
@@ -65,8 +65,8 @@
             </asp:CommandField>
         </Columns>
         <EmptyDataTemplate>
-            <span style="width: 70%;">Asset Name</span> <span style="width: 30%; float: right;">
-                Amount</span> </td> </tr>
+            <span style="width: 70%;">Fund Name</span> <span style="width: 30%; float: right;">Amount
+                £</span> </td> </tr>
             <tr>
                 <td class="lnowrap" width="70%" colspan="3">
                     <asp:TextBox ID="textAssetNameAddAllNew" runat="server" Width="100%" ValidationGroup="Investment"></asp:TextBox>
@@ -77,14 +77,13 @@
                 <td class="right">
                     <asp:LinkButton ID="linkAdd" runat="server" CommandName="Insert" CommandArgument="AllNew"
                         ValidationGroup="Investment">Add</asp:LinkButton>
-
-            <asp:RequiredFieldValidator ID="validRequiredAssetName" runat="server" ControlToValidate="textAssetNameAddAllNew"
-                Display="None" ErrorMessage="Please enter an Investment Name." ValidationGroup="Investment"></asp:RequiredFieldValidator>
-            <asp:RequiredFieldValidator ID="validRequiredAmount" runat="server" ControlToValidate="textAmountAddAllNew"
-                Display="None" ErrorMessage="Please enter an Investment Amount." ValidationGroup="Investment"></asp:RequiredFieldValidator>
-            <asp:CompareValidator ID="validCompareAmountAdd" runat="server" ControlToValidate="textAmountAddAllNew"
-                Display="None" ErrorMessage="Please enter a valid Investment Amount." Operator="GreaterThan"
-                Type="Currency" ValidationGroup="Investment" ValueToCompare="0"></asp:CompareValidator>
+                    <asp:RequiredFieldValidator ID="validRequiredAssetName" runat="server" ControlToValidate="textAssetNameAddAllNew"
+                        Display="None" ErrorMessage="Please enter an Investment Name." ValidationGroup="Investment"></asp:RequiredFieldValidator>
+                    <asp:RequiredFieldValidator ID="validRequiredAmount" runat="server" ControlToValidate="textAmountAddAllNew"
+                        Display="None" ErrorMessage="Please enter an Investment Amount." ValidationGroup="Investment"></asp:RequiredFieldValidator>
+                    <asp:CompareValidator ID="validCompareAmountAdd" runat="server" ControlToValidate="textAmountAddAllNew"
+                        Display="None" ErrorMessage="Please enter a valid Investment Amount." Operator="GreaterThan"
+                        Type="Currency" ValidationGroup="Investment" ValueToCompare="0"></asp:CompareValidator>
         </EmptyDataTemplate>
         <AlternatingRowStyle CssClass="even" />
     </asp:GridView>
@@ -114,14 +113,8 @@
     <br />
     <asp:ValidationSummary ID="validationSummary1" runat="server" ValidationGroup="Investment" />
     <asp:ValidationSummary ID="validationSummary2" runat="server" ValidationGroup="InvestmentEdit" />
+    <asp:ValidationSummary ID="validationSummary3" runat="server" ValidationGroup="AssetClassEdit" />
     <br />
-    <asp:LinqDataSource ID="sourceAssets" runat="server" ContextTypeName="RSMTenon.Data.RepGenDataContext"
-        EnableDelete="True" EnableInsert="True" EnableUpdate="True" TableName="ClientAssets"
-        Where="ClientGUID == @ClientGUID" OrderBy="AssetName">
-        <WhereParameters>
-            <asp:QueryStringParameter DbType="Guid" Name="ClientGUID" QueryStringField="guid" />
-        </WhereParameters>
-    </asp:LinqDataSource>
     <asp:ObjectDataSource ID="sourceAssetsObject" runat="server" ConflictDetection="CompareAllValues"
         DataObjectTypeName="RSMTenon.Data.ClientAsset" DeleteMethod="DeleteClientAsset"
         InsertMethod="InsertClientAsset" OldValuesParameterFormatString="original_{0}"
@@ -136,65 +129,202 @@
     </asp:ObjectDataSource>
     <asp:DetailsView ID="detailsView" runat="server" AutoGenerateRows="False" CssClass="listing"
         DataSourceID="sourceDetails" Height="50px" Width="302px" OnDataBound="detailsView_DataBound"
-        DataKeyNames="GUID" OnItemUpdated="detailsView_ItemUpdated">
+        DataKeyNames="GUID" OnItemUpdated="detailsView_ItemUpdated" 
+        onmodechanged="detailsView_ModeChanged">
         <Fields>
-            <asp:BoundField DataField="CASH" HeaderText="Cash" SortExpression="CASH" HeaderStyle-CssClass="left"
-                DataFormatString="{0:0.0%}">
-                <HeaderStyle CssClass="left"></HeaderStyle>
+            <asp:TemplateField HeaderText="Cash" SortExpression="CASH">
+                <EditItemTemplate>
+                    <asp:TextBox ID="textCASH" runat="server" Text='<%# Bind("CASH") %>' ValidationGroup="AssetClassEdit"></asp:TextBox>
+                    <asp:RegularExpressionValidator ID="validRegexCASH" runat="server" ErrorMessage="Please enter a percentage Cash value."
+                        Display="None" ControlToValidate="textCASH" ValidationExpression="^100(?:\.0)?$|^\d{1,2}(?:\.\d)?$"
+                        ValidationGroup="AssetClassEdit"></asp:RegularExpressionValidator>
+                </EditItemTemplate>
+                <InsertItemTemplate>
+                    <asp:TextBox ID="TextBox1" runat="server" Text='<%# Bind("CASH", "{0:0.0}") %>'></asp:TextBox>
+                </InsertItemTemplate>
+                <ItemTemplate>
+                    <asp:Label ID="Label1" runat="server" Text='<%# Bind("CASH", "{0:0.0}") %>'></asp:Label>
+                </ItemTemplate>
+                <HeaderStyle CssClass="left" />
                 <ItemStyle CssClass="right" />
-            </asp:BoundField>
-            <asp:BoundField DataField="COMM" HeaderText="Commodities" SortExpression="COMM" DataFormatString="{0:0.0%}">
+            </asp:TemplateField>
+            <asp:TemplateField HeaderText="Commodities" SortExpression="COMM">
+                <EditItemTemplate>
+                    <asp:TextBox ID="textCOMM" runat="server" Text='<%# Bind("COMM") %>'></asp:TextBox>
+                    <asp:RegularExpressionValidator ID="validRegexCOMM" runat="server" ErrorMessage="Please enter a percentage Commodities value."
+                        Display="None" ControlToValidate="textCOMM" ValidationExpression="^100(?:\.0)?$|^\d{1,2}(?:\.\d)?$"
+                        ValidationGroup="AssetClassEdit"></asp:RegularExpressionValidator>
+                </EditItemTemplate>
+                <InsertItemTemplate>
+                    <asp:TextBox ID="TextBox2" runat="server" Text='<%# Bind("COMM", "{0:0.0}") %>'></asp:TextBox>
+                </InsertItemTemplate>
+                <ItemTemplate>
+                    <asp:Label ID="Label2" runat="server" Text='<%# Bind("COMM", "{0:0.0}") %>'></asp:Label>
+                </ItemTemplate>
                 <HeaderStyle CssClass="left" />
                 <ItemStyle CssClass="right" Width="5em" />
-            </asp:BoundField>
-            <asp:BoundField DataField="COPR" HeaderText="Commercial Property" SortExpression="COPR"
-                DataFormatString="{0:0.0%}">
+            </asp:TemplateField>
+            <asp:TemplateField HeaderText="Commercial Property" SortExpression="COPR">
+                <EditItemTemplate>
+                    <asp:TextBox ID="textCOPR" runat="server" Text='<%# Bind("COPR") %>'></asp:TextBox>
+                    <asp:RegularExpressionValidator ID="validRegexCOPR" runat="server" ErrorMessage="Please enter a percentage Commercial Property value."
+                        Display="None" ControlToValidate="textCOPR" ValidationExpression="^100(?:\.0)?$|^\d{1,2}(?:\.\d)?$"
+                        ValidationGroup="AssetClassEdit"></asp:RegularExpressionValidator>
+                </EditItemTemplate>
+                <InsertItemTemplate>
+                    <asp:TextBox ID="TextBox3" runat="server" Text='<%# Bind("COPR", "{0:0.0}") %>'></asp:TextBox>
+                </InsertItemTemplate>
+                <ItemTemplate>
+                    <asp:Label ID="Label3" runat="server" Text='<%# Bind("COPR", "{0:0.0}") %>'></asp:Label>
+                </ItemTemplate>
                 <HeaderStyle CssClass="left" />
                 <ItemStyle CssClass="right" />
-            </asp:BoundField>
-            <asp:BoundField DataField="GLEQ" HeaderText="Global Equities" SortExpression="GLEQ"
-                DataFormatString="{0:0.0%}">
+            </asp:TemplateField>
+            <asp:TemplateField HeaderText="Global Equities" SortExpression="GLEQ">
+                <EditItemTemplate>
+                    <asp:TextBox ID="textGLEQ" runat="server" Text='<%# Bind("GLEQ") %>'></asp:TextBox>
+                    <asp:RegularExpressionValidator ID="validRegexGLEQ" runat="server" ErrorMessage="Please enter a percentage Global Equities value."
+                        Display="None" ControlToValidate="textGLEQ" ValidationExpression="^100(?:\.0)?$|^\d{1,2}(?:\.\d)?$"
+                        ValidationGroup="AssetClassEdit"></asp:RegularExpressionValidator>
+                </EditItemTemplate>
+                <InsertItemTemplate>
+                    <asp:TextBox ID="TextBox4" runat="server" Text='<%# Bind("GLEQ", "{0:0.0}") %>'></asp:TextBox>
+                </InsertItemTemplate>
+                <ItemTemplate>
+                    <asp:Label ID="Label4" runat="server" Text='<%# Bind("GLEQ", "{0:0.0}") %>'></asp:Label>
+                </ItemTemplate>
                 <HeaderStyle CssClass="lnowrap" />
                 <ItemStyle CssClass="right" />
-            </asp:BoundField>
-            <asp:BoundField DataField="HEDG" HeaderText="Hedge" SortExpression="HEDG" DataFormatString="{0:0.0%}">
+            </asp:TemplateField>
+            <asp:TemplateField HeaderText="Hedge" SortExpression="HEDG">
+                <EditItemTemplate>
+                    <asp:TextBox ID="textHEDG" runat="server" Text='<%# Bind("HEDG") %>'></asp:TextBox>
+                    <asp:RegularExpressionValidator ID="validRegexHEDG" runat="server" ErrorMessage="Please enter a percentage Hedge value."
+                        Display="None" ControlToValidate="textHEDG" ValidationExpression="^100(?:\.0)?$|^\d{1,2}(?:\.\d)?$"
+                        ValidationGroup="AssetClassEdit"></asp:RegularExpressionValidator>
+                </EditItemTemplate>
+                <InsertItemTemplate>
+                    <asp:TextBox ID="TextBox5" runat="server" Text='<%# Bind("HEDG", "{0:0.0}") %>'></asp:TextBox>
+                </InsertItemTemplate>
+                <ItemTemplate>
+                    <asp:Label ID="Label5" runat="server" Text='<%# Bind("HEDG", "{0:0.0}") %>'></asp:Label>
+                </ItemTemplate>
                 <HeaderStyle CssClass="left" />
                 <ItemStyle CssClass="right" />
-            </asp:BoundField>
-            <asp:BoundField DataField="LOSH" HeaderText="Long Short Equities" SortExpression="LOSH"
-                DataFormatString="{0:0.0%}">
+            </asp:TemplateField>
+            <asp:TemplateField HeaderText="Long Short Equities" SortExpression="LOSH">
+                <EditItemTemplate>
+                    <asp:TextBox ID="textLOSH" runat="server" Text='<%# Bind("LOSH") %>'></asp:TextBox>
+                    <asp:RegularExpressionValidator ID="validRegexLOSH" runat="server" ErrorMessage="Please enter a percentage Long Short value."
+                        Display="None" ControlToValidate="textLOSH" ValidationExpression="^100(?:\.0)?$|^\d{1,2}(?:\.\d)?$"
+                        ValidationGroup="AssetClassEdit"></asp:RegularExpressionValidator>
+                </EditItemTemplate>
+                <InsertItemTemplate>
+                    <asp:TextBox ID="TextBox6" runat="server" Text='<%# Bind("LOSH", "{0:0.0}") %>'></asp:TextBox>
+                </InsertItemTemplate>
+                <ItemTemplate>
+                    <asp:Label ID="Label6" runat="server" Text='<%# Bind("LOSH", "{0:0.0}") %>'></asp:Label>
+                </ItemTemplate>
                 <HeaderStyle CssClass="lnowrap" />
                 <ItemStyle CssClass="right" />
-            </asp:BoundField>
-            <asp:BoundField DataField="PREQ" HeaderText="Private Equity" SortExpression="PREQ"
-                DataFormatString="{0:0.0%}">
+            </asp:TemplateField>
+            <asp:TemplateField HeaderText="Private Equity" SortExpression="PREQ">
+                <EditItemTemplate>
+                    <asp:TextBox ID="textPREQ" runat="server" Text='<%# Bind("PREQ") %>'></asp:TextBox>
+                    <asp:RegularExpressionValidator ID="validRegexPREQ" runat="server" ErrorMessage="Please enter a percentage Private Equity value."
+                        Display="None" ControlToValidate="textPREQ" ValidationExpression="^100(?:\.0)?$|^\d{1,2}(?:\.\d)?$"
+                        ValidationGroup="AssetClassEdit"></asp:RegularExpressionValidator>
+                </EditItemTemplate>
+                <InsertItemTemplate>
+                    <asp:TextBox ID="TextBox7" runat="server" Text='<%# Bind("PREQ", "{0:0.0}") %>'></asp:TextBox>
+                </InsertItemTemplate>
+                <ItemTemplate>
+                    <asp:Label ID="Label7" runat="server" Text='<%# Bind("PREQ", "{0:0.0}") %>'></asp:Label>
+                </ItemTemplate>
                 <HeaderStyle CssClass="left" />
                 <ItemStyle CssClass="right" />
-            </asp:BoundField>
-            <asp:BoundField DataField="UKCB" HeaderText="UK Corporate Bonds" SortExpression="UKCB"
-                DataFormatString="{0:0.0%}">
+            </asp:TemplateField>
+            <asp:TemplateField HeaderText="UK Corporate Bonds" SortExpression="UKCB">
+                <EditItemTemplate>
+                    <asp:TextBox ID="textUKCB" runat="server" Text='<%# Bind("UKCB") %>'></asp:TextBox>
+                    <asp:RegularExpressionValidator ID="validRegexUKCB" runat="server" ErrorMessage="Please enter a percentage UK Corporate Bonds value."
+                        Display="None" ControlToValidate="textUKCB" ValidationExpression="^100(?:\.0)?$|^\d{1,2}(?:\.\d)?$"
+                        ValidationGroup="AssetClassEdit"></asp:RegularExpressionValidator>
+                </EditItemTemplate>
+                <InsertItemTemplate>
+                    <asp:TextBox ID="TextBox8" runat="server" Text='<%# Bind("UKCB", "{0:0.0}") %>'></asp:TextBox>
+                </InsertItemTemplate>
+                <ItemTemplate>
+                    <asp:Label ID="Label8" runat="server" Text='<%# Bind("UKCB", "{0:0.0}") %>'></asp:Label>
+                </ItemTemplate>
                 <HeaderStyle CssClass="lnowrap" />
                 <ItemStyle CssClass="right" />
-            </asp:BoundField>
-            <asp:BoundField DataField="UKEQ" HeaderText="UK Equities" SortExpression="UKEQ" DataFormatString="{0:0.0%}">
+            </asp:TemplateField>
+            <asp:TemplateField HeaderText="UK Equities" SortExpression="UKEQ">
+                <EditItemTemplate>
+                    <asp:TextBox ID="textUKEQ" runat="server" Text='<%# Bind("UKEQ") %>'></asp:TextBox>
+                    <asp:RegularExpressionValidator ID="validRegexUKEQ" runat="server" ErrorMessage="Please enter a percentage UK Equities value."
+                        Display="None" ControlToValidate="textUKEQ" ValidationExpression="^100(?:\.0)?$|^\d{1,2}(?:\.\d)?$"
+                        ValidationGroup="AssetClassEdit"></asp:RegularExpressionValidator>
+                </EditItemTemplate>
+                <InsertItemTemplate>
+                    <asp:TextBox ID="TextBox9" runat="server" Text='<%# Bind("UKEQ", "{0:0.0}") %>'></asp:TextBox>
+                </InsertItemTemplate>
+                <ItemTemplate>
+                    <asp:Label ID="Label9" runat="server" Text='<%# Bind("UKEQ", "{0:0.0}") %>'></asp:Label>
+                </ItemTemplate>
                 <HeaderStyle CssClass="lnowrap" />
                 <ItemStyle CssClass="right" />
-            </asp:BoundField>
-            <asp:BoundField DataField="UKGB" HeaderText="UK Government Bonds" SortExpression="UKGB"
-                DataFormatString="{0:0.0%}">
+            </asp:TemplateField>
+            <asp:TemplateField HeaderText="UK Government Bonds" SortExpression="UKGB">
+                <EditItemTemplate>
+                    <asp:TextBox ID="textUKGB" runat="server" Text='<%# Bind("UKGB") %>'></asp:TextBox>
+                    <asp:RegularExpressionValidator ID="validRegexUKGB" runat="server" ErrorMessage="Please enter a percentage UK Government Bonds value."
+                        Display="None" ControlToValidate="textUKGB" ValidationExpression="^100(?:\.0)?$|^\d{1,2}(?:\.\d)?$"
+                        ValidationGroup="AssetClassEdit"></asp:RegularExpressionValidator>
+                </EditItemTemplate>
+                <InsertItemTemplate>
+                    <asp:TextBox ID="TextBox10" runat="server" Text='<%# Bind("UKGB", "{0:0.0}") %>'></asp:TextBox>
+                </InsertItemTemplate>
+                <ItemTemplate>
+                    <asp:Label ID="Label10" runat="server" Text='<%# Bind("UKGB", "{0:0.0}") %>'></asp:Label>
+                </ItemTemplate>
                 <HeaderStyle CssClass="lnowrap" />
                 <ItemStyle CssClass="right" />
-            </asp:BoundField>
-            <asp:BoundField DataField="UKHY" HeaderText="UK High Yield Bonds" SortExpression="UKHY"
-                DataFormatString="{0:0.0%}">
+            </asp:TemplateField>
+            <asp:TemplateField HeaderText="UK High Yield Bonds" SortExpression="UKHY">
+                <EditItemTemplate>
+                    <asp:TextBox ID="textUKHY" runat="server" Text='<%# Bind("UKHY") %>'></asp:TextBox>
+                    <asp:RegularExpressionValidator ID="validRegexUKHY" runat="server" ErrorMessage="Please enter a percentage UK High Yield Bonds value."
+                        Display="None" ControlToValidate="textUKHY" ValidationExpression="^100(?:\.0)?$|^\d{1,2}(?:\.\d)?$"
+                        ValidationGroup="AssetClassEdit"></asp:RegularExpressionValidator>
+                </EditItemTemplate>
+                <InsertItemTemplate>
+                    <asp:TextBox ID="TextBox11" runat="server" Text='<%# Bind("UKHY", "{0:0.0}") %>'></asp:TextBox>
+                </InsertItemTemplate>
+                <ItemTemplate>
+                    <asp:Label ID="Label11" runat="server" Text='<%# Bind("UKHY", "{0:0.0}") %>'></asp:Label>
+                </ItemTemplate>
                 <HeaderStyle CssClass="lnowrap" />
                 <ItemStyle CssClass="right" />
-            </asp:BoundField>
-            <asp:BoundField DataField="WOBO" HeaderText="World Bonds" SortExpression="WOBO" DataFormatString="{0:0.0%}">
+            </asp:TemplateField>
+            <asp:TemplateField HeaderText="World Bonds" SortExpression="WOBO">
+                <EditItemTemplate>
+                    <asp:TextBox ID="textWOBO" runat="server" Text='<%# Bind("WOBO") %>'></asp:TextBox>
+                    <asp:RegularExpressionValidator ID="validRegexWOBO" runat="server" ErrorMessage="Please enter a percentage World Bonds value."
+                        Display="None" ControlToValidate="textWOBO" ValidationExpression="^100(?:\.0)?$|^\d{1,2}(?:\.\d)?$"
+                        ValidationGroup="AssetClassEdit"></asp:RegularExpressionValidator>
+                </EditItemTemplate>
+                <InsertItemTemplate>
+                    <asp:TextBox ID="TextBox12" runat="server" Text='<%# Bind("WOBO", "{0:0.0}") %>'></asp:TextBox>
+                </InsertItemTemplate>
+                <ItemTemplate>
+                    <asp:Label ID="Label12" runat="server" Text='<%# Bind("WOBO", "{0:0.0}") %>'></asp:Label>
+                </ItemTemplate>
                 <HeaderStyle CssClass="lnowrap" />
                 <ItemStyle CssClass="right" />
-            </asp:BoundField>
-            <asp:CommandField ShowEditButton="True">
+            </asp:TemplateField>
+            <asp:CommandField ShowEditButton="True" ValidationGroup="AssetClassEdit">
                 <HeaderStyle CssClass="right" />
                 <ItemStyle CssClass="right" />
             </asp:CommandField>
@@ -202,6 +332,7 @@
         <AlternatingRowStyle CssClass="even" />
     </asp:DetailsView>
     <br />
+    <asp:Label ID="labelInstruction" runat="server" Text="Enter values as percentages to one decimal place e.g., 10.5 for 10.5%<br />" Visible="false"></asp:Label>
     <asp:Label ID="labelExceptionDetails" runat="server"></asp:Label>
     <asp:ObjectDataSource ID="sourceDetails" runat="server" OldValuesParameterFormatString="original_{0}"
         SelectMethod="GetClientAsset" TypeName="RSMTenon.Data.ClientAsset" ConflictDetection="CompareAllValues"

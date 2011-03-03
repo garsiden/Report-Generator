@@ -164,4 +164,11 @@ public partial class Pages_Client_assets : RepGenPage
             e.KeepInEditMode = true;
         }
     }
+
+    protected void detailsView_ModeChanged(object sender, EventArgs e)
+    {
+        var mode = detailsView.CurrentMode;
+        labelInstruction.Visible = mode == DetailsViewMode.Edit || mode == DetailsViewMode.Insert;
+
+    }
 }
