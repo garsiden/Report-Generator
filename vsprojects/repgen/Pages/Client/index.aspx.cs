@@ -21,4 +21,11 @@ public partial class Pages_Client_index : RepGenPage
             showException(ex, labelException, "generating a report");
         }
     }
+    protected void sourceClient_Selecting(object sender, LinqDataSourceSelectEventArgs e)
+    {
+        if (!User.IsInRole(RSMTenon.ReportGenerator.ReportGenerator.AdminGroup)) {
+            string where = String.Format(@"UserID = ""{0}""", User.Identity.Name);
+            sourceClient.Where = where;
+        }
+    }
 }

@@ -69,6 +69,7 @@
     <br />
     <asp:Label ID="labelException" runat="server" Text=""></asp:Label>
     <asp:LinqDataSource ID="sourceClient" runat="server" ContextTypeName="RSMTenon.Data.RepGenDataContext"
-        EnableDelete="True" EnableInsert="True" EnableUpdate="True" OrderBy="Name" TableName="Clients">
+        EnableDelete="True" EnableInsert="True" EnableUpdate="True" OrderBy="Name" 
+        TableName="Clients" onselecting="sourceClient_Selecting" >
     </asp:LinqDataSource>
 </asp:Content>
