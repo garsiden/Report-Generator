@@ -1,55 +1,58 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <siteMap xmlns="http://schemas.microsoft.com/AspNet/SiteMap-File-1.0" >
-    <siteMapNode  title="Home"  description="">
+    <siteMapNode  title="Home"  description="" roles="*">
+
+        <!--Default-->
         <siteMapNode url="Default.aspx" title="Home"  description="Home page">
         </siteMapNode>
+
         <!--Clients-->
-        <siteMapNode title="Clients"  description="">
-            <siteMapNode url="~/Pages/Client/new.aspx" title="New Client"  description="" />
-            <siteMapNode url="~/Pages/Client/index.aspx" title="All Clients"  description="" />
+        <siteMapNode title="Clients"  description="" roles="*">
+            <siteMapNode url="Pages/Client/new.aspx" title="New Client"  description="" />
+            <siteMapNode url="Pages/Client/index.aspx" title="All Clients"  description="" />
         </siteMapNode>
 
         <!--Models-->
-        <siteMapNode url ="~/Pages/Model/index.aspx" title ="Models" />
+        <siteMapNode url ="Pages/Model/index.aspx" title ="Models" roles="*"/>
 
         <!--Administration-->
-        <siteMapNode title="Administration" description ="Manage static data">
+        <siteMapNode title="Administration" description ="Manage static data" roles="ARTHUR\RepGenAdmins">
             <!--Models-->
-            <siteMapNode title="Models" description="Manage Models" >
-                <siteMapNode url ="~/Pages/Model/edit.aspx" title ="Edit" />
-                <siteMapNode url ="~/Pages/Model/upload.aspx" title ="Upload" />
+            <siteMapNode title="Models" description="Manage Models" roles="ARTHUR\RepGenAdmins">
+                <siteMapNode url ="Pages/Model/edit.aspx" title ="Edit" />
+                <siteMapNode url ="Pages/Model/upload.aspx" title ="Upload" />
             </siteMapNode>
             <!--Strategies-->
-            <siteMapNode title="Strategies" description="Manage Strategies" >
-                <siteMapNode url ="~/Pages/Strategy/index.aspx" title ="Edit" />
-                <siteMapNode url ="~/Pages/Strategy/new.aspx" title ="New" />
+            <siteMapNode title="Strategies" description="Manage Strategies" roles="ARTHUR\RepGenAdmins">
+                <siteMapNode url ="Pages/Strategy/index.aspx" title ="Edit" />
+                <siteMapNode url ="Pages/Strategy/new.aspx" title ="New" />
             </siteMapNode>
             <!--Asset Classes-->
-            <siteMapNode title="Asset Classes" description="Manange Asset Classes">
-                <siteMapNode url ="~/Pages/AssetClass/index.aspx" title ="Edit" />
-                <siteMapNode url="~/Pages/AssetClass/editA-M.aspx" title="Prices A-M" />
-                <siteMapNode url="~/Pages/AssetClass/editN-Z.aspx" title="Prices N-Z" />
-                <siteMapNode url ="~/Pages/AssetClass/upload.aspx" title="Upload" />
+            <siteMapNode title="Asset Classes" description="Manange Asset Classes" roles="ARTHUR\RepGenAdmins">
+                <siteMapNode url = "Pages/AssetClass/index.aspx" title ="Edit" />
+                <siteMapNode url = "Pages/AssetClass/editA-M.aspx" title="Prices A-M" />
+                <siteMapNode url = "Pages/AssetClass/editN-Z.aspx" title="Prices N-Z" />
+                <siteMapNode url = "Pages/AssetClass/upload.aspx" title="Upload" />
             </siteMapNode>
             <!--Benchmarks-->
-            <siteMapNode title="Benchmarks"  description="Manage benchmarks">
-                <siteMapNode url ="~/Pages/Benchmark/index.aspx" title="Edit" />
-                <siteMapNode url ="~/Pages/Benchmark/edit.aspx" title="Prices" />
-                <siteMapNode url ="~/Pages/Benchmark/upload.aspx" title="Upload" />
+            <siteMapNode title="Benchmarks"  description="Manage benchmarks" roles="ARTHUR\RepGenAdmins">
+                <siteMapNode url ="Pages/Benchmark/index.aspx" title="Edit" />
+                <siteMapNode url ="Pages/Benchmark/edit.aspx" title="Prices" />
+                <siteMapNode url ="Pages/Benchmark/upload.aspx" title="Upload" />
             </siteMapNode>
             <!--Text Content-->
-            <siteMapNode title="Text Content" description="Manage content">
-                <siteMapNode url ="~/Pages/Content/index.aspx" title ="Edit" />
-                <siteMapNode url ="~/Pages/Content/add.aspx" title ="New" />
-                <siteMapNode url ="~/Pages/Content/upload.aspx" title ="Upload XML file" />
+            <siteMapNode title="Text Content" description="Manage content" roles="ARTHUR\RepGenAdmins">
+                <siteMapNode url ="Pages/Content/index.aspx" title ="Edit" />
+                <siteMapNode url ="Pages/Content/add.aspx" title ="New" />
+                <siteMapNode url ="Pages/Content/upload.aspx" title ="Upload XML file" />
             </siteMapNode>
             <!--Templates-->
-            <siteMapNode title="Template" description="Manage templates">
-                <siteMapNode url="~/Pages/Template/index.aspx" title="Select" />
-                <siteMapNode url="~/Pages/Template/upload.aspx" title="Upload" />
+            <siteMapNode title="Template" description="Manage templates" roles="ARTHUR\RepGenAdmins">
+                <siteMapNode url="Pages/Template/index.aspx" title="Select" />
+                <siteMapNode url="Pages/Template/upload.aspx" title="Upload" />
             </siteMapNode>
             <!--Report Spec-->
-            <siteMapNode url ="~/Pages/ReportSpec/upload.aspx" title ="Report-Spec" />
+            <siteMapNode url ="Pages/ReportSpec/upload.aspx" title ="Report-Spec" />
 
         </siteMapNode>
     </siteMapNode>
