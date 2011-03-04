@@ -9,10 +9,8 @@ using System.Data;
 using System.Globalization;
 using RSMTenon.Data;
 
-public partial class Pages_Benchmark_upload : System.Web.UI.Page
+public partial class Pages_Benchmark_upload : UploadPage
 {
-    private static string tbl = "tblBenchmarkData";
-
     protected void Page_Load(object sender, EventArgs e)
     {
         lblStatus.Text = String.Empty;
@@ -20,46 +18,22 @@ public partial class Pages_Benchmark_upload : System.Web.UI.Page
 
     protected void btnUpload_Click(object sender, EventArgs e)
     {
-        var dt = new DataUpload.BenchmarkDataTable();
-
-        if (uploader.PostedFile.ContentLength != 0) {
-            try {
-                if (uploader.PostedFile.ContentLength > 100000) {
-                    lblStatus.Text = "File is too large for upload";
-                } else {
-                    using (StreamReader sr = new StreamReader(uploader.PostedFile.InputStream)) {
-                        string line = null;
-                        string[] split = null;
-                        char[] sep = { ',' };
-                        while ((line = sr.ReadLine()) != null) {
-                            if (line.StartsWith("Date")) {
-                                continue;
-                            } else {
-                                split = line.Split(sep);
-                                addToTypedTable(dt, split);
-                            }
-                        }
-                    }
-                    RSMTenon.Data.DataUtilities.UploadToDatabase(dt, tbl, null);
-                    lblStatus.Text = String.Format("{0:#,##0} row(s) added to database", dt.Rows.Count);
-                }
-            } catch (Exception err) {
-                lblStatus.Text = err.Message;
-            }
-        }
-
+        TableName = "tblBenchmarkData";
+        Table = new DataUpload.BenchmarkDataTable();
+        Upload(uploader, lblStatus);
     }
 
-    private void addToTypedTable(DataUpload.BenchmarkDataTable dt, string[] fields)
+    protected override void AddToTypedTable(string[] fields, IEnumerable<string> headers)
     {
+        var dt = (DataUpload.BenchmarkDataTable)Table;
         DataUpload.BenchmarkRow row = dt.NewBenchmarkRow();
 
         row.Date = DateTime.ParseExact(fields[0], "dd/MM/yyyy", CultureInfo.InvariantCulture);
-        row.STBO = Convert.ToDouble(fields[1]);
-        row.CAMA = Convert.ToDouble(fields[2]);
-        row.BAMA = Convert.ToDouble(fields[3]);
-        row.ACMA = Convert.ToDouble(fields[4]);
-        row.GLGR = Convert.ToDouble(fields[5]);
+        int idx = 1;
+
+        foreach (var hdr in headers)
+            row[hdr] = Convert.ToDouble(fields[idx++]);
+
         dt.AddBenchmarkRow(row);
     }
 }
