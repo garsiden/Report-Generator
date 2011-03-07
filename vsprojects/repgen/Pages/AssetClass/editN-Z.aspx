@@ -9,34 +9,34 @@
     <br />
     <asp:GridView ID="gridHistoricData" runat="server" AllowPaging="True" AutoGenerateColumns="False"
         CssClass="listing" DataKeyNames="Date" DataSourceID="sourceHistoricData" ShowFooter="True"
-        OnRowCommand="gridHistoricData_RowCommand" UseAccessibleHeader="False" Width="5em"
+        OnRowCommand="gridHistoricData_RowCommand" UseAccessibleHeader="False" Width="100%"
         AllowSorting="True" onrowdeleted="gridHistoricData_RowDeleted" 
         onrowupdated="gridHistoricData_RowUpdated">
         <RowStyle CssClass="odd" />
         <Columns>
             <asp:TemplateField HeaderText="Date" SortExpression="Date">
                 <EditItemTemplate>
-                    <asp:Label ID="Label1" runat="server" Text='<%# Eval("Date", "{0:d}") %>'></asp:Label>
+                    <asp:Label ID="labelDateEdit" runat="server" Text='<%# Eval("Date", "{0:d}") %>'></asp:Label>
                 </EditItemTemplate>
                 <FooterTemplate>
                     <asp:TextBox ID="textDateAdd" runat="server" Width="6em"></asp:TextBox>
                 </FooterTemplate>
                 <ItemTemplate>
-                    <asp:Label ID="Label1" runat="server" Text='<%# Bind("Date", "{0:d}") %>'></asp:Label>
+                    <asp:Label ID="labelDate" runat="server" Text='<%# Bind("Date", "{0:d}") %>'></asp:Label>
                 </ItemTemplate>
                 <HeaderStyle CssClass="center" />
                 <ItemStyle CssClass="center" />
             </asp:TemplateField>
             <asp:TemplateField HeaderText="Real Estate">
                 <EditItemTemplate>
-                    <asp:TextBox ID="TextBox2" runat="server" Text='<%# Bind("COPR", "{0:0.00}") %>'
+                    <asp:TextBox ID="textCOPREdit" runat="server" Text='<%# Bind("COPR", "{0:0.00}") %>'
                         Width="5em"></asp:TextBox>
                 </EditItemTemplate>
                 <FooterTemplate>
                     <asp:TextBox ID="textCOPRAdd" runat="server" Width="5em"></asp:TextBox>
                 </FooterTemplate>
                 <ItemTemplate>
-                    <asp:Label ID="Label3" runat="server" Text='<%# Bind("COPR", "{0:0.00}") %>'></asp:Label>
+                    <asp:Label ID="labelCOPR" runat="server" Text='<%# Bind("COPR", "{0:0.00}") %>'></asp:Label>
                 </ItemTemplate>
                 <FooterStyle CssClass="right" />
                 <HeaderStyle CssClass="center" />
@@ -45,14 +45,14 @@
 
             <asp:TemplateField HeaderText="UK Corp Bonds">
                 <EditItemTemplate>
-                    <asp:TextBox ID="TextBox2" runat="server" Text='<%# Bind("UKCB", "{0:0.00}") %>'
+                    <asp:TextBox ID="textUKCBEdit" runat="server" Text='<%# Bind("UKCB", "{0:0.00}") %>'
                         Width="5em"></asp:TextBox>
                 </EditItemTemplate>
                 <FooterTemplate>
                     <asp:TextBox ID="textUKCBAdd" runat="server" Width="5em"></asp:TextBox>
                 </FooterTemplate>
                 <ItemTemplate>
-                    <asp:Label ID="Label3" runat="server" Text='<%# Bind("UKCB", "{0:0.00}") %>'></asp:Label>
+                    <asp:Label ID="labelUKCB" runat="server" Text='<%# Bind("UKCB", "{0:0.00}") %>'></asp:Label>
                 </ItemTemplate>
                 <FooterStyle CssClass="right" />
                 <HeaderStyle CssClass="center" />
@@ -60,14 +60,14 @@
             </asp:TemplateField>
             <asp:TemplateField HeaderText="UK Equities">
                 <EditItemTemplate>
-                    <asp:TextBox ID="TextBox5" runat="server" Text='<%# Bind("UKEQ", "{0:0.00}") %>'
+                    <asp:TextBox ID="textUKEQEdit" runat="server" Text='<%# Bind("UKEQ", "{0:0.00}") %>'
                         Width="5em"></asp:TextBox>
                 </EditItemTemplate>
                 <FooterTemplate>
                     <asp:TextBox ID="textUKEQAdd" runat="server" Width="5em"></asp:TextBox>
                 </FooterTemplate>
                 <ItemTemplate>
-                    <asp:Label ID="Label6" runat="server" Text='<%# Bind("UKEQ", "{0:0.00}") %>'></asp:Label>
+                    <asp:Label ID="lableUKEQ" runat="server" Text='<%# Bind("UKEQ", "{0:0.00}") %>'></asp:Label>
                 </ItemTemplate>
                 <FooterStyle CssClass="right" />
                 <HeaderStyle CssClass="center" />
@@ -75,14 +75,14 @@
             </asp:TemplateField>
             <asp:TemplateField HeaderText="UK Govt Bonds">
                 <EditItemTemplate>
-                    <asp:TextBox ID="TextBox3" runat="server" Text='<%# Bind("UKGB", "{0:0.00}") %>'
+                    <asp:TextBox ID="textUKGBEdit" runat="server" Text='<%# Bind("UKGB", "{0:0.00}") %>'
                         Width="5em"></asp:TextBox>
                 </EditItemTemplate>
                 <FooterTemplate>
                     <asp:TextBox ID="textUKGBAdd" runat="server" Width="5em"></asp:TextBox>
                 </FooterTemplate>
                 <ItemTemplate>
-                    <asp:Label ID="Label4" runat="server" Text='<%# Bind("UKGB", "{0:0.00}") %>'></asp:Label>
+                    <asp:Label ID="labelUKGB" runat="server" Text='<%# Bind("UKGB", "{0:0.00}") %>'></asp:Label>
                 </ItemTemplate>
                 <FooterStyle CssClass="right" />
                 <HeaderStyle CssClass="center" />
@@ -90,14 +90,14 @@
             </asp:TemplateField>
             <asp:TemplateField HeaderText="UK High Yield">
                 <EditItemTemplate>
-                    <asp:TextBox ID="TextBox4" runat="server" Text='<%# Bind("UKHY", "{0:0.00}") %>'
+                    <asp:TextBox ID="textUKHYEdit" runat="server" Text='<%# Bind("UKHY", "{0:0.00}") %>'
                         Width="5em"></asp:TextBox>
                 </EditItemTemplate>
                 <FooterTemplate>
                     <asp:TextBox ID="textUKHYAdd" runat="server" Width="5em"></asp:TextBox>
                 </FooterTemplate>
                 <ItemTemplate>
-                    <asp:Label ID="Label5" runat="server" Text='<%# Bind("UKHY", "{0:0.00}") %>'></asp:Label>
+                    <asp:Label ID="labelUKHY" runat="server" Text='<%# Bind("UKHY", "{0:0.00}") %>'></asp:Label>
                 </ItemTemplate>
                 <FooterStyle CssClass="right" />
                 <HeaderStyle CssClass="center" />
@@ -105,14 +105,14 @@
             </asp:TemplateField>
             <asp:TemplateField HeaderText="World Bonds">
                 <EditItemTemplate>
-                    <asp:TextBox ID="TextBox6" runat="server" Text='<%# Bind("WOBO", "{0:0.00}") %>'
+                    <asp:TextBox ID="textWOBOEdit" runat="server" Text='<%# Bind("WOBO", "{0:0.00}") %>'
                         Width="5em"></asp:TextBox>
                 </EditItemTemplate>
                 <FooterTemplate>
                     <asp:TextBox ID="textWOBOAdd" runat="server" Width="5em"></asp:TextBox>
                 </FooterTemplate>
                 <ItemTemplate>
-                    <asp:Label ID="Label7" runat="server" Text='<%# Bind("WOBO", "{0:0.00}") %>'></asp:Label>
+                    <asp:Label ID="lableWOBO" runat="server" Text='<%# Bind("WOBO", "{0:0.00}") %>'></asp:Label>
                 </ItemTemplate>
                 <FooterStyle CssClass="right" HorizontalAlign="Right" />
                 <HeaderStyle CssClass="center" />

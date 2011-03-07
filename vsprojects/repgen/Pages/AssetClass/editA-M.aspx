@@ -16,27 +16,27 @@
         <Columns>
             <asp:TemplateField HeaderText="Date" SortExpression="Date" ItemStyle-CssClass="center">
                 <EditItemTemplate>
-                    <asp:Label ID="Label1" runat="server" Text='<%# Eval("Date", "{0:d}") %>'></asp:Label>
+                    <asp:Label ID="labelDateEdit" runat="server" Text='<%# Eval("Date", "{0:d}") %>'></asp:Label>
                 </EditItemTemplate>
                 <FooterTemplate>
                     <asp:TextBox ID="textDateAdd" runat="server" Width="6em"></asp:TextBox>
                 </FooterTemplate>
                 <ItemTemplate>
-                    <asp:Label ID="Label1" runat="server" Text='<%# Bind("Date", "{0:d}") %>'></asp:Label>
+                    <asp:Label ID="labelDate" runat="server" Text='<%# Bind("Date", "{0:d}") %>'></asp:Label>
                 </ItemTemplate>
                 <HeaderStyle CssClass="center" />
                 <ItemStyle CssClass="center"></ItemStyle>
             </asp:TemplateField>
             <asp:TemplateField HeaderText="Cash">
                 <EditItemTemplate>
-                    <asp:TextBox ID="TextBox1" runat="server" Text='<%# Bind("CASH", "{0:0.00}") %>'
+                    <asp:TextBox ID="textCashEdit" runat="server" Text='<%# Bind("CASH", "{0:0.00}") %>'
                         Width="5em"></asp:TextBox>
                 </EditItemTemplate>
                 <FooterTemplate>
                     <asp:TextBox ID="textCASHAdd" runat="server" Width="5em"></asp:TextBox>
                 </FooterTemplate>
                 <ItemTemplate>
-                    <asp:Label ID="Label2" runat="server" Text='<%# Bind("CASH", "{0:0.00}") %>'></asp:Label>
+                    <asp:Label ID="labelCASH" runat="server" Text='<%# Bind("CASH", "{0:0.00}") %>'></asp:Label>
                 </ItemTemplate>
                 <FooterStyle CssClass="right" />
                 <HeaderStyle CssClass="center" />
@@ -44,14 +44,14 @@
             </asp:TemplateField>
             <asp:TemplateField HeaderText="Commod- ities">
                 <EditItemTemplate>
-                    <asp:TextBox ID="TextBox3" runat="server" Text='<%# Bind("COMM", "{0:0.00}") %>'
+                    <asp:TextBox ID="textCOMMEdit" runat="server" Text='<%# Bind("COMM", "{0:0.00}") %>'
                         Width="5em"></asp:TextBox>
                 </EditItemTemplate>
                 <FooterTemplate>
                     <asp:TextBox ID="textCOMMAdd" runat="server" Width="5em"></asp:TextBox>
                 </FooterTemplate>
                 <ItemTemplate>
-                    <asp:Label ID="Label4" runat="server" Text='<%# Bind("COMM", "{0:0.00}") %>'></asp:Label>
+                    <asp:Label ID="labelCOMM" runat="server" Text='<%# Bind("COMM", "{0:0.00}") %>'></asp:Label>
                 </ItemTemplate>
                 <FooterStyle CssClass="right" />
                 <HeaderStyle CssClass="center" />
@@ -59,14 +59,14 @@
             </asp:TemplateField>
             <asp:TemplateField HeaderText="Global Equities">
                 <EditItemTemplate>
-                    <asp:TextBox ID="TextBox4" runat="server" Text='<%# Bind("GLEQ", "{0:0.00}") %>'
+                    <asp:TextBox ID="textGLEQEdit" runat="server" Text='<%# Bind("GLEQ", "{0:0.00}") %>'
                         Width="5em"></asp:TextBox>
                 </EditItemTemplate>
                 <FooterTemplate>
                     <asp:TextBox ID="textGLEQAdd" runat="server" Width="5em"></asp:TextBox>
                 </FooterTemplate>
                 <ItemTemplate>
-                    <asp:Label ID="Label5" runat="server" Text='<%# Bind("GLEQ", "{0:0.00}") %>'></asp:Label>
+                    <asp:Label ID="labelGLEQ" runat="server" Text='<%# Bind("GLEQ", "{0:0.00}") %>'></asp:Label>
                 </ItemTemplate>
                 <FooterStyle CssClass="right" />
                 <HeaderStyle CssClass="center" />
@@ -74,14 +74,14 @@
             </asp:TemplateField>
             <asp:TemplateField HeaderText="Hedge">
                 <EditItemTemplate>
-                    <asp:TextBox ID="TextBox5" runat="server" Text='<%# Bind("HEDG", "{0:0.00}") %>'
+                    <asp:TextBox ID="textHEDGEdit" runat="server" Text='<%# Bind("HEDG", "{0:0.00}") %>'
                         Width="5em"></asp:TextBox>
                 </EditItemTemplate>
                 <FooterTemplate>
                     <asp:TextBox ID="textHEDGAdd" runat="server" Width="5em"></asp:TextBox>
                 </FooterTemplate>
                 <ItemTemplate>
-                    <asp:Label ID="Label6" runat="server" Text='<%# Bind("HEDG", "{0:0.00}") %>'></asp:Label>
+                    <asp:Label ID="labelHEDG" runat="server" Text='<%# Bind("HEDG", "{0:0.00}") %>'></asp:Label>
                 </ItemTemplate>
                 <FooterStyle CssClass="right" />
                 <HeaderStyle CssClass="center" />
@@ -89,14 +89,14 @@
             </asp:TemplateField>
             <asp:TemplateField HeaderText="Long Short">
                 <EditItemTemplate>
-                    <asp:TextBox ID="TextBox6" runat="server" Text='<%# Bind("LOSH", "{0:0.00}") %>'
+                    <asp:TextBox ID="textLOSHEdit" runat="server" Text='<%# Bind("LOSH", "{0:0.00}") %>'
                         Width="5em"></asp:TextBox>
                 </EditItemTemplate>
                 <FooterTemplate>
                     <asp:TextBox ID="textLOSHAdd" runat="server" Width="5em"></asp:TextBox>
                 </FooterTemplate>
                 <ItemTemplate>
-                    <asp:Label ID="Label7" runat="server" Text='<%# Bind("LOSH", "{0:0.00}") %>'></asp:Label>
+                    <asp:Label ID="labelLOSH" runat="server" Text='<%# Bind("LOSH", "{0:0.00}") %>'></asp:Label>
                 </ItemTemplate>
                 <FooterStyle CssClass="right" HorizontalAlign="Right" />
                 <HeaderStyle CssClass="center" />
@@ -104,14 +104,14 @@
             </asp:TemplateField>
             <asp:TemplateField HeaderText="Private Equity">
                 <EditItemTemplate>
-                    <asp:TextBox ID="TextBox1" runat="server" Text='<%# Bind("PREQ", "{0:0.00}") %>'
+                    <asp:TextBox ID="textPREQEdit" runat="server" Text='<%# Bind("PREQ", "{0:0.00}") %>'
                         Width="5em"></asp:TextBox>
                 </EditItemTemplate>
                 <FooterTemplate>
                     <asp:TextBox ID="textPREQAdd" runat="server" Width="5em"></asp:TextBox>
                 </FooterTemplate>
                 <ItemTemplate>
-                    <asp:Label ID="Label2" runat="server" Text='<%# Bind("PREQ", "{0:0.00}") %>'></asp:Label>
+                    <asp:Label ID="textPREQ" runat="server" Text='<%# Bind("PREQ", "{0:0.00}") %>'></asp:Label>
                 </ItemTemplate>
                 <FooterStyle CssClass="right" />
                 <HeaderStyle CssClass="center" />
