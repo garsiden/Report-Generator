@@ -66,8 +66,13 @@ public partial class Pages_Model_upload : RepGenPage
 
         row.GUID = Guid.NewGuid();
         row.StrategyID = strategyId;
-        row.AssetClassID = assetClasses[fields[2]].ID;
+        AssetClass assetClass = null;
+        assetClasses.TryGetValue(fields[2], out assetClass);
 
+        if (assetClass == null)
+            throw new Exception(String.Format("Upload Error: Asset Class '{0}' not recognized.", fields[2]));
+
+        row.AssetClassID = assetClass.ID;
         row.SEDOL = fields[0];
         row.InvestmentName = fields[1];
         row.WeightingHNW = Convert.ToDecimal(fields[3]);
