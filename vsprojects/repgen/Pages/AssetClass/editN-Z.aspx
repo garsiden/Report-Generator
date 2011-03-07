@@ -5,7 +5,7 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
     <h4>
-        Edit Asset Class Historic Data (N - Z)</h4>
+        Edit Asset Class Historic Data (Q - Z)</h4>
     <br />
     <asp:GridView ID="gridHistoricData" runat="server" AllowPaging="True" AutoGenerateColumns="False"
         CssClass="listing" DataKeyNames="Date" DataSourceID="sourceHistoricData" ShowFooter="True"
@@ -27,31 +27,47 @@
                 <HeaderStyle CssClass="center" />
                 <ItemStyle CssClass="center" />
             </asp:TemplateField>
-            <asp:TemplateField HeaderText="Private Equity">
+            <asp:TemplateField HeaderText="Real Estate">
                 <EditItemTemplate>
-                    <asp:TextBox ID="TextBox1" runat="server" Text='<%# Bind("PREQ", "{0:0.00}") %>'
-                        Width="5em"></asp:TextBox>
-                </EditItemTemplate>
-                <FooterTemplate>
-                    <asp:TextBox ID="textCASHAdd" runat="server" Width="5em"></asp:TextBox>
-                </FooterTemplate>
-                <ItemTemplate>
-                    <asp:Label ID="Label2" runat="server" Text='<%# Bind("PREQ", "{0:0.00}") %>'></asp:Label>
-                </ItemTemplate>
-                <FooterStyle CssClass="right" />
-                <HeaderStyle CssClass="center" />
-                <ItemStyle CssClass="right" Width="12%" />
-            </asp:TemplateField>
-            <asp:TemplateField HeaderText="UK Corp Bonds">
-                <EditItemTemplate>
-                    <asp:TextBox ID="TextBox2" runat="server" Text='<%# Bind("UKCB", "{0:0.00}") %>'
+                    <asp:TextBox ID="TextBox2" runat="server" Text='<%# Bind("COPR", "{0:0.00}") %>'
                         Width="5em"></asp:TextBox>
                 </EditItemTemplate>
                 <FooterTemplate>
                     <asp:TextBox ID="textCOPRAdd" runat="server" Width="5em"></asp:TextBox>
                 </FooterTemplate>
                 <ItemTemplate>
+                    <asp:Label ID="Label3" runat="server" Text='<%# Bind("COPR", "{0:0.00}") %>'></asp:Label>
+                </ItemTemplate>
+                <FooterStyle CssClass="right" />
+                <HeaderStyle CssClass="center" />
+                <ItemStyle CssClass="right" Width="12%" />
+            </asp:TemplateField>
+
+            <asp:TemplateField HeaderText="UK Corp Bonds">
+                <EditItemTemplate>
+                    <asp:TextBox ID="TextBox2" runat="server" Text='<%# Bind("UKCB", "{0:0.00}") %>'
+                        Width="5em"></asp:TextBox>
+                </EditItemTemplate>
+                <FooterTemplate>
+                    <asp:TextBox ID="textUKCBAdd" runat="server" Width="5em"></asp:TextBox>
+                </FooterTemplate>
+                <ItemTemplate>
                     <asp:Label ID="Label3" runat="server" Text='<%# Bind("UKCB", "{0:0.00}") %>'></asp:Label>
+                </ItemTemplate>
+                <FooterStyle CssClass="right" />
+                <HeaderStyle CssClass="center" />
+                <ItemStyle CssClass="right" Width="12%" />
+            </asp:TemplateField>
+            <asp:TemplateField HeaderText="UK Equities">
+                <EditItemTemplate>
+                    <asp:TextBox ID="TextBox5" runat="server" Text='<%# Bind("UKEQ", "{0:0.00}") %>'
+                        Width="5em"></asp:TextBox>
+                </EditItemTemplate>
+                <FooterTemplate>
+                    <asp:TextBox ID="textUKEQAdd" runat="server" Width="5em"></asp:TextBox>
+                </FooterTemplate>
+                <ItemTemplate>
+                    <asp:Label ID="Label6" runat="server" Text='<%# Bind("UKEQ", "{0:0.00}") %>'></asp:Label>
                 </ItemTemplate>
                 <FooterStyle CssClass="right" />
                 <HeaderStyle CssClass="center" />
@@ -63,7 +79,7 @@
                         Width="5em"></asp:TextBox>
                 </EditItemTemplate>
                 <FooterTemplate>
-                    <asp:TextBox ID="textCOMMAdd" runat="server" Width="5em"></asp:TextBox>
+                    <asp:TextBox ID="textUKGBAdd" runat="server" Width="5em"></asp:TextBox>
                 </FooterTemplate>
                 <ItemTemplate>
                     <asp:Label ID="Label4" runat="server" Text='<%# Bind("UKGB", "{0:0.00}") %>'></asp:Label>
@@ -78,25 +94,10 @@
                         Width="5em"></asp:TextBox>
                 </EditItemTemplate>
                 <FooterTemplate>
-                    <asp:TextBox ID="textGLEQAdd" runat="server" Width="5em"></asp:TextBox>
+                    <asp:TextBox ID="textUKHYAdd" runat="server" Width="5em"></asp:TextBox>
                 </FooterTemplate>
                 <ItemTemplate>
                     <asp:Label ID="Label5" runat="server" Text='<%# Bind("UKHY", "{0:0.00}") %>'></asp:Label>
-                </ItemTemplate>
-                <FooterStyle CssClass="right" />
-                <HeaderStyle CssClass="center" />
-                <ItemStyle CssClass="right" Width="12%" />
-            </asp:TemplateField>
-            <asp:TemplateField HeaderText="UK Equities">
-                <EditItemTemplate>
-                    <asp:TextBox ID="TextBox5" runat="server" Text='<%# Bind("UKEQ", "{0:0.00}") %>'
-                        Width="5em"></asp:TextBox>
-                </EditItemTemplate>
-                <FooterTemplate>
-                    <asp:TextBox ID="textHEDGAdd" runat="server" Width="5em"></asp:TextBox>
-                </FooterTemplate>
-                <ItemTemplate>
-                    <asp:Label ID="Label6" runat="server" Text='<%# Bind("UKEQ", "{0:0.00}") %>'></asp:Label>
                 </ItemTemplate>
                 <FooterStyle CssClass="right" />
                 <HeaderStyle CssClass="center" />
@@ -108,7 +109,7 @@
                         Width="5em"></asp:TextBox>
                 </EditItemTemplate>
                 <FooterTemplate>
-                    <asp:TextBox ID="textLOSHAdd" runat="server" Width="5em"></asp:TextBox>
+                    <asp:TextBox ID="textWOBOAdd" runat="server" Width="5em"></asp:TextBox>
                 </FooterTemplate>
                 <ItemTemplate>
                     <asp:Label ID="Label7" runat="server" Text='<%# Bind("WOBO", "{0:0.00}") %>'></asp:Label>
@@ -141,7 +142,7 @@
     </asp:GridView>
     <br />
     <p align="right">
-        <asp:HyperLink ID="linkAM" runat="server" NavigateUrl="~/Pages/AssetClass/editA-M.aspx">A - M</asp:HyperLink>
+        <asp:HyperLink ID="linkAP" runat="server" NavigateUrl="~/Pages/AssetClass/editA-M.aspx">A - P</asp:HyperLink>
     </p>
     <br />
     <br />

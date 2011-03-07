@@ -5,7 +5,7 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
     <h4>
-        Edit Asset Class Historic Data (A - M)</h4>
+        Edit Asset Class Historic Data (A - P)</h4>
     <br />
     <asp:GridView ID="gridHistoricData" runat="server" AllowPaging="True" AutoGenerateColumns="False"
         CssClass="listing" DataKeyNames="Date" DataSourceID="sourceHistoricData" ShowFooter="True"
@@ -37,21 +37,6 @@
                 </FooterTemplate>
                 <ItemTemplate>
                     <asp:Label ID="Label2" runat="server" Text='<%# Bind("CASH", "{0:0.00}") %>'></asp:Label>
-                </ItemTemplate>
-                <FooterStyle CssClass="right" />
-                <HeaderStyle CssClass="center" />
-                <ItemStyle CssClass="right" Width="12%" />
-            </asp:TemplateField>
-            <asp:TemplateField HeaderText="Comm. Property">
-                <EditItemTemplate>
-                    <asp:TextBox ID="TextBox2" runat="server" Text='<%# Bind("COPR", "{0:0.00}") %>'
-                        Width="5em"></asp:TextBox>
-                </EditItemTemplate>
-                <FooterTemplate>
-                    <asp:TextBox ID="textCOPRAdd" runat="server" Width="5em"></asp:TextBox>
-                </FooterTemplate>
-                <ItemTemplate>
-                    <asp:Label ID="Label3" runat="server" Text='<%# Bind("COPR", "{0:0.00}") %>'></asp:Label>
                 </ItemTemplate>
                 <FooterStyle CssClass="right" />
                 <HeaderStyle CssClass="center" />
@@ -117,6 +102,22 @@
                 <HeaderStyle CssClass="center" />
                 <ItemStyle CssClass="right" Width="12%" />
             </asp:TemplateField>
+            <asp:TemplateField HeaderText="Private Equity">
+                <EditItemTemplate>
+                    <asp:TextBox ID="TextBox1" runat="server" Text='<%# Bind("PREQ", "{0:0.00}") %>'
+                        Width="5em"></asp:TextBox>
+                </EditItemTemplate>
+                <FooterTemplate>
+                    <asp:TextBox ID="textPREQAdd" runat="server" Width="5em"></asp:TextBox>
+                </FooterTemplate>
+                <ItemTemplate>
+                    <asp:Label ID="Label2" runat="server" Text='<%# Bind("PREQ", "{0:0.00}") %>'></asp:Label>
+                </ItemTemplate>
+                <FooterStyle CssClass="right" />
+                <HeaderStyle CssClass="center" />
+                <ItemStyle CssClass="right" Width="12%" />
+            </asp:TemplateField>
+
             <asp:TemplateField ShowHeader="False" ItemStyle-CssClass="lnowrap">
                 <EditItemTemplate>
                     <asp:LinkButton ID="LinkButton1" runat="server" CausesValidation="True" CommandName="Update"
@@ -141,7 +142,7 @@
     </asp:GridView>
     <br />
     <p align="right">
-        <asp:HyperLink ID="linkNZ" runat="server" NavigateUrl="~/Pages/AssetClass/editN-Z.aspx">N - Z</asp:HyperLink>
+        <asp:HyperLink ID="linkQZ" runat="server" NavigateUrl="~/Pages/AssetClass/editN-Z.aspx">Q - Z</asp:HyperLink>
     </p>
     <br />
     <br />

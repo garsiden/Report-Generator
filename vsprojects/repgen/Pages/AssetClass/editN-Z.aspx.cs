@@ -18,7 +18,7 @@ public partial class Pages_AssetClass_editN_Z : RepGenPage
         try {
             if (e.CommandName == "Insert") {
 
-                string[] fields = { "Date", "CASH", "COMM", "COPR", "GLEQ", "HEDG", "LOSH" };
+                string[] fields = { "Date", "COPR", "UKCB", "UKEQ", "UKGB", "UKHY", "WOBO" };
                 ListDictionary listDictionary = new ListDictionary();
 
                 foreach (var f in fields) {
