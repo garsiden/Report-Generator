@@ -164,22 +164,6 @@
                 <HeaderStyle CssClass="left" />
                 <ItemStyle CssClass="right" Width="5em" />
             </asp:TemplateField>
-            <asp:TemplateField HeaderText="Real Estate" SortExpression="COPR">
-                <EditItemTemplate>
-                    <asp:TextBox ID="textCOPR" runat="server" Text='<%# Bind("COPR") %>'></asp:TextBox>
-                    <asp:RegularExpressionValidator ID="validRegexCOPR" runat="server" ErrorMessage="Please enter a percentage Real Estate value."
-                        Display="None" ControlToValidate="textCOPR" ValidationExpression="^100(?:\.0)?$|^\d{1,2}(?:\.\d)?$"
-                        ValidationGroup="AssetClassEdit"></asp:RegularExpressionValidator>
-                </EditItemTemplate>
-                <InsertItemTemplate>
-                    <asp:TextBox ID="TextBox3" runat="server" Text='<%# Bind("COPR", "{0:0.0}") %>'></asp:TextBox>
-                </InsertItemTemplate>
-                <ItemTemplate>
-                    <asp:Label ID="Label3" runat="server" Text='<%# Bind("COPR", "{0:0.0}") %>'></asp:Label>
-                </ItemTemplate>
-                <HeaderStyle CssClass="left" />
-                <ItemStyle CssClass="right" />
-            </asp:TemplateField>
             <asp:TemplateField HeaderText="Global Equities" SortExpression="GLEQ">
                 <EditItemTemplate>
                     <asp:TextBox ID="textGLEQ" runat="server" Text='<%# Bind("GLEQ") %>'></asp:TextBox>
@@ -240,6 +224,22 @@
                 </InsertItemTemplate>
                 <ItemTemplate>
                     <asp:Label ID="Label7" runat="server" Text='<%# Bind("PREQ", "{0:0.0}") %>'></asp:Label>
+                </ItemTemplate>
+                <HeaderStyle CssClass="left" />
+                <ItemStyle CssClass="right" />
+            </asp:TemplateField>
+            <asp:TemplateField HeaderText="Real Estate" SortExpression="COPR">
+                <EditItemTemplate>
+                    <asp:TextBox ID="textCOPR" runat="server" Text='<%# Bind("COPR") %>'></asp:TextBox>
+                    <asp:RegularExpressionValidator ID="validRegexCOPR" runat="server" ErrorMessage="Please enter a percentage Real Estate value."
+                        Display="None" ControlToValidate="textCOPR" ValidationExpression="^100(?:\.0)?$|^\d{1,2}(?:\.\d)?$"
+                        ValidationGroup="AssetClassEdit"></asp:RegularExpressionValidator>
+                </EditItemTemplate>
+                <InsertItemTemplate>
+                    <asp:TextBox ID="TextBox3" runat="server" Text='<%# Bind("COPR", "{0:0.0}") %>'></asp:TextBox>
+                </InsertItemTemplate>
+                <ItemTemplate>
+                    <asp:Label ID="Label3" runat="server" Text='<%# Bind("COPR", "{0:0.0}") %>'></asp:Label>
                 </ItemTemplate>
                 <HeaderStyle CssClass="left" />
                 <ItemStyle CssClass="right" />
