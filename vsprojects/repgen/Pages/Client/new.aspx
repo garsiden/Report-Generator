@@ -62,7 +62,7 @@
                 </tr>
                 <tr>
                     <td class="lnowrap">
-                        Time Horizon (years)
+                        Time Horizon
                     </td>
                     <td class="lnowrap">
                         <asp:DropDownList ID="listTimeHorizonEdit" runat="server" SelectedValue='<%# Bind("TimeHorizon") %>'>
@@ -85,7 +85,7 @@
                             <asp:ListItem>17</asp:ListItem>
                             <asp:ListItem>19</asp:ListItem>
                             <asp:ListItem>20</asp:ListItem>
-                        </asp:DropDownList>
+                        </asp:DropDownList> year(s)
                     </td>
                 </tr>
                 <tr class="even">
