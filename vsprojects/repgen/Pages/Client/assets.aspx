@@ -164,10 +164,10 @@
                 <HeaderStyle CssClass="left" />
                 <ItemStyle CssClass="right" Width="5em" />
             </asp:TemplateField>
-            <asp:TemplateField HeaderText="Commercial Property" SortExpression="COPR">
+            <asp:TemplateField HeaderText="Real Estate" SortExpression="COPR">
                 <EditItemTemplate>
                     <asp:TextBox ID="textCOPR" runat="server" Text='<%# Bind("COPR") %>'></asp:TextBox>
-                    <asp:RegularExpressionValidator ID="validRegexCOPR" runat="server" ErrorMessage="Please enter a percentage Commercial Property value."
+                    <asp:RegularExpressionValidator ID="validRegexCOPR" runat="server" ErrorMessage="Please enter a percentage Real Estate value."
                         Display="None" ControlToValidate="textCOPR" ValidationExpression="^100(?:\.0)?$|^\d{1,2}(?:\.\d)?$"
                         ValidationGroup="AssetClassEdit"></asp:RegularExpressionValidator>
                 </EditItemTemplate>

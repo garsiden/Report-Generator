@@ -168,17 +168,17 @@
                 <HeaderStyle CssClass="lnowrap" />
                 <ItemStyle CssClass="right" />
             </asp:TemplateField>
-            <asp:TemplateField HeaderText="Commercial Property" SortExpression="COPR">
+            <asp:TemplateField HeaderText="Real Estate" SortExpression="COPR">
                 <EditItemTemplate>
                     <asp:TextBox ID="textCOPREdit" runat="server" Text='<%# Bind("COPR") %>' ValidationGroup="Edit"></asp:TextBox>
-                    <asp:RegularExpressionValidator ID="validRegexCOPREdit" runat="server" ErrorMessage="Please enter a percentage Commercial Property value."
+                    <asp:RegularExpressionValidator ID="validRegexCOPREdit" runat="server" ErrorMessage="Please enter a percentage Real Estate value."
                         Display="None" ControlToValidate="textCOPREdit" ValidationExpression="^100(?:\.0)?$|^\d{1,2}(?:\.\d)?$"
                         ValidationGroup="Edit"></asp:RegularExpressionValidator>
                 </EditItemTemplate>
                 <InsertItemTemplate>
                     <asp:TextBox ID="textCOPRInsert" runat="server" Text='<%# Bind("COPR", "{0:0.0}") %>'
                         ValidationGroup="Insert"></asp:TextBox>
-                    <asp:RegularExpressionValidator ID="validRegexCOPRInsert" runat="server" ErrorMessage="Please enter a percentage Commercial Property value."
+                    <asp:RegularExpressionValidator ID="validRegexCOPRInsert" runat="server" ErrorMessage="Please enter a percentage Real Estate value."
                         Display="None" ControlToValidate="textCOPRInsert" ValidationExpression="^100(?:\.0)?$|^\d{1,2}(?:\.\d)?$"
                         ValidationGroup="Insert"></asp:RegularExpressionValidator>
                 </InsertItemTemplate>
