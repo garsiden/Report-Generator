@@ -50,6 +50,17 @@ public partial class Pages_Model_upload : RepGenPage
                             }
                         }
                     }
+
+                    decimal totalHNW = dt.Sum(r => r.Field<decimal>("WeightingHNW"));
+                    
+                    if (totalHNW != 1)
+                        throw new Exception(String.Format("Upload Error: HNW Weighting does not total 100% (currently {0:0.00%})", totalHNW));
+
+                    if (strategyId != "TC") {
+                        decimal totalAffluent = dt.Sum(r => r.Field<decimal>("WeightingAffluent"));
+                        if (totalAffluent != 1)
+                            throw new Exception(String.Format("Upload Error: Affluent Weighting does not equal 100% (currently {0:0.00%})", totalAffluent));
+                    }
                     string where = String.Format("StrategyID='{0}'", listModel.SelectedValue);
                     RSMTenon.Data.DataUtilities.UploadToDatabase(dt, tbl, where);
                     lblStatus.Text = String.Format("{0:#,##0} row(s) added to database", dt.Rows.Count);
