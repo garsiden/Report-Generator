@@ -36,7 +36,8 @@ public partial class Pages_Model_index : RepGenPage
             Table table = (Table)(e.Row.Cells[1].FindControl("tableFooterTotal"));
             table.Rows[0].Cells[1].Text = tot[HNW].ToString("0.00%");
             table.Rows[0].Cells[2].Text = tot[AFF].ToString("0.00%");
-            table.Rows[0].Cells[3].Text = (tot[INC] / 100).ToString("0.00%");
+            string totalYield = tot[INC] == 0 ? "0.00%" : (tot[INC] / 100).ToString("0.00%");
+            table.Rows[0].Cells[3].Text = totalYield;
         }
     }
     protected void listStrategy_SelectedIndexChanged(object sender, EventArgs e)
@@ -65,7 +66,8 @@ public partial class Pages_Model_index : RepGenPage
             e.Row.Cells[0].Text = "Weighting Total/Average HNW Yield";
             e.Row.Cells[1].Text = sub[HNW].ToString("0.00%");
             e.Row.Cells[2].Text = sub[AFF].ToString("0.00%");
-            e.Row.Cells[3].Text = (sub[INC] / (100 * sub[HNW])).ToString("0.00%");
+            string hnwYield = sub[INC] == 0 ? "0.00%" : (sub[INC] / (100 * sub[HNW])).ToString("0.00%");
+            e.Row.Cells[3].Text = hnwYield;
             tot[HNW] += sub[HNW];
             tot[AFF] += sub[AFF];
             tot[INC] += sub[INC];
