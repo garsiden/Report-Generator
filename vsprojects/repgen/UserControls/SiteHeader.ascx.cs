@@ -14,7 +14,7 @@ public partial class UserControls_SiteHeader : System.Web.UI.UserControl
             var user = HttpContext.Current.User;
             var principal = (WindowsIdentity)user.Identity;
             userLabel.Text = String.Format("User: {0}", principal.Name.Split('\\')[1]);
-            if (user.IsInRole(@"ARTHUR\RepGenAdmins")) {
+            if (user.IsInRole(RSMTenon.ReportGenerator.ReportGenerator.AdminGroup)) {
                 roleLabel.Text = "Administrator";
                 roleLabel.Visible = true;
             }
