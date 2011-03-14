@@ -129,13 +129,13 @@
                         <asp:ListItem>17</asp:ListItem>
                         <asp:ListItem>19</asp:ListItem>
                         <asp:ListItem>20</asp:ListItem>
-                    </asp:DropDownList>
+                    </asp:DropDownList>&nbsp;years(s)
                 </InsertItemTemplate>
                 <ItemTemplate>
-                    <asp:Label ID="Label1" runat="server" Text='<%# Bind("TimeHorizon") %>'></asp:Label>
+                    <asp:Label ID="Label1" runat="server" Text='<%# Bind("TimeHorizon") %>'></asp:Label>years(s)
                 </ItemTemplate>
             </asp:TemplateField>
-            <asp:TemplateField HeaderText="Return Over Base &nbsp;" SortExpression="ReturnOverBase">
+            <asp:TemplateField HeaderText="Return Over Base %" SortExpression="ReturnOverBase">
                 <EditItemTemplate>
                     <asp:TextBox ID="TextBox4" runat="server" Text='<%# Bind("ReturnOverBase") %>'></asp:TextBox>
                 </EditItemTemplate>
@@ -166,7 +166,7 @@
                     <asp:Label ID="Label2" runat="server" Text='<%# Bind("BenchmarkID") %>'></asp:Label>
                 </ItemTemplate>
             </asp:TemplateField>
-            <asp:TemplateField HeaderText="Rolling Return" SortExpression="RollingReturn">
+            <asp:TemplateField HeaderText="Rolling Return %" SortExpression="RollingReturn">
                 <EditItemTemplate>
                     <asp:TextBox ID="TextBox5" runat="server" Text='<%# Bind("RollingReturn") %>'></asp:TextBox>
                 </EditItemTemplate>
@@ -180,7 +180,7 @@
                 </ItemTemplate>
                 <HeaderStyle CssClass="lnowrap" />
             </asp:TemplateField>
-            <asp:TemplateField HeaderText="Aggregate Charge" SortExpression="AggregateCharge">
+            <asp:TemplateField HeaderText="Aggregate Charge %" SortExpression="AggregateCharge" HeaderStyle-Wrap="False">
                 <EditItemTemplate>
                     <asp:TextBox ID="textAggregateCharge" runat="server" Text='<%# Bind("AggregateCharge") %>' Width="5em"></asp:TextBox>
                 </EditItemTemplate>
