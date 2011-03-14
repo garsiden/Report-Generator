@@ -85,7 +85,7 @@ namespace RSMTenon.ReportGenerator
 
             // Create an XmlNamespaceManager to resolve the default namespace.
             XmlNamespaceManager nsmgr = new XmlNamespaceManager(doc.NameTable);
-            nsmgr.AddNamespace("wmr", @"http://rmtenon.com/2010/wealth-management-report");
+            nsmgr.AddNamespace("wmr", @"http://rmstenon.com/2010/wealth-management-report");
 
             XmlNode xmlnode;
             XmlElement root = doc.DocumentElement;
@@ -104,9 +104,9 @@ namespace RSMTenon.ReportGenerator
             xmlnode = root.SelectSingleNode("/wmr:repgen/wmr:client/wmr:name", nsmgr);
             xmlnode.InnerText = client.Name;
 
-            // client.meeting-date
-            xmlnode = root.SelectSingleNode("/wmr:repgen/wmr:client/wmr:meeting-date", nsmgr);
-            xmlnode.InnerText = client.MeetingDate.ToString("dd MMMM yyyy");
+            // client.date-issued
+            xmlnode = root.SelectSingleNode("/wmr:repgen/wmr:client/wmr:date-issued", nsmgr);
+            xmlnode.InnerText = client.DateIssued.ToString("dd MMMM yyyy");
 
             // client.time-horizon
             int clientHorizon = client.TimeHorizon;
@@ -116,10 +116,6 @@ namespace RSMTenon.ReportGenerator
             // client.reporting-frequency
             xmlnode = root.SelectSingleNode("/wmr:repgen/wmr:client/wmr:reporting-frequency", nsmgr);
             xmlnode.InnerText = client.ReportingFrequency;
-
-            // client.initial-fee
-            xmlnode = root.SelectSingleNode("/wmr:repgen/wmr:client/wmr:initial-fee", nsmgr);
-            xmlnode.InnerText = (client.InitialFee / 100).ToString("0.00%");
 
             // Strategy
             // get strategy object
@@ -136,7 +132,7 @@ namespace RSMTenon.ReportGenerator
 
             // strategy.performance.return-over-base
             xmlnode = root.SelectSingleNode("/wmr:repgen/wmr:strategy/wmr:performance/wmr:return-over-base", nsmgr);
-            xmlnode.InnerText = ((double)strategy.ReturnOverBase / 100).ToString("0%");
+            xmlnode.InnerText = strategy.ReturnOverBase.ToString("0\\%");
 
             // strategy.time-horizon
             xmlnode = root.SelectSingleNode("/wmr:repgen/wmr:strategy/wmr:time-horizon", nsmgr);
@@ -144,7 +140,11 @@ namespace RSMTenon.ReportGenerator
 
             // strategy.performance.rolling-return
             xmlnode = root.SelectSingleNode("/wmr:repgen/wmr:strategy/wmr:performance/wmr:rolling-return", nsmgr);
-            xmlnode.InnerText = (strategy.RollingReturn / 100).ToString("0.0%");
+            xmlnode.InnerText = strategy.RollingReturn.ToString("0.0\\%");
+
+            // strategy.aggregate-charge
+            xmlnode = root.SelectSingleNode("/wmr:repgen/wmr:strategy/wmr:aggregate-charge", nsmgr);
+            xmlnode.InnerText = strategy.AggregateCharge.ToString("0.00\\%");
 
             // strategy.cost
             xmlnode = root.SelectSingleNode("/wmr:repgen/wmr:strategy/wmr:cost", nsmgr);
