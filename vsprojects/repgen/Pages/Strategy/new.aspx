@@ -58,6 +58,14 @@
                 </td>
             </tr>
             <tr class="odd">
+                <td>
+                    Aggregate Charge
+                </td>
+                <td>
+                    &nbsp;
+                </td>
+            </tr>
+            <tr class="even">
                 <td colspan="2" class="right">
                     <asp:LinkButton ID="LinkButton1" runat="server" CausesValidation="False" CommandName="New"
                         Text="New"></asp:LinkButton>
@@ -80,6 +88,7 @@
                 <ItemTemplate>
                     <asp:Label ID="Label3" runat="server" Text='<%# Bind("ID") %>'></asp:Label>
                 </ItemTemplate>
+                <ItemStyle Width="70%"></ItemStyle>
             </asp:TemplateField>
             <asp:TemplateField HeaderText="Name" SortExpression="Name">
                 <EditItemTemplate>
@@ -171,6 +180,14 @@
                 </ItemTemplate>
                 <HeaderStyle CssClass="lnowrap" />
             </asp:TemplateField>
+            <asp:TemplateField HeaderText="Aggregate Charge" SortExpression="AggregateCharge">
+                <EditItemTemplate>
+                    <asp:TextBox ID="textAggregateCharge" runat="server" Text='<%# Bind("AggregateCharge") %>' Width="5em"></asp:TextBox>
+                </EditItemTemplate>
+                <ItemTemplate>
+                    <asp:Label ID="Label7" runat="server" Text='<%# Eval("AggregateCharge") %>'></asp:Label>
+                </ItemTemplate>
+            </asp:TemplateField>
             <asp:TemplateField ShowHeader="False" ItemStyle-CssClass="right">
                 <InsertItemTemplate>
                     <asp:LinkButton ID="LinkButton1" runat="server" CausesValidation="True" CommandName="Insert"
@@ -182,15 +199,15 @@
                     <asp:LinkButton ID="LinkButton1" runat="server" CausesValidation="False" CommandName="New"
                         Text="New"></asp:LinkButton>
                 </ItemTemplate>
+                <ItemStyle CssClass="right"></ItemStyle>
             </asp:TemplateField>
         </Fields>
         <AlternatingRowStyle CssClass="even"></AlternatingRowStyle>
     </asp:DetailsView>
     <br />
-
     <asp:ValidationSummary ID="validationSummary1" runat="server" />
-    <asp:Label ID="labelException" runat="server" Text=""></asp:Label>
-<br />
+    <asp:Label ID="labelException" class="errortext" runat="server" Text=""></asp:Label>
+    <br />
     <asp:HyperLink ID="hyperNewTextContent" runat="server" NavigateUrl="~/Pages/Content/strategy.aspx">Add strategy text content</asp:HyperLink>
     <asp:LinqDataSource ID="linqStrategy" runat="server" ContextTypeName="RSMTenon.Data.RepGenDataContext"
         EnableInsert="True" TableName="Strategies" Where="ID == @ID">
