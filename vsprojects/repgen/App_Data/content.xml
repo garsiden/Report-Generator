@@ -1,54 +1,51 @@
-<repgen xmlns="http://rmtenon.com/2010/wealth-management-report">
+<repgen xmlns="http://rmstenon.com/2010/wealth-management-report">
   <client>
-    <name/>
-    <meeting-date/>
-    <time-horizon/>
-    <transfer/>
-    <transfer-many/>
-    <reporting-frequency/>
-    <initial-fee/>
-    <investment-type/>
+    <name />
+    <date-issued />
+    <time-horizon />
+    <reporting-frequency />
   </client>
   <strategy>
-    <name-proper/>
-    <name-lower/>
-    <aim/>
-    <time-horizon-text/>
-    <asset-classes/>
-    <investor-focus/>
-    <income-note1/>
-    <income-note2/>
-    <cost/>
-    <time-horizon/>
+    <name-proper />
+    <name-lower />
+    <aim />
+    <time-horizon-text />
+    <asset-classes />
+    <investor-focus />
+    <income-note1 />
+    <income-note2 />
+    <aggregate-charge />
+    <time-horizon />
+    <cost />
     <risk>
-      <header/>
-      <text/>
+      <header />
+      <text />
     </risk>
     <performance>
-      <text/>
-      <return-over-base/>
-      <return/>
-      <rolling-return/>
+      <text />
+      <return-over-base />
+      <return />
+      <rolling-return />
     </performance>
   </strategy>
   <charts>
     <allocation>
-      <header/>
-      <caption/>
-      <weighting-text/>
+      <header />
+      <caption />
+      <weighting-text />
     </allocation>
     <comparison>
-      <header/>
+      <header />
     </comparison>
     <stress-crash>
-      <header/>
-      <text/>
+      <header />
+      <text />
     </stress-crash>
     <stress-rise>
-      <text/>
+      <text />
     </stress-rise>
     <drawdown>
-      <text/>
+      <text />
     </drawdown>
   </charts>
 </repgen>
