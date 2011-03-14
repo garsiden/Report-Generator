@@ -143,7 +143,7 @@
                         ValidationGroup="Insert"></asp:RegularExpressionValidator>
                 </InsertItemTemplate>
                 <ItemTemplate>
-                    <asp:Label ID="Label1" runat="server" Text='<%# Eval("CASH", "{0:0.0}") %>'></asp:Label>
+                    <asp:Label ID="Label1" runat="server" Text='<%# Eval("CASH", "{0:0.0\\%}") %>'></asp:Label>
                 </ItemTemplate>
                 <HeaderStyle CssClass="left" />
                 <ItemStyle CssClass="right" />
@@ -163,7 +163,7 @@
                         ValidationGroup="Insert"></asp:RegularExpressionValidator>
                 </InsertItemTemplate>
                 <ItemTemplate>
-                    <asp:Label ID="Label2" runat="server" Text='<%# Eval("COMM", "{0:0.0}") %>'></asp:Label>
+                    <asp:Label ID="Label2" runat="server" Text='<%# Eval("COMM", "{0:0.0\\%}") %>'></asp:Label>
                 </ItemTemplate>
                 <HeaderStyle CssClass="lnowrap" />
                 <ItemStyle CssClass="right" />
@@ -183,7 +183,7 @@
                         ValidationGroup="Insert"></asp:RegularExpressionValidator>
                 </InsertItemTemplate>
                 <ItemTemplate>
-                    <asp:Label ID="Label4" runat="server" Text='<%# Eval("GLEQ", "{0:0.0}") %>'></asp:Label>
+                    <asp:Label ID="Label4" runat="server" Text='<%# Eval("GLEQ", "{0:0.0\\%}") %>'></asp:Label>
                 </ItemTemplate>
                 <HeaderStyle CssClass="lnowrap" />
                 <ItemStyle CssClass="right" />
@@ -197,13 +197,13 @@
                 </EditItemTemplate>
                 <InsertItemTemplate>
                     <asp:TextBox ID="textHEDGInsert" runat="server" Text='<%# Bind("HEDG", "{0:0.0}") %>'
-                        ValidationGroup="Insert" TextMode="Password"></asp:TextBox>
+                        ValidationGroup="Insert"></asp:TextBox>
                     <asp:RegularExpressionValidator ID="validRegexHEDGInsert" runat="server" ErrorMessage="Please enter a percentage Hedge value."
                         Display="None" ControlToValidate="textHEDGInsert" ValidationExpression="^100(?:\.0)?$|^\d{1,2}(?:\.\d)?$"
                         ValidationGroup="Insert"></asp:RegularExpressionValidator>
                 </InsertItemTemplate>
                 <ItemTemplate>
-                    <asp:Label ID="Label5" runat="server" Text='<%# Eval("HEDG", "{0:0.0}") %>'></asp:Label>
+                    <asp:Label ID="Label5" runat="server" Text='<%# Eval("HEDG", "{0:0.0\\%}") %>'></asp:Label>
                 </ItemTemplate>
                 <HeaderStyle CssClass="lnowrap" />
                 <ItemStyle CssClass="right" />
@@ -223,7 +223,7 @@
                         ValidationGroup="Insert"></asp:RegularExpressionValidator>
                 </InsertItemTemplate>
                 <ItemTemplate>
-                    <asp:Label ID="Label6" runat="server" Text='<%# Eval("LOSH", "{0:0.0}") %>'></asp:Label>
+                    <asp:Label ID="Label6" runat="server" Text='<%# Eval("LOSH", "{0:0.0\\%}") %>'></asp:Label>
                 </ItemTemplate>
                 <HeaderStyle CssClass="lnowrap" />
                 <ItemStyle CssClass="right" />
@@ -243,7 +243,7 @@
                         ValidationGroup="Insert"></asp:RegularExpressionValidator>
                 </InsertItemTemplate>
                 <ItemTemplate>
-                    <asp:Label ID="Label7" runat="server" Text='<%# Eval("PREQ", "{0:0.0}") %>'></asp:Label>
+                    <asp:Label ID="Label7" runat="server" Text='<%# Eval("PREQ", "{0:0.0\\%}") %>'></asp:Label>
                 </ItemTemplate>
                 <HeaderStyle CssClass="lnowrap" />
                 <ItemStyle CssClass="right" />
@@ -263,7 +263,7 @@
                         ValidationGroup="Insert"></asp:RegularExpressionValidator>
                 </InsertItemTemplate>
                 <ItemTemplate>
-                    <asp:Label ID="Label3" runat="server" Text='<%# Eval("COPR", "{0:0.0}") %>'></asp:Label>
+                    <asp:Label ID="Label3" runat="server" Text='<%# Eval("COPR", "{0:0.0\\%}") %>'></asp:Label>
                 </ItemTemplate>
                 <HeaderStyle CssClass="lnowrap" />
                 <ItemStyle CssClass="right" />
@@ -284,7 +284,7 @@
                         ValidationGroup="Insert"></asp:RegularExpressionValidator>
                 </InsertItemTemplate>
                 <ItemTemplate>
-                    <asp:Label ID="Label8" runat="server" Text='<%# Eval("UKCB", "{0:0.0}") %>'></asp:Label>
+                    <asp:Label ID="Label8" runat="server" Text='<%# Eval("UKCB", "{0:0.0\\%}") %>'></asp:Label>
                 </ItemTemplate>
                 <HeaderStyle CssClass="lnowrap" />
                 <ItemStyle CssClass="right" />
@@ -304,7 +304,7 @@
                         ValidationGroup="Insert"></asp:RegularExpressionValidator>
                 </InsertItemTemplate>
                 <ItemTemplate>
-                    <asp:Label ID="Label9" runat="server" Text='<%# Eval("UKEQ", "{0:0.0}") %>'></asp:Label>
+                    <asp:Label ID="Label9" runat="server" Text='<%# Eval("UKEQ", "{0:0.0\\%}") %>'></asp:Label>
                 </ItemTemplate>
                 <HeaderStyle CssClass="lnowrap" />
                 <ItemStyle CssClass="right" />
@@ -323,7 +323,7 @@
                         ValidationGroup="Insert"></asp:RegularExpressionValidator>
                 </InsertItemTemplate>
                 <ItemTemplate>
-                    <asp:Label ID="Label10" runat="server" Text='<%# Eval("UKGB", "{0:0.0}") %>'></asp:Label>
+                    <asp:Label ID="Label10" runat="server" Text='<%# Eval("UKGB", "{0:0.0\\%}") %>'></asp:Label>
                 </ItemTemplate>
                 <HeaderStyle CssClass="lnowrap" />
                 <ItemStyle CssClass="right" />
@@ -343,7 +343,7 @@
                         ValidationGroup="Insert"></asp:RegularExpressionValidator>
                 </InsertItemTemplate>
                 <ItemTemplate>
-                    <asp:Label ID="Label11" runat="server" Text='<%# Eval("UKHY", "{0:0.0}") %>'></asp:Label>
+                    <asp:Label ID="Label11" runat="server" Text='<%# Eval("UKHY", "{0:0.0\\%}") %>'></asp:Label>
                 </ItemTemplate>
                 <HeaderStyle CssClass="lnowrap" />
                 <ItemStyle CssClass="right" />
@@ -363,7 +363,7 @@
                         ValidationGroup="Insert"></asp:RegularExpressionValidator>
                 </InsertItemTemplate>
                 <ItemTemplate>
-                    <asp:Label ID="Label12" runat="server" Text='<%# Eval("WOBO", "{0:0.0}") %>'></asp:Label>
+                    <asp:Label ID="Label12" runat="server" Text='<%# Eval("WOBO", "{0:0.0\\%}") %>'></asp:Label>
                 </ItemTemplate>
                 <HeaderStyle CssClass="lnowrap" />
                 <ItemStyle CssClass="right" />
@@ -391,7 +391,7 @@
     <div style="width: 60%; text-align: right;">
         <asp:HyperLink ID="hyperClient" runat="server" NavigateUrl="edit.aspx">Back to Client</asp:HyperLink>
     </div>
-    <asp:Label ID="labelException" runat="server"></asp:Label><br />
+    <asp:Label ID="labelException" class="errortext" runat="server"></asp:Label><br />
     <asp:ValidationSummary ID="validationSummaryEdit" runat="server" ValidationGroup="Edit" />
     <asp:ValidationSummary ID="validationSummaryInsert" runat="server" ValidationGroup="Insert" />
     <asp:Label ID="labelInstruction" runat="server" Text="Enter values as percentages to one decimal place e.g., 10.5 for 10.5%" Visible="false"></asp:Label>

@@ -19,7 +19,7 @@ public partial class Pages_Client_assetclasses : RepGenPage
                 ViewState["ClientAssetClass_ClientGUID"] = guid;
                 Guid clientGuid = new Guid(guid);
                 Client client = Client.GetClientByGUID(clientGuid);
-                clientAssetHeader.InnerText = "Client Assets By Class for " + client.Name;
+                clientAssetHeader.InnerText = "Client Assets for " + client.Name;
                 hyperClient.NavigateUrl += String.Format("?guid={0}", clientGuid);
                 if (client.ClientAssetClass == null) {
                     detailsView.ChangeMode(DetailsViewMode.Insert);
