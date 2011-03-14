@@ -29,7 +29,7 @@
         <AlternatingRowStyle CssClass="even" />
     </asp:GridView>
     <br />
-    <asp:Label ID="labelException" runat="server" Text=""></asp:Label>
+    <asp:Label ID="labelException" class="errortext" runat="server" Text=""></asp:Label>
 <br />
     <asp:ValidationSummary ID="validationSummary1" runat="server" />
     <asp:LinqDataSource ID="sourceAssetClass" runat="server" 
