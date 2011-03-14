@@ -12,8 +12,8 @@
                 DataTextField="Name" HeaderText="Client Name" SortExpression="Name">
                 <ItemStyle CssClass="lnowrap" />
             </asp:HyperLinkField>
-            <asp:BoundField DataField="MeetingDate" DataFormatString="{0:dd/MM/yyyy}" HeaderText="Meeting Date"
-                SortExpression="MeetingDate" ItemStyle-CssClass="center">
+            <asp:BoundField DataField="DateIssued" DataFormatString="{0:dd/MM/yyyy}" HeaderText="Date Issued"
+                SortExpression="DateIssued" ItemStyle-CssClass="center">
                 <HeaderStyle Wrap="False" />
                 <ItemStyle Width="10%" />
             </asp:BoundField>
@@ -36,8 +36,8 @@
     <br />
     <div align="right" style="width: 60%">
         <asp:HyperLink ID="hyperNewClient" runat="server" NavigateUrl="Pages/Client/new.aspx">New Client</asp:HyperLink></div>
-    <asp:Label ID="labelException" runat="server" Visible="False"></asp:Label>
+    <asp:Label ID="labelException" class="errortext" runat="server" Visible="False"></asp:Label>
     <asp:LinqDataSource ID="sourceClient" runat="server" ContextTypeName="RSMTenon.Data.RepGenDataContext"
-        OrderBy="MeetingDate desc, Name" TableName="Clients" EnableDelete="True" OnSelecting="sourceClient_Selecting">
+        OrderBy="DateIssued desc, Name" TableName="Clients" EnableDelete="True" OnSelecting="sourceClient_Selecting">
     </asp:LinqDataSource>
 </asp:Content>
