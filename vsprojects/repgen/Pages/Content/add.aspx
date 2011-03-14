@@ -158,7 +158,7 @@
             <br />
             <asp:ValidationSummary ID="validSummary" runat="server" />
 <br/>
-    <asp:Label ID="labelException" runat="server" Text=""></asp:Label>
+    <asp:Label ID="labelException" class="errortext" runat="server" Text=""></asp:Label>
 
 
     <asp:LinqDataSource ID="linqContent" runat="server" 

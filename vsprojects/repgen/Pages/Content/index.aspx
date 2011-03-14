@@ -58,7 +58,7 @@
         </tr>
     </table>
 <br />
-    <asp:Label ID="labelException" runat="server" Text="Label"></asp:Label>
+    <asp:Label ID="labelException" class="errortext" runat="server" Text="Label"></asp:Label>
     <br />
     <p>
         Use <i>[Strategy]</i> to indicate where a strategy name should be placed.</p>
