@@ -12,13 +12,9 @@
         <EditItemTemplate>
             ReportingFrequency:
             <br />
-            InitialFeeAmount: GUID:
-            <br />
             Name:
             <br />
-            MeetingDate:
-            <br />
-            InitialFee:
+            DateIssued:
             <br />
             TimeHorizon:
             <br />
@@ -27,8 +23,6 @@
             StrategyID:
             <br />
             InvestmentAmount:
-            <br />
-            SSMA_TimeStamp:
             <br />
             ClientAssets:
             <br />
@@ -53,10 +47,10 @@
                 </tr>
                 <tr class="even">
                     <td class="lnowrap">
-                        Meeting Date
+                        Date Issued
                     </td>
                     <td class="lnowrap">
-                        <BDP:BDPLite ID="bdpMeetingDate" runat="server" SelectedDate='<%# Bind("MeetingDate") %>'
+                        <BDP:BDPLite ID="bdpDateIssued" runat="server" SelectedDate='<%# Bind("DateIssued") %>'
                             Style="display: inline;" />
                     </td>
                 </tr>
@@ -118,15 +112,7 @@
                 </tr>
                 <tr>
                     <td class="lnowrap">
-                        Initial Fee (%)
-                    </td>
-                    <td class="lnowrap">
-                        <asp:TextBox ID="InitialFeeTextBox" runat="server" Text='<%# Bind("InitialFee") %>' />
-                    </td>
-                </tr>
-                <tr class="even">
-                    <td class="lnowrap">
-                        Status*
+                        Status <span style="color:Red;"><b>*</b></span>
                     </td>
                     <td class="lnowrap">
                         <asp:RadioButtonList ID="radioListStatus" runat="server" RepeatLayout="Flow" SelectedValue='<%# Bind("Status") %>'>
@@ -147,8 +133,8 @@
             <asp:ValidationSummary ID="validSummary" runat="server" />
             <asp:RequiredFieldValidator ID="validRequiredName" runat="server" ErrorMessage="Please enter a client Name."
                 Display="None" ControlToValidate="NameTextBox"></asp:RequiredFieldValidator>
-            <asp:RequiredFieldValidator ID="validRequiredMeetingDate" runat="server" ErrorMessage="Please enter a Meeting Date."
-                ControlToValidate="bdpMeetingDate" Display="None"></asp:RequiredFieldValidator>
+            <asp:RequiredFieldValidator ID="validRequiredMeetingDate" runat="server" ErrorMessage="Please enter a Date Issued."
+                ControlToValidate="bdpDateIssued" Display="None"></asp:RequiredFieldValidator>
             <asp:CompareValidator ID="validCompareStrategyID" runat="server" ControlToValidate="listStrategy"
                 Display="None" ErrorMessage="Please select a Strategy from the list." Operator="NotEqual"
                 ValueToCompare="XX"></asp:CompareValidator>
@@ -157,11 +143,6 @@
             <asp:CompareValidator ID="validCompareInvestment" runat="server" ErrorMessage="Please enter a valid Investment Amount."
                 ValueToCompare="1" Type="Currency" Operator="GreaterThanEqual" ControlToValidate="InvestmentAmountTextBox"
                 Display="None"></asp:CompareValidator>
-            <asp:RequiredFieldValidator ID="validRequiredInitialFee" runat="server" ErrorMessage="Please enter an Initial Fee."
-                ControlToValidate="InitialFeeTextBox" Display="None"></asp:RequiredFieldValidator>
-            <asp:RangeValidator ID="validRangeInitialFee" runat="server" ErrorMessage="Please enter an Initial Fee of between 0 and 5."
-                Type="Currency" MaximumValue="5" MinimumValue="0" ControlToValidate="InitialFeeTextBox"
-                Display="None"></asp:RangeValidator>
             <asp:RequiredFieldValidator ID="validRequiredStatus" runat="server" ErrorMessage="Please select a client Status."
                 Display="None" ControlToValidate="radioListStatus"></asp:RequiredFieldValidator>
             <asp:CustomValidator ID="validCustomTimeHorizon" runat="server" ErrorMessage="Client's Time Horizon is less than Strategy's."
@@ -179,7 +160,7 @@
                 </tr>
                 <tr class="even">
                     <td class="lnowrap">
-                        Meeting Date
+                        Date Issued
                     </td>
                     <td>
                         <asp:Label ID="MeetingDateLabel" runat="server" />
@@ -219,15 +200,7 @@
                 </tr>
                 <tr>
                     <td class="lnowrap">
-                        InitialFee
-                    </td>
-                    <td>
-                        <asp:Label ID="InitialFeeLabel" runat="server" />
-                    </td>
-                </tr>
-                <tr class="even">
-                    <td class="lnowrap">
-                        Status*
+                        Status
                     </td>
                     <td class="lnowrap">
                         <asp:RadioButtonList ID="radioListStatus" runat="server" RepeatLayout="Flow">
@@ -257,7 +230,7 @@
                 </tr>
                 <tr class="even">
                     <td class="lnowrap">
-                        Meeting Date
+                        Date Issued
                     </td>
                     <td>
                         <asp:Label ID="MeetingDateLabel" runat="server" />
@@ -297,14 +270,6 @@
                 </tr>
                 <tr>
                     <td class="lnowrap">
-                        InitialFee
-                    </td>
-                    <td>
-                        <asp:Label ID="InitialFeeLabel" runat="server" />
-                    </td>
-                </tr>
-                <tr class="even">
-                    <td class="lnowrap">
                         Status
                     </td>
                     <td class="lnowrap">
@@ -318,10 +283,10 @@
         </EmptyDataTemplate>
     </asp:FormView>
     <br />
-    <asp:Label ID="labelException" runat="server"></asp:Label><br />
+    <asp:Label ID="labelException" class="errortext" runat="server"></asp:Label><br />
     <div id="textnote">
-        <ul runat="server" id="noteList" style="width: 60%">
-            <li><b>* Note</b></li>
+        <ul runat="server" id="noteList" style="width: 60%;">
+            <li style="color:Red;"><b>* Note</b></li>
             <li>Clients with portfolios under £250,000 <u>OR</u> that require ISA-eligible funds
                 only should be categorised as Affluent. </li>
             <li>Clients with no requirement for ISA-eligibility <u>AND</u> have a portfolio of over

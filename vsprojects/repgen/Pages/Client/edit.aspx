@@ -22,10 +22,10 @@
                 </tr>
                 <tr class="even">
                     <td class="lnowrap">
-                        Meeting Date
+                        Date Issued
                     </td>
                     <td class="lnowrap">
-                        <BDP:BDPLite ID="bdpMeetingDate" runat="server" SelectedDate='<%# Bind("MeetingDate") %>'
+                        <BDP:BDPLite ID="bdpDateIssued" runat="server" SelectedDate='<%# Bind("DateIssued") %>'
                             Style="display: inline;" DateFormat="d" />
                     </td>
                 </tr>
@@ -86,15 +86,7 @@
                 </tr>
                 <tr>
                     <td class="lnowrap">
-                        Initial Fee (%)
-                    </td>
-                    <td class="left">
-                        <asp:TextBox ID="InitialFeeTextBox" runat="server" Text='<%# Bind("InitialFee", "{0:N}") %>' />
-                    </td>
-                </tr>
-                <tr class="even">
-                    <td class="lnowrap">
-                        Status*
+                        Status<span style="color:Red;"><b>*</b></span>
                     </td>
                     <td class="left">
                         <asp:RadioButtonList ID="radioListStatus" runat="server" SelectedIndex='<%# Bind("Status") %>'
@@ -115,18 +107,13 @@
             <asp:ValidationSummary ID="validSummary" runat="server" />
             <asp:RequiredFieldValidator ID="validRequiredName" runat="server" ErrorMessage="Please enter a client Name."
                 Display="None" ControlToValidate="NameTextBox"></asp:RequiredFieldValidator>
-            <asp:RequiredFieldValidator ID="validRequiredMeetingDate" runat="server" ErrorMessage="Please enter a Meeting Date."
-                ControlToValidate="bdpMeetingDate" Display="None"></asp:RequiredFieldValidator>
+            <asp:RequiredFieldValidator ID="validRequiredMeetingDate" runat="server" ErrorMessage="Please enter a Date Issued."
+                ControlToValidate="bdpDateIssued" Display="None"></asp:RequiredFieldValidator>
             <asp:RequiredFieldValidator ID="validRequiredInvestmentAmount" runat="server" ErrorMessage="Please enter an Investment Amount."
                 ControlToValidate="InvestmentAmountTextBox" Display="None"></asp:RequiredFieldValidator>
             <asp:CompareValidator ID="validCompareInvestment" runat="server" ErrorMessage="Please enter a valid Investment Amount."
                 ValueToCompare="1" Type="Currency" Operator="GreaterThanEqual" ControlToValidate="InvestmentAmountTextBox"
                 Display="None"></asp:CompareValidator>
-            <asp:RequiredFieldValidator ID="validRequiredInitialFee" runat="server" ErrorMessage="Please enter an Initial Fee."
-                ControlToValidate="InitialFeeTextBox" Display="None"></asp:RequiredFieldValidator>
-            <asp:RangeValidator ID="validRangeInitialFee" runat="server" ErrorMessage="Please enter an Initial Fee of between 0 and 5."
-                Type="Currency" MaximumValue="5" MinimumValue="0" ControlToValidate="InitialFeeTextBox"
-                Display="None"></asp:RangeValidator>
             <asp:CustomValidator ID="validCustomClientTimeHorizon" runat="server" OnServerValidate="TimeHorizonServerValidate"
                 ErrorMessage="Client's Time Horizon is less than Strategy's." Display="None"></asp:CustomValidator>
         </EditItemTemplate>
@@ -142,22 +129,14 @@
                 </tr>
                 <tr class="even">
                     <td class="lnowrap">
-                        Meeting Date
+                        Date Issued
                     </td>
                     <td class="lnowrap">
-                        <BDP:BDPLite ID="dpMeetingInsert" runat="server" SelectedDate='<%# Bind("MeetingDate") %>'
+                        <BDP:BDPLite ID="bdpDateIssuedInsert" runat="server" SelectedDate='<%# Bind("DateIssued") %>'
                             Style="display: inline;" />
                     </td>
                 </tr>
                 <tr>
-                    <td class="lnowrap">
-                        Initial Fee
-                    </td>
-                    <td class="lnowrap">
-                        <asp:TextBox ID="InitialFeeTextBox" runat="server" Text='<%# Bind("InitialFee", "{0:N}") %>' />
-                    </td>
-                </tr>
-                <tr class="even">
                     <td class="lnowrap">
                         Time Horizon
                     </td>
@@ -185,7 +164,7 @@
                         </asp:DropDownList>
                     </td>
                 </tr>
-                <tr>
+                <tr class="even">
                     <td class="lnowrap">
                         Existing Assets
                     </td>
@@ -193,7 +172,7 @@
                         <asp:CheckBox ID="ExistingAssetsCheckBox" runat="server" Checked='<%# Bind("ExistingAssets") %>' />
                     </td>
                 </tr>
-                <tr class="even">
+                <tr>
                     <td class="lnowrap">
                         Strategy
                     </td>
@@ -204,7 +183,7 @@
                         </asp:DropDownList>
                     </td>
                 </tr>
-                <tr>
+                <tr class="even">
                     <td class="lnowrap">
                         Investment Amount
                     </td>
@@ -232,10 +211,10 @@
                 </tr>
                 <tr class="even">
                     <td class="lnowrap">
-                        Meeting Date
+                        Date Issued
                     </td>
                     <td class="lnowrap">
-                        <asp:Label ID="MeetingDateLabel" runat="server" Text='<%# Bind("MeetingDate", "{0:dd/MM/yyyy}") %>' />
+                        <asp:Label ID="DateIssuedLabel" runat="server" Text='<%# Bind("DateIssued", "{0:dd/MM/yyyy}") %>' />
                     </td>
                 </tr>
                 <tr>
@@ -273,15 +252,7 @@
                 </tr>
                 <tr>
                     <td class="lnowrap">
-                        Initial Fee %
-                    </td>
-                    <td class="lnowrap">
-                        <asp:Label ID="InitialFeeLabel" runat="server" Text='<%# Bind("InitialFee", "{0:N}") %>' />
-                    </td>
-                </tr>
-                <tr class="even">
-                    <td class="lnowrap">
-                        Status*
+                        Status
                     </td>
                     <td class="lnowrap">
                         <asp:RadioButtonList ID="radioListStatus" runat="server" SelectedIndex='<%# Bind("Status") %>'
@@ -309,7 +280,7 @@
                 </tr>
                 <tr>
                     <td class="lnowrap">
-                        Meeting Date
+                        Date Issued
                     </td>
                     <td>
                         &nbsp;
@@ -349,15 +320,7 @@
                 </tr>
                 <tr>
                     <td class="lnowrap">
-                        Initial Fee %
-                    </td>
-                    <td>
-                        &nbsp;
-                    </td>
-                </tr>
-                <tr>
-                    <td class="lnowrap">
-                        Status*
+                        Status
                     </td>
                     <td>
                         &nbsp;
@@ -383,10 +346,10 @@
             CssClass="button" Width="90px" OnClientClick="hideException('labelException');" />
     </div>
     <br />
-    <asp:Label ID="labelException" runat="server"></asp:Label>
+    <asp:Label ID="labelException" class="errortext" runat="server"></asp:Label>
     <div id="textnote">
-        <ul runat="server" id="noteList" style="width: 60%">
-            <li><b>* Note</b></li>
+        <ul runat="server" id="noteList" style="width: 60%;">
+            <li style="color:red"><b>* Note</b></li>
             <li>Clients with portfolios under £250,000 <u>OR</u> that require ISA-eligible funds
                 only should be categorised as Affluent. </li>
             <li>Clients with no requirement for ISA-eligibility <u>AND</u> have a portfolio of over
