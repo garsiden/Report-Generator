@@ -14,7 +14,7 @@
     <tr>
         <td nowrap="nowrap">
             <asp:Label ID="Label1" runat="server" Font-Bold="True" Font-Names="Tahoma" 
-                Font-Size="Large" Text="Wealth Managment Report Generator"></asp:Label>
+                Font-Size="Large" Text="The Investment Management Service Report"></asp:Label>
         </td>
         <td align="right" width="50%">
             <asp:Label ID="userLabel" runat="server" style="margin-right:10px"></asp:Label><br />
