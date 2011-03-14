@@ -109,7 +109,7 @@
             </td>
         </tr>
     </table>
-    <asp:Label ID="labelException" runat="server"></asp:Label>
+    <asp:Label ID="labelException" class="errortext" runat="server"></asp:Label>
     <br />
     <asp:ValidationSummary ID="validationSummary1" runat="server" ValidationGroup="Investment" />
     <asp:ValidationSummary ID="validationSummary2" runat="server" ValidationGroup="InvestmentEdit" />
@@ -143,7 +143,7 @@
                     <asp:TextBox ID="TextBox1" runat="server" Text='<%# Bind("CASH", "{0:0.0}") %>'></asp:TextBox>
                 </InsertItemTemplate>
                 <ItemTemplate>
-                    <asp:Label ID="Label1" runat="server" Text='<%# Bind("CASH", "{0:0.0}") %>'></asp:Label>
+                    <asp:Label ID="Label1" runat="server" Text='<%# Eval("CASH", "{0:0.0\\%}") %>'></asp:Label>
                 </ItemTemplate>
                 <HeaderStyle CssClass="left" />
                 <ItemStyle CssClass="right" />
@@ -159,7 +159,7 @@
                     <asp:TextBox ID="TextBox2" runat="server" Text='<%# Bind("COMM", "{0:0.0}") %>'></asp:TextBox>
                 </InsertItemTemplate>
                 <ItemTemplate>
-                    <asp:Label ID="Label2" runat="server" Text='<%# Bind("COMM", "{0:0.0}") %>'></asp:Label>
+                    <asp:Label ID="Label2" runat="server" Text='<%# Eval("COMM", "{0:0.0\\%}") %>'></asp:Label>
                 </ItemTemplate>
                 <HeaderStyle CssClass="left" />
                 <ItemStyle CssClass="right" Width="5em" />
@@ -175,7 +175,7 @@
                     <asp:TextBox ID="TextBox4" runat="server" Text='<%# Bind("GLEQ", "{0:0.0}") %>'></asp:TextBox>
                 </InsertItemTemplate>
                 <ItemTemplate>
-                    <asp:Label ID="Label4" runat="server" Text='<%# Bind("GLEQ", "{0:0.0}") %>'></asp:Label>
+                    <asp:Label ID="Label4" runat="server" Text='<%# Eval("GLEQ", "{0:0.0\\%}") %>'></asp:Label>
                 </ItemTemplate>
                 <HeaderStyle CssClass="lnowrap" />
                 <ItemStyle CssClass="right" />
@@ -191,7 +191,7 @@
                     <asp:TextBox ID="TextBox5" runat="server" Text='<%# Bind("HEDG", "{0:0.0}") %>'></asp:TextBox>
                 </InsertItemTemplate>
                 <ItemTemplate>
-                    <asp:Label ID="Label5" runat="server" Text='<%# Bind("HEDG", "{0:0.0}") %>'></asp:Label>
+                    <asp:Label ID="Label5" runat="server" Text='<%# Eval("HEDG", "{0:0.0\\%}") %>'></asp:Label>
                 </ItemTemplate>
                 <HeaderStyle CssClass="left" />
                 <ItemStyle CssClass="right" />
@@ -207,7 +207,7 @@
                     <asp:TextBox ID="TextBox6" runat="server" Text='<%# Bind("LOSH", "{0:0.0}") %>'></asp:TextBox>
                 </InsertItemTemplate>
                 <ItemTemplate>
-                    <asp:Label ID="Label6" runat="server" Text='<%# Bind("LOSH", "{0:0.0}") %>'></asp:Label>
+                    <asp:Label ID="Label6" runat="server" Text='<%# Eval("LOSH", "{0:0.0\\%}") %>'></asp:Label>
                 </ItemTemplate>
                 <HeaderStyle CssClass="lnowrap" />
                 <ItemStyle CssClass="right" />
@@ -223,7 +223,7 @@
                     <asp:TextBox ID="TextBox7" runat="server" Text='<%# Bind("PREQ", "{0:0.0}") %>'></asp:TextBox>
                 </InsertItemTemplate>
                 <ItemTemplate>
-                    <asp:Label ID="Label7" runat="server" Text='<%# Bind("PREQ", "{0:0.0}") %>'></asp:Label>
+                    <asp:Label ID="Label7" runat="server" Text='<%# Eval("PREQ", "{0:0.0\\%}") %>'></asp:Label>
                 </ItemTemplate>
                 <HeaderStyle CssClass="left" />
                 <ItemStyle CssClass="right" />
@@ -239,7 +239,7 @@
                     <asp:TextBox ID="TextBox3" runat="server" Text='<%# Bind("COPR", "{0:0.0}") %>'></asp:TextBox>
                 </InsertItemTemplate>
                 <ItemTemplate>
-                    <asp:Label ID="Label3" runat="server" Text='<%# Bind("COPR", "{0:0.0}") %>'></asp:Label>
+                    <asp:Label ID="Label3" runat="server" Text='<%# Eval("COPR", "{0:0.0\\%}") %>'></asp:Label>
                 </ItemTemplate>
                 <HeaderStyle CssClass="left" />
                 <ItemStyle CssClass="right" />
@@ -255,7 +255,7 @@
                     <asp:TextBox ID="TextBox8" runat="server" Text='<%# Bind("UKCB", "{0:0.0}") %>'></asp:TextBox>
                 </InsertItemTemplate>
                 <ItemTemplate>
-                    <asp:Label ID="Label8" runat="server" Text='<%# Bind("UKCB", "{0:0.0}") %>'></asp:Label>
+                    <asp:Label ID="Label8" runat="server" Text='<%# Eval("UKCB", "{0:0.0\\%}") %>'></asp:Label>
                 </ItemTemplate>
                 <HeaderStyle CssClass="lnowrap" />
                 <ItemStyle CssClass="right" />
@@ -271,7 +271,7 @@
                     <asp:TextBox ID="TextBox9" runat="server" Text='<%# Bind("UKEQ", "{0:0.0}") %>'></asp:TextBox>
                 </InsertItemTemplate>
                 <ItemTemplate>
-                    <asp:Label ID="Label9" runat="server" Text='<%# Bind("UKEQ", "{0:0.0}") %>'></asp:Label>
+                    <asp:Label ID="Label9" runat="server" Text='<%# Eval("UKEQ", "{0:0.0\\%}") %>'></asp:Label>
                 </ItemTemplate>
                 <HeaderStyle CssClass="lnowrap" />
                 <ItemStyle CssClass="right" />
@@ -287,7 +287,7 @@
                     <asp:TextBox ID="TextBox10" runat="server" Text='<%# Bind("UKGB", "{0:0.0}") %>'></asp:TextBox>
                 </InsertItemTemplate>
                 <ItemTemplate>
-                    <asp:Label ID="Label10" runat="server" Text='<%# Bind("UKGB", "{0:0.0}") %>'></asp:Label>
+                    <asp:Label ID="Label10" runat="server" Text='<%# Eval("UKGB", "{0:0.0\\%}") %>'></asp:Label>
                 </ItemTemplate>
                 <HeaderStyle CssClass="lnowrap" />
                 <ItemStyle CssClass="right" />
@@ -303,7 +303,7 @@
                     <asp:TextBox ID="TextBox11" runat="server" Text='<%# Bind("UKHY", "{0:0.0}") %>'></asp:TextBox>
                 </InsertItemTemplate>
                 <ItemTemplate>
-                    <asp:Label ID="Label11" runat="server" Text='<%# Bind("UKHY", "{0:0.0}") %>'></asp:Label>
+                    <asp:Label ID="Label11" runat="server" Text='<%# Eval("UKHY", "{0:0.0\\%}") %>'></asp:Label>
                 </ItemTemplate>
                 <HeaderStyle CssClass="lnowrap" />
                 <ItemStyle CssClass="right" />
@@ -319,7 +319,7 @@
                     <asp:TextBox ID="TextBox12" runat="server" Text='<%# Bind("WOBO", "{0:0.0}") %>'></asp:TextBox>
                 </InsertItemTemplate>
                 <ItemTemplate>
-                    <asp:Label ID="Label12" runat="server" Text='<%# Bind("WOBO", "{0:0.0}") %>'></asp:Label>
+                    <asp:Label ID="Label12" runat="server" Text='<%# Eval("WOBO", "{0:0.0\\%}") %>'></asp:Label>
                 </ItemTemplate>
                 <HeaderStyle CssClass="lnowrap" />
                 <ItemStyle CssClass="right" />
@@ -333,7 +333,7 @@
     </asp:DetailsView>
     <br />
     <asp:Label ID="labelInstruction" runat="server" Text="Enter values as percentages to one decimal place e.g., 10.5 for 10.5%<br />" Visible="false"></asp:Label>
-    <asp:Label ID="labelExceptionDetails" runat="server"></asp:Label>
+    <asp:Label ID="labelExceptionDetails" class="errortext" runat="server"></asp:Label>
     <asp:ObjectDataSource ID="sourceDetails" runat="server" OldValuesParameterFormatString="original_{0}"
         SelectMethod="GetClientAsset" TypeName="RSMTenon.Data.ClientAsset" ConflictDetection="CompareAllValues"
         DataObjectTypeName="RSMTenon.Data.ClientAsset" UpdateMethod="UpdateClientAsset"
