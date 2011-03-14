@@ -125,7 +125,7 @@
     </asp:GridView>
 <br />
 <br />
-    <asp:Label ID="labelException" runat="server" Text=""></asp:Label>
+    <asp:Label ID="labelException" class="errortext" runat="server" Text=""></asp:Label>
     <asp:LinqDataSource ID="sourceBenchmarkData" runat="server" ContextTypeName="RSMTenon.Data.RepGenDataContext"
         EnableDelete="True" EnableInsert="True" EnableUpdate="True" OrderBy="Date desc"
         TableName="BenchmarkDatas">
