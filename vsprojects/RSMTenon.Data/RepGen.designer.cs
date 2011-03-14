@@ -474,9 +474,7 @@ namespace RSMTenon.Data
 		
 		private string _Name;
 		
-		private System.DateTime _MeetingDate;
-		
-		private decimal _InitialFee;
+		private System.DateTime _DateIssued;
 		
 		private short _TimeHorizon;
 		
@@ -506,10 +504,8 @@ namespace RSMTenon.Data
     partial void OnGUIDChanged();
     partial void OnNameChanging(string value);
     partial void OnNameChanged();
-    partial void OnMeetingDateChanging(System.DateTime value);
-    partial void OnMeetingDateChanged();
-    partial void OnInitialFeeChanging(decimal value);
-    partial void OnInitialFeeChanged();
+    partial void OnDateIssuedChanging(System.DateTime value);
+    partial void OnDateIssuedChanged();
     partial void OnTimeHorizonChanging(short value);
     partial void OnTimeHorizonChanged();
     partial void OnExistingAssetsChanging(bool value);
@@ -574,42 +570,22 @@ namespace RSMTenon.Data
 			}
 		}
 		
-		[Column(Storage="_MeetingDate", DbType="DateTime NOT NULL", UpdateCheck=UpdateCheck.Never)]
-		public System.DateTime MeetingDate
+		[Column(Storage="_DateIssued", DbType="DateTime NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		public System.DateTime DateIssued
 		{
 			get
 			{
-				return this._MeetingDate;
+				return this._DateIssued;
 			}
 			set
 			{
-				if ((this._MeetingDate != value))
+				if ((this._DateIssued != value))
 				{
-					this.OnMeetingDateChanging(value);
+					this.OnDateIssuedChanging(value);
 					this.SendPropertyChanging();
-					this._MeetingDate = value;
-					this.SendPropertyChanged("MeetingDate");
-					this.OnMeetingDateChanged();
-				}
-			}
-		}
-		
-		[Column(Storage="_InitialFee", DbType="Money NOT NULL", UpdateCheck=UpdateCheck.Never)]
-		public decimal InitialFee
-		{
-			get
-			{
-				return this._InitialFee;
-			}
-			set
-			{
-				if ((this._InitialFee != value))
-				{
-					this.OnInitialFeeChanging(value);
-					this.SendPropertyChanging();
-					this._InitialFee = value;
-					this.SendPropertyChanged("InitialFee");
-					this.OnInitialFeeChanged();
+					this._DateIssued = value;
+					this.SendPropertyChanged("DateIssued");
+					this.OnDateIssuedChanged();
 				}
 			}
 		}
@@ -1948,6 +1924,8 @@ namespace RSMTenon.Data
 		
 		private decimal _RollingReturn;
 		
+		private decimal _AggregateCharge;
+		
 		private EntitySet<Client> _Clients;
 		
 		private EntitySet<ModelBreakdown> _ModelBreakdowns;
@@ -1974,6 +1952,8 @@ namespace RSMTenon.Data
     partial void OnBenchmarkIDChanged();
     partial void OnRollingReturnChanging(decimal value);
     partial void OnRollingReturnChanged();
+    partial void OnAggregateChargeChanging(decimal value);
+    partial void OnAggregateChargeChanged();
     #endregion
 		
 		public Strategy()
@@ -2106,6 +2086,26 @@ namespace RSMTenon.Data
 					this._RollingReturn = value;
 					this.SendPropertyChanged("RollingReturn");
 					this.OnRollingReturnChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_AggregateCharge", DbType="Decimal(4,2) NOT NUL", UpdateCheck=UpdateCheck.Never)]
+		public decimal AggregateCharge
+		{
+			get
+			{
+				return this._AggregateCharge;
+			}
+			set
+			{
+				if ((this._AggregateCharge != value))
+				{
+					this.OnAggregateChargeChanging(value);
+					this.SendPropertyChanging();
+					this._AggregateCharge = value;
+					this.SendPropertyChanged("AggregateCharge");
+					this.OnAggregateChargeChanged();
 				}
 			}
 		}

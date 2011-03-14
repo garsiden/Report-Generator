@@ -26,7 +26,7 @@ namespace RSMTenon.Data
         {
             if (number > 0) {
                 var ctx = new RepGenDataContext();
-                return ctx.Clients.OrderByDescending(c => c.MeetingDate).Take(number);
+                return ctx.Clients.OrderByDescending(c => c.DateIssued).Take(number);
             } else {
                 return null;
             }
@@ -37,7 +37,7 @@ namespace RSMTenon.Data
         {
             if (number > 0) {
                 var ctx = new RepGenDataContext();
-                return ctx.Clients.Where(c => c.UserID == userId).OrderByDescending(c => c.MeetingDate).Take(number);
+                return ctx.Clients.Where(c => c.UserID == userId).OrderByDescending(c => c.DateIssued).Take(number);
             } else {
                 return null;
             }
@@ -63,7 +63,6 @@ namespace RSMTenon.Data
         public static Guid InsertClient(Client client)
         {
             var ctx = new RepGenDataContext();
-            //client.UserID = ReportGenerator.ReportGenerator.GetUserId();
             ctx.Clients.InsertOnSubmit(client);
             ctx.SubmitChanges();
 
@@ -99,14 +98,6 @@ namespace RSMTenon.Data
                 } else {
                     return "half-yearly";
                 }
-            }
-        }
-
-        public decimal InitialFeeAmount
-        {
-            get
-            {
-                return this.InitialFee * this.InvestmentAmount;
             }
         }
 
@@ -191,24 +182,11 @@ namespace RSMTenon.Data
         #endregion
 
         #region Data Validation
-        partial void OnInitialFeeChanging(decimal value)
-        {
-            if ((value < 0 || value > 5)) {
-                throw new ArgumentException("Initial Fee Percent must be between 0 and 5");
-            }
-        }
 
         partial void OnInvestmentAmountChanging(decimal value)
         {
             if (value <= 0) {
                 throw new ArgumentException("Investment Amount must be greater than 0");
-            }
-        }
-
-        partial void OnMeetingDateChanging(System.DateTime value)
-        {
-            if (value != null && value > DateTime.Today) {
-                throw new ArgumentException("Meeting Date must be less than or equal to today");
             }
         }
 
