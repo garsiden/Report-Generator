@@ -11,7 +11,7 @@
         DataTextField="Name" DataValueField="ID" AutoPostBack="True" OnSelectedIndexChanged="listStrategy_SelectedIndexChanged">
     </asp:DropDownList>
     <br />
-    <asp:Label ID="labelException" runat="server" Text=""></asp:Label>
+    <asp:Label ID="labelException" class="errortext" runat="server" Text=""></asp:Label>
     <asp:ValidationSummary ID="validationSummary1" runat="server" ValidationGroup="Editing" />
     <asp:ValidationSummary ID="validationSummary2" runat="server" ValidationGroup="Adding" />
     <br />
