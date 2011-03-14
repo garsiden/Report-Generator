@@ -90,7 +90,7 @@ namespace RSMTenon.ReportGenerator
 
             // client.meeting-date
             xmlnode = root.SelectSingleNode("/wmr:repgen/wmr:client/wmr:meeting-date", nsmgr);
-            xmlnode.InnerText = client.MeetingDate.ToString("dd MMMM yyyy");
+            xmlnode.InnerText = client.DateIssued.ToString("dd MMMM yyyy");
 
             // client.time-horizon
             int clientHorizon = client.TimeHorizon;
@@ -100,10 +100,6 @@ namespace RSMTenon.ReportGenerator
             // client.reporting-frequency
             xmlnode = root.SelectSingleNode("/wmr:repgen/wmr:client/wmr:reporting-frequency", nsmgr);
             xmlnode.InnerText = client.ReportingFrequency;
-
-            // client.initial-fee
-            xmlnode = root.SelectSingleNode("/wmr:repgen/wmr:client/wmr:initial-fee", nsmgr);
-            xmlnode.InnerText = client.InitialFee.ToString("0.00%");
 
             // Strategy
             // get strategy object
