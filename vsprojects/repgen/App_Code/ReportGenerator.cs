@@ -29,6 +29,7 @@ namespace RSMTenon.ReportGenerator
         private string ReportSpecFile { get; set; }
         public Client Client { get; set; }
         public Report Report { get; set; }
+        public bool FillContentControls { get; set; }
 
         public ReportGenerator(Client client)
         {
@@ -52,6 +53,10 @@ namespace RSMTenon.ReportGenerator
             // source files
             TempContentXmlFile = tempDir + "\\content_temp.xml";
             ReportSpecFile = HttpContext.Current.Server.MapPath(sourceDir + "report-spec.xml");
+
+            // directly fill Content Controls?
+            FillContentControls = Boolean.Parse(appSettings["FillContentControls"] ?? "true");
+
             Client = client;
             Report = new Report(ReportSpecFile) { Client = Client };
         }
@@ -77,7 +82,7 @@ namespace RSMTenon.ReportGenerator
 
                 // Add text content
                 TextContent tc = new TextContent(Report);
-                tc.GenerateTextContent(mainPart, ContentXmlFile, tempXmlStream);
+                tc.GenerateTextContent(mainPart, ContentXmlFile, tempXmlStream, FillContentControls);
 
                 // Model Table
                 string controlName = null;
