@@ -20,7 +20,7 @@ public partial class Pages_Client_assets : RepGenPage
             if (guidString != null) {
                 Guid guid = new Guid(guidString);
                 client = Client.GetClientByGUID(guid);
-                clientAssetHeader.InnerText = "Client Assets By Class for " + client.Name;
+                clientAssetHeader.InnerText = "Client Assets for " + client.Name;
                 hyperClient.NavigateUrl += String.Format("?guid={0}", guid);
             }
 
