@@ -10,6 +10,8 @@ using DocumentFormat.OpenXml.Wordprocessing;
 using Wp = DocumentFormat.OpenXml.Drawing.Wordprocessing;
 using A = DocumentFormat.OpenXml.Drawing;
 using C = DocumentFormat.OpenXml.Drawing.Charts;
+using S = DocumentFormat.OpenXml.Spreadsheet;
+
 using System.Threading;
 
 using RSMTenon.Graphing;
@@ -19,9 +21,9 @@ namespace RSMTenon.ReportGenerator
 {
     class Program
     {
-        static string path = @"C:\Documents and Settings\garsiden\My Documents\Projects\RepGen\test\chart\";
+        static string path = @"C:\Documents and Settings\garsiden\My Documents\Projects\RepGen\test\chart\excel_data\";
         static string generated = path + "ChartDoc.docx";
-        private static string sourceFile = @"../../App_Data/template1.dotx";
+        private static string sourceFile = path + "template.docx";
         private uint docPrId = 0U;
         private string contentSourceXml = @"../../App_Data/content.xml";
 
@@ -30,38 +32,69 @@ namespace RSMTenon.ReportGenerator
         {
             Program This = new Program();
 
-            // create test Client and Report
-            Guid guid = new Guid("636c8103-e06d-4575-aafc-574474c2d7f8");
-            Client client = Client.GetClientByGUID(guid);
-            Report report = new Report() { Client = client };
-
-            //string template = path + "chart_template.docx";
-            //string generated = path + "chart_test.docx";
-
-            // copy template to generated
-            //File.Copy(template, generated, true);
-            string tempDoc = createTempDocFile(sourceFile);
-
-            // open Word document
-            WordprocessingDocument myWordDoc = WordprocessingDocument.Open(tempDoc, true);
+            File.Copy(sourceFile, generated, true);
+            Report report = new Report();
+            WordprocessingDocument myWordDoc = WordprocessingDocument.Open(generated, true);
             MainDocumentPart mainPart = myWordDoc.MainDocumentPart;
 
-            //This.InsertAllocationPie(mainPart);
-            //This.InsertRRChartIntoWord(mainPart, report);
-            This.CreateReport(mainPart, report);
+            string ssTest = path + "GraphData.xlsx";
+            MemoryStream ms = new MemoryStream();
+            SpreadsheetDocument spreadsheetDoc = GraphData.GenerateDataSpreadsheet(ms);
+            GraphData gd = new GraphData();
+            gd.Add(spreadsheetDoc);
+
+
+            spreadsheetDoc.Close();
+            //copyStream(ms, ssTest);
+            This.CreateReportTest(mainPart, report, ms);
+
+
 
             myWordDoc.Close();
+            return;
+
+            // create test Client and Report
+            //Guid guid = new Guid("636c8103-e06d-4575-aafc-574474c2d7f8");
+            //Client client = Client.GetClientByGUID(guid);
+            //Report report = new Report() { Client = client };
+
+            //// copy template to generated
+            ////File.Copy(template, generated, true);
+            //string tempDoc = createTempDocFile(sourceFile);
+
+            //// open Word document
+            //WordprocessingDocument myWordDoc = WordprocessingDocument.Open(tempDoc, true);
+            //MainDocumentPart mainPart = myWordDoc.MainDocumentPart;
+
+            ////This.InsertAllocationPie(mainPart);
+            //This.CreateReport(mainPart, report);
+
+            //myWordDoc.Close();
         }
 
+
+        public void CreateReportTest(MainDocumentPart mainPart, Report report, Stream ms)
+        {
+            ChartItem chartItem = null;
+            string controlName = null;
+
+            // Test Graph
+            chartItem = report.ExcelChart();
+            controlName = chartItem.CustomControlName;
+            AddChartToDoc(mainPart, chartItem, controlName, ms);
+
+            // save and close document
+            mainPart.Document.Save();
+        }
 
         public void CreateReport(MainDocumentPart mainPart, Report report)
         {
             TextContent tc = new TextContent();
             tc.GenerateTextContent(mainPart, report.Client, contentSourceXml);
-            
+
             ChartItem chartItem = null;
             string controlName = null;
-            
+
             // Model Table
             Table table = report.ModelTable();
             controlName = "ModelTable";
@@ -379,7 +412,12 @@ namespace RSMTenon.ReportGenerator
             return null;
         }
 
-        private void AddChartToDoc(MainDocumentPart mainPart, ChartItem chartItem, string controlName)
+
+
+        private void AddChartToDoc(MainDocumentPart mainPart, ChartItem chartItem, string controlName) { }
+
+
+        private void AddChartToDoc(MainDocumentPart mainPart, ChartItem chartItem, string controlName, Stream ms)
         {
             // open Word documant and remove existing content from control
             Paragraph para = findAndRemoveContent(mainPart, controlName);
@@ -387,8 +425,11 @@ namespace RSMTenon.ReportGenerator
             // generate new ChartPart and ChartSpace
             ChartPart chartPart = mainPart.AddNewPart<ChartPart>();
             string relId = mainPart.GetIdOfPart(chartPart);
-            C.ChartSpace chartSpace = GraphSpace.GenerateChartSpace(chartItem.Chart);
-            chartSpace.Append(chartItem.Chart);
+            string embeddedDataId = "rIdExcel1";
+            ExcelGraph.AddEmbeddedToChartPart(chartPart, embeddedDataId, ms);
+
+            C.ChartSpace chartSpace = GraphSpace.GenerateChartSpaceWithData(chartItem.Chart, embeddedDataId);
+            //chartSpace.Append(chartItem.Chart);
 
             // set ChartPart ChartSpace
             chartPart.ChartSpace = chartSpace;
@@ -408,7 +449,7 @@ namespace RSMTenon.ReportGenerator
             //WordprocessingDocument myDoc = WordprocessingDocument.Open(docName, true);
             //MainDocumentPart mainPart = myDoc.MainDocumentPart;
             Document doc = mainPart.Document;
-            
+
 
             // create table to hold strategy details
             // add table to doc and save
@@ -436,6 +477,20 @@ namespace RSMTenon.ReportGenerator
             copyFile(sourceFile, tempFile);
 
             return tempFile;
+        }
+
+        public static void copyStream(Stream input, string destination)
+        {
+            using (input) {
+                input.Position = 0;
+                using (FileStream output = new FileStream(destination, FileMode.Create, FileAccess.Write)) {
+                    byte[] buffer = new byte[16384];
+                    int len;
+                    while ((len = input.Read(buffer, 0, buffer.Length)) > 0) {
+                        output.Write(buffer, 0, len);
+                    }
+                }
+            }
         }
 
         private static void copyFile(string source, string destination)
