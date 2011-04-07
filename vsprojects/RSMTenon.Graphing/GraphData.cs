@@ -12,7 +12,6 @@ namespace RSMTenon.Graphing
 {
     public class GraphData
     {
-
         public static SpreadsheetDocument GenerateDataSpreadsheet(Stream stream)
         {
             // Open a SpreadsheetDocument based on a stream.
@@ -31,7 +30,7 @@ namespace RSMTenon.Graphing
             Sheets sheets = spreadsheetDocument.WorkbookPart.Workbook.AppendChild<Sheets>(new Sheets());
 
             // Append a new worksheet and associate it with the workbook.
-            Sheet sheet = new Sheet() { Id = spreadsheetDocument.WorkbookPart.GetIdOfPart(worksheetPart), SheetId = 1, Name = "mySheet" };
+            Sheet sheet = new Sheet() { Id = spreadsheetDocument.WorkbookPart.GetIdOfPart(worksheetPart), SheetId = 1, Name = "Sheet1" };
             sheets.Append(sheet);
 
             workbookpart.Workbook.Save();
@@ -57,7 +56,7 @@ namespace RSMTenon.Graphing
 
             SharedStringItem sharedStringItem1 = new SharedStringItem();
             Text text1 = new Text();
-            text1.Text = "Sales";
+            text1.Text = "My Sales";
 
             sharedStringItem1.Append(text1);
 
@@ -187,8 +186,6 @@ namespace RSMTenon.Graphing
             sheetData1.Append(row3);
             sheetData1.Append(row4);
             sheetData1.Append(row5);
-            //return sheetData1;
         }
-
     }
 }
