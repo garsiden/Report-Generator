@@ -249,6 +249,22 @@ namespace RSMTenon.ReportGenerator
             return chartItem;
         }
 
+        public ChartItem ExcelChart()
+        {
+            // set title
+            string title = "Excel Test";
+
+            // create chart
+            var eg = new ExcelGraph();
+            C.Chart chart = eg.GenerateChart(title);
+
+            string ccn = "ExcelChart";
+
+            ChartItem chartItem = new ChartItem { Chart = chart, Title = title, CustomControlName = ccn };
+
+            return chartItem;
+        }
+
         public ChartItem StressTestMarketRise()
         {
             // get chart specs
