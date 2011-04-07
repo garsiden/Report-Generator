@@ -14,4 +14,8 @@
     <br />
     <br />
     <asp:Button ID="btnSetTemplate" runat="server" Text="Set Template" OnClick="btnSetTemplate_Click" />
+    <br />
+    <br />
+    <asp:Label ID="lblStatus" runat="server"></asp:Label>
+    </div>
 </asp:Content>
