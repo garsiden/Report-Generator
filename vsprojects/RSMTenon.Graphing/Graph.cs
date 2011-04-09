@@ -113,7 +113,7 @@ namespace RSMTenon.Graphing
             return legend1;
         }
 
-        protected StringPoint GenerateStringPoint(UInt32Value idx, string text)
+        protected virtual StringPoint GenerateStringPoint(UInt32Value idx, string text)
         {
             StringPoint stringPoint1 = new StringPoint() { Index = idx };
             NumericValue numericValue1 = new NumericValue();
@@ -123,7 +123,7 @@ namespace RSMTenon.Graphing
             return stringPoint1;
         }
 
-        protected NumericPoint GenerateNumericPoint(UInt32Value idx, string text)
+        protected virtual NumericPoint GenerateNumericPoint(UInt32Value idx, string text)
         {
             // c:pt (NumericPoint)
             NumericPoint numericPoint1 = new NumericPoint() { Index = idx };
@@ -198,7 +198,7 @@ namespace RSMTenon.Graphing
             return numberingCache2;
         }
 
-        protected SeriesText GenerateSeriesText(string seriesName)
+        protected virtual SeriesText GenerateSeriesText(string seriesName)
         {
             // c:tx (SeriesText)
             SeriesText seriesText1 = new SeriesText();
