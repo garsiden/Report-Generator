@@ -12,6 +12,19 @@ namespace RSMTenon.Graphing
 {
     public class GraphData
     {
+        public static void AddEmbeddedToChartPart(ChartPart part, string externalDataId, Stream ms)
+        {
+            EmbeddedPackagePart embeddedPackagePart1 = part.AddNewPart<EmbeddedPackagePart>("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", externalDataId);
+            GenerateEmbeddedPackagePart1Content(embeddedPackagePart1, ms);
+        }
+
+        private static void GenerateEmbeddedPackagePart1Content(EmbeddedPackagePart embeddedPackagePart1, Stream ms)
+        {
+            ms.Position = 0;
+            embeddedPackagePart1.FeedData(ms);
+            //ms.Close();
+        }
+
         public static SpreadsheetDocument GenerateDataSpreadsheet(Stream stream)
         {
             // Open a SpreadsheetDocument based on a stream.
@@ -42,55 +55,71 @@ namespace RSMTenon.Graphing
         }
 
 
-        public void Add(SpreadsheetDocument spreadsheetDoc)
+        public void Add(SpreadsheetDocument spreadsheetDoc, List<AssetWeighting> model)
         {
             WorkbookPart part = spreadsheetDoc.WorkbookPart;
             SharedStringTablePart sharedStringTablePart1 = part.AddNewPart<SharedStringTablePart>();
-            GenerateSharedStringTable(sharedStringTablePart1);
-            AddSheetData(spreadsheetDoc);
+            string[] items = { "My Sales", "Qtr 1", "Qtr 2", "Qtr 3", "Qtr 4" };
+            var data = model.Select(m => m.Weighting).ToArray<double?>();
+            GenerateSharedStringTable(sharedStringTablePart1, items);
+
+            Sheet sheet = (Sheet)part.Workbook.Sheets.First();
+            string sheetId = sheet.Id;
+
+            WorksheetPart wsp = (WorksheetPart)spreadsheetDoc.WorkbookPart.Parts
+                .Where(pt => pt.RelationshipId == sheetId).FirstOrDefault()
+                .OpenXmlPart;
+
+            // add column heading cell
+            Cell cell = InsertCellInWorksheet("B", 1U, wsp);
+            cell.DataType = CellValues.SharedString;
+            CellValue cellValue1 = new CellValue("0");
+            cellValue1.Text = "0";
+            wsp.Worksheet.Save();
+
+            AddSharedStringColumnData(wsp, "A", 2, 4);
+            AddColumnData(wsp, "B", 2, data);
+            //AddSheetData(spreadsheetDoc);
         }
 
-        private void GenerateSharedStringTable(SharedStringTablePart sharedStringTablePart1)
+        private void GenerateSharedStringTable(SharedStringTablePart sharedStringTablePart1, string[] items)
         {
-            SharedStringTable sharedStringTable1 = new SharedStringTable() { Count = (UInt32Value)5U, UniqueCount = (UInt32Value)5U };
+            uint num = (uint)items.Length;
+            SharedStringTable sharedStringTable1 = new SharedStringTable() { Count = (UInt32Value)num, UniqueCount = (UInt32Value)num };
 
-            SharedStringItem sharedStringItem1 = new SharedStringItem();
-            Text text1 = new Text();
-            text1.Text = "My Sales";
+            foreach (var item in items) {
+                SharedStringItem sharedStringItem1 = new SharedStringItem();
+                Text text1 = new Text() { Text = item };
+                sharedStringItem1.Append(text1);
+                sharedStringTable1.Append(sharedStringItem1);
+            }
 
-            sharedStringItem1.Append(text1);
-
-            SharedStringItem sharedStringItem2 = new SharedStringItem();
-            Text text2 = new Text();
-            text2.Text = "1st Qtr";
-
-            sharedStringItem2.Append(text2);
-
-            SharedStringItem sharedStringItem3 = new SharedStringItem();
-            Text text3 = new Text();
-            text3.Text = "2nd Qtr";
-
-            sharedStringItem3.Append(text3);
-
-            SharedStringItem sharedStringItem4 = new SharedStringItem();
-            Text text4 = new Text();
-            text4.Text = "3rd Qtr";
-
-            sharedStringItem4.Append(text4);
-
-            SharedStringItem sharedStringItem5 = new SharedStringItem();
-            Text text5 = new Text();
-            text5.Text = "4th Qtr";
-
-            sharedStringItem5.Append(text5);
-
-            sharedStringTable1.Append(sharedStringItem1);
-            sharedStringTable1.Append(sharedStringItem2);
-            sharedStringTable1.Append(sharedStringItem3);
-            sharedStringTable1.Append(sharedStringItem4);
-            sharedStringTable1.Append(sharedStringItem5);
 
             sharedStringTablePart1.SharedStringTable = sharedStringTable1;
+        }
+
+
+        protected void AddSharedStringColumnData(WorksheetPart worksheetPart, string columnName, uint startRow, uint numRows)
+        {
+            for (uint index = startRow; index < (startRow + numRows); index++) {
+                Cell cell = InsertCellInWorksheet(columnName, index, worksheetPart);
+                cell.CellValue = new CellValue((index - 1).ToString());
+                cell.DataType = new EnumValue<CellValues>(CellValues.SharedString);
+            }
+            worksheetPart.Worksheet.Save();
+        }
+
+        protected void AddColumnData(WorksheetPart worksheetPart, string columnName, uint startRow, double?[] data)
+        {
+            uint numRows = (uint)data.Length;
+            int j = 0;
+
+            for (uint index = startRow;  index < (startRow + numRows); index++) {
+                Cell cell = InsertCellInWorksheet(columnName, index, worksheetPart);
+                cell.CellValue = new CellValue(data[j++].ToString());
+                cell.DataType = new EnumValue<CellValues>(CellValues.Number);
+            }
+            worksheetPart.Worksheet.Save();
         }
 
         public void AddSheetData(SpreadsheetDocument spreadsheetDoc)
@@ -187,5 +216,71 @@ namespace RSMTenon.Graphing
             sheetData1.Append(row4);
             sheetData1.Append(row5);
         }
+
+        // Given a column name, a row index, and a WorksheetPart, inserts a cell into the worksheet. 
+        // If the cell already exists, returns it. 
+        //private Cell InsertCellInWorksheet(string columnName, uint rowIndex, WorksheetPart worksheetPart)
+        private Cell InsertCellInWorksheet(string columnName, uint rowIndex, WorksheetPart worksheetPart)
+        {
+            Worksheet worksheet = worksheetPart.Worksheet;
+            SheetData sheetData = worksheet.GetFirstChild<SheetData>();
+            string cellReference = columnName + rowIndex;
+
+            // If the worksheet does not contain a row with the specified row index, insert one.
+            Row row;
+            if (sheetData.Elements<Row>().Where(r => r.RowIndex == rowIndex).Count() != 0) {
+                row = sheetData.Elements<Row>().Where(r => r.RowIndex == rowIndex).First();
+            } else {
+                row = new Row() { RowIndex = rowIndex };
+                sheetData.Append(row);
+            }
+
+            // If there is not a cell with the specified column name, insert one.  
+            if (row.Elements<Cell>().Where(c => c.CellReference.Value == columnName + rowIndex).Count() > 0) {
+                return row.Elements<Cell>().Where(c => c.CellReference.Value == cellReference).First();
+            } else {
+                // Cells must be in sequential order according to CellReference. Determine where to insert the new cell.
+                Cell refCell = null;
+                foreach (Cell cell in row.Elements<Cell>()) {
+                    if (string.Compare(cell.CellReference.Value, cellReference, true) > 0) {
+                        refCell = cell;
+                        break;
+                    }
+                }
+
+                Cell newCell = new Cell() { CellReference = cellReference };
+                row.InsertBefore(newCell, refCell);
+
+                worksheet.Save();
+                return newCell;
+            }
+        }
+
+        // Given text and a SharedStringTablePart, creates a SharedStringItem with the specified text 
+        // and inserts it into the SharedStringTablePart. If the item already exists, returns its index.
+        private int InsertSharedStringItem(string text, SharedStringTablePart shareStringPart)
+        {
+            // If the part does not contain a SharedStringTable, create it.
+            if (shareStringPart.SharedStringTable == null) {
+                shareStringPart.SharedStringTable = new SharedStringTable();
+            }
+
+            int i = 0;
+            foreach (SharedStringItem item in shareStringPart.SharedStringTable.Elements<SharedStringItem>()) {
+                if (item.InnerText == text) {
+                    // The text already exists in the part. Return its index.
+                    return i;
+                }
+
+                i++;
+            }
+
+            // The text does not exist in the part. Create the SharedStringItem.
+            shareStringPart.SharedStringTable.AppendChild(new SharedStringItem(new DocumentFormat.OpenXml.Spreadsheet.Text(text)));
+            shareStringPart.SharedStringTable.Save();
+
+            return i;
+        }
+
     }
 }
