@@ -45,7 +45,7 @@ namespace RSMTenon.Graphing
             }
         }
 
-        public void AddDataColumn(string columnHeader, double?[] data)
+        public void AddDataColumn(string columnHeader, double[] data)
         {
             // get next column
             string columnName = (dataColumn++).ToString();
@@ -59,7 +59,7 @@ namespace RSMTenon.Graphing
 
             for (uint index = 2U; index < (numRows + 2); index++) {
                 Cell cell = insertCellInWorksheet(columnName, index, worksheetPart);
-                double val = data[j++] ?? 0D;
+                double val = data[j++];// ?? 0D;
                 cell.CellValue = new CellValue(val.ToString());
                 cell.DataType = new EnumValue<CellValues>(CellValues.Number);
             }
