@@ -18,6 +18,7 @@ namespace RSMTenon.ReportGenerator
     public class ChartItem
     {
         public C.Chart Chart { get; set; }
+        public GraphData GraphData { get; set ;}
         public string Title { get; set; }
         public string CustomControlName { get; set; }
     }
@@ -183,7 +184,7 @@ namespace RSMTenon.ReportGenerator
             C.Chart chart = pie.GenerateChart(title, data.ToList());
 
             string ccn = rpt.Element("control-name").Value;
-            ChartItem chartItem = new ChartItem { Chart = chart, Title = title, CustomControlName = ccn };
+            ChartItem chartItem = new ChartItem { Chart = chart, Title = title, CustomControlName = ccn, GraphData = pie.GraphData };
 
             return chartItem;
         }
@@ -227,7 +228,6 @@ namespace RSMTenon.ReportGenerator
             if (Client.ExistingAssets) {
                 var data1 = getClientAssetDrawdown(Client.GUID);
                 lc.AddLineChartSeries(chart, data1, "Current", clientColourHex);
-
             }
 
             // first asset class
@@ -261,7 +261,7 @@ namespace RSMTenon.ReportGenerator
 
             string ccn = "ExcelChart";
 
-            ChartItem chartItem = new ChartItem { Chart = chart, Title = title, CustomControlName = ccn };
+            ChartItem chartItem = new ChartItem { Chart = chart, Title = title, CustomControlName = ccn, GraphData = eg.GraphData };
 
             return chartItem;
         }
