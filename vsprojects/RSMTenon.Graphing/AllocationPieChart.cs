@@ -11,8 +11,12 @@ namespace RSMTenon.Graphing
 {
     public class AllocationPieChart : PieGraph
     {
+        public GraphData GraphData { get; set; }
+
         public Chart GenerateChart(string title, List<AssetWeighting>model)
         {
+            GraphData = new GraphData("rIdExcel1");
+
             Chart chart1 = new Chart();
             Title title1 = GenerateTitle(title);
 
@@ -39,12 +43,15 @@ namespace RSMTenon.Graphing
             // c:cat category axis data
             //var categoryData = model.OrderByDescending(m => m.Weighting).Select(n => n.AssetClass).ToArray<string>();
             var categoryData = model.OrderBy(m => m.AssetClass).Select(n => n.AssetClass).ToArray<string>();
+            GraphData.AddTextColumn(categoryData);
 
             CategoryAxisData categoryAxisData1 = GenerateCategoryAxisData(categoryData, "A");
 
             // c:val values
             var valuesData = model.OrderBy(m => m.AssetClass).Select(n => n.Weighting.Value).ToArray<double>();
 //            var valuesData = model.OrderByDescending(m => m.Weighting).Select(n => n.Weighting.Value).ToArray<double>();
+            GraphData.AddDataColumn("Sales", valuesData);
+
             Values values1 = GenerateValues("General", valuesData, "B");
 
             pieChartSeries1.Append(index1);
