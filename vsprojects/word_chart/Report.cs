@@ -249,14 +249,15 @@ namespace RSMTenon.ReportGenerator
             return chartItem;
         }
 
-        public ChartItem ExcelChart()
+        public ChartItem ExcelChart(List<AssetWeighting> model)
         {
             // set title
             string title = "Excel Test";
 
             // create chart
-            var eg = new ExcelGraph();
-            C.Chart chart = eg.GenerateChart(title);
+            //var eg = new ExcelGraph();
+            var eg = new AllocationPieChart();
+            C.Chart chart = eg.GenerateChart(title, model);
 
             string ccn = "ExcelChart";
 
