@@ -5,6 +5,7 @@ using System.Text;
 using DocumentFormat.OpenXml.Drawing.Charts;
 using A = DocumentFormat.OpenXml.Drawing;
 using DocumentFormat.OpenXml;
+using DocumentFormat.OpenXml.Packaging;
 using RSMTenon.Data;
 
 namespace RSMTenon.Graphing
@@ -335,6 +336,13 @@ namespace RSMTenon.Graphing
             chartShapeProperties1.Append(outline1);
 
             return chartShapeProperties1;
+        }
+
+        public static void AddEmbeddedToChartPart(ChartPart part, string externalDataId, System.IO.Stream stream)
+        {
+            EmbeddedPackagePart embeddedPackagePart1 = part.AddNewPart<EmbeddedPackagePart>("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", externalDataId);
+            stream.Position = 0;
+            embeddedPackagePart1.FeedData(stream);
         }
     }
 }
