@@ -114,7 +114,8 @@ namespace RSMTenon.ReportGenerator
 
             // Allocation Pie Chart
             chartItem = report.Allocation();
-            AddChartToDoc(mainPart, chartItem);
+            AddChartToDocWithData(mainPart, chartItem);
+            return;
 
             // Comparison Chart
             if (report.Client.ExistingAssets) {
@@ -152,6 +153,32 @@ namespace RSMTenon.ReportGenerator
             // Rolling Return 5 yr
             chartItem = report.RollingReturnChart(5);
             AddChartToDoc(mainPart, chartItem);
+        }
+
+        private void AddChartToDocWithData(MainDocumentPart mainPart, ChartItem chartItem)
+        {
+            // open Word documant and remove existing content from control
+            Paragraph para = findAndRemoveContent(mainPart, chartItem.CustomControlName);
+
+            // generate new ChartPart and ChartSpace
+            ChartPart chartPart = mainPart.AddNewPart<ChartPart>();
+            string relId = mainPart.GetIdOfPart(chartPart);
+
+            GraphData gd = chartItem.GraphData;
+            gd.Close();
+
+            gd.AddEmbeddedToChartPart(chartPart);
+            C.ChartSpace chartSpace = GraphSpace.GenerateChartSpaceWithData(chartItem.Chart, gd.ExternalDataId);
+            chartPart.ChartSpace = chartSpace;
+
+            // generate a new Wordprocessing Drawing, add to a new Run,
+            // and relate to new ChartPart
+            Run run = new Run();
+            uint prId = getNextDocPrId(mainPart);
+
+            Drawing drawing = GraphDrawing.GenerateDrawing(relId, chartItem.CustomControlName, prId, chartItem.Cx, chartItem.Cy);
+            para.Append(run);
+            run.Append(drawing);
         }
 
         private void AddChartToDoc(MainDocumentPart mainPart, ChartItem chartItem)

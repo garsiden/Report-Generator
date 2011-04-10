@@ -20,6 +20,7 @@ namespace RSMTenon.ReportGenerator
         public C.Chart Chart { get; set; }
         public string Title { get; set; }
         public string CustomControlName { get; set; }
+        public GraphData GraphData { get; set; }
         public decimal SizeX { get; set; }
         public decimal SizeY { get; set; }
         public long Cx { get { return (long)(SizeX * Graph.EMUS_PER_CENTIMETRE); } }
@@ -239,7 +240,8 @@ namespace RSMTenon.ReportGenerator
                 Title = title,
                 CustomControlName = ccn,
                 SizeX = x,
-                SizeY = y
+                SizeY = y,
+                GraphData = pie.GraphData
             };
 
             return chartItem;
