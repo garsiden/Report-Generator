@@ -22,7 +22,7 @@ namespace RSMTenon.ReportGenerator
     class Program
     {
         static string path = @"C:\Documents and Settings\garsiden\My Documents\Projects\RepGen\test\chart\excel_data\";
-        static string generated = path + "ChartDoc.docx";
+        static string generated = path + "ChartDocComp.docx";
         private static string sourceFile = path + "template.docx";
         private uint docPrId = 0U;
         private string contentSourceXml = @"../../App_Data/content.xml";
@@ -37,19 +37,7 @@ namespace RSMTenon.ReportGenerator
             WordprocessingDocument myWordDoc = WordprocessingDocument.Open(generated, true);
             MainDocumentPart mainPart = myWordDoc.MainDocumentPart;
 
-            string ssTest = path + "GraphData.xlsx";
-            MemoryStream ms = new MemoryStream();
-            SpreadsheetDocument spreadsheetDoc = GraphData.GenerateDataSpreadsheet(ms);
-            GraphData gd = new GraphData();
-            gd.Add(spreadsheetDoc);
-
-
-            spreadsheetDoc.Close();
-            //copyStream(ms, ssTest);
-            This.CreateReportTest(mainPart, report, ms);
-
-
-
+            This.CreateReportTest(mainPart, report);
             myWordDoc.Close();
             return;
 
@@ -73,19 +61,43 @@ namespace RSMTenon.ReportGenerator
         }
 
 
-        public void CreateReportTest(MainDocumentPart mainPart, Report report, Stream ms)
+        public void CreateReportTest(MainDocumentPart mainPart, Report report)
         {
             ChartItem chartItem = null;
             string controlName = null;
 
+            // data
+            var model = new List<AssetWeighting>();
+            model.Add(new AssetWeighting { AssetClass = "1st Qtr", Weighting = 8.2 });
+            model.Add(new AssetWeighting { AssetClass = "2nd Qtr", Weighting = 3.2 });
+            model.Add(new AssetWeighting { AssetClass = "3rd Qtr", Weighting = 1.4 });
+            model.Add(new AssetWeighting { AssetClass = "4th Qtr", Weighting = 1.2 });
+
+            //MemoryStream ms = new MemoryStream();
+            //SpreadsheetDocument spreadsheetDoc = GraphData.GenerateDataSpreadsheet(ms);
+            GraphData gd = new GraphData("rIdExcel1");
+            gd.AddTextColumn(model.Select(m => m.AssetClass).ToArray<string>());
+            gd.AddDataColumn("Sales", model.Select(m => m.Weighting).ToArray<double?>());
+            //gd.Add(spreadsheetDoc, model);
+            //spreadsheetDoc.Close();
+            // output ss
+            string ssTest = path + "GraphDataCompare.xlsx";
+            //copyStream(ms, ssTest);
+            //ms.Position = 0;
+            gd.Close();
+            gd.WriteSpreadSheetToFile(ssTest);
+
             // Test Graph
-            chartItem = report.ExcelChart();
+            chartItem = report.ExcelChart(model);
             controlName = chartItem.CustomControlName;
-            AddChartToDoc(mainPart, chartItem, controlName, ms);
+            AddChartToDoc(mainPart, chartItem, controlName, gd);
 
             // save and close document
             mainPart.Document.Save();
-        }
+
+            //ms.Close();
+
+       }
 
         public void CreateReport(MainDocumentPart mainPart, Report report)
         {
@@ -417,7 +429,7 @@ namespace RSMTenon.ReportGenerator
         private void AddChartToDoc(MainDocumentPart mainPart, ChartItem chartItem, string controlName) { }
 
 
-        private void AddChartToDoc(MainDocumentPart mainPart, ChartItem chartItem, string controlName, Stream ms)
+        private void AddChartToDoc(MainDocumentPart mainPart, ChartItem chartItem, string controlName, GraphData gd)
         {
             // open Word documant and remove existing content from control
             Paragraph para = findAndRemoveContent(mainPart, controlName);
@@ -425,10 +437,10 @@ namespace RSMTenon.ReportGenerator
             // generate new ChartPart and ChartSpace
             ChartPart chartPart = mainPart.AddNewPart<ChartPart>();
             string relId = mainPart.GetIdOfPart(chartPart);
-            string embeddedDataId = "rIdExcel1";
-            ExcelGraph.AddEmbeddedToChartPart(chartPart, embeddedDataId, ms);
-
-            C.ChartSpace chartSpace = GraphSpace.GenerateChartSpaceWithData(chartItem.Chart, embeddedDataId);
+            //string embeddedDataId = "rIdExcel1";
+            //Graph.AddEmbeddedToChartPart(chartPart, embeddedDataId, ms);
+            gd.AddEmbeddedToChartPart(chartPart);
+            C.ChartSpace chartSpace = GraphSpace.GenerateChartSpaceWithData(chartItem.Chart, gd.ExternalDataId);
             //chartSpace.Append(chartItem.Chart);
 
             // set ChartPart ChartSpace
@@ -481,7 +493,7 @@ namespace RSMTenon.ReportGenerator
 
         public static void copyStream(Stream input, string destination)
         {
-            using (input) {
+            //using (input) {
                 input.Position = 0;
                 using (FileStream output = new FileStream(destination, FileMode.Create, FileAccess.Write)) {
                     byte[] buffer = new byte[16384];
@@ -490,7 +502,7 @@ namespace RSMTenon.ReportGenerator
                         output.Write(buffer, 0, len);
                     }
                 }
-            }
+            //}
         }
 
         private static void copyFile(string source, string destination)
