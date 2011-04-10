@@ -12,19 +12,108 @@ namespace RSMTenon.Graphing
 {
     public class GraphData
     {
-        public static void AddEmbeddedToChartPart(ChartPart part, string externalDataId, Stream ms)
+        private SpreadsheetDocument spreadsheetDoc;
+        private char dataColumn = 'B';
+        public Stream BinaryStream { get; private set; }
+        private WorksheetPart wsp;
+        private SharedStringTablePart sharedStringTablePart;
+        public string ExternalDataId { get; private set; }
+
+        public GraphData(string externalDataId)
         {
-            EmbeddedPackagePart embeddedPackagePart1 = part.AddNewPart<EmbeddedPackagePart>("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", externalDataId);
-            GenerateEmbeddedPackagePart1Content(embeddedPackagePart1, ms);
+            ExternalDataId = externalDataId;
+            BinaryStream = new MemoryStream();
+            spreadsheetDoc = createSpreadsheet(BinaryStream, "Sheet1");
+            wsp = getWorksheetPart(spreadsheetDoc);
+
+            // Add SharedStringTablePart
+            WorkbookPart workbookPart = spreadsheetDoc.WorkbookPart;
+            sharedStringTablePart = workbookPart.SharedStringTablePart;
+
         }
 
-        private static void GenerateEmbeddedPackagePart1Content(EmbeddedPackagePart embeddedPackagePart1, Stream ms)
+        public void AddTextColumn(string[] text)
         {
-            ms.Position = 0;
-            embeddedPackagePart1.FeedData(ms);
-            //ms.Close();
+            int index;
+            Cell cell;
+            uint rowIndex = 2U;
+
+            // add column header cell
+            addColumnHeader("A", "Categories");
+ 
+            // Get the SharedStringTablePart. If it does not exist, create a new one.
+            SharedStringTablePart shareStringPart;
+            if (spreadsheetDoc.WorkbookPart.GetPartsOfType<SharedStringTablePart>().Count() > 0) {
+                shareStringPart = spreadsheetDoc.WorkbookPart.GetPartsOfType<SharedStringTablePart>().First();
+            } else {
+                shareStringPart = spreadsheetDoc.WorkbookPart.AddNewPart<SharedStringTablePart>();
+            }
+
+
+            foreach (var item in text) {
+                // add string to shared string table, creating table if required
+                index = InsertSharedStringItem(item, shareStringPart);
+                cell = InsertCellInWorksheet("A", rowIndex++, wsp);
+                cell.CellValue = new CellValue((index).ToString());
+                cell.DataType = new EnumValue<CellValues>(CellValues.SharedString);
+            }
         }
 
+        public void AddDataColumn(string columnHeader, double?[] data)
+        {
+            // get next column
+            string columnName = (dataColumn++).ToString();
+
+            // add column header cell
+            addColumnHeader(columnName, columnHeader);
+
+            // add data cells
+            uint numRows = (uint)data.Length;
+            int j = 0;
+
+            for (uint index = 2U; index < (numRows + 2); index++) {
+                Cell cell = InsertCellInWorksheet(columnName, index, wsp);
+                double val = data[j++] ?? 0D;
+                cell.CellValue = new CellValue(val.ToString());
+                cell.DataType = new EnumValue<CellValues>(CellValues.Number);
+            }
+            wsp.Worksheet.Save();
+        }
+
+        private void addColumnHeader(string columnName, string header)
+        {
+            // Get the SharedStringTablePart. If it does not exist, create a new one.
+            SharedStringTablePart shareStringPart;
+            if (spreadsheetDoc.WorkbookPart.GetPartsOfType<SharedStringTablePart>().Count() > 0) {
+                shareStringPart = spreadsheetDoc.WorkbookPart.GetPartsOfType<SharedStringTablePart>().First();
+            } else {
+                shareStringPart = spreadsheetDoc.WorkbookPart.AddNewPart<SharedStringTablePart>();
+            }
+
+            // add column heading cell
+            int index = InsertSharedStringItem(header, shareStringPart);
+            Cell cell = InsertCellInWorksheet(columnName, 1U, wsp);
+            cell.DataType = new EnumValue<CellValues>(CellValues.SharedString);
+            cell.CellValue = new CellValue() { Text = index.ToString() };
+        }
+
+        public void AddEmbeddedToChartPart(ChartPart part)
+        {
+            EmbeddedPackagePart embeddedPackagePart1 = part.AddNewPart<EmbeddedPackagePart>("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", ExternalDataId);
+            BinaryStream.Position = 0;
+            embeddedPackagePart1.FeedData(BinaryStream);
+        }
+
+        public void WriteSpreadSheetToFile(string filepath)
+        {
+            copyStream(BinaryStream, filepath);
+        }
+
+        private static SpreadsheetDocument createSpreadsheet(Stream stream, string sheetName)
+        {
+            return GraphData.GenerateDataSpreadsheet(stream);
+        }
+ 
         public static SpreadsheetDocument GenerateDataSpreadsheet(Stream stream)
         {
             // Open a SpreadsheetDocument based on a stream.
@@ -46,6 +135,9 @@ namespace RSMTenon.Graphing
             Sheet sheet = new Sheet() { Id = spreadsheetDocument.WorkbookPart.GetIdOfPart(worksheetPart), SheetId = 1, Name = "Sheet1" };
             sheets.Append(sheet);
 
+           // 
+            
+            //workbookpart.AddNewPart<SharedStringTablePart>("rIdSST");
             workbookpart.Workbook.Save();
 
             // Close the document.
@@ -54,6 +146,25 @@ namespace RSMTenon.Graphing
             return spreadsheetDocument;
         }
 
+
+        private WorksheetPart getWorksheetPart(SpreadsheetDocument sreadsheetDoc)
+        {
+            WorkbookPart part = spreadsheetDoc.WorkbookPart;
+
+            Sheet sheet = (Sheet)part.Workbook.Sheets.First();
+            string sheetId = sheet.Id;
+
+            WorksheetPart worksheetPart = (WorksheetPart)spreadsheetDoc.WorkbookPart.Parts
+                .Where(pt => pt.RelationshipId == sheetId).FirstOrDefault()
+                .OpenXmlPart;
+
+            return worksheetPart;
+        }
+
+        public void Close()
+        {
+            spreadsheetDoc.Close();
+        }
 
         public void Add(SpreadsheetDocument spreadsheetDoc, List<AssetWeighting> model)
         {
@@ -116,7 +227,8 @@ namespace RSMTenon.Graphing
 
             for (uint index = startRow;  index < (startRow + numRows); index++) {
                 Cell cell = InsertCellInWorksheet(columnName, index, worksheetPart);
-                cell.CellValue = new CellValue(data[j++].ToString());
+                double val = data[j++] ?? 0D;
+                cell.CellValue = new CellValue(val.ToString());
                 cell.DataType = new EnumValue<CellValues>(CellValues.Number);
             }
             worksheetPart.Worksheet.Save();
@@ -282,5 +394,22 @@ namespace RSMTenon.Graphing
             return i;
         }
 
+        public static void copyStream(Stream input, string destination)
+        {
+            input.Position = 0;
+            using (FileStream output = new FileStream(destination, FileMode.Create, FileAccess.Write)) {
+                byte[] buffer = new byte[16384];
+                int len;
+                while ((len = input.Read(buffer, 0, buffer.Length)) > 0) {
+                    output.Write(buffer, 0, len);
+                }
+            }
+        }
+
+        ~GraphData()
+        {
+            if (BinaryStream != null)
+                BinaryStream.Close();
+        }
     }
 }
