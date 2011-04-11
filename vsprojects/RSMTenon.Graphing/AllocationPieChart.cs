@@ -13,8 +13,6 @@ namespace RSMTenon.Graphing
     {
         public Chart GenerateChart(string title, List<AssetWeighting>model)
         {
-            GraphData = new GraphData("rIdExcel1");
-
             Chart chart1 = new Chart();
             Title title1 = GenerateTitle(title);
 
@@ -39,16 +37,14 @@ namespace RSMTenon.Graphing
             SeriesText seriesText1 = GenerateSeriesText(title, GraphData.DataColumn);
 
             // c:cat category axis data
-            //var categoryData = model.OrderByDescending(m => m.Weighting).Select(n => n.AssetClass).ToArray<string>();
-            var categoryData = model.OrderBy(m => m.AssetClass).Select(n => n.AssetClass).ToArray<string>();
+            string[] categoryData = model.OrderByDescending(m => m.Weighting).Select(n => n.AssetClass).ToArray();
             GraphData.AddTextColumn(categoryData, "Series Name");
 
             CategoryAxisData categoryAxisData1 = GenerateCategoryAxisData(categoryData, GraphData.TextColumn);
 
             // c:val values
-            var valuesData = model.OrderBy(m => m.AssetClass).Select(n => n.Weighting.Value).ToArray<double>();
-//            var valuesData = model.OrderByDescending(m => m.Weighting).Select(n => n.Weighting.Value).ToArray<double>();
-            GraphData.AddDataColumn("Sales", valuesData);
+            double[] valuesData = model.OrderByDescending(m => m.Weighting).Select(n => n.Weighting ?? 0).ToArray();
+            GraphData.AddDataColumn("Series Data", valuesData);
 
             Values values1 = GenerateValues("General", valuesData, GraphData.DataColumn);
 
@@ -102,16 +98,16 @@ namespace RSMTenon.Graphing
             layout1.Append(manualLayout1);
 
             TextProperties textProperties1 = new TextProperties();
-            A.BodyProperties bodyProperties1 = new A.BodyProperties();
-            A.ListStyle listStyle1 = new A.ListStyle();
+            A::BodyProperties bodyProperties1 = new A::BodyProperties();
+            A::ListStyle listStyle1 = new A::ListStyle();
 
-            A.Paragraph paragraph1 = new A.Paragraph();
+            A::Paragraph paragraph1 = new A::Paragraph();
 
-            A.ParagraphProperties paragraphProperties1 = new A.ParagraphProperties();
-            A.DefaultRunProperties defaultRunProperties1 = new A.DefaultRunProperties() { Language = "en-GB" };
+            A::ParagraphProperties paragraphProperties1 = new A::ParagraphProperties();
+            A::DefaultRunProperties defaultRunProperties1 = new A::DefaultRunProperties() { Language = "en-GB" };
 
             paragraphProperties1.Append(defaultRunProperties1);
-            A.EndParagraphRunProperties endParagraphRunProperties1 = new A.EndParagraphRunProperties() { Language = "en-US" };
+            A::EndParagraphRunProperties endParagraphRunProperties1 = new A::EndParagraphRunProperties() { Language = "en-US" };
 
             paragraph1.Append(paragraphProperties1);
             paragraph1.Append(endParagraphRunProperties1);
