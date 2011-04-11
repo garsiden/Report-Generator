@@ -273,7 +273,8 @@ namespace RSMTenon.ReportGenerator
                 Title = title,
                 CustomControlName = ccn,
                 SizeX = x,
-                SizeY = y
+                SizeY = y,
+                GraphData = bc.GraphData
             };
 
             return chartItem;
@@ -320,7 +321,8 @@ namespace RSMTenon.ReportGenerator
                 Title = title,
                 CustomControlName = ccn,
                 SizeX = x,
-                SizeY = y
+                SizeY = y,
+                GraphData = lc.GraphData
             };
 
             return chartItem;
@@ -371,7 +373,8 @@ namespace RSMTenon.ReportGenerator
                 Title = title,
                 CustomControlName = ccn,
                 SizeX = x,
-                SizeY = y
+                SizeY = y,
+                GraphData = bc.GraphData
             };
 
             return chartItem;
@@ -422,7 +425,8 @@ namespace RSMTenon.ReportGenerator
                 Title = title,
                 CustomControlName = ccn,
                 SizeX = x,
-                SizeY = y
+                SizeY = y,
+                GraphData = bc.GraphData
             };
 
             return chartItem;
@@ -483,7 +487,8 @@ namespace RSMTenon.ReportGenerator
                 Title = title,
                 CustomControlName = ccn,
                 SizeX = x,
-                SizeY = y
+                SizeY = y,
+                GraphData = lc.GraphData
             };
 
             return chartItem;
@@ -552,7 +557,8 @@ namespace RSMTenon.ReportGenerator
                 Title = title,
                 CustomControlName = ccn,
                 SizeX = x,
-                SizeY = y
+                SizeY = y,
+                GraphData = lc.GraphData
             };
 
             return chartItem;
