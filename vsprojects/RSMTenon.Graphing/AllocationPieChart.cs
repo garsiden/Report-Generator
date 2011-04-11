@@ -11,8 +11,6 @@ namespace RSMTenon.Graphing
 {
     public class AllocationPieChart : PieGraph
     {
-        public GraphData GraphData { get; set; }
-
         public Chart GenerateChart(string title, List<AssetWeighting>model)
         {
             GraphData = new GraphData("rIdExcel1");
@@ -38,21 +36,21 @@ namespace RSMTenon.Graphing
             Order order1 = new Order() { Val = (UInt32Value)0U };
 
             // c:tx series text
-            SeriesText seriesText1 = GenerateSeriesText(title); // new SeriesText();
+            SeriesText seriesText1 = GenerateSeriesText(title, GraphData.DataColumn);
 
             // c:cat category axis data
             //var categoryData = model.OrderByDescending(m => m.Weighting).Select(n => n.AssetClass).ToArray<string>();
             var categoryData = model.OrderBy(m => m.AssetClass).Select(n => n.AssetClass).ToArray<string>();
-            GraphData.AddTextColumn(categoryData);
+            GraphData.AddTextColumn(categoryData, "Series Name");
 
-            CategoryAxisData categoryAxisData1 = GenerateCategoryAxisData(categoryData, "A");
+            CategoryAxisData categoryAxisData1 = GenerateCategoryAxisData(categoryData, GraphData.TextColumn);
 
             // c:val values
             var valuesData = model.OrderBy(m => m.AssetClass).Select(n => n.Weighting.Value).ToArray<double>();
 //            var valuesData = model.OrderByDescending(m => m.Weighting).Select(n => n.Weighting.Value).ToArray<double>();
             GraphData.AddDataColumn("Sales", valuesData);
 
-            Values values1 = GenerateValues("General", valuesData, "B");
+            Values values1 = GenerateValues("General", valuesData, GraphData.DataColumn);
 
             pieChartSeries1.Append(index1);
             pieChartSeries1.Append(order1);
@@ -128,106 +126,5 @@ namespace RSMTenon.Graphing
 
             return legend1;
         }
-
-        protected override SeriesText GenerateSeriesText(string seriesName)
-        {
-            SeriesText seriesText1 = new SeriesText();
-
-            StringReference stringReference1 = new StringReference();
-            Formula formula1 = new Formula();
-            formula1.Text = "Sheet1!$B$1";
-
-            StringCache stringCache1 = new StringCache();
-            PointCount pointCount1 = new PointCount() { Val = (UInt32Value)1U };
-
-            StringPoint stringPoint1 = new StringPoint() { Index = (UInt32Value)0U };
-            NumericValue numericValue1 = new NumericValue();
-            numericValue1.Text = seriesName;
-
-            stringPoint1.Append(numericValue1);
-
-            stringCache1.Append(pointCount1);
-            stringCache1.Append(stringPoint1);
-
-            stringReference1.Append(formula1);
-            stringReference1.Append(stringCache1);
-
-            seriesText1.Append(stringReference1);
-            return seriesText1;
-        }
-
-        protected CategoryAxisData GenerateCategoryAxisData(string[] data, string column)
-        {
-            CategoryAxisData categoryAxisData1 = new CategoryAxisData();
-
-            StringReference stringReference1 = new StringReference();
-            Formula formula1 = new Formula();
-            uint len = (uint)data.Length;
-            formula1.Text = formulaColumn(column, 2, len);
-            //"Sheet1!$A$2:$A$5";
-
-            StringCache stringCache1 = new StringCache();
-            PointCount pointCount1 = new PointCount() { Val = (UInt32Value)len };
-            stringCache1.Append(pointCount1);
-
-            for (int i = 0; i < len; i++) {
-                StringPoint stringPoint1 = GenerateStringPoint((uint)i);
-                NumericValue numericValue1 = new NumericValue() { Text = data[i] };
-                stringPoint1.Append(numericValue1);
-                stringCache1.Append(stringPoint1);
-            }
-
-            stringReference1.Append(formula1);
-            stringReference1.Append(stringCache1);
-
-            categoryAxisData1.Append(stringReference1);
-            return categoryAxisData1;
-        }
-
-
-        protected StringPoint GenerateStringPoint(uint index)
-        {
-            StringPoint stringPoint1 = new StringPoint() { Index = (UInt32Value)index };
-
-            return stringPoint1;
-        }
-
-        public Values GenerateValues(string format, double[] data, string column)
-        {
-            uint len = (uint)data.Length;
-            Values values1 = new Values();
-
-            NumberReference numberReference1 = new NumberReference();
-            Formula formula1 = new Formula();
-            formula1.Text = formulaColumn(column, 2, len);
-            //"Sheet1!$B$2:$B$5";
-
-            NumberingCache numberingCache1 = new NumberingCache();
-            FormatCode formatCode1 = new FormatCode();
-            formatCode1.Text = format; //"General;
-            PointCount pointCount1 = new PointCount() { Val = (UInt32Value)len };
-            numberingCache1.Append(formatCode1);
-            numberingCache1.Append(pointCount1);
-
-            for (uint i = 0; i < len; i++) {
-                NumericPoint numericPoint1 = GenerateNumericPoint((UInt32Value)i, data[i].ToString());
-                numberingCache1.Append(numericPoint1);
-            }
-
-            numberReference1.Append(formula1);
-            numberReference1.Append(numberingCache1);
-
-            values1.Append(numberReference1);
-            return values1;
-        }
-
-        protected string formulaColumn(string column, int start, uint length)
-        {
-            string col = column.ToUpper();
-            string form = String.Format("Sheet1!${0}${1}:${2}${3}", col, start, col, length + 1);
-
-            return form;
-        }
-
     }
 }
