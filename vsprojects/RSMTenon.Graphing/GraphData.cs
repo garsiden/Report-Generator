@@ -16,39 +16,62 @@ namespace RSMTenon.Graphing
         private WorksheetPart worksheetPart;
         private SharedStringTablePart shareStringPart;
         private char dataColumn = 'B';
+        private static string textColumn = "A";
 
         public Stream BinaryStream { get; private set; }
         public string ExternalDataId { get; private set; }
+        public static readonly string SHEETNAME = "Sheet1";
 
         public GraphData(string externalDataId)
         {
             ExternalDataId = externalDataId;
             BinaryStream = new MemoryStream();
-            createSpreadsheet(BinaryStream, "Sheet1");
+            createSpreadsheet(BinaryStream, GraphData.SHEETNAME);
         }
 
-        public void AddTextColumn(string[] text)
+        public string AddTextColumn(string[] text, string headerText)
         {
             int index;
             Cell cell;
             uint rowIndex = 2U;
 
             // add column header cell
-            addColumnHeader("A", "Categories");
+            addColumnHeader(TextColumn, headerText);
 
             foreach (var item in text) {
                 // add string to shared string table, creating table if required
                 index = insertSharedStringItem(item);
-                cell = insertCellInWorksheet("A", rowIndex++, worksheetPart);
+                cell = insertCellInWorksheet(TextColumn, rowIndex++, worksheetPart);
                 cell.CellValue = new CellValue((index).ToString());
                 cell.DataType = new EnumValue<CellValues>(CellValues.SharedString);
             }
+
+            return TextColumn;
         }
 
-        public void AddDataColumn(string columnHeader, double[] data)
+
+        public string AddDateColumn(int[] dates, string headerText)
+        {
+            Cell cell;
+            uint rowIndex = 2U;
+
+            // add column header cell
+            addColumnHeader(DateColumn, headerText);
+
+            foreach (int date in dates) {
+                cell = insertCellInWorksheet(DateColumn, rowIndex++, worksheetPart);
+                CellValue cellValue = new CellValue();
+                cellValue.Text = date.ToString();
+                cell.Append(cellValue);
+            }
+
+            return DateColumn;
+        }
+
+        public string AddDataColumn(string columnHeader, double[] data)
         {
             // get next column
-            string columnName = (dataColumn++).ToString();
+            string columnName = DataColumn;
 
             // add column header cell
             addColumnHeader(columnName, columnHeader);
@@ -59,11 +82,15 @@ namespace RSMTenon.Graphing
 
             for (uint index = 2U; index < (numRows + 2); index++) {
                 Cell cell = insertCellInWorksheet(columnName, index, worksheetPart);
-                double val = data[j++];// ?? 0D;
+                double val = data[j++];
                 cell.CellValue = new CellValue(val.ToString());
                 cell.DataType = new EnumValue<CellValues>(CellValues.Number);
             }
             worksheetPart.Worksheet.Save();
+
+            dataColumn++;
+
+            return columnName;
         }
 
         private void addColumnHeader(string columnName, string header)
@@ -203,6 +230,12 @@ namespace RSMTenon.Graphing
                 }
             }
         }
+
+        public string DataColumn { get { return dataColumn.ToString(); } }
+
+        public string TextColumn { get { return textColumn; } }
+
+        public string DateColumn { get { return textColumn; } }
 
         ~GraphData()
         {
