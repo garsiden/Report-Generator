@@ -36,7 +36,6 @@ namespace RSMTenon.Graphing
         protected LineChartSeries GenerateLineChartSeries(string seriesName, List<ReturnData> data, string colourHex)
         {
             uint numPoints = (uint)data.Count();
-            //string colourHex = colours[order];
 
             // c:ser (LineChartSeries)
             LineChartSeries lineChartSeries1 = new LineChartSeries();
@@ -44,7 +43,7 @@ namespace RSMTenon.Graphing
             Order order1 = new Order() { Val = (UInt32Value)order };
 
             // c:tx (SeriesText)
-            SeriesText seriesText1 = GenerateSeriesText(seriesName);
+            SeriesText seriesText1 = GenerateSeriesText(seriesName, GraphData.DataColumn);
 
             // c:spPr (ChartShapeProperties)
             ChartShapeProperties chartShapeProperties1 = GenerateChartShapeProperties(colourHex);
@@ -54,11 +53,18 @@ namespace RSMTenon.Graphing
             Symbol symbol1 = new Symbol() { Val = MarkerStyleValues.None };
             marker1.Append(symbol1);
 
-            // c:cat (CategoryAxisData)
-            CategoryAxisData categoryAxisData1 = GenerateCategoryAxisData(axisFormat, data);
-
             // c:val (Values)
-            Values values1 = GenerateValues(valueFormat, data);
+            double[] valuesData = data.Select(v => v.Value).ToArray<double>();
+            string valuesColumn = GraphData.AddDataColumn(seriesName, valuesData);
+            Values values1 = GenerateValues("General", valuesData, valuesColumn);
+
+            // c:cat (CategoryAxisData)
+            int[] categoryData = data.Select(c => c.Date).ToArray<int>();
+            if (valuesColumn == "B") {
+                string columnName = GraphData.AddDateColumn(categoryData, "Date");
+            }
+
+            CategoryAxisData categoryAxisData1 = GenerateCategoryAxisData(axisFormat, categoryData, GraphData.DateColumn);
 
             lineChartSeries1.Append(index1);
             lineChartSeries1.Append(order1);
