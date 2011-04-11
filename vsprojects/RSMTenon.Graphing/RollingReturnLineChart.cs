@@ -38,22 +38,24 @@ namespace RSMTenon.Graphing
 
             // c:plotArea (PlotArea)
             PlotArea plotArea1 = new PlotArea();
+
             // c:layout (Layout)
             Layout layout2 = new Layout();
 
             // c:lineChart (LineChart)
             LineChart lineChart1 = new LineChart();
+
             // c:grouping (Grouping)
             Grouping grouping1 = new Grouping() { Val = GroupingValues.Standard };
 
             // c:marker (Marker)
             ShowMarker showMarker1 = new ShowMarker() { Val = true };
+
             // c:axId (AxisId)
             AxisId axisId1 = new AxisId() { Val = (UInt32Value)54573696U };
             AxisId axisId2 = new AxisId() { Val = (UInt32Value)54657408U };
 
             lineChart1.Append(grouping1);
-            //lineChart1.Append(lineChartSeries1);
             lineChart1.Append(showMarker1);
             lineChart1.Append(axisId1);
             lineChart1.Append(axisId2);
