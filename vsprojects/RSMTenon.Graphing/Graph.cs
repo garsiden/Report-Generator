@@ -33,6 +33,8 @@ namespace RSMTenon.Graphing
         {
             this.order = 0U;
             this.index = 1U;
+            string id = "rId" + new Random().Next();
+            GraphData = new GraphData(id);
         }
 
         // c:title (Title)
@@ -137,6 +139,7 @@ namespace RSMTenon.Graphing
         {
             // c:pt (NumericPoint)
             NumericPoint numericPoint1 = new NumericPoint() { Index = idx };
+
             // c:v (NumericValue)
             NumericValue numericValue1 = new NumericValue();
             numericValue1.Text = text;
