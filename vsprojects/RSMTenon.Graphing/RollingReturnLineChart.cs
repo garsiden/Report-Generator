@@ -4,21 +4,13 @@ using System.Linq;
 using System.Text;
 using DocumentFormat.OpenXml.Drawing.Charts;
 using DocumentFormat.OpenXml;
-using A = DocumentFormat.OpenXml.Drawing;
 using RSMTenon.Data;
 
 namespace RSMTenon.Graphing
 {
     public class RollingReturnLineChart : LineGraph
     {
-
-        public new static long Cy
-        {
-            get
-            {
-                return (long)(6.70 * EMUS_PER_CENTIMETRE);
-            }
-        } 
+        public new static long Cy { get { return (long)(6.70 * EMUS_PER_CENTIMETRE); } }
 
         public RollingReturnLineChart()
         {
@@ -87,4 +79,3 @@ namespace RSMTenon.Graphing
         }
     }
 }
-
