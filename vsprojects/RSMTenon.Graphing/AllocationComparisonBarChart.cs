@@ -12,35 +12,17 @@ namespace RSMTenon.Graphing
 {
     public class AllocationComparisonBarChart : BarGraph
     {
-        public  Chart GenerateChart(string title, List<AssetWeighting>data)
+        private readonly string colourHex = "0066CC";
+
+        public Chart GenerateChart(string title, List<AssetWeighting> data)
         {
-            string[] pointNames = new string[data.Count];
-            double[] vals = new double[data.Count];
-            int i = 0;
-            foreach (var item in data) {
-                pointNames[i] = item.AssetClass;
-                vals[i++] = (double)item.Weighting;
-            }
+            string[] pointNames = data.Select(p => p.AssetClass).ToArray();
+            double[] vals = data.Select(v => v.Weighting ?? 0).ToArray();
+
             Chart chart1 = new Chart();
 
             Title title1 = GenerateTitle(title, 1200);
             PlotArea plotArea1 = new PlotArea();
-
-            Layout layout1 = new Layout();
-            ManualLayout manualLayout1 = new ManualLayout();
-            LeftMode leftMode1 = new LeftMode() { Val = LayoutModeValues.Edge };
-            TopMode topMode1 = new TopMode() { Val = LayoutModeValues.Edge };
-            Left left1 = new Left() { Val = 0.21001634106211481D };
-            Top top1 = new Top() { Val = 5.2303080634122836E-3D };
-
-            manualLayout1.Append(leftMode1);
-            manualLayout1.Append(topMode1);
-            manualLayout1.Append(left1);
-            manualLayout1.Append(top1);
-
-            //layout1.Append(manualLayout1);
-            //title1.Append(layout1);
-
 
             Layout layout2 = GeneratePlotAreaLayout();
             ManualLayout manualLayout2 = new ManualLayout();
@@ -60,11 +42,10 @@ namespace RSMTenon.Graphing
             manualLayout2.Append(width1);
             manualLayout2.Append(height1);
 
-
             BarChart barChart1 = new BarChart();
             BarDirection barDirection1 = new BarDirection() { Val = BarDirectionValues.Column };
             BarGrouping barGrouping1 = new BarGrouping() { Val = BarGroupingValues.Clustered };
-            BarChartSeries barChartSeries1 = GenerateBarChartSeries(null, pointNames, vals, "0066CC", null);
+            BarChartSeries barChartSeries1 = GenerateBarChartSeries("Under/Over Allocation", pointNames, vals, colourHex, "General");
 
             AxisId axisId1 = new AxisId() { Val = (UInt32Value)97045504U };
             AxisId axisId2 = new AxisId() { Val = (UInt32Value)97055488U };
@@ -79,10 +60,10 @@ namespace RSMTenon.Graphing
             CategoryAxis categoryAxis1 = GenerateCategoryAxis(axisId1, AxisPositionValues.Bottom, "General", axisId2);
 
             ShapeProperties shapeProperties1 = new ShapeProperties();
-            A.NoFill noFill3 = new A.NoFill();
+            A::NoFill noFill3 = new A::NoFill();
 
-            A.Outline outline6 = new A.Outline() { Width = 25400 };
-            A.NoFill noFill4 = new A.NoFill();
+            A::Outline outline6 = new A::Outline() { Width = 25400 };
+            A::NoFill noFill4 = new A::NoFill();
 
             outline6.Append(noFill4);
 
@@ -121,24 +102,24 @@ namespace RSMTenon.Graphing
             ChartShapeProperties chartShapeProperties1 = GenerateChartShapeProperties(3175);
 
             TextProperties textProperties1 = new TextProperties();
-            A.BodyProperties bodyProperties1 = new A.BodyProperties() { Rotation = -1800000, Vertical = A.TextVerticalValues.Horizontal };
-            A.ListStyle listStyle1 = new A.ListStyle();
+            A::BodyProperties bodyProperties1 = new A::BodyProperties() { Rotation = -1800000, Vertical = A::TextVerticalValues.Horizontal };
+            A::ListStyle listStyle1 = new A::ListStyle();
 
-            A.Paragraph paragraph1 = new A.Paragraph();
+            A::Paragraph paragraph1 = new A::Paragraph();
 
-            A.ParagraphProperties paragraphProperties1 = new A.ParagraphProperties();
+            A::ParagraphProperties paragraphProperties1 = new A::ParagraphProperties();
 
-            A.DefaultRunProperties defaultRunProperties1 = new A.DefaultRunProperties() { Language = DEFAULT_LANG, FontSize = 1000, Bold = false, Italic = false, Underline = A.TextUnderlineValues.None, Strike = A.TextStrikeValues.NoStrike, Baseline = 0 };
+            A::DefaultRunProperties defaultRunProperties1 = new A::DefaultRunProperties() { Language = DEFAULT_LANG, FontSize = 1000, Bold = false, Italic = false, Underline = A::TextUnderlineValues.None, Strike = A::TextStrikeValues.NoStrike, Baseline = 0 };
 
-            A.SolidFill solidFill2 = new A.SolidFill();
-            A.RgbColorModelHex rgbColorModelHex2 = new A.RgbColorModelHex() { Val = "000000" };
+            A::SolidFill solidFill2 = new A::SolidFill();
+            A::RgbColorModelHex rgbColorModelHex2 = new A::RgbColorModelHex() { Val = "000000" };
 
             solidFill2.Append(rgbColorModelHex2);
 
             defaultRunProperties1.Append(solidFill2);
 
             paragraphProperties1.Append(defaultRunProperties1);
-            A.EndParagraphRunProperties endParagraphRunProperties1 = new A.EndParagraphRunProperties() { Language = DEFAULT_LANG };
+            A::EndParagraphRunProperties endParagraphRunProperties1 = new A::EndParagraphRunProperties() { Language = DEFAULT_LANG };
 
             paragraph1.Append(paragraphProperties1);
             paragraph1.Append(endParagraphRunProperties1);
@@ -174,27 +155,15 @@ namespace RSMTenon.Graphing
 
         protected override BarChartSeries GenerateBarChartSeries(string seriesName, string[] pointNames, double[] vals, string colourHex, string valueFormat)
         {
-            BarChartSeries barChartSeries1 = new BarChartSeries();
-            Index index1 = new Index() { Val = (UInt32Value)index };
-            Order order1 = new Order() { Val = (UInt32Value)order };
+            var barChartSeries1 = base.GenerateBarChartSeries(seriesName, pointNames, vals, colourHex, valueFormat);
 
-            //SeriesText seriesText = GenerateSeriesText(seriesName);
-            ChartShapeProperties chartShapeProperties2 = GenerateChartShapeProperties(colourHex, 12700);
-            CategoryAxisData categoryAxisData1 = GenerateCategoryAxisData(pointNames);
-            Values values1 = GenerateValues(valueFormat, vals);
+            // remove unused series text
+            SeriesText seriesText = barChartSeries1.Descendants<SeriesText>().FirstOrDefault();
 
-            barChartSeries1.Append(index1);
-            barChartSeries1.Append(order1);
-            //barChartSeries1.Append(seriesText);
-            barChartSeries1.Append(chartShapeProperties2);
-            barChartSeries1.Append(categoryAxisData1);
-            barChartSeries1.Append(values1);
-
-            this.index++;
-            this.order++;
+            if (seriesText != null)
+                seriesText.Remove();
 
             return barChartSeries1;
         }
-
     }
 }
