@@ -23,16 +23,16 @@ namespace RSMTenon.Graphing
         {
             ChartShapeProperties chartShapeProperties2 = new ChartShapeProperties();
 
-            A.SolidFill solidFill1 = new A.SolidFill();
-            A.RgbColorModelHex rgbColorModelHex1 = new A.RgbColorModelHex() { Val = colourHex };
+            A::SolidFill solidFill1 = new A::SolidFill();
+            A::RgbColorModelHex rgbColorModelHex1 = new A::RgbColorModelHex() { Val = colourHex };
             solidFill1.Append(rgbColorModelHex1);
 
-            A.Outline outline2 = new A.Outline() { Width = width };
-            A.SolidFill solidFill2 = new A.SolidFill();
-            A.RgbColorModelHex rgbColorModelHex2 = new A.RgbColorModelHex() { Val = "000000" };
+            A::Outline outline2 = new A::Outline() { Width = width };
+            A::SolidFill solidFill2 = new A::SolidFill();
+            A::RgbColorModelHex rgbColorModelHex2 = new A::RgbColorModelHex() { Val = "000000" };
 
             solidFill2.Append(rgbColorModelHex2);
-            A.PresetDash presetDash1 = new A.PresetDash() { Val = A.PresetLineDashValues.Solid };
+            A::PresetDash presetDash1 = new A::PresetDash() { Val = A::PresetLineDashValues.Solid };
 
             outline2.Append(solidFill2);
             outline2.Append(presetDash1);
@@ -49,10 +49,16 @@ namespace RSMTenon.Graphing
             Index index1 = new Index() { Val = (UInt32Value)index };
             Order order1 = new Order() { Val = (UInt32Value)order };
 
-            SeriesText seriesText = GenerateSeriesText(seriesName);
+            SeriesText seriesText = GenerateSeriesText(seriesName, GraphData.DataColumn);
             ChartShapeProperties chartShapeProperties2 = GenerateChartShapeProperties(colourHex, 12700);
-            CategoryAxisData categoryAxisData1 = GenerateCategoryAxisData(pointNames);
-            Values values1 = GenerateValues(valueFormat, vals);
+            CategoryAxisData categoryAxisData1 = GenerateCategoryAxisData(pointNames, GraphData.TextColumn);
+
+            string valuesColumn = GraphData.AddDataColumn(seriesName, vals);
+            Values values1 = GenerateValues(valueFormat, vals, valuesColumn);
+
+            if (valuesColumn == "B") {
+                string columnName = GraphData.AddTextColumn(pointNames, "Category");
+            }
 
             barChartSeries1.Append(index1);
             barChartSeries1.Append(order1);
@@ -89,22 +95,22 @@ namespace RSMTenon.Graphing
             ChartShapeProperties chartShapeProperties5 = GenerateChartShapeProperties(3175);
 
             TextProperties textProperties2 = new TextProperties();
-            A.BodyProperties bodyProperties3 = new A.BodyProperties() { Rotation = 0, Vertical = A.TextVerticalValues.Horizontal };
-            A.ListStyle listStyle3 = new A.ListStyle();
+            A::BodyProperties bodyProperties3 = new A::BodyProperties() { Rotation = 0, Vertical = A::TextVerticalValues.Horizontal };
+            A::ListStyle listStyle3 = new A::ListStyle();
 
-            A.Paragraph paragraph3 = new A.Paragraph();
+            A::Paragraph paragraph3 = new A::Paragraph();
 
-            A.ParagraphProperties paragraphProperties3 = new A.ParagraphProperties();
+            A::ParagraphProperties paragraphProperties3 = new A::ParagraphProperties();
 
-            A.DefaultRunProperties defaultRunProperties3 = new A.DefaultRunProperties() { Language = DEFAULT_LANG };
+            A::DefaultRunProperties defaultRunProperties3 = new A::DefaultRunProperties() { Language = DEFAULT_LANG };
 
-            A.SolidFill solidFill8 = new A.SolidFill();
-            A.RgbColorModelHex rgbColorModelHex8 = new A.RgbColorModelHex() { Val = "000000" };
+            A::SolidFill solidFill8 = new A::SolidFill();
+            A::RgbColorModelHex rgbColorModelHex8 = new A::RgbColorModelHex() { Val = "000000" };
 
             solidFill8.Append(rgbColorModelHex8);
 
             paragraphProperties3.Append(defaultRunProperties3);
-            A.EndParagraphRunProperties endParagraphRunProperties2 = new A.EndParagraphRunProperties() { Language = DEFAULT_LANG };
+            A::EndParagraphRunProperties endParagraphRunProperties2 = new A::EndParagraphRunProperties() { Language = DEFAULT_LANG };
 
             paragraph3.Append(paragraphProperties3);
             paragraph3.Append(endParagraphRunProperties2);
