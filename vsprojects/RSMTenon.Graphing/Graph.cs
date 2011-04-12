@@ -21,7 +21,6 @@ namespace RSMTenon.Graphing
         protected const int TITLE_FONT_SIZE = 1200;
         protected const int DEFAULT_FONT_SIZE = 1100;
 
-
         public GraphData GraphData { get; set; }
         public static long Cx { get { return DEFAULT_GRAPH_X; } }
         public static long Cy { get { return DEFAULT_GRAPH_Y; } }
@@ -50,19 +49,19 @@ namespace RSMTenon.Graphing
             ChartText chartText1 = new ChartText();
 
             RichText richText1 = new RichText();
-            A.BodyProperties bodyProperties1 = new A.BodyProperties();
-            A.ListStyle listStyle1 = new A.ListStyle();
+            A::BodyProperties bodyProperties1 = new A::BodyProperties();
+            A::ListStyle listStyle1 = new A::ListStyle();
 
-            A.Paragraph paragraph1 = new A.Paragraph();
+            A::Paragraph paragraph1 = new A::Paragraph();
 
-            A.ParagraphProperties paragraphProperties1 = new A.ParagraphProperties();
-            A.DefaultRunProperties defaultRunProperties1 = new A.DefaultRunProperties() { Language = DEFAULT_LANG, FontSize = DEFAULT_FONT_SIZE };
+            A::ParagraphProperties paragraphProperties1 = new A::ParagraphProperties();
+            A::DefaultRunProperties defaultRunProperties1 = new A::DefaultRunProperties() { Language = DEFAULT_LANG, FontSize = DEFAULT_FONT_SIZE };
 
             paragraphProperties1.Append(defaultRunProperties1);
 
-            A.Run run1 = new A.Run();
-            A.RunProperties runProperties1 = new A.RunProperties() { Language = DEFAULT_LANG, FontSize = fontSize };
-            A.Text text1 = new A.Text();
+            A::Run run1 = new A::Run();
+            A::RunProperties runProperties1 = new A::RunProperties() { Language = DEFAULT_LANG, FontSize = fontSize };
+            A::Text text1 = new A::Text();
             text1.Text = text;
 
             run1.Append(runProperties1);
@@ -93,16 +92,16 @@ namespace RSMTenon.Graphing
             Layout layout1 = new Layout();
 
             TextProperties textProperties1 = new TextProperties();
-            A.BodyProperties bodyProperties1 = new A.BodyProperties();
-            A.ListStyle listStyle1 = new A.ListStyle();
+            A::BodyProperties bodyProperties1 = new A::BodyProperties();
+            A::ListStyle listStyle1 = new A::ListStyle();
 
-            A.Paragraph paragraph1 = new A.Paragraph();
+            A::Paragraph paragraph1 = new A::Paragraph();
 
-            A.ParagraphProperties paragraphProperties1 = new A.ParagraphProperties();
-            A.DefaultRunProperties defaultRunProperties1 = new A.DefaultRunProperties() { Language = DEFAULT_LANG };
+            A::ParagraphProperties paragraphProperties1 = new A::ParagraphProperties();
+            A::DefaultRunProperties defaultRunProperties1 = new A::DefaultRunProperties() { Language = DEFAULT_LANG };
 
             paragraphProperties1.Append(defaultRunProperties1);
-            A.EndParagraphRunProperties endParagraphRunProperties1 = new A.EndParagraphRunProperties() { Language = DEFAULT_LANG };
+            A::EndParagraphRunProperties endParagraphRunProperties1 = new A::EndParagraphRunProperties() { Language = DEFAULT_LANG };
 
             paragraph1.Append(paragraphProperties1);
             paragraph1.Append(endParagraphRunProperties1);
@@ -399,13 +398,13 @@ namespace RSMTenon.Graphing
         {
             ChartShapeProperties chartShapeProperties5 = new ChartShapeProperties();
 
-            A.Outline outline5 = new A.Outline() { Width = width };
+            A::Outline outline5 = new A::Outline() { Width = width };
 
-            A.SolidFill solidFill7 = new A.SolidFill();
-            A.RgbColorModelHex rgbColorModelHex7 = new A.RgbColorModelHex() { Val = "000000" };
+            A::SolidFill solidFill7 = new A::SolidFill();
+            A::RgbColorModelHex rgbColorModelHex7 = new A::RgbColorModelHex() { Val = "000000" };
 
             solidFill7.Append(rgbColorModelHex7);
-            A.PresetDash presetDash4 = new A.PresetDash() { Val = A.PresetLineDashValues.Solid };
+            A::PresetDash presetDash4 = new A::PresetDash() { Val = A::PresetLineDashValues.Solid };
 
             outline5.Append(solidFill7);
             outline5.Append(presetDash4);
@@ -419,9 +418,9 @@ namespace RSMTenon.Graphing
         {
             ChartShapeProperties chartShapeProperties1 = new ChartShapeProperties();
 
-            A.Outline outline1 = new A.Outline();
-            A.SolidFill solidFill1 = new A.SolidFill();
-            A.RgbColorModelHex rgbColorModelHex1 = new A.RgbColorModelHex() { Val = colourHex };
+            A::Outline outline1 = new A::Outline();
+            A::SolidFill solidFill1 = new A::SolidFill();
+            A::RgbColorModelHex rgbColorModelHex1 = new A::RgbColorModelHex() { Val = colourHex };
             solidFill1.Append(rgbColorModelHex1);
             outline1.Append(solidFill1);
             chartShapeProperties1.Append(outline1);
