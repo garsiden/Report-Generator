@@ -38,15 +38,15 @@ namespace RSMTenon.Graphing
 
             // c:cat category axis data
             string[] categoryData = model.OrderByDescending(m => m.Weighting).Select(n => n.AssetClass).ToArray();
-            GraphData.AddTextColumn(categoryData, "Series Name");
+            GraphData.AddTextColumn(categoryData, "Asset Class");
 
             CategoryAxisData categoryAxisData1 = GenerateCategoryAxisData(categoryData, GraphData.TextColumn);
 
             // c:val values
             double[] valuesData = model.OrderByDescending(m => m.Weighting).Select(n => n.Weighting ?? 0).ToArray();
-            GraphData.AddDataColumn("Series Data", valuesData);
+            string valuesColumn = GraphData.AddDataColumn("Allocation", valuesData);
 
-            Values values1 = GenerateValues("General", valuesData, GraphData.DataColumn);
+            Values values1 = GenerateValues("General", valuesData, valuesColumn);
 
             pieChartSeries1.Append(index1);
             pieChartSeries1.Append(order1);
