@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using DocumentFormat.OpenXml.Drawing.Charts;
-using A = DocumentFormat.OpenXml.Drawing;
 using DocumentFormat.OpenXml;
 
 namespace RSMTenon.Graphing
