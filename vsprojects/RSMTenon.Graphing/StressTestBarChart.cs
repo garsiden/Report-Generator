@@ -12,13 +12,7 @@ namespace RSMTenon.Graphing
     {
         private string pointFormat = "0.00%";
 
-        public new  static long Cy
-        {
-            get
-            {
-                return (long)(7.00 * EMUS_PER_CENTIMETRE);
-            }
-        }
+        public new static long Cy { get { return (long)(7.00 * EMUS_PER_CENTIMETRE); } }
 
         public void AddBarChartSeries(Chart chart, BarGraphSeries series)
         {
@@ -26,12 +20,10 @@ namespace RSMTenon.Graphing
             BarChart barChart = chart.PlotArea.ChildElements.First<BarChart>();
             var bcs = chart.PlotArea.Descendants<BarChartSeries>().LastOrDefault();
 
-            if (bcs == null)
-            {
+            if (bcs == null) {
                 var grp = barChart.ChildElements.First<BarGrouping>();
                 barChart.InsertAfter<BarChartSeries>(barChartSeries, grp);
-            } else
-            {
+            } else {
                 barChart.InsertAfter<BarChartSeries>(barChartSeries, bcs);
             }
         }
@@ -94,18 +86,18 @@ namespace RSMTenon.Graphing
 
             ChartShapeProperties chartShapeProperties8 = new ChartShapeProperties();
 
-            A.SolidFill solidFill10 = new A.SolidFill();
-            A.RgbColorModelHex rgbColorModelHex10 = new A.RgbColorModelHex() { Val = "FFFFFF" };
+            A::SolidFill solidFill10 = new A::SolidFill();
+            A::RgbColorModelHex rgbColorModelHex10 = new A::RgbColorModelHex() { Val = "FFFFFF" };
 
             solidFill10.Append(rgbColorModelHex10);
 
-            A.Outline outline9 = new A.Outline() { Width = 3175 };
+            A::Outline outline9 = new A::Outline() { Width = 3175 };
 
-            A.SolidFill solidFill11 = new A.SolidFill();
-            A.RgbColorModelHex rgbColorModelHex11 = new A.RgbColorModelHex() { Val = "000000" };
+            A::SolidFill solidFill11 = new A::SolidFill();
+            A::RgbColorModelHex rgbColorModelHex11 = new A::RgbColorModelHex() { Val = "000000" };
 
             solidFill11.Append(rgbColorModelHex11);
-            A.PresetDash presetDash7 = new A.PresetDash() { Val = A.PresetLineDashValues.Solid };
+            A::PresetDash presetDash7 = new A::PresetDash() { Val = A::PresetLineDashValues.Solid };
 
             outline9.Append(solidFill11);
             outline9.Append(presetDash7);
@@ -136,16 +128,16 @@ namespace RSMTenon.Graphing
             ChartShapeProperties chartShapeProperties5 = GenerateChartShapeProperties(3175);
 
             TextProperties textProperties1 = new TextProperties();
-            A.BodyProperties bodyProperties2 = new A.BodyProperties() { Rotation = 0, Vertical = A.TextVerticalValues.Horizontal };
-            A.ListStyle listStyle2 = new A.ListStyle();
+            A::BodyProperties bodyProperties2 = new A::BodyProperties() { Rotation = 0, Vertical = A::TextVerticalValues.Horizontal };
+            A::ListStyle listStyle2 = new A::ListStyle();
 
-            A.Paragraph paragraph2 = new A.Paragraph();
+            A::Paragraph paragraph2 = new A::Paragraph();
 
-            A.ParagraphProperties paragraphProperties2 = new A.ParagraphProperties();
-            A.DefaultRunProperties defaultRunProperties2 = new A.DefaultRunProperties();
+            A::ParagraphProperties paragraphProperties2 = new A::ParagraphProperties();
+            A::DefaultRunProperties defaultRunProperties2 = new A::DefaultRunProperties();
 
             paragraphProperties2.Append(defaultRunProperties2);
-            A.EndParagraphRunProperties endParagraphRunProperties1 = new A.EndParagraphRunProperties() { Language = DEFAULT_LANG };
+            A::EndParagraphRunProperties endParagraphRunProperties1 = new A::EndParagraphRunProperties() { Language = DEFAULT_LANG };
 
             paragraph2.Append(paragraphProperties2);
             paragraph2.Append(endParagraphRunProperties1);
@@ -204,10 +196,10 @@ namespace RSMTenon.Graphing
             ValueAxis valueAxis1 = GenerateValueAxis(axisId2, AxisPositionValues.Left, "0%", axisId1);
 
             ShapeProperties shapeProperties1 = new ShapeProperties();
-            A.NoFill noFill3 = new A.NoFill();
+            A::NoFill noFill3 = new A::NoFill();
 
-            A.Outline outline8 = new A.Outline() { Width = 25400 };
-            A.NoFill noFill4 = new A.NoFill();
+            A::Outline outline8 = new A::Outline() { Width = 25400 };
+            A::NoFill noFill4 = new A::NoFill();
 
             outline8.Append(noFill4);
 
