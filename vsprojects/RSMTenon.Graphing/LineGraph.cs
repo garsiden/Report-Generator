@@ -15,7 +15,6 @@ namespace RSMTenon.Graphing
         protected string valueFormat;
         protected string dateAxisFormat;
         protected string valueAxisFormat;
-        protected string[] colours = { "C0C0C0", "808080", "0066CC", "98CC00" };
 
         public void AddLineChartSeries(Chart chart, List<ReturnData> data, string seriesName, string colourHex)
         {
@@ -95,16 +94,16 @@ namespace RSMTenon.Graphing
             TickLabelPosition tickLabelPosition1 = new TickLabelPosition() { Val = tickLabelPosition };
 
             TextProperties textProperties1 = new TextProperties();
-            A.BodyProperties bodyProperties2 = new A.BodyProperties() { Rotation = -5400000, Vertical = A.TextVerticalValues.Horizontal };
-            A.ListStyle listStyle2 = new A.ListStyle();
+            A::BodyProperties bodyProperties2 = new A::BodyProperties() { Rotation = -5400000, Vertical = A::TextVerticalValues.Horizontal };
+            A::ListStyle listStyle2 = new A::ListStyle();
 
-            A.Paragraph paragraph2 = new A.Paragraph();
+            A::Paragraph paragraph2 = new A::Paragraph();
 
-            A.ParagraphProperties paragraphProperties2 = new A.ParagraphProperties();
-            A.DefaultRunProperties defaultRunProperties2 = new A.DefaultRunProperties() { Language = DEFAULT_LANG };
+            A::ParagraphProperties paragraphProperties2 = new A::ParagraphProperties();
+            A::DefaultRunProperties defaultRunProperties2 = new A::DefaultRunProperties() { Language = DEFAULT_LANG };
 
             paragraphProperties2.Append(defaultRunProperties2);
-            A.EndParagraphRunProperties endParagraphRunProperties1 = new A.EndParagraphRunProperties() { Language = DEFAULT_LANG };
+            A::EndParagraphRunProperties endParagraphRunProperties1 = new A::EndParagraphRunProperties() { Language = DEFAULT_LANG };
 
             paragraph2.Append(paragraphProperties2);
             paragraph2.Append(endParagraphRunProperties1);
@@ -150,16 +149,16 @@ namespace RSMTenon.Graphing
             ChartShapeProperties chartShapeProperties4 = GenerateChartShapeProperties(9525);
 
             TextProperties textProperties2 = new TextProperties();
-            A.BodyProperties bodyProperties3 = new A.BodyProperties();
-            A.ListStyle listStyle3 = new A.ListStyle();
+            A::BodyProperties bodyProperties3 = new A::BodyProperties();
+            A::ListStyle listStyle3 = new A::ListStyle();
 
-            A.Paragraph paragraph3 = new A.Paragraph();
+            A::Paragraph paragraph3 = new A::Paragraph();
 
-            A.ParagraphProperties paragraphProperties3 = new A.ParagraphProperties();
-            A.DefaultRunProperties defaultRunProperties3 = new A.DefaultRunProperties() { Language = DEFAULT_LANG };
+            A::ParagraphProperties paragraphProperties3 = new A::ParagraphProperties();
+            A::DefaultRunProperties defaultRunProperties3 = new A::DefaultRunProperties() { Language = DEFAULT_LANG };
 
             paragraphProperties3.Append(defaultRunProperties3);
-            A.EndParagraphRunProperties endParagraphRunProperties2 = new A.EndParagraphRunProperties() { Language = DEFAULT_LANG };
+            A::EndParagraphRunProperties endParagraphRunProperties2 = new A::EndParagraphRunProperties() { Language = DEFAULT_LANG };
 
             paragraph3.Append(paragraphProperties3);
             paragraph3.Append(endParagraphRunProperties2);
