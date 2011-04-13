@@ -8,14 +8,15 @@ using RSMTenon.Data;
 
 namespace RSMTenon.Graphing
 {
-    public class TenYearLineChart  : LineGraph
+    public class TenYearLineChart : LineGraph
     {
         public TenYearLineChart()
         {
-            this.axisFormat = "mmm\\-yy";
-            this.valueFormat = "0.0%";
-            this.dateAxisFormat = "mmm\\-yy";
-            this.valueAxisFormat = "0%";
+            axisFormat = "mmm\\-yy";
+            valueFormat = "0.0%";
+            dateAxisFormat = "mmm\\-yy";
+            valueAxisFormat = "0%";
+            categoryName = "Date";
         }
 
         // Creates an Chart instance and adds its children.

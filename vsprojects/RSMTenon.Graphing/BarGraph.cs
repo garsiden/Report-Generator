@@ -19,6 +19,8 @@ namespace RSMTenon.Graphing
 
     public abstract class BarGraph : Graph
     {
+        protected string pointFormat;
+
         protected ChartShapeProperties GenerateChartShapeProperties(string colourHex, int width)
         {
             ChartShapeProperties chartShapeProperties2 = new ChartShapeProperties();
@@ -57,7 +59,7 @@ namespace RSMTenon.Graphing
             Values values1 = GenerateValues(valueFormat, vals, valuesColumn);
 
             if (valuesColumn == "B") {
-                string columnName = GraphData.AddTextColumn(pointNames, "Category");
+                string columnName = GraphData.AddTextColumn(categoryName, pointNames);
             }
 
             barChartSeries1.Append(index1);

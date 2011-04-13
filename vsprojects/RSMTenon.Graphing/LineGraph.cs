@@ -11,23 +11,16 @@ namespace RSMTenon.Graphing
 {
     public abstract class LineGraph : Graph
     {
-        protected string axisFormat;
-        protected string valueFormat;
-        protected string dateAxisFormat;
-        protected string valueAxisFormat;
-
         public void AddLineChartSeries(Chart chart, List<ReturnData> data, string seriesName, string colourHex)
         {
             LineChartSeries lineChartSeries = GenerateLineChartSeries(seriesName, data, colourHex);
             LineChart lineChart = chart.PlotArea.ChildElements.First<LineChart>();
             var lcs = chart.PlotArea.Descendants<LineChartSeries>().LastOrDefault();
 
-            if (lcs == null)
-            {
+            if (lcs == null) {
                 var grp = lineChart.ChildElements.First<Grouping>();
                 lineChart.InsertAfter<LineChartSeries>(lineChartSeries, grp);
-            } else
-            {
+            } else {
                 lineChart.InsertAfter<LineChartSeries>(lineChartSeries, lcs);
             }
         }
@@ -53,14 +46,14 @@ namespace RSMTenon.Graphing
             marker1.Append(symbol1);
 
             // c:val (Values)
-            double[] valuesData = data.Select(v => v.Value).ToArray<double>();
+            double[] valuesData = data.Select(v => v.Value).ToArray();
             string valuesColumn = GraphData.AddDataColumn(seriesName, valuesData);
-            Values values1 = GenerateValues("General", valuesData, valuesColumn);
+            Values values1 = GenerateValues(valueFormat, valuesData, valuesColumn);
 
             // c:cat (CategoryAxisData)
-            int[] categoryData = data.Select(c => c.Date).ToArray<int>();
+            int[] categoryData = data.Select(c => c.Date).ToArray();
             if (valuesColumn == "B") {
-                string columnName = GraphData.AddDateColumn(categoryData, "Date");
+                string columnName = GraphData.AddDateColumn(categoryName, categoryData);
             }
 
             CategoryAxisData categoryAxisData1 = GenerateCategoryAxisData(axisFormat, categoryData, GraphData.DateColumn);

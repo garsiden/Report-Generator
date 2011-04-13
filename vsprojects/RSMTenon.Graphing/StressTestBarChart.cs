@@ -10,9 +10,15 @@ namespace RSMTenon.Graphing
 {
     public class StressTestBarChart : BarGraph
     {
-        private string pointFormat = "0.00%";
-
         public new static long Cy { get { return (long)(7.00 * EMUS_PER_CENTIMETRE); } }
+
+        public StressTestBarChart()
+        {
+            pointFormat = "0.00%";
+            categoryAxisFormat = "General";
+            valueAxisFormat = "0%";
+            categoryName = "Stress Test";
+        }
 
         public void AddBarChartSeries(Chart chart, BarGraphSeries series)
         {
@@ -192,8 +198,8 @@ namespace RSMTenon.Graphing
             barChart1.Append(axisId1);
             barChart1.Append(axisId2);
 
-            CategoryAxis categoryAxis1 = GenerateCategoryAxis(axisId1, AxisPositionValues.Bottom, "General", axisId2);
-            ValueAxis valueAxis1 = GenerateValueAxis(axisId2, AxisPositionValues.Left, "0%", axisId1);
+            CategoryAxis categoryAxis1 = GenerateCategoryAxis(axisId1, AxisPositionValues.Bottom, categoryAxisFormat, axisId2);
+            ValueAxis valueAxis1 = GenerateValueAxis(axisId2, AxisPositionValues.Left, valueAxisFormat, axisId1);
 
             ShapeProperties shapeProperties1 = new ShapeProperties();
             A::NoFill noFill3 = new A::NoFill();
