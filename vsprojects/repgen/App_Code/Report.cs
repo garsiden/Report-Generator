@@ -812,16 +812,27 @@ namespace RSMTenon.ReportGenerator
 
         private List<ReturnData> calculateAssetClassDrawdown(string assetclassId)
         {
-            var prices = getAssetClassPrices(assetclassId);
+            var returns = getAssetClassReturn(assetclassId);
 
-            ReturnCalculation calc = new ReturnCalculation();
+            ReturnCalculation cp = new ReturnCalculation();
+            ReturnCalculation cd = new ReturnCalculation();
 
-            var dd = from p in prices
+            var dd = from r in returns
+                     let price = cp.Price(r)
                      select new ReturnData
                      {
-                         Value = calc.Drawdown(p) - 1,
-                         Date = p.Date
+                         Value = cd.Drawdown(price, r.Value) - 1,
+                         Date = r.Date
                      };
+
+            //ReturnCalculation calc = new ReturnCalculation();
+
+            //var dd = from p in returns
+            //         select new ReturnData
+            //         {
+            //             Value = calc.Drawdown(p) - 1,
+            //             Date = p.Date
+            //         };
 
             return dd.ToList();
         }
