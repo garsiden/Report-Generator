@@ -10,6 +10,9 @@ using RSMTenon.Data;
 
 namespace RSMTenon.Graphing
 {
+
+    public class TextSeries { public string Name { get; set; } public List<double> Values { get; set; } }
+
     public abstract class Graph
     {
         public const long EMUS_PER_CENTIMETRE = 360000L;
@@ -25,15 +28,19 @@ namespace RSMTenon.Graphing
         public static long Cx { get { return DEFAULT_GRAPH_X; } }
         public static long Cy { get { return DEFAULT_GRAPH_Y; } }
 
-        protected uint order;
-        protected uint index;
+        protected string axisFormat = "General";
+        protected string valueFormat = "General";
+        protected string dateAxisFormat = "General";
+        protected string valueAxisFormat = "General";
+        protected string categoryAxisFormat = "General";
+        protected string categoryName = "Category";
+
+        protected uint order = 0U;
+        protected uint index = 1U;
 
         public Graph()
         {
-            this.order = 0U;
-            this.index = 1U;
-            string id = "rId" + new Random().Next();
-            GraphData = new GraphData(id);
+            GraphData = new GraphData("rId" + new Random().Next());
         }
 
         // c:title (Title)
@@ -171,31 +178,6 @@ namespace RSMTenon.Graphing
             return values1;
         }
 
-        protected virtual Values GenerateValues(string formatCode, List<ReturnData>data)
-        {
-            Values values1 = new Values();
-            Formula formula1 = new Formula();
-            formula1.Text = "Category Axis Data Values";
-
-            uint numPoints = (uint)data.Count();
-
-            // c:numRef (NumberingReference)
-            NumberReference numberReference2 = new NumberReference();
-            NumberingCache numberingCache2 = GenerateNumberingCache(formatCode, numPoints);
-
-            uint i = 0U;
-            foreach (var r in data) {
-                NumericPoint numericPoint = GenerateNumericPoint(i++, r.Value.ToString());
-                numberingCache2.Append(numericPoint);
-            }
-
-            numberReference2.Append(formula1);
-            numberReference2.Append(numberingCache2);
-            values1.Append(numberReference2);
-
-            return values1;
-        }
-
         protected NumberingCache GenerateNumberingCache(string formatCode, uint numPoints)
         {
             // c:numCache (NumberingCache)
@@ -236,42 +218,12 @@ namespace RSMTenon.Graphing
             return seriesText1;
         }
 
-        protected virtual SeriesText GenerateSeriesText(string seriesName)
-        {
-            // c:tx (SeriesText)
-            SeriesText seriesText1 = new SeriesText();
-            Formula formula1 = new Formula();
-            formula1.Text = "Series Text";
-
-            StringReference stringReference1 = new StringReference();
-
-            StringCache stringCache1 = new StringCache();
-            PointCount pointCount1 = new PointCount() { Val = (UInt32Value)1U };
-
-            StringPoint stringPoint1 = new StringPoint() { Index = (UInt32Value)0U };
-            NumericValue numericValue1 = new NumericValue();
-            numericValue1.Text = seriesName;
-
-            stringPoint1.Append(numericValue1);
-
-            stringCache1.Append(pointCount1);
-            stringCache1.Append(stringPoint1);
-
-            stringReference1.Append(formula1);
-            stringReference1.Append(stringCache1);
-
-            seriesText1.Append(stringReference1);
-
-            return seriesText1;
-        }
-
         protected virtual Layout GeneratePlotAreaLayout()
         {
             Layout layout1 = new Layout();
 
             return layout1;
         }
-
 
         protected CategoryAxisData GenerateCategoryAxisData(string formatCode, int[] data, string columnName)
         {
@@ -298,99 +250,30 @@ namespace RSMTenon.Graphing
             return categoryAxisData1;
         }
 
-        protected CategoryAxisData GenerateCategoryAxisData(string formatCode, int[] data)
+        protected CategoryAxisData GenerateCategoryAxisData(IEnumerable<string> data, string columnName)
         {
             CategoryAxisData categoryAxisData1 = new CategoryAxisData();
-
-            uint numPoints = (uint)data.Length;
-            NumberReference numberReference1 = new NumberReference();
-            NumberingCache numberingCache1 = GenerateNumberingCache(formatCode, numPoints);
-
-            for (UInt32 i = 0; i < numPoints; i++) {
-                NumericPoint numericPoint = GenerateNumericPoint(i, data[i].ToString());
-                numberingCache1.Append(numericPoint);
-            }
-
-            numberReference1.Append(numberingCache1);
-            categoryAxisData1.Append(numberReference1);
-
-            return categoryAxisData1;
-        }
-
-        protected CategoryAxisData GenerateCategoryAxisData(string formatCode, List<ReturnData>data)
-        {
-            CategoryAxisData categoryAxisData1 = new CategoryAxisData();
-
-            uint numPoints = (uint)data.Count();
-            NumberReference numberReference1 = new NumberReference();
-            Formula formula1 = new Formula();
-            formula1.Text = "Category Axis Data";
-
-            NumberingCache numberingCache1 = GenerateNumberingCache(formatCode, numPoints);
+            StringReference stringReference1 = new StringReference();
+            StringCache stringCache1 = new StringCache();
 
             uint i = 0U;
-            foreach (var r in data) {
-
-                NumericPoint numericPoint = GenerateNumericPoint(i++, r.Date.ToString());
-                numberingCache1.Append(numericPoint);
-            }
-
-            numberReference1.Append(formula1);
-            numberReference1.Append(numberingCache1);
-            categoryAxisData1.Append(numberReference1);
-
-            return categoryAxisData1;
-        }
-
-        protected CategoryAxisData GenerateCategoryAxisData(string[] data, string columnName)
-        {
-            CategoryAxisData categoryAxisData1 = new CategoryAxisData();
-
-            StringReference stringReference1 = new StringReference();
-            Formula formula1 = new Formula();
-            uint len = (uint)data.Length;
-            formula1.Text = formulaColumn(columnName, 2, len);
-
-            StringCache stringCache1 = new StringCache();
-            PointCount pointCount1 = new PointCount() { Val = (UInt32Value)len };
-            stringCache1.Append(pointCount1);
-
-            for (int i = 0; i < len; i++) {
-                StringPoint stringPoint1 = GenerateStringPoint((uint)i);
-                NumericValue numericValue1 = new NumericValue() { Text = data[i] };
+            foreach (string item in data) {
+                StringPoint stringPoint1 = GenerateStringPoint(i++);
+                NumericValue numericValue1 = new NumericValue() { Text = item };
                 stringPoint1.Append(numericValue1);
                 stringCache1.Append(stringPoint1);
             }
 
+            uint count = i++;
+            PointCount pointCount1 = new PointCount() { Val = (UInt32Value)count };
+            stringCache1.InsertAt(pointCount1, 0);
+
+            Formula formula1 = new Formula();
+            formula1.Text = formulaColumn(columnName, 2, count);
             stringReference1.Append(formula1);
             stringReference1.Append(stringCache1);
 
             categoryAxisData1.Append(stringReference1);
-            return categoryAxisData1;
-        }
-
-        protected virtual CategoryAxisData GenerateCategoryAxisData(string[] data)
-        {
-            CategoryAxisData categoryAxisData1 = new CategoryAxisData();
-
-            uint numPoints = (uint)data.Length;
-            StringReference stringReference2 = new StringReference();
-            Formula formula1 = new Formula();
-            formula1.Text = "Category Axis Data";
-
-            StringCache stringCache2 = new StringCache();
-            PointCount pointCount2 = new PointCount() { Val = (UInt32Value)numPoints };
-            stringCache2.Append(pointCount2);
-
-            for (uint i = 0; i < numPoints; i++) {
-                StringPoint stringPoint2 = GenerateStringPoint(i, data[i]);
-                stringCache2.Append(stringPoint2);
-            }
-
-            stringReference2.Append(formula1);
-            stringReference2.Append(stringCache2);
-            categoryAxisData1.Append(stringReference2);
-
             return categoryAxisData1;
         }
 
