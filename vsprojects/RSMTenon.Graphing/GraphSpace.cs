@@ -9,8 +9,6 @@ namespace RSMTenon.Graphing
 {
     public class GraphSpace
     {
-
-        //public static C::ChartSpace GenerateChartSpace(ChartPart part)
         public static C::ChartSpace GenerateChartSpace(C::Chart chart)
         {
             return GenerateChartSpace(chart, false);
