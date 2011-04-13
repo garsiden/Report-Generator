@@ -12,15 +12,15 @@ namespace RSMTenon.Graphing
 {
     public class GraphData
     {
+        public Stream BinaryStream { get; private set; }
+        public string ExternalDataId { get; private set; }
+        public static readonly string SHEETNAME = "Sheet1";
+
         private SpreadsheetDocument spreadsheetDoc;
         private WorksheetPart worksheetPart;
         private SharedStringTablePart shareStringPart;
         private char dataColumn = 'B';
-        private static string textColumn = "A";
-
-        public Stream BinaryStream { get; private set; }
-        public string ExternalDataId { get; private set; }
-        public static readonly string SHEETNAME = "Sheet1";
+        private static readonly string textColumn = "A";
 
         public GraphData(string externalDataId)
         {
@@ -29,34 +29,55 @@ namespace RSMTenon.Graphing
             createSpreadsheet(BinaryStream, GraphData.SHEETNAME);
         }
 
-        public string AddTextColumn(string[] text, string headerText)
+        public string AddTextColumn(string columnHeader, string[] text)
         {
-            int index;
             Cell cell;
+            int stringIndex;
             uint rowIndex = 2U;
 
             // add column header cell
-            addColumnHeader(TextColumn, headerText);
+            addColumnHeader(TextColumn, columnHeader);
 
             foreach (var item in text) {
                 // add string to shared string table, creating table if required
-                index = insertSharedStringItem(item);
+                stringIndex = insertSharedStringItem(item);
                 cell = insertCellInWorksheet(TextColumn, rowIndex++, worksheetPart);
-                cell.CellValue = new CellValue((index).ToString());
+                cell.CellValue = new CellValue(stringIndex.ToString());
                 cell.DataType = new EnumValue<CellValues>(CellValues.SharedString);
             }
 
+            worksheetPart.Worksheet.Save();
             return TextColumn;
         }
 
+        public string AddTextColumn(string columnHeader, IEnumerable<string> text)
+        {
+            Cell cell;
+            int stringIndex;
+            uint rowIndex = 2U;
 
-        public string AddDateColumn(int[] dates, string headerText)
+            // add column header cell
+            addColumnHeader(TextColumn, columnHeader);
+
+            foreach (var item in text) {
+                // add string to shared string table, creating table if required
+                stringIndex = insertSharedStringItem(item);
+                cell = insertCellInWorksheet(TextColumn, rowIndex++, worksheetPart);
+                cell.CellValue = new CellValue(stringIndex.ToString());
+                cell.DataType = new EnumValue<CellValues>(CellValues.SharedString);
+            }
+
+            worksheetPart.Worksheet.Save();
+            return TextColumn;
+        }
+
+        public string AddDateColumn(string columnHeader, int[] dates)
         {
             Cell cell;
             uint rowIndex = 2U;
 
             // add column header cell
-            addColumnHeader(DateColumn, headerText);
+            addColumnHeader(DateColumn, columnHeader);
 
             foreach (int date in dates) {
                 cell = insertCellInWorksheet(DateColumn, rowIndex++, worksheetPart);
@@ -65,6 +86,7 @@ namespace RSMTenon.Graphing
                 cell.Append(cellValue);
             }
 
+            worksheetPart.Worksheet.Save();
             return DateColumn;
         }
 
@@ -77,29 +99,32 @@ namespace RSMTenon.Graphing
             addColumnHeader(columnName, columnHeader);
 
             // add data cells
-            uint numRows = (uint)data.Length;
-            int j = 0;
+            Cell cell;
+            uint rowIndex = 2U;
+            Worksheet worksheet = worksheetPart.Worksheet;
+            SheetData sheetData = worksheet.GetFirstChild<SheetData>();
 
-            for (uint index = 2U; index < (numRows + 2); index++) {
-                Cell cell = insertCellInWorksheet(columnName, index, worksheetPart);
-                double val = data[j++];
-                cell.CellValue = new CellValue(val.ToString());
-                cell.DataType = new EnumValue<CellValues>(CellValues.Number);
+            foreach (double value in data) {
+                cell = insertCellInWorksheet(columnName, rowIndex++, worksheetPart);
+                cell.CellValue = new CellValue(value.ToString());
+                cell.DataType = CellValues.Number;
             }
-            worksheetPart.Worksheet.Save();
 
+            worksheetPart.Worksheet.Save();
             dataColumn++;
 
             return columnName;
         }
 
-        private void addColumnHeader(string columnName, string header)
+        private Cell addColumnHeader(string columnName, string header)
         {
             // add column heading cell
             int index = insertSharedStringItem(header);
             Cell cell = insertCellInWorksheet(columnName, 1U, worksheetPart);
             cell.DataType = new EnumValue<CellValues>(CellValues.SharedString);
             cell.CellValue = new CellValue() { Text = index.ToString() };
+
+            return cell;
         }
 
         public void AddEmbeddedToChartPart(ChartPart part)
@@ -175,7 +200,7 @@ namespace RSMTenon.Graphing
                 Cell newCell = new Cell() { CellReference = cellReference };
                 row.InsertBefore(newCell, refCell);
 
-                worksheet.Save();
+                //worksheet.Save();
                 return newCell;
             }
         }
@@ -241,6 +266,77 @@ namespace RSMTenon.Graphing
         {
             if (BinaryStream != null)
                 BinaryStream.Close();
+        }
+
+        // WIP methods
+        public void AddTextSeries(string[] headers, IEnumerable<TextSeries> series)
+        {
+            Row r = createHeaderRow(headers);
+            Worksheet worksheet = worksheetPart.Worksheet;
+            SheetData sheetData = worksheet.GetFirstChild<SheetData>();
+            sheetData.AppendChild(r);
+
+            int rowIndex = 2;
+
+            foreach (var s in series) {
+                r = createContentRow(rowIndex++, s.Name, s.Values);
+                sheetData.AppendChild(r);
+            }
+
+            worksheet.Save();
+        }
+
+        private Row createHeaderRow(string[] headers)
+        {
+            Cell c;
+            Row r = new Row() { RowIndex = 1 };
+            char col = 'A';
+
+            foreach (var h in headers) {
+                c = createTextCell((col++).ToString(), h, 1);
+                r.AppendChild(c);
+            }
+
+            return r;
+        }
+
+        private Row createContentRow(int index, string firstColVal, IEnumerable<double>values) 
+        {
+            Row r = new Row();
+            r.RowIndex = (UInt32)index;
+            char col = 'B';
+
+            Cell cell = createTextCell("A", firstColVal, index);
+            r.AppendChild(cell);
+
+            //Create cells that contain data
+            foreach (double val in values) {
+                Cell c = new Cell();
+                c.CellReference = col.ToString() + index;
+                CellValue v = new CellValue();
+                v.Text = val.ToString();
+
+                c.AppendChild(v);
+                r.AppendChild(c);
+            }
+            return r;
+        }
+
+        private Cell createTextCell(string header, string text, int index)
+        {
+            //Create new inline string cell 
+            Cell c = new Cell();
+            c.DataType = CellValues.InlineString;
+            c.CellReference = header + index;
+
+            //Add text to text cell 
+            InlineString inlineString = new InlineString();
+            Text t = new Text();
+            t.Text = text;
+            inlineString.AppendChild(t);
+            c.AppendChild(inlineString);
+
+            return c;
         }
     }
 }
