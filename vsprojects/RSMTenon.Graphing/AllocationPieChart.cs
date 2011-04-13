@@ -11,7 +11,15 @@ namespace RSMTenon.Graphing
 {
     public class AllocationPieChart : PieGraph
     {
-        public Chart GenerateChart(string title, List<AssetWeighting>model)
+        private readonly string seriesName = "Allocation";
+
+        public AllocationPieChart()
+        {
+            categoryName = "Asset Class";
+            valueFormat = "General";
+        }
+
+        public Chart GenerateChart(string title, List<AssetWeighting> model)
         {
             Chart chart1 = new Chart();
             Title title1 = GenerateTitle(title);
@@ -37,16 +45,21 @@ namespace RSMTenon.Graphing
             SeriesText seriesText1 = GenerateSeriesText(title, GraphData.DataColumn);
 
             // c:cat category axis data
-            string[] categoryData = model.OrderByDescending(m => m.Weighting).Select(n => n.AssetClass).ToArray();
-            GraphData.AddTextColumn(categoryData, "Asset Class");
-
+            var categoryData = model.OrderByDescending(m => m.Weighting).Select(n => n.AssetClass);
+            GraphData.AddTextColumn(categoryName, categoryData);
             CategoryAxisData categoryAxisData1 = GenerateCategoryAxisData(categoryData, GraphData.TextColumn);
 
             // c:val values
-            double[] valuesData = model.OrderByDescending(m => m.Weighting).Select(n => n.Weighting ?? 0).ToArray();
-            string valuesColumn = GraphData.AddDataColumn("Allocation", valuesData);
+            var valuesData = model.OrderByDescending(m => m.Weighting).Select(n => n.Weighting ?? 0).ToArray();
+            string valuesColumn = GraphData.AddDataColumn(seriesName, valuesData);
+            Values values1 = GenerateValues(valueFormat, valuesData, valuesColumn);
 
-            Values values1 = GenerateValues("General", valuesData, valuesColumn);
+            //var series = from m in model
+            //             orderby m.Weighting descending
+            //             select new TextSeries { Name = m.AssetClass, Values = (new List<double>() { m.Weighting ?? 0 }) };
+
+            //string[] headers = { categoryName, seriesName };
+            //GraphData.AddTextSeries(headers, series);
 
             pieChartSeries1.Append(index1);
             pieChartSeries1.Append(order1);
