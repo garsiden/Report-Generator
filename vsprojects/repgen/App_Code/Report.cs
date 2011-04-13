@@ -721,13 +721,13 @@ namespace RSMTenon.ReportGenerator
         private List<ReturnData> calculateTenYearBenchmarkReturn(List<ReturnData> prices)
         {
             int months = prices.Count;
-            int startIndex = months - Math.Min(121, months);
-            int startDate = prices[startIndex].Date;
+            //int startIndex = months - Math.Min(121, months);
+            int startDate = prices[months - 121].Date;
 
             ReturnCalculation cr = new ReturnCalculation();
             ReturnCalculation cb = new ReturnCalculation();
 
-            var rtrn = from p in prices
+            var rtrn = from p in prices.Skip(months - 120)
                        let r = cr.Return(p)
                        select new ReturnData
                        {
