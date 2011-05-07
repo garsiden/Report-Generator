@@ -132,6 +132,7 @@ namespace RSMTenon.Graphing
             EmbeddedPackagePart embeddedPackagePart1 = part.AddNewPart<EmbeddedPackagePart>("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", ExternalDataId);
             BinaryStream.Position = 0;
             embeddedPackagePart1.FeedData(BinaryStream);
+            BinaryStream.Close();
         }
 
         public void WriteSpreadSheetToFile(string filepath)
@@ -262,11 +263,11 @@ namespace RSMTenon.Graphing
 
         public string DateColumn { get { return textColumn; } }
 
-        ~GraphData()
-        {
-            if (BinaryStream != null)
-                BinaryStream.Close();
-        }
+        //~GraphData()
+        //{
+        //    if (BinaryStream != null)
+        //        BinaryStream.Close();
+        //}
 
         // WIP methods
         public void AddTextSeries(string[] headers, IEnumerable<TextSeries> series)
