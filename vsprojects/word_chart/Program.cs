@@ -73,30 +73,27 @@ namespace RSMTenon.ReportGenerator
             model.Add(new AssetWeighting { AssetClass = "3rd Qtr", Weighting = 1.4 });
             model.Add(new AssetWeighting { AssetClass = "4th Qtr", Weighting = 1.2 });
 
-            //MemoryStream ms = new MemoryStream();
-            //SpreadsheetDocument spreadsheetDoc = GraphData.GenerateDataSpreadsheet(ms);
-            GraphData gd = new GraphData("rIdExcel1");
-            gd.AddTextColumn(model.Select(m => m.AssetClass).ToArray<string>());
-            gd.AddDataColumn("Sales", model.Select(m => m.Weighting).ToArray<double?>());
-            //gd.Add(spreadsheetDoc, model);
-            //spreadsheetDoc.Close();
-            // output ss
+            //var m = new List<ReturnData>();
+            //int startDate = 35944;
+            //double val = 100;
+
+            //for (int i = 0; i < 30; i++) {
+            //    m.Add(new ReturnData { Date = startDate, Value = val++ });
+            //    startDate += 30;
+            //}
+
             string ssTest = path + "GraphDataCompare.xlsx";
-            //copyStream(ms, ssTest);
-            //ms.Position = 0;
-            gd.Close();
-            gd.WriteSpreadSheetToFile(ssTest);
 
             // Test Graph
             chartItem = report.ExcelChart(model);
-            controlName = chartItem.CustomControlName;
-            AddChartToDoc(mainPart, chartItem, controlName, gd);
+            chartItem.GraphData.Close();
+            chartItem.GraphData.WriteSpreadSheetToFile(ssTest);
+
+            controlName = "ExcelChart"; // chartItem.CustomControlName;
+            AddChartToDoc(mainPart, chartItem, controlName);
 
             // save and close document
             mainPart.Document.Save();
-
-            //ms.Close();
-
        }
 
         public void CreateReport(MainDocumentPart mainPart, Report report)
@@ -426,10 +423,10 @@ namespace RSMTenon.ReportGenerator
 
 
 
-        private void AddChartToDoc(MainDocumentPart mainPart, ChartItem chartItem, string controlName) { }
+        //private void AddChartToDoc(MainDocumentPart mainPart, ChartItem chartItem, string controlName) { }
 
 
-        private void AddChartToDoc(MainDocumentPart mainPart, ChartItem chartItem, string controlName, GraphData gd)
+        private void AddChartToDoc(MainDocumentPart mainPart, ChartItem chartItem, string controlName)
         {
             // open Word documant and remove existing content from control
             Paragraph para = findAndRemoveContent(mainPart, controlName);
@@ -437,13 +434,10 @@ namespace RSMTenon.ReportGenerator
             // generate new ChartPart and ChartSpace
             ChartPart chartPart = mainPart.AddNewPart<ChartPart>();
             string relId = mainPart.GetIdOfPart(chartPart);
-            //string embeddedDataId = "rIdExcel1";
-            //Graph.AddEmbeddedToChartPart(chartPart, embeddedDataId, ms);
+
+            GraphData gd = chartItem.GraphData;
             gd.AddEmbeddedToChartPart(chartPart);
             C.ChartSpace chartSpace = GraphSpace.GenerateChartSpaceWithData(chartItem.Chart, gd.ExternalDataId);
-            //chartSpace.Append(chartItem.Chart);
-
-            // set ChartPart ChartSpace
             chartPart.ChartSpace = chartSpace;
 
             // generate a new Wordprocessing Drawing, add to a new Run,
