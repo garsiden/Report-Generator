@@ -11,7 +11,15 @@ namespace RSMTenon.Graphing
 {
     public class AllocationPieChart : PieGraph
     {
-        public Chart GenerateChart(string title, List<AssetWeighting>model)
+        private readonly string seriesName = "Allocation";
+
+        public AllocationPieChart()
+        {
+            categoryName = "Asset Class";
+            valueFormat = "General";
+        }
+
+        public Chart GenerateChart(string title, List<AssetWeighting> model)
         {
             Chart chart1 = new Chart();
             Title title1 = GenerateTitle(title);
@@ -24,6 +32,7 @@ namespace RSMTenon.Graphing
             view3D1.Append(perspective1);
 
             PlotArea plotArea1 = new PlotArea();
+            Layout layout1 = new Layout();
 
             Pie3DChart pie3DChart1 = new Pie3DChart();
             VaryColors varyColors1 = new VaryColors() { Val = true };
@@ -32,41 +41,25 @@ namespace RSMTenon.Graphing
             Index index1 = new Index() { Val = (UInt32Value)0U };
             Order order1 = new Order() { Val = (UInt32Value)0U };
 
-            SeriesText seriesText1 = new SeriesText();
-            NumericValue numericValue1 = new NumericValue();
-            numericValue1.Text = title + "Series";
+            // c:tx series text
+            SeriesText seriesText1 = GenerateSeriesText(title, GraphData.DataColumn);
 
-            seriesText1.Append(numericValue1);
+            // c:cat category axis data
+            var categoryData = model.OrderByDescending(m => m.Weighting).Select(n => n.AssetClass);
+            GraphData.AddTextColumn(categoryName, categoryData);
+            CategoryAxisData categoryAxisData1 = GenerateCategoryAxisData(categoryData, GraphData.TextColumn);
 
-            CategoryAxisData categoryAxisData1 = new CategoryAxisData();
+            // c:val values
+            var valuesData = model.OrderByDescending(m => m.Weighting).Select(n => n.Weighting ?? 0).ToArray();
+            string valuesColumn = GraphData.AddDataColumn(seriesName, valuesData);
+            Values values1 = GenerateValues(valueFormat, valuesData, valuesColumn);
 
-            StringLiteral stringLiteral1 = new StringLiteral();
-            NumberLiteral numberLiteral1 = new NumberLiteral();
+            //var series = from m in model
+            //             orderby m.Weighting descending
+            //             select new TextSeries { Name = m.AssetClass, Values = (new List<double>() { m.Weighting ?? 0 }) };
 
-            FormatCode formatCode1 = new FormatCode();
-            formatCode1.Text = "General";
-            numberLiteral1.Append(formatCode1);
-
-            UInt32 numPoints = (UInt32)model.Count();
-            PointCount pointCount1 = new PointCount() { Val = (UInt32Value)numPoints };
-            stringLiteral1.Append(pointCount1);
-
-            PointCount pointCount2 = new PointCount() { Val = (UInt32Value)numPoints };
-            numberLiteral1.Append(pointCount2);
-
-            uint i = 0U;
-
-            foreach (var alloc in model.OrderByDescending(m => m.Weighting)) {
-                StringPoint stringPoint1 = GenerateStringPoint(i, alloc.AssetClass);
-                stringLiteral1.Append(stringPoint1);
-                NumericPoint numericPoint1 = GenerateNumericPoint(i++, alloc.Weighting.ToString());
-                numberLiteral1.Append(numericPoint1);
-            }
-
-            categoryAxisData1.Append(stringLiteral1);
-
-            Values values1 = new Values();
-            values1.Append(numberLiteral1);
+            //string[] headers = { categoryName, seriesName };
+            //GraphData.AddTextSeries(headers, series);
 
             pieChartSeries1.Append(index1);
             pieChartSeries1.Append(order1);
@@ -77,6 +70,7 @@ namespace RSMTenon.Graphing
             pie3DChart1.Append(varyColors1);
             pie3DChart1.Append(pieChartSeries1);
 
+            plotArea1.Append(layout1);
             plotArea1.Append(pie3DChart1);
 
             Legend legend1 = GenerateLegend(LegendPositionValues.Right);
@@ -117,16 +111,16 @@ namespace RSMTenon.Graphing
             layout1.Append(manualLayout1);
 
             TextProperties textProperties1 = new TextProperties();
-            A.BodyProperties bodyProperties1 = new A.BodyProperties();
-            A.ListStyle listStyle1 = new A.ListStyle();
+            A::BodyProperties bodyProperties1 = new A::BodyProperties();
+            A::ListStyle listStyle1 = new A::ListStyle();
 
-            A.Paragraph paragraph1 = new A.Paragraph();
+            A::Paragraph paragraph1 = new A::Paragraph();
 
-            A.ParagraphProperties paragraphProperties1 = new A.ParagraphProperties();
-            A.DefaultRunProperties defaultRunProperties1 = new A.DefaultRunProperties() { Language = "en-GB" };
+            A::ParagraphProperties paragraphProperties1 = new A::ParagraphProperties();
+            A::DefaultRunProperties defaultRunProperties1 = new A::DefaultRunProperties() { Language = "en-GB" };
 
             paragraphProperties1.Append(defaultRunProperties1);
-            A.EndParagraphRunProperties endParagraphRunProperties1 = new A.EndParagraphRunProperties() { Language = "en-US" };
+            A::EndParagraphRunProperties endParagraphRunProperties1 = new A::EndParagraphRunProperties() { Language = "en-US" };
 
             paragraph1.Append(paragraphProperties1);
             paragraph1.Append(endParagraphRunProperties1);

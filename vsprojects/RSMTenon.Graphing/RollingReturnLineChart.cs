@@ -4,28 +4,21 @@ using System.Linq;
 using System.Text;
 using DocumentFormat.OpenXml.Drawing.Charts;
 using DocumentFormat.OpenXml;
-using A = DocumentFormat.OpenXml.Drawing;
 using RSMTenon.Data;
 
 namespace RSMTenon.Graphing
 {
     public class RollingReturnLineChart : LineGraph
     {
-
-        public new static long Cy
-        {
-            get
-            {
-                return (long)(6.70 * EMUS_PER_CENTIMETRE);
-            }
-        } 
+        public new static long Cy { get { return (long)(6.70 * EMUS_PER_CENTIMETRE); } }
 
         public RollingReturnLineChart()
         {
-            this.axisFormat = "mmm\\-yy";
-            this.valueFormat = "0.0%";
-            this.dateAxisFormat = "mmm\\-yy";
-            this.valueAxisFormat = "0%";
+            axisFormat = "mmm\\-yy";
+            valueFormat = "0.0%";
+            dateAxisFormat = "mmm\\-yy";
+            valueAxisFormat = "0%";
+            categoryName = "Date";
         }
 
         public Chart GenerateChart(string title)
@@ -38,22 +31,24 @@ namespace RSMTenon.Graphing
 
             // c:plotArea (PlotArea)
             PlotArea plotArea1 = new PlotArea();
+
             // c:layout (Layout)
             Layout layout2 = new Layout();
 
             // c:lineChart (LineChart)
             LineChart lineChart1 = new LineChart();
+
             // c:grouping (Grouping)
             Grouping grouping1 = new Grouping() { Val = GroupingValues.Standard };
 
             // c:marker (Marker)
             ShowMarker showMarker1 = new ShowMarker() { Val = true };
+
             // c:axId (AxisId)
             AxisId axisId1 = new AxisId() { Val = (UInt32Value)54573696U };
             AxisId axisId2 = new AxisId() { Val = (UInt32Value)54657408U };
 
             lineChart1.Append(grouping1);
-            //lineChart1.Append(lineChartSeries1);
             lineChart1.Append(showMarker1);
             lineChart1.Append(axisId1);
             lineChart1.Append(axisId2);
@@ -85,4 +80,3 @@ namespace RSMTenon.Graphing
         }
     }
 }
-

@@ -162,9 +162,12 @@ namespace RSMTenon.ReportGenerator
             // generate new ChartPart and ChartSpace
             ChartPart chartPart = mainPart.AddNewPart<ChartPart>();
             string relId = mainPart.GetIdOfPart(chartPart);
-            C.ChartSpace chartSpace = GraphSpace.GenerateChartSpace(chartItem.Chart);
 
-            // set ChartPart ChartSpace
+            GraphData gd = chartItem.GraphData;
+            gd.Close();
+
+            gd.AddEmbeddedToChartPart(chartPart);
+            C.ChartSpace chartSpace = GraphSpace.GenerateChartSpaceWithData(chartItem.Chart, gd.ExternalDataId);
             chartPart.ChartSpace = chartSpace;
 
             // generate a new Wordprocessing Drawing, add to a new Run,

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using DocumentFormat.OpenXml.Drawing.Charts;
-using A = DocumentFormat.OpenXml.Drawing;
 using DocumentFormat.OpenXml;
 
 namespace RSMTenon.Graphing
@@ -12,10 +11,11 @@ namespace RSMTenon.Graphing
     {
         public DrawdownLineChart()
         {
-            this.axisFormat = "mmm\\-yy";
-            this.valueFormat = "0.0%";
-            this.dateAxisFormat = "mmm\\-yy";
-            this.valueAxisFormat = "0%";
+            axisFormat = "mmm\\-yy";
+            valueFormat = "0.0%";
+            dateAxisFormat = "mmm\\-yy";
+            valueAxisFormat = "0%";
+            categoryName = "Date";
         }
 
         public Chart GenerateChart(string title)

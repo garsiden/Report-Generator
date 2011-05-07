@@ -20,6 +20,7 @@ namespace RSMTenon.ReportGenerator
         public C.Chart Chart { get; set; }
         public string Title { get; set; }
         public string CustomControlName { get; set; }
+        public GraphData GraphData { get; set; }
         public decimal SizeX { get; set; }
         public decimal SizeY { get; set; }
         public long Cx { get { return (long)(SizeX * Graph.EMUS_PER_CENTIMETRE); } }
@@ -239,7 +240,8 @@ namespace RSMTenon.ReportGenerator
                 Title = title,
                 CustomControlName = ccn,
                 SizeX = x,
-                SizeY = y
+                SizeY = y,
+                GraphData = pie.GraphData
             };
 
             return chartItem;
@@ -271,7 +273,8 @@ namespace RSMTenon.ReportGenerator
                 Title = title,
                 CustomControlName = ccn,
                 SizeX = x,
-                SizeY = y
+                SizeY = y,
+                GraphData = bc.GraphData
             };
 
             return chartItem;
@@ -318,7 +321,8 @@ namespace RSMTenon.ReportGenerator
                 Title = title,
                 CustomControlName = ccn,
                 SizeX = x,
-                SizeY = y
+                SizeY = y,
+                GraphData = lc.GraphData
             };
 
             return chartItem;
@@ -369,7 +373,8 @@ namespace RSMTenon.ReportGenerator
                 Title = title,
                 CustomControlName = ccn,
                 SizeX = x,
-                SizeY = y
+                SizeY = y,
+                GraphData = bc.GraphData
             };
 
             return chartItem;
@@ -420,7 +425,8 @@ namespace RSMTenon.ReportGenerator
                 Title = title,
                 CustomControlName = ccn,
                 SizeX = x,
-                SizeY = y
+                SizeY = y,
+                GraphData = bc.GraphData
             };
 
             return chartItem;
@@ -481,7 +487,8 @@ namespace RSMTenon.ReportGenerator
                 Title = title,
                 CustomControlName = ccn,
                 SizeX = x,
-                SizeY = y
+                SizeY = y,
+                GraphData = lc.GraphData
             };
 
             return chartItem;
@@ -550,7 +557,8 @@ namespace RSMTenon.ReportGenerator
                 Title = title,
                 CustomControlName = ccn,
                 SizeX = x,
-                SizeY = y
+                SizeY = y,
+                GraphData = lc.GraphData
             };
 
             return chartItem;
@@ -713,13 +721,13 @@ namespace RSMTenon.ReportGenerator
         private List<ReturnData> calculateTenYearBenchmarkReturn(List<ReturnData> prices)
         {
             int months = prices.Count;
-            int startIndex = months - Math.Min(121, months);
-            int startDate = prices[startIndex].Date;
+            //int startIndex = months - Math.Min(121, months);
+            int startDate = prices[months - 121].Date;
 
             ReturnCalculation cr = new ReturnCalculation();
             ReturnCalculation cb = new ReturnCalculation();
 
-            var rtrn = from p in prices
+            var rtrn = from p in prices.Skip(months - 120)
                        let r = cr.Return(p)
                        select new ReturnData
                        {
@@ -804,16 +812,27 @@ namespace RSMTenon.ReportGenerator
 
         private List<ReturnData> calculateAssetClassDrawdown(string assetclassId)
         {
-            var prices = getAssetClassPrices(assetclassId);
+            var returns = getAssetClassReturn(assetclassId);
 
-            ReturnCalculation calc = new ReturnCalculation();
+            ReturnCalculation cp = new ReturnCalculation();
+            ReturnCalculation cd = new ReturnCalculation();
 
-            var dd = from p in prices
+            var dd = from r in returns
+                     let price = cp.Price(r)
                      select new ReturnData
                      {
-                         Value = calc.Drawdown(p) - 1,
-                         Date = p.Date
+                         Value = cd.Drawdown(price, r.Value) - 1,
+                         Date = r.Date
                      };
+
+            //ReturnCalculation calc = new ReturnCalculation();
+
+            //var dd = from p in returns
+            //         select new ReturnData
+            //         {
+            //             Value = calc.Drawdown(p) - 1,
+            //             Date = p.Date
+            //         };
 
             return dd.ToList();
         }

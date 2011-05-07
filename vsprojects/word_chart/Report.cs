@@ -18,6 +18,7 @@ namespace RSMTenon.ReportGenerator
     public class ChartItem
     {
         public C.Chart Chart { get; set; }
+        public GraphData GraphData { get; set ;}
         public string Title { get; set; }
         public string CustomControlName { get; set; }
     }
@@ -67,7 +68,7 @@ namespace RSMTenon.ReportGenerator
         public Client Client { get; set; }
         private RepGenDataContext context;
         private XElement reportSpec = null;
-        private static string SPEC_FILE = @"C:\Documents and Settings\garsiden\My Documents\svn\repgen\vsprojects\word_chart\App_Data\report-spec.xml";
+        private static string SPEC_FILE = @"C:\Documents and Settings\garsiden\My Documents\Projects\git\repgen\vsprojects\word_chart\App_Data\report-spec.xml";
         private List<AssetClass> assetClasses = null;
         private string strategyName;
         // "C0C0C0", "808080", "0066CC", "98CC00"
@@ -183,7 +184,7 @@ namespace RSMTenon.ReportGenerator
             C.Chart chart = pie.GenerateChart(title, data.ToList());
 
             string ccn = rpt.Element("control-name").Value;
-            ChartItem chartItem = new ChartItem { Chart = chart, Title = title, CustomControlName = ccn };
+            ChartItem chartItem = new ChartItem { Chart = chart, Title = title, CustomControlName = ccn, GraphData = pie.GraphData };
 
             return chartItem;
         }
@@ -227,7 +228,6 @@ namespace RSMTenon.ReportGenerator
             if (Client.ExistingAssets) {
                 var data1 = getClientAssetDrawdown(Client.GUID);
                 lc.AddLineChartSeries(chart, data1, "Current", clientColourHex);
-
             }
 
             // first asset class
@@ -245,6 +245,23 @@ namespace RSMTenon.ReportGenerator
             string ccn = rpt.Element("control-name").Value;
 
             ChartItem chartItem = new ChartItem { Chart = chart, Title = title, CustomControlName = ccn };
+
+            return chartItem;
+        }
+
+        public ChartItem ExcelChart(List<AssetWeighting> model)
+        {
+            // set title
+            string title = "Excel Test";
+
+            // create chart
+            //var eg = new ExcelGraph();
+            var eg = new AllocationPieChart();
+            C.Chart chart = eg.GenerateChart(title, model);
+
+            string ccn = "ExcelChart";
+
+            ChartItem chartItem = new ChartItem { Chart = chart, Title = title, CustomControlName = ccn, GraphData = eg.GraphData };
 
             return chartItem;
         }
@@ -436,6 +453,43 @@ namespace RSMTenon.ReportGenerator
 
             string ccn = rpt.Element("control-name").Value;
             ChartItem chartItem = new ChartItem { Chart = chart, Title = title, CustomControlName = ccn };
+
+            return chartItem;
+        }
+
+        public ChartItem RollingReturnChartExcel(int years)
+        {
+            // set title
+            string title = "RR Test";
+
+            var assets = getAssetClasses();
+
+            // create chart
+            var lc = new RollingReturnLineChart();
+            C.Chart chart = lc.GenerateChart(title);
+
+            // first asset class
+            var data2 = new List<ReturnData>();
+            var data3 = new List<ReturnData>();
+            int startDate = 35944;
+            double val1 = 0.01;
+            double val2 = 0.10;
+
+            for (int i = 0; i < 30; i++) {
+                data2.Add(new ReturnData { Date = startDate, Value = val1+= 0.01 });
+                data3.Add(new ReturnData { Date = startDate, Value = val2+= 0.01 });
+                startDate += 30;
+            }
+
+            string dataKey2 = "UK Govt. Bonds";
+            lc.AddLineChartSeries(chart, data2.ToList(), dataKey2, assetClasses[0].ColourHex);
+
+            // add second data series
+            string dataKey3 = "Corp Bonds";
+            lc.AddLineChartSeries(chart, data3.ToList(), dataKey3, assetClasses[1].ColourHex);
+
+            string ccn = "";
+            ChartItem chartItem = new ChartItem { Chart = chart, Title = title, CustomControlName = ccn, GraphData = lc.GraphData};
 
             return chartItem;
         }

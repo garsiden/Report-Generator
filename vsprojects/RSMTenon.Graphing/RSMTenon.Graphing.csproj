@@ -52,6 +52,7 @@
     <Compile Include="BarGraph.cs" />
     <Compile Include="DrawdownLineChart.cs" />
     <Compile Include="Graph.cs" />
+    <Compile Include="GraphData.cs" />
     <Compile Include="GraphDrawing.cs" />
     <Compile Include="GraphSpace.cs" />
     <Compile Include="LineGraph.cs" />

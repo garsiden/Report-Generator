@@ -10,6 +10,8 @@ using DocumentFormat.OpenXml.Wordprocessing;
 using Wp = DocumentFormat.OpenXml.Drawing.Wordprocessing;
 using A = DocumentFormat.OpenXml.Drawing;
 using C = DocumentFormat.OpenXml.Drawing.Charts;
+using S = DocumentFormat.OpenXml.Spreadsheet;
+
 using System.Threading;
 
 using RSMTenon.Graphing;
@@ -19,9 +21,9 @@ namespace RSMTenon.ReportGenerator
 {
     class Program
     {
-        static string path = @"C:\Documents and Settings\garsiden\My Documents\Projects\RepGen\test\chart\";
-        static string generated = path + "ChartDoc.docx";
-        private static string sourceFile = @"../../App_Data/template1.dotx";
+        static string path = @"C:\Documents and Settings\garsiden\My Documents\Projects\RepGen\test\chart\excel_data\";
+        static string generated = path + "ChartDocComp.docx";
+        private static string sourceFile = path + "template.docx";
         private uint docPrId = 0U;
         private string contentSourceXml = @"../../App_Data/content.xml";
 
@@ -30,38 +32,78 @@ namespace RSMTenon.ReportGenerator
         {
             Program This = new Program();
 
-            // create test Client and Report
-            Guid guid = new Guid("636c8103-e06d-4575-aafc-574474c2d7f8");
-            Client client = Client.GetClientByGUID(guid);
-            Report report = new Report() { Client = client };
-
-            //string template = path + "chart_template.docx";
-            //string generated = path + "chart_test.docx";
-
-            // copy template to generated
-            //File.Copy(template, generated, true);
-            string tempDoc = createTempDocFile(sourceFile);
-
-            // open Word document
-            WordprocessingDocument myWordDoc = WordprocessingDocument.Open(tempDoc, true);
+            File.Copy(sourceFile, generated, true);
+            Report report = new Report();
+            WordprocessingDocument myWordDoc = WordprocessingDocument.Open(generated, true);
             MainDocumentPart mainPart = myWordDoc.MainDocumentPart;
 
-            //This.InsertAllocationPie(mainPart);
-            //This.InsertRRChartIntoWord(mainPart, report);
-            This.CreateReport(mainPart, report);
-
+            This.CreateReportTest(mainPart, report);
             myWordDoc.Close();
+            return;
+
+            // create test Client and Report
+            //Guid guid = new Guid("636c8103-e06d-4575-aafc-574474c2d7f8");
+            //Client client = Client.GetClientByGUID(guid);
+            //Report report = new Report() { Client = client };
+
+            //// copy template to generated
+            ////File.Copy(template, generated, true);
+            //string tempDoc = createTempDocFile(sourceFile);
+
+            //// open Word document
+            //WordprocessingDocument myWordDoc = WordprocessingDocument.Open(tempDoc, true);
+            //MainDocumentPart mainPart = myWordDoc.MainDocumentPart;
+
+            ////This.InsertAllocationPie(mainPart);
+            //This.CreateReport(mainPart, report);
+
+            //myWordDoc.Close();
         }
 
+
+        public void CreateReportTest(MainDocumentPart mainPart, Report report)
+        {
+            ChartItem chartItem = null;
+            string controlName = null;
+
+            // data
+            var model = new List<AssetWeighting>();
+            model.Add(new AssetWeighting { AssetClass = "1st Qtr", Weighting = 8.2 });
+            model.Add(new AssetWeighting { AssetClass = "2nd Qtr", Weighting = 3.2 });
+            model.Add(new AssetWeighting { AssetClass = "3rd Qtr", Weighting = 1.4 });
+            model.Add(new AssetWeighting { AssetClass = "4th Qtr", Weighting = 1.2 });
+
+            //var m = new List<ReturnData>();
+            //int startDate = 35944;
+            //double val = 100;
+
+            //for (int i = 0; i < 30; i++) {
+            //    m.Add(new ReturnData { Date = startDate, Value = val++ });
+            //    startDate += 30;
+            //}
+
+            string ssTest = path + "GraphDataCompare.xlsx";
+
+            // Test Graph
+            chartItem = report.ExcelChart(model);
+            chartItem.GraphData.Close();
+            chartItem.GraphData.WriteSpreadSheetToFile(ssTest);
+
+            controlName = "ExcelChart"; // chartItem.CustomControlName;
+            AddChartToDoc(mainPart, chartItem, controlName);
+
+            // save and close document
+            mainPart.Document.Save();
+       }
 
         public void CreateReport(MainDocumentPart mainPart, Report report)
         {
             TextContent tc = new TextContent();
             tc.GenerateTextContent(mainPart, report.Client, contentSourceXml);
-            
+
             ChartItem chartItem = null;
             string controlName = null;
-            
+
             // Model Table
             Table table = report.ModelTable();
             controlName = "ModelTable";
@@ -379,6 +421,11 @@ namespace RSMTenon.ReportGenerator
             return null;
         }
 
+
+
+        //private void AddChartToDoc(MainDocumentPart mainPart, ChartItem chartItem, string controlName) { }
+
+
         private void AddChartToDoc(MainDocumentPart mainPart, ChartItem chartItem, string controlName)
         {
             // open Word documant and remove existing content from control
@@ -387,10 +434,10 @@ namespace RSMTenon.ReportGenerator
             // generate new ChartPart and ChartSpace
             ChartPart chartPart = mainPart.AddNewPart<ChartPart>();
             string relId = mainPart.GetIdOfPart(chartPart);
-            C.ChartSpace chartSpace = GraphSpace.GenerateChartSpace(chartItem.Chart);
-            chartSpace.Append(chartItem.Chart);
 
-            // set ChartPart ChartSpace
+            GraphData gd = chartItem.GraphData;
+            gd.AddEmbeddedToChartPart(chartPart);
+            C.ChartSpace chartSpace = GraphSpace.GenerateChartSpaceWithData(chartItem.Chart, gd.ExternalDataId);
             chartPart.ChartSpace = chartSpace;
 
             // generate a new Wordprocessing Drawing, add to a new Run,
@@ -408,7 +455,7 @@ namespace RSMTenon.ReportGenerator
             //WordprocessingDocument myDoc = WordprocessingDocument.Open(docName, true);
             //MainDocumentPart mainPart = myDoc.MainDocumentPart;
             Document doc = mainPart.Document;
-            
+
 
             // create table to hold strategy details
             // add table to doc and save
@@ -436,6 +483,20 @@ namespace RSMTenon.ReportGenerator
             copyFile(sourceFile, tempFile);
 
             return tempFile;
+        }
+
+        public static void copyStream(Stream input, string destination)
+        {
+            //using (input) {
+                input.Position = 0;
+                using (FileStream output = new FileStream(destination, FileMode.Create, FileAccess.Write)) {
+                    byte[] buffer = new byte[16384];
+                    int len;
+                    while ((len = input.Read(buffer, 0, buffer.Length)) > 0) {
+                        output.Write(buffer, 0, len);
+                    }
+                }
+            //}
         }
 
         private static void copyFile(string source, string destination)
