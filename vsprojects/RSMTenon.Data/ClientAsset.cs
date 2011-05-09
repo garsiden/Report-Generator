@@ -65,7 +65,7 @@ namespace RSMTenon.Data
         {
             get
             {
-                return CASH + COMM + COPR + GLEQ + HEDG + + LOSH + PREQ + UKCB + UKEQ + UKGB + UKHY + WOBO;
+                return CASH + COMM + COPR + GLEQ + HEDG + LOSH + PREQ + UKCB + UKEQ + UKGB + UKHY + WOBO;
             }
         }
         #endregion

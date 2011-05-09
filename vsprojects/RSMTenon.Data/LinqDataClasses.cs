@@ -26,7 +26,7 @@ namespace RSMTenon.Data
     {
         public string AssetClassId;
         public string AssetClassName;
-        public IGrouping<string, Model> Investments;
+        public IGrouping<string, TacticalModel> Investments;
         public decimal Weighting;
     }
 
