@@ -23,16 +23,14 @@ namespace RSMTenon.Data
             return ctx.Strategies.First(s => s.ID.Equals(id)).Name;
         }
 
-        public Dictionary<int, ReturnData> GetStrategyPrices(string status)
+        public Dictionary<int, ReturnData> GetStrategyPrices()
         {
-            if (strategyPrices == null)
-            {
+            if (strategyPrices == null) {
                 var ctx = new RepGenDataContext();
-                var returns = ctx.ModelReturn(this.ID, status);
+                var returns = ctx.StrategicModelReturn(this.ID);
                 var calc = new ReturnCalculation();
                 var prices = from p in returns
-                             select new ReturnData
-                             {
+                             select new ReturnData {
                                  Date = p.Date,
                                  Value = calc.Price(p)
                              };

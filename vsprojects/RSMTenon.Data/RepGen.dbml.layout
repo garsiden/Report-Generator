@@ -2,10 +2,10 @@
 <ordesignerObjectsDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 11.375, 12" name="RepGen">
   <DataContextMoniker Name="/RepGenDataContext" />
   <nestedChildShapes>
-    <classShape Id="8dcdb6ff-e756-460a-86d7-941ad7e43132" absoluteBounds="6, 0.5, 2, 1.0961531575520833">
+    <classShape Id="8dcdb6ff-e756-460a-86d7-941ad7e43132" absoluteBounds="3.375, 0.5, 2, 1.26050048828125">
       <DataClassMoniker Name="/RepGenDataContext/AssetClass" />
       <nestedChildShapes>
-        <elementListCompartment Id="c3193d5c-47e9-4063-beef-4393d94eae4a" absoluteBounds="6.015, 0.96, 1.9700000000000002, 0.53615315755208326" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+        <elementListCompartment Id="c3193d5c-47e9-4063-beef-4393d94eae4a" absoluteBounds="3.3899999999999997, 0.96, 1.9700000000000002, 0.70050048828125" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
     <classShape Id="5a08ee7a-7218-4b84-b2bf-0df2e19e83e2" absoluteBounds="6.5, 4.25, 2, 2.4109318033854166">
@@ -20,10 +20,10 @@
         <elementListCompartment Id="04f40d3c-46a8-4ce4-852d-2441dff41d82" absoluteBounds="3.3900000000000006, 9.21, 1.9700000000000002, 0.53615315755208326" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
-    <classShape Id="1c8c825d-80c8-4eef-ba9a-6b81c6da89ef" absoluteBounds="3.375, 10.125, 2, 1.4248478190104166">
+    <classShape Id="1c8c825d-80c8-4eef-ba9a-6b81c6da89ef" absoluteBounds="3.375, 10.125, 2, 1.2605004882812505">
       <DataClassMoniker Name="/RepGenDataContext/ClientWeightingDifference" />
       <nestedChildShapes>
-        <elementListCompartment Id="337434c0-c919-47b9-9c27-9c55791ed3a3" absoluteBounds="3.39, 10.585, 1.9700000000000002, 0.86484781901041663" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+        <elementListCompartment Id="337434c0-c919-47b9-9c27-9c55791ed3a3" absoluteBounds="3.39, 10.585, 1.9700000000000002, 0.70050048828125" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
     <classShape Id="759d9c1f-0346-4f0a-9f6d-3ff8ab573208" absoluteBounds="0.5, 4.375, 2, 1.0961531575520833">
@@ -77,65 +77,18 @@
         <elementListCompartment Id="f64573b8-6b46-471f-b138-bab614a77b98" absoluteBounds="0.51500000000000012, 11.71, 1.9700000000000002, 1.3578898111979165" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
-    <classShape Id="576d4f93-2dd2-44f4-ab66-402a34eedade" absoluteBounds="3, 0.5, 2, 0.93180582682291679">
+    <classShape Id="576d4f93-2dd2-44f4-ab66-402a34eedade" absoluteBounds="7.25, 0.5, 2, 1.0961531575520833">
       <DataClassMoniker Name="/RepGenDataContext/AssetGroup" />
       <nestedChildShapes>
-        <elementListCompartment Id="54595305-a9d4-4cff-9a08-252d4100fb0f" absoluteBounds="3.015, 0.96, 1.9700000000000002, 0.37180582682291669" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+        <elementListCompartment Id="54595305-a9d4-4cff-9a08-252d4100fb0f" absoluteBounds="7.2650000000000006, 0.96, 1.9700000000000002, 0.53615315755208326" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
-    <classShape Id="dd065346-1889-47a4-a109-fefbeab2f311" absoluteBounds="3, 1.75, 2, 1.0961531575520833">
-      <DataClassMoniker Name="/RepGenDataContext/AssetGroupClass" />
-      <nestedChildShapes>
-        <elementListCompartment Id="6970ad5c-c2e7-45aa-8369-bd4c51cc88db" absoluteBounds="3.015, 2.21, 1.9700000000000002, 0.53615315755208326" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
-      </nestedChildShapes>
-    </classShape>
-    <associationConnector edgePoints="[(4 : 1.43180582682292); (4 : 1.75)]" fixedFrom="NotFixed" fixedTo="NotFixed">
-      <AssociationMoniker Name="/RepGenDataContext/AssetGroup/AssetGroup_AssetGroupClass" />
-      <nodes>
-        <classShapeMoniker Id="576d4f93-2dd2-44f4-ab66-402a34eedade" />
-        <classShapeMoniker Id="dd065346-1889-47a4-a109-fefbeab2f311" />
-      </nodes>
-    </associationConnector>
-    <associationConnector edgePoints="[(6 : 0.965902913411458); (5 : 0.965902913411458)]" fixedFrom="NotFixed" fixedTo="NotFixed">
-      <AssociationMoniker Name="/RepGenDataContext/AssetClass/AssetClass_AssetGroup" />
-      <nodes>
-        <classShapeMoniker Id="8dcdb6ff-e756-460a-86d7-941ad7e43132" />
-        <classShapeMoniker Id="576d4f93-2dd2-44f4-ab66-402a34eedade" />
-      </nodes>
-    </associationConnector>
-    <associationConnector edgePoints="[(7 : 1.59615315755208); (7 : 2.09375); (5 : 2.09375)]" fixedFrom="NotFixed" fixedTo="NotFixed">
-      <AssociationMoniker Name="/RepGenDataContext/AssetClass/AssetClass_AssetGroupClass" />
-      <nodes>
-        <classShapeMoniker Id="8dcdb6ff-e756-460a-86d7-941ad7e43132" />
-        <classShapeMoniker Id="dd065346-1889-47a4-a109-fefbeab2f311" />
-      </nodes>
-    </associationConnector>
     <classShape Id="634ff28c-6028-461e-b3c0-1b08244e1142" absoluteBounds="3.375, 7.375, 2, 1.0961531575520833">
       <DataClassMoniker Name="/RepGenDataContext/AssetWeighting" />
       <nestedChildShapes>
         <elementListCompartment Id="60916eb0-cdda-4ca5-8d41-5c967d1c6e91" absoluteBounds="3.3899999999999997, 7.835, 1.9700000000000002, 0.53615315755208326" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
-    <classShape Id="82bd445c-8450-45ea-84dd-86ee7c0f56b7" absoluteBounds="6.125, 2.5, 2, 1.26050048828125">
-      <DataClassMoniker Name="/RepGenDataContext/StrategicModel" />
-      <nestedChildShapes>
-        <elementListCompartment Id="ef3bb1d4-7e98-48cd-8b95-8a6f834e111b" absoluteBounds="6.14, 2.96, 1.9700000000000002, 0.70050048828125" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
-      </nestedChildShapes>
-    </classShape>
-    <associationConnector edgePoints="[(7.0625 : 1.59615315755208); (7.0625 : 2.5)]" fixedFrom="NotFixed" fixedTo="NotFixed">
-      <AssociationMoniker Name="/RepGenDataContext/AssetClass/AssetClass_StrategicModel" />
-      <nodes>
-        <classShapeMoniker Id="8dcdb6ff-e756-460a-86d7-941ad7e43132" />
-        <classShapeMoniker Id="82bd445c-8450-45ea-84dd-86ee7c0f56b7" />
-      </nodes>
-    </associationConnector>
-    <associationConnector edgePoints="[(4.75 : 3.44275024414063); (6.125 : 3.44275024414063)]" fixedFrom="NotFixed" fixedTo="NotFixed">
-      <AssociationMoniker Name="/RepGenDataContext/Strategy/Strategy_StrategicModel" />
-      <nodes>
-        <classShapeMoniker Id="6ff63e00-fb84-4961-a3d0-eef3a0c4efdd" />
-        <classShapeMoniker Id="82bd445c-8450-45ea-84dd-86ee7c0f56b7" />
-      </nodes>
-    </associationConnector>
     <classShape Id="ed47fa15-c49f-439d-912a-882b934366c5" absoluteBounds="6.5, 7.25, 2, 4.0544051106770826">
       <DataClassMoniker Name="/RepGenDataContext/ClientAsset" />
       <nestedChildShapes>
@@ -148,38 +101,65 @@
         <elementListCompartment Id="82474b28-313b-4929-ba44-6b9b83958704" absoluteBounds="8.89, 5.71, 1.9700000000000002, 3.001363118489583" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
-    <associationConnector edgePoints="[(7.5 : 6.66093180338542); (7.5 : 7.25)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+    <associationConnector edgePoints="[(7.5 : 6.66093180338542); (7.5 : 7.25)]" fixedFrom="NotFixed" fixedTo="NotFixed">
       <AssociationMoniker Name="/RepGenDataContext/Client/Client_ClientAsset" />
       <nodes>
         <classShapeMoniker Id="5a08ee7a-7218-4b84-b2bf-0df2e19e83e2" />
         <classShapeMoniker Id="ed47fa15-c49f-439d-912a-882b934366c5" />
       </nodes>
     </associationConnector>
-    <associationConnector edgePoints="[(8.5 : 5.95546590169271); (8.875 : 5.95546590169271)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+    <associationConnector edgePoints="[(8.5 : 5.95546590169271); (8.875 : 5.95546590169271)]" fixedFrom="NotFixed" fixedTo="NotFixed">
       <AssociationMoniker Name="/RepGenDataContext/Client/Client_ClientAssetClass" />
       <nodes>
         <classShapeMoniker Id="5a08ee7a-7218-4b84-b2bf-0df2e19e83e2" />
         <classShapeMoniker Id="707e3fee-d13f-4152-9393-27c3c8bb285a" />
       </nodes>
     </associationConnector>
-    <classShape Id="3397acc3-f762-4093-bd9b-056b74721e10" absoluteBounds="9.125, 1.5, 2, 2.4109318033854166">
+    <classShape Id="3397acc3-f762-4093-bd9b-056b74721e10" absoluteBounds="9.125, 2.125, 2, 2.4109318033854166">
       <DataClassMoniker Name="/RepGenDataContext/TacticalModel" />
       <nestedChildShapes>
-        <elementListCompartment Id="19612907-f5be-44e4-a23c-5405ac6dd4ae" absoluteBounds="9.14, 1.96, 1.9700000000000002, 1.8509318033854165" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+        <elementListCompartment Id="19612907-f5be-44e4-a23c-5405ac6dd4ae" absoluteBounds="9.14, 2.585, 1.9700000000000002, 1.8509318033854165" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
-    <associationConnector edgePoints="[(8 : 0.9999995); (10.125 : 0.9999995); (10.125 : 1.5)]" fixedFrom="Algorithm" fixedTo="Algorithm">
-      <AssociationMoniker Name="/RepGenDataContext/AssetClass/AssetClass_tblTacticalModel" />
+    <associationConnector edgePoints="[(9.25 : 1.04807657877604); (10.1875005 : 1.04807657877604); (10.1875005 : 2.125)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+      <AssociationMoniker Name="/RepGenDataContext/AssetGroup/AssetGroup_TacticalModel" />
       <nodes>
-        <classShapeMoniker Id="8dcdb6ff-e756-460a-86d7-941ad7e43132" />
+        <classShapeMoniker Id="576d4f93-2dd2-44f4-ab66-402a34eedade" />
         <classShapeMoniker Id="3397acc3-f762-4093-bd9b-056b74721e10" />
       </nodes>
     </associationConnector>
-    <associationConnector edgePoints="[(4.75 : 3.86696614583333); (9.125 : 3.86696614583333)]" fixedFrom="Algorithm" fixedTo="Algorithm">
-      <AssociationMoniker Name="/RepGenDataContext/Strategy/Strategy_tblTacticalModel" />
+    <associationConnector edgePoints="[(7.25 : 1.04807657877604); (5.375 : 1.04807657877604)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+      <AssociationMoniker Name="/RepGenDataContext/AssetGroup/AssetGroup_AssetClass" />
+      <nodes>
+        <classShapeMoniker Id="576d4f93-2dd2-44f4-ab66-402a34eedade" />
+        <classShapeMoniker Id="8dcdb6ff-e756-460a-86d7-941ad7e43132" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(4.75 : 3.89992390950521); (9.125 : 3.89992390950521)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <AssociationMoniker Name="/RepGenDataContext/Strategy/Strategy_TacticalModel" />
       <nodes>
         <classShapeMoniker Id="6ff63e00-fb84-4961-a3d0-eef3a0c4efdd" />
         <classShapeMoniker Id="3397acc3-f762-4093-bd9b-056b74721e10" />
+      </nodes>
+    </associationConnector>
+    <classShape Id="4ff3e174-14a1-4923-822c-a99599a6dd85" absoluteBounds="6.375, 2.125, 2, 1.4248478190104168">
+      <DataClassMoniker Name="/RepGenDataContext/StrategicModel" />
+      <nestedChildShapes>
+        <elementListCompartment Id="f529bba6-8714-4e1f-b8b5-1e6dcd7fcfee" absoluteBounds="6.39, 2.585, 1.9700000000000002, 0.86484781901041674" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <associationConnector edgePoints="[(5.375 : 1.70957682291667); (6.78125 : 1.70957682291667); (6.78125 : 2.125)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <AssociationMoniker Name="/RepGenDataContext/AssetClass/AssetClass_tblStrategicModel" />
+      <nodes>
+        <classShapeMoniker Id="8dcdb6ff-e756-460a-86d7-941ad7e43132" />
+        <classShapeMoniker Id="4ff3e174-14a1-4923-822c-a99599a6dd85" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(4.75 : 3.33742390950521); (6.375 : 3.33742390950521)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <AssociationMoniker Name="/RepGenDataContext/Strategy/Strategy_tblStrategicModel" />
+      <nodes>
+        <classShapeMoniker Id="6ff63e00-fb84-4961-a3d0-eef3a0c4efdd" />
+        <classShapeMoniker Id="4ff3e174-14a1-4923-822c-a99599a6dd85" />
       </nodes>
     </associationConnector>
   </nestedChildShapes>

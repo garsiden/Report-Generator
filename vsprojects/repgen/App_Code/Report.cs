@@ -144,8 +144,8 @@ namespace RSMTenon.ReportGenerator
                 colHeaders.Add(c.Value);
             }
 
-            // get model investments, grouped by asset class
-            var model = getModelTableData(Client.StrategyID, Client.StatusName).ToList();
+            // get tactical model investments, by asset group
+            var model = getTacticalModelTableData(Client.StrategyID, Client.StatusName).ToList();
 
             // build table
             Table table1 = modelTable.GenerateTable(colwidths, colHeaders);
@@ -155,9 +155,9 @@ namespace RSMTenon.ReportGenerator
             decimal income = 0;
 
             foreach (var g in model) {
-                // Asset Class sub-headings
+                // Asset Group sub-headings
                 var headerCells = new List<CellProps>();
-                headerCells.Add(new CellProps { text = g.AssetClassName, align = JustificationValues.Left });
+                headerCells.Add(new CellProps { text = g.AssetGroupName, align = JustificationValues.Left });
                 headerCells.Add(new CellProps { text = g.Weighting.ToString(formats[1]) });
                 for (int i = 2; i < ncols; i++) {
                     headerCells.Add(new CellProps());
@@ -188,7 +188,7 @@ namespace RSMTenon.ReportGenerator
                 table1.Append(emptyRow);
             }
 
-            // create a footer row with totals for asset class weighting, investment amount and total income
+            // create a footer row with totals for asset group weighting, investment amount and total income
             var footerCells = new List<CellProps>();
 
             footerCells.Add(new CellProps());
@@ -227,7 +227,7 @@ namespace RSMTenon.ReportGenerator
             if (Client.ExistingAssets) {
                 data = ClientAssetClass.GetClientAssetWeighting(Client.GUID).Where(a => a.Weighting > 0).ToList();
             } else {
-                data = Model.GetModelAllocation(Client.StrategyID, Client.HighNetWorth).Where(a => a.Weighting > 0).ToList();
+                data = StrategicModel.GetAssetWeighting(Client.StrategyID).Where(a => a.Weighting > 0).ToList();
             }
 
             AllocationPieChart pie = new AllocationPieChart();
@@ -259,8 +259,7 @@ namespace RSMTenon.ReportGenerator
 
             var comp = DataContext.ClientWeightingComparison(Client.GUID, Client.StrategyID);
             var diff = from c in comp
-                       let weight = Client.HighNetWorth ? c.WeightingDifferenceHNW : c.WeightingDifferenceAffluent
-                       select new AssetWeighting { AssetClass = c.AssetClassName, Weighting = weight };
+                       select new AssetWeighting { AssetGroup = c.AssetGroupName, Weighting = c.WeightingDifference };
             var data = diff.ToList();
 
             AllocationComparisonBarChart bc = new AllocationComparisonBarChart();
@@ -312,11 +311,12 @@ namespace RSMTenon.ReportGenerator
             lc.AddLineChartSeries(chart, data3, assets[1].Name, assets[1].ColourHex);
 
             // model drawdown
-            var data4 = calculateModelDrawdown(Client.StrategyID, Client.StatusName);
+            var data4 = calculateStrategicModelDrawdown(Client.StrategyID, Client.StatusName);
             lc.AddLineChartSeries(chart, data4, StrategyName + " Strategy", strategyColourHex);
 
             string ccn = rpt.Element("control-name").Value;
-            ChartItem chartItem = new ChartItem {
+            ChartItem chartItem = new ChartItem
+            {
                 Chart = chart,
                 Title = title,
                 CustomControlName = ccn,
@@ -363,12 +363,13 @@ namespace RSMTenon.ReportGenerator
             bc.AddBarChartSeries(chart, series3);
 
             // strategy
-            var prices4 = calculateModelPrices();
+            var prices4 = calculateStrategicModelPrices();
             var series4 = stressTestMarketRiseSeries(prices4, Client.Strategy.Name, strategyColourHex, rpt);
             bc.AddBarChartSeries(chart, series4);
 
             string ccn = rpt.Element("control-name").Value;
-            ChartItem chartItem = new ChartItem {
+            ChartItem chartItem = new ChartItem
+            {
                 Chart = chart,
                 Title = title,
                 CustomControlName = ccn,
@@ -415,12 +416,13 @@ namespace RSMTenon.ReportGenerator
             bc.AddBarChartSeries(chart, series3);
 
             // strategy
-            var returns4 = calculateModelPrices();
+            var returns4 = calculateStrategicModelPrices();
             var series4 = stressTestMarketCrashSeries(returns4, Client.Strategy.Name, strategyColourHex, rpt);
             bc.AddBarChartSeries(chart, series4);
 
             string ccn = rpt.Element("control-name").Value;
-            ChartItem chartItem = new ChartItem {
+            ChartItem chartItem = new ChartItem
+            {
                 Chart = chart,
                 Title = title,
                 CustomControlName = ccn,
@@ -476,13 +478,14 @@ namespace RSMTenon.ReportGenerator
             lc.AddLineChartSeries(chart, data5, dataKey5, benchmarkColourHex);
 
             // strategy
-            var rtrn4 = getModelReturn();
+            var rtrn4 = getStrategicModelReturn();
             var data4 = calculateTenYearReturn(rtrn4);
             string dataKey4 = StrategyName;
             lc.AddLineChartSeries(chart, data4, dataKey4, strategyColourHex);
 
             string ccn = rpt.Element("control-name").Value;
-            ChartItem chartItem = new ChartItem {
+            ChartItem chartItem = new ChartItem
+            {
                 Chart = chart,
                 Title = title,
                 CustomControlName = ccn,
@@ -546,13 +549,14 @@ namespace RSMTenon.ReportGenerator
             lc.AddLineChartSeries(chart, data3.ToList(), dataKey3, assetClasses[1].ColourHex);
 
             // add appropriate strategy data
-            var data4 = getModelReturn();
+            var data4 = getStrategicModelReturn();
             string dataKey4 = StrategyName + " Strategy";
             var rr = calulateRollingReturn(data4, years);
             lc.AddLineChartSeries(chart, rr, dataKey4, strategyColourHex);
 
             string ccn = rpt.Element("control-name").Value;
-            ChartItem chartItem = new ChartItem {
+            ChartItem chartItem = new ChartItem
+            {
                 Chart = chart,
                 Title = title,
                 CustomControlName = ccn,
@@ -611,26 +615,26 @@ namespace RSMTenon.ReportGenerator
             return clientAssetReturn;
         }
 
-        private List<ReturnData> getModelReturn()
+        private List<ReturnData> getStrategicModelReturn()
         {
             if (modelReturn == null)
-                modelReturn = DataContext.ModelReturn(Client.StrategyID, Client.StatusName).ToList();
+                modelReturn = DataContext.StrategicModelReturn(Client.StrategyID).ToList();
             return modelReturn;
         }
 
-        private IQueryable<ModelTableData> getModelTableData(string strategyId, string status)
+        private IQueryable<TacticalModelTableData> getTacticalModelTableData(string strategyId, string status)
         {
-            var models = DataContext.Models;
+            var models = DataContext.TacticalModels;
 
             var modelData = from m in models
                             where m.StrategyID == strategyId
-                            group m by m.AssetClassID
+                            group m by m.AssetGroupID
                                 into g
                                 let weight = (status == "HNW" ? g.Sum(m => m.WeightingHNW) : g.Sum(m => m.WeightingAffluent))
-                                select new ModelTableData
+                                select new TacticalModelTableData
                                 {
-                                    AssetClassId = g.Key,
-                                    AssetClassName = g.First().AssetClass.Name,
+                                    AssetGroupId = g.Key,
+                                    AssetGroupName = g.First().AssetGroup.Name,
                                     Investments = g,
                                     Weighting = weight
                                 };
@@ -700,10 +704,10 @@ namespace RSMTenon.ReportGenerator
             return prices.ToDictionary(p => p.Date);
         }
 
-        private Dictionary<int, ReturnData> calculateModelPrices()
+        private Dictionary<int, ReturnData> calculateStrategicModelPrices()
         {
             if (modelPrices == null) {
-                var returns = getModelReturn();
+                var returns = getStrategicModelReturn();
                 var calc = new ReturnCalculation();
                 var prices = from p in returns
                              select new ReturnData
@@ -765,7 +769,7 @@ namespace RSMTenon.ReportGenerator
 
         public double CalculateModelReturn()
         {
-            var prices = calculateModelPrices();
+            var prices = calculateStrategicModelPrices();
             double endPrice = prices.Last().Value.Value;
             double startPrice = prices.ElementAt(prices.Count - 121).Value.Value;
 
@@ -774,9 +778,9 @@ namespace RSMTenon.ReportGenerator
             return rtrn;
         }
 
-        private List<ReturnData> calculateModelDrawdown(string strategyId, string status)
+        private List<ReturnData> calculateStrategicModelDrawdown(string strategyId, string status)
         {
-            var returns = getModelReturn();
+            var returns = getStrategicModelReturn();
 
             ReturnCalculation cp = new ReturnCalculation();
             ReturnCalculation cd = new ReturnCalculation();
@@ -824,15 +828,6 @@ namespace RSMTenon.ReportGenerator
                          Value = cd.Drawdown(price, r.Value) - 1,
                          Date = r.Date
                      };
-
-            //ReturnCalculation calc = new ReturnCalculation();
-
-            //var dd = from p in returns
-            //         select new ReturnData
-            //         {
-            //             Value = calc.Drawdown(p) - 1,
-            //             Date = p.Date
-            //         };
 
             return dd.ToList();
         }

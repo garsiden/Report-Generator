@@ -73,7 +73,10 @@ namespace RSMTenon.Data
         {
             get
             {
-                return rnd(CASH) + rnd(COMM) + rnd(COPR) + rnd(GLEQ) + rnd(HEDG) + rnd(LOSH) + rnd(PREQ) + rnd(UKCB) + rnd(UKEQ) + rnd(UKGB) + rnd(UKHY) + rnd(WOBO);
+                decimal total = rnd(CASH) + rnd(COMM) + rnd(COPR) + rnd(EMMA) + rnd(GLEQ);
+                total += (rnd(GLMA) + rnd(HEDG) + rnd(LOSH) + rnd(MAFU) + rnd(PREQ));
+                total += (rnd(UKCB) + rnd(UKEQ) + rnd(UKGB) + rnd(UKHY) + rnd(WOBO));
+                return total;
             }
         }
         #endregion

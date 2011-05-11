@@ -5,10 +5,9 @@
     <Type Name="AssetClass">
       <Column Name="ID" Type="System.String" DbType="NChar(4) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
       <Column Name="Name" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
-      <Association Name="AssetClass_AssetGroup" Member="AssetGroup" ThisKey="ID" OtherKey="ID" Type="AssetGroup" Cardinality="One" />
-      <Association Name="AssetClass_AssetGroupClass" Member="AssetGroupClass" ThisKey="ID" OtherKey="AssetClassID" Type="AssetGroupClass" Cardinality="One" />
-      <Association Name="AssetClass_StrategicModel" Member="StrategicModels" ThisKey="ID" OtherKey="AssetClassID" Type="StrategicModel" />
-      <Association Name="AssetClass_tblTacticalModel" Member="TacticalModels" ThisKey="ID" OtherKey="AssetClassID" Type="TacticalModel" />
+      <Column Name="AssetGroupID" Type="System.String" DbType="NChar(4) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
+      <Association Name="AssetClass_tblStrategicModel" Member="StrategicModels" ThisKey="ID" OtherKey="AssetClassID" Type="StrategicModel" />
+      <Association Name="AssetGroup_AssetClass" Member="AssetGroup" ThisKey="AssetGroupID" OtherKey="ID" Type="AssetGroup" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.tblClient" Member="Clients">
@@ -36,10 +35,9 @@
   </Table>
   <Table Name="" Member="ClientWeightingDifferences">
     <Type Name="ClientWeightingDifference" Id="ID3">
-      <Column Name="AssetClassID" Type="System.String" DbType="NChar(4) NOT NULL" CanBeNull="false" />
-      <Column Name="AssetClassName" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
-      <Column Name="WeightingDifferenceHNW" Storage="_WeightingDifference" Type="System.Double" DbType="Float NOT NULL" CanBeNull="false" />
-      <Column Name="WeightingDifferenceAffluent" AutoSync="Never" Type="System.Double" DbType="Float NOT NULL" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="AssetGroupID" Storage="_AssetClassID" Type="System.String" DbType="NChar(4) NOT NULL" CanBeNull="false" />
+      <Column Name="AssetGroupName" Storage="_AssetClassName" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="WeightingDifference" Type="System.Double" DbType="Float NOT NULL" CanBeNull="false" />
     </Type>
   </Table>
   <Table Name="dbo.tblBenchmark" Member="Benchmarks">
@@ -71,8 +69,8 @@
       <Column Name="AggregateCharge" Type="System.Decimal" DbType="Decimal(4,2) NOT NUL" CanBeNull="false" UpdateCheck="Never" />
       <Association Name="Strategy_Client" Member="Clients" ThisKey="ID" OtherKey="StrategyID" Type="Client" />
       <Association Name="Strategy_Content" Member="Contents" ThisKey="ID" OtherKey="StrategyID" Type="Content" />
-      <Association Name="Strategy_StrategicModel" Member="StrategicModels" ThisKey="ID" OtherKey="StrategyID" Type="StrategicModel" />
-      <Association Name="Strategy_tblTacticalModel" Member="TacticalModels" ThisKey="ID" OtherKey="StrategyID" Type="TacticalModel" />
+      <Association Name="Strategy_TacticalModel" Member="TacticalModels" ThisKey="ID" OtherKey="StrategyID" Type="TacticalModel" />
+      <Association Name="Strategy_tblStrategicModel" Member="StrategicModels" ThisKey="ID" OtherKey="StrategyID" Type="StrategicModel" />
       <Association Name="Benchmark_Strategy" Member="Benchmark" ThisKey="BenchmarkID" OtherKey="ID" Type="Benchmark" IsForeignKey="true" />
     </Type>
   </Table>
@@ -111,48 +109,32 @@
   <Table Name="dbo.tblAssetGroup" Member="AssetGroups">
     <Type Name="AssetGroup">
       <Column Name="ID" Type="System.String" DbType="NChar(4) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
-      <Association Name="AssetGroup_AssetGroupClass" Member="AssetGroupClasses" ThisKey="ID" OtherKey="AssetGroupID" Type="AssetGroupClass" />
-      <Association Name="AssetClass_AssetGroup" Member="AssetClass" ThisKey="ID" OtherKey="ID" Type="AssetClass" IsForeignKey="true" />
-    </Type>
-  </Table>
-  <Table Name="dbo.tblAssetGroupClass" Member="AssetGroupClasses">
-    <Type Name="AssetGroupClass">
-      <Column Name="AssetGroupID" Type="System.String" DbType="NChar(4) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
-      <Column Name="AssetClassID" Type="System.String" DbType="NChar(4) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
-      <Association Name="AssetClass_AssetGroupClass" Member="AssetClass" ThisKey="AssetClassID" OtherKey="ID" Type="AssetClass" IsForeignKey="true" />
-      <Association Name="AssetGroup_AssetGroupClass" Member="AssetGroup" ThisKey="AssetGroupID" OtherKey="ID" Type="AssetGroup" IsForeignKey="true" />
+      <Column Name="Name" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
+      <Association Name="AssetGroup_AssetClass" Member="AssetClasses" ThisKey="ID" OtherKey="AssetGroupID" Type="AssetClass" />
+      <Association Name="AssetGroup_TacticalModel" Member="TacticalModels" ThisKey="ID" OtherKey="AssetGroupID" Type="TacticalModel" />
     </Type>
   </Table>
   <Table Name="" Member="AssetWeightings">
     <Type Name="AssetWeighting" Id="ID2">
-      <Column Name="AssetClass" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="AssetGroup" Storage="_AssetClass" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
       <Column Name="Weighting" Type="System.Double" DbType="Float" CanBeNull="true" />
-    </Type>
-  </Table>
-  <Table Name="dbo.tblStrategicModel" Member="StrategicModels">
-    <Type Name="StrategicModel">
-      <Column Name="StrategyID" Type="System.String" DbType="NChar(2) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
-      <Column Name="AssetClassID" Type="System.String" DbType="NChar(4) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
-      <Column Name="Weighting" Type="System.Decimal" DbType="Decimal(5,4) NOT NULL" CanBeNull="false" />
-      <Association Name="AssetClass_StrategicModel" Member="AssetClass" ThisKey="AssetClassID" OtherKey="ID" Type="AssetClass" IsForeignKey="true" DeleteRule="CASCADE" DeleteOnNull="true" />
-      <Association Name="Strategy_StrategicModel" Member="Strategy" ThisKey="StrategyID" OtherKey="ID" Type="Strategy" IsForeignKey="true" DeleteRule="CASCADE" DeleteOnNull="true" />
     </Type>
   </Table>
   <Table Name="dbo.tblClientAsset" Member="ClientAssets">
     <Type Name="ClientAsset">
-      <Column Name="GUID" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="GUID" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
       <Column Name="ClientGUID" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" UpdateCheck="Never" />
       <Column Name="AssetName" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
       <Column Name="Amount" Type="System.Decimal" DbType="Money NOT NULL" CanBeNull="false" UpdateCheck="Never" />
       <Column Name="CASH" Type="System.Decimal" DbType="Decimal(4,1) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
       <Column Name="COMM" Type="System.Decimal" DbType="Decimal(4,1) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
       <Column Name="COPR" Type="System.Decimal" DbType="Decimal(4,1) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
-      <Column Name="EMMA" Type="System.Decimal" DbType="Decimal(4,1)" CanBeNull="true" UpdateCheck="Never" />
+      <Column Name="EMMA" Type="System.Decimal" DbType="Decimal(4,1)" CanBeNull="false" UpdateCheck="Never" />
       <Column Name="GLEQ" Type="System.Decimal" DbType="Decimal(4,1) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
-      <Column Name="GLMA" Type="System.Decimal" DbType="Decimal(4,1)" CanBeNull="true" UpdateCheck="Never" />
+      <Column Name="GLMA" Type="System.Decimal" DbType="Decimal(4,1)" CanBeNull="false" UpdateCheck="Never" />
       <Column Name="HEDG" Type="System.Decimal" DbType="Decimal(4,1) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
       <Column Name="LOSH" Type="System.Decimal" DbType="Decimal(4,1) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
-      <Column Name="MAFU" Type="System.Decimal" DbType="Decimal(4,1)" CanBeNull="true" UpdateCheck="Never" />
+      <Column Name="MAFU" Type="System.Decimal" DbType="Decimal(4,1)" CanBeNull="false" UpdateCheck="Never" />
       <Column Name="PREQ" Type="System.Decimal" DbType="Decimal(4,1) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
       <Column Name="UKCB" Type="System.Decimal" DbType="Decimal(4,1) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
       <Column Name="UKEQ" Type="System.Decimal" DbType="Decimal(4,1) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
@@ -169,12 +151,12 @@
       <Column Name="CASH" Type="System.Decimal" DbType="Decimal(4,1) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
       <Column Name="COMM" Type="System.Decimal" DbType="Decimal(4,1) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
       <Column Name="COPR" Type="System.Decimal" DbType="Decimal(4,1) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
-      <Column Name="EMMA" Type="System.Decimal" DbType="Decimal(4,1)" CanBeNull="true" UpdateCheck="Never" />
+      <Column Name="EMMA" Type="System.Decimal" DbType="Decimal(4,1)" CanBeNull="false" UpdateCheck="Never" />
       <Column Name="GLEQ" Type="System.Decimal" DbType="Decimal(4,1) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
-      <Column Name="GLMA" Type="System.Decimal" DbType="Decimal(4,1)" CanBeNull="true" UpdateCheck="Never" />
+      <Column Name="GLMA" Type="System.Decimal" DbType="Decimal(4,1)" CanBeNull="false" UpdateCheck="Never" />
       <Column Name="HEDG" Type="System.Decimal" DbType="Decimal(4,1) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
       <Column Name="LOSH" Type="System.Decimal" DbType="Decimal(4,1) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
-      <Column Name="MAFU" Type="System.Decimal" DbType="Decimal(4,1)" CanBeNull="true" UpdateCheck="Never" />
+      <Column Name="MAFU" Type="System.Decimal" DbType="Decimal(4,1)" CanBeNull="false" UpdateCheck="Never" />
       <Column Name="PREQ" Type="System.Decimal" DbType="Decimal(4,1) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
       <Column Name="UKCB" Type="System.Decimal" DbType="Decimal(4,1) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
       <Column Name="UKEQ" Type="System.Decimal" DbType="Decimal(4,1) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
@@ -187,18 +169,28 @@
   </Table>
   <Table Name="dbo.tblTacticalModel" Member="TacticalModels">
     <Type Name="TacticalModel">
-      <Column Name="GUID" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="GUID" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
       <Column Name="SEDOL" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" UpdateCheck="Never" />
       <Column Name="StrategyID" Type="System.String" DbType="NChar(2) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
-      <Column Name="AssetClassID" Type="System.String" DbType="NChar(4) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="AssetGroupID" Type="System.String" DbType="NChar(4) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
       <Column Name="InvestmentName" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
       <Column Name="WeightingHNW" Type="System.Decimal" DbType="Decimal(5,4) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
       <Column Name="WeightingAffluent" Type="System.Decimal" DbType="Decimal(5,4) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
       <Column Name="ExpectedYield" Type="System.Decimal" DbType="Decimal(5,4) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
       <Column Name="PurchaseCharge" Type="System.Decimal" DbType="Money NOT NULL" CanBeNull="false" UpdateCheck="Never" />
       <Column Name="SSMA_TimeStamp" Type="System.Data.Linq.Binary" DbType="rowversion NOT NULL" IsDbGenerated="true" CanBeNull="false" UpdateCheck="Never" />
-      <Association Name="AssetClass_tblTacticalModel" Member="AssetClass" ThisKey="AssetClassID" OtherKey="ID" Type="AssetClass" IsForeignKey="true" />
-      <Association Name="Strategy_tblTacticalModel" Member="Strategy" ThisKey="StrategyID" OtherKey="ID" Type="Strategy" IsForeignKey="true" DeleteRule="CASCADE" DeleteOnNull="true" />
+      <Association Name="Strategy_TacticalModel" Member="Strategy" ThisKey="StrategyID" OtherKey="ID" Type="Strategy" IsForeignKey="true" DeleteRule="CASCADE" DeleteOnNull="true" />
+      <Association Name="AssetGroup_TacticalModel" Member="AssetGroup" ThisKey="AssetGroupID" OtherKey="ID" Type="AssetGroup" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.tblStrategicModel" Member="StrategicModels">
+    <Type Name="StrategicModel">
+      <Column Name="GUID" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="StrategyID" Type="System.String" DbType="NChar(2) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="AssetClassID" Type="System.String" DbType="NChar(4) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="Weighting" Type="System.Decimal" DbType="Decimal(5,4) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
+      <Association Name="AssetClass_tblStrategicModel" Member="AssetClass" ThisKey="AssetClassID" OtherKey="ID" Type="AssetClass" IsForeignKey="true" DeleteRule="CASCADE" DeleteOnNull="true" />
+      <Association Name="Strategy_tblStrategicModel" Member="Strategy" ThisKey="StrategyID" OtherKey="ID" Type="Strategy" IsForeignKey="true" DeleteRule="CASCADE" DeleteOnNull="true" />
     </Type>
   </Table>
   <Function Name="dbo.spRollingReturn" Method="RollingReturn">
@@ -213,11 +205,6 @@
   <Function Name="dbo.spClientAssetWeighting" Method="ClientAssetWeighting">
     <Parameter Name="ClientGUID" Parameter="clientGUID" Type="System.Guid" DbType="UniqueIdentifier" />
     <ElementType IdRef="ID2" />
-  </Function>
-  <Function Name="dbo.spModelReturn" Method="ModelReturn">
-    <Parameter Name="StrategyID" Parameter="strategyID" Type="System.String" DbType="NChar(2)" />
-    <Parameter Name="ModelType" Parameter="modelType" Type="System.String" DbType="NChar(3)" />
-    <ElementType IdRef="ID1" />
   </Function>
   <Function Name="dbo.spClientWeightingComparison" Method="ClientWeightingComparison">
     <Parameter Name="ClientGUID" Parameter="clientGUID" Type="System.Guid" DbType="UniqueIdentifier" />
@@ -234,6 +221,10 @@
   </Function>
   <Function Name="dbo.spClientAssetReturn" Method="ClientAssetReturn">
     <Parameter Name="ClientGUID" Parameter="clientGUID" Type="System.Guid" DbType="UniqueIdentifier" />
+    <ElementType IdRef="ID1" />
+  </Function>
+  <Function Name="dbo.spStrategicModelReturn" Method="StrategicModelReturn">
+    <Parameter Name="StrategyID" Parameter="strategyID" Type="System.String" DbType="NChar(2)" />
     <ElementType IdRef="ID1" />
   </Function>
 </Database>

@@ -15,7 +15,7 @@ namespace RSMTenon.Graphing
 
         public AllocationPieChart()
         {
-            categoryName = "Asset Class";
+            categoryName = "Asset Group";
             valueFormat = "General";
         }
 
@@ -45,7 +45,7 @@ namespace RSMTenon.Graphing
             SeriesText seriesText1 = GenerateSeriesText(title, GraphData.DataColumn);
 
             // c:cat category axis data
-            var categoryData = model.OrderByDescending(m => m.Weighting).Select(n => n.AssetClass);
+            var categoryData = model.OrderByDescending(m => m.Weighting).Select(n => n.AssetGroup);
             GraphData.AddTextColumn(categoryName, categoryData);
             CategoryAxisData categoryAxisData1 = GenerateCategoryAxisData(categoryData, GraphData.TextColumn);
 
@@ -93,22 +93,23 @@ namespace RSMTenon.Graphing
             Layout layout1 = new Layout();
 
             // Manual layout to accomodate all Asset Classes
-            ManualLayout manualLayout1 = new ManualLayout();
-            LeftMode leftMode1 = new LeftMode() { Val = LayoutModeValues.Edge };
-            TopMode topMode1 = new TopMode() { Val = LayoutModeValues.Edge };
-            Left left1 = new Left() { Val = 0.74094630872483225D };
-            Top top1 = new Top() { Val = 0.13422099673202617D };
-            Width width1 = new Width() { Val = 0.24484787472035793D };
-            Height height1 = new Height() { Val = 0.84387581699346426D };
+            // (Removed as Asset Groups used instead of Classes, of which ther are fewer
+            //ManualLayout manualLayout1 = new ManualLayout();
+            //LeftMode leftMode1 = new LeftMode() { Val = LayoutModeValues.Edge };
+            //TopMode topMode1 = new TopMode() { Val = LayoutModeValues.Edge };
+            //Left left1 = new Left() { Val = 0.74094630872483225D };
+            //Top top1 = new Top() { Val = 0.13422099673202617D };
+            //Width width1 = new Width() { Val = 0.24484787472035793D };
+            //Height height1 = new Height() { Val = 0.84387581699346426D };
 
-            manualLayout1.Append(leftMode1);
-            manualLayout1.Append(topMode1);
-            manualLayout1.Append(left1);
-            manualLayout1.Append(top1);
-            manualLayout1.Append(width1);
-            manualLayout1.Append(height1);
+            //manualLayout1.Append(leftMode1);
+            //manualLayout1.Append(topMode1);
+            //manualLayout1.Append(left1);
+            //manualLayout1.Append(top1);
+            //manualLayout1.Append(width1);
+            //manualLayout1.Append(height1);
 
-            layout1.Append(manualLayout1);
+            //layout1.Append(manualLayout1);
 
             TextProperties textProperties1 = new TextProperties();
             A::BodyProperties bodyProperties1 = new A::BodyProperties();

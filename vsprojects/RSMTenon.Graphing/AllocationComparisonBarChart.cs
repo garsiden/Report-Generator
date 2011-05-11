@@ -25,7 +25,7 @@ namespace RSMTenon.Graphing
 
         public Chart GenerateChart(string title, List<AssetWeighting> data)
         {
-            string[] pointNames = data.Select(p => p.AssetClass).ToArray();
+            string[] pointNames = data.Select(p => p.AssetGroup).ToArray();
             double[] values = data.Select(v => v.Weighting ?? 0).ToArray();
 
             Chart chart1 = new Chart();

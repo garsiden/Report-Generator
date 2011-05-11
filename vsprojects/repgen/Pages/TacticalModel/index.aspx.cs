@@ -6,7 +6,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using RSMTenon.Data;
 
-public partial class Pages_Model_index : RepGenPage
+public partial class Pages_TacticalModel_index : RepGenPage
 {
     private decimal[] sub = { 0, 0, 0 };
     private decimal[] tot = { 0, 0, 0 };
@@ -16,23 +16,20 @@ public partial class Pages_Model_index : RepGenPage
 
     protected void Page_Load(object sender, EventArgs e)
     {
-        if (!IsPostBack)
-        {
+        if (!IsPostBack) {
             this.DataBind();
         }
     }
 
     protected void gridModel_RowDataBound(object sender, GridViewRowEventArgs e)
     {
-        if (e.Row.RowType == DataControlRowType.DataRow)
-        {
+        if (e.Row.RowType == DataControlRowType.DataRow) {
             GridView gridChild = (GridView)e.Row.Cells[1].Controls[1];
             string assetClassId = gridModel.DataKeys[e.Row.DataItemIndex].Value.ToString();
             sourceDetail.WhereParameters[0].DefaultValue = assetClassId;
             gridChild.DataSource = sourceDetail;
             gridChild.DataBind();
-        } else if (e.Row.RowType == DataControlRowType.Footer)
-        {
+        } else if (e.Row.RowType == DataControlRowType.Footer) {
             Table table = (Table)(e.Row.Cells[1].FindControl("tableFooterTotal"));
             table.Rows[0].Cells[1].Text = tot[HNW].ToString("0.00%");
             table.Rows[0].Cells[2].Text = tot[AFF].ToString("0.00%");
@@ -45,24 +42,22 @@ public partial class Pages_Model_index : RepGenPage
         this.gridModel.DataBind();
     }
 
-    public IEnumerable<ModelAssetClass> GetAssetClasses()
+    public IEnumerable<ModelAssetGroup> GetAssetGroups()
     {
         string strategyId = this.listStrategy.SelectedValue;
 
-        return Model.GetAssetClasses(strategyId);
+        return TacticalModel.GetAssetGroups(strategyId);
 
     }
 
     protected void gridChild_RowDataBound(object sender, GridViewRowEventArgs e)
     {
-        if (e.Row.RowType == DataControlRowType.DataRow)
-        {
-            var item = (Model)e.Row.DataItem;
+        if (e.Row.RowType == DataControlRowType.DataRow) {
+            var item = (TacticalModel)e.Row.DataItem;
             sub[HNW] += item.WeightingHNW;
             sub[AFF] += item.WeightingAffluent;
             sub[INC] += (100 * item.WeightingHNW * item.ExpectedYield);
-        } else if (e.Row.RowType == DataControlRowType.Footer)
-        {
+        } else if (e.Row.RowType == DataControlRowType.Footer) {
             e.Row.Cells[0].Text = "Weighting Total/Average HNW Yield";
             e.Row.Cells[1].Text = sub[HNW].ToString("0.00%");
             e.Row.Cells[2].Text = sub[AFF].ToString("0.00%");

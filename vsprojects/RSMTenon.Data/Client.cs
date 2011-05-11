@@ -170,8 +170,8 @@ namespace RSMTenon.Data
                 }
                 return;
             }
-            
-           // Or check assets by class 
+
+            // Or check assets by class 
             if (ClientAssetClass == null)
                 throw new Exception(@"No client assets entered.<br/>Please add client's assets or uncheck 'Use Existing Assets'.");
 

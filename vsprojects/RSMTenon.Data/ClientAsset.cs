@@ -13,8 +13,7 @@ namespace RSMTenon.Data
         [System.ComponentModel.DataObjectMethod(System.ComponentModel.DataObjectMethodType.Select, true)]
         public static ClientAsset GetClientAsset(Guid? guid)
         {
-            if (guid != null)
-            {
+            if (guid != null) {
                 var ctx = new RepGenDataContext();
                 return ctx.ClientAssets.SingleOrDefault(a => a.GUID == guid);
             }
@@ -65,7 +64,7 @@ namespace RSMTenon.Data
         {
             get
             {
-                return CASH + COMM + COPR + GLEQ + HEDG + LOSH + PREQ + UKCB + UKEQ + UKGB + UKHY + WOBO;
+                return CASH + COMM + COPR + EMMA + GLEQ + GLMA + HEDG + LOSH + MAFU + PREQ + UKCB + UKEQ + UKGB + UKHY + WOBO;
             }
         }
         #endregion
@@ -74,10 +73,8 @@ namespace RSMTenon.Data
 
         partial void OnValidate(System.Data.Linq.ChangeAction action)
         {
-            if (action == ChangeAction.Update)
-            {
-                if (TotalAssetAllocation != 100 && ClientGUID != Guid.Empty)
-                {
+            if (action == ChangeAction.Update) {
+                if (TotalAssetAllocation != 100 && ClientGUID != Guid.Empty) {
                     string msg = String.Format("Asset allocations must total 100% (currently {0:0.0}%)", TotalAssetAllocation);
                     throw new ArgumentException(msg);
                 }
@@ -87,8 +84,7 @@ namespace RSMTenon.Data
 
         partial void OnAmountChanging(decimal value)
         {
-            if (value <= 0)
-            {
+            if (value <= 0) {
                 throw new ArgumentException("Investment Amount must be greater than 0");
             }
         }

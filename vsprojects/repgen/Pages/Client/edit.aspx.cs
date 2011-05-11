@@ -12,8 +12,7 @@ public partial class Pages_Client_edit : RepGenPage
 {
     protected void Page_Load(object sender, EventArgs e)
     {
-        if (!IsPostBack)
-        {
+        if (!IsPostBack) {
             string guid = this.Request.QueryString["guid"];
 
             // set link urls
@@ -28,7 +27,7 @@ public partial class Pages_Client_edit : RepGenPage
                 hyperClass.Text = hyperClass.Text.Replace("Add", "Amend");
             if (client.HasAssetsByInvestment)
                 hyperAsset.Text = hyperAsset.Text.Replace("Add", "Amend");
-            
+
         }
 
         labelException.Visible = false;
@@ -37,8 +36,7 @@ public partial class Pages_Client_edit : RepGenPage
 
     protected void formClient_ItemUpdated(object sender, FormViewUpdatedEventArgs e)
     {
-        if (e.Exception != null)
-        {
+        if (e.Exception != null) {
             showException(e.Exception, labelException, "updating the client");
             e.ExceptionHandled = true;
             e.KeepInEditMode = true;
@@ -60,12 +58,10 @@ public partial class Pages_Client_edit : RepGenPage
     {
         var radio = (RadioButtonList)this.formClient.Row.FindControl("radioListStatus");
 
-        if (((DropDownList)sender).SelectedValue == "TC")
-        {
+        if (((DropDownList)sender).SelectedValue == "TC") {
             radio.SelectedValue = "High Net Worth";
             radio.Enabled = false;
-        } else
-        {
+        } else {
             radio.Enabled = true;
         }
     }

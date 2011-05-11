@@ -6,7 +6,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
-public partial class Pages_AssetClass_editA_M : RepGenPage
+public partial class Pages_AssetClass_editA_G : RepGenPage
 {
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -17,7 +17,7 @@ public partial class Pages_AssetClass_editA_M : RepGenPage
     {
         try {
             if (e.CommandName == "Insert") {
-                string[] fields = { "Date", "CASH", "COMM", "GLEQ", "HEDG", "LOSH", "PREQ" };
+                string[] fields = { "Date", "CASH", "COMM", "EMMA", "GLEQ", "GLMA" };
                 ListDictionary listDictionary = new ListDictionary();
 
                 foreach (var f in fields) {

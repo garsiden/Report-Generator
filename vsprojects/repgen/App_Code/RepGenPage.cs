@@ -24,30 +24,19 @@ public partial class RepGenPage : System.Web.UI.Page
         return DataContext.Benchmarks.OrderBy(b => b.Name).ToList();
     }
 
-    public List<AssetClass> GetModelAssetClasses()
+    public virtual List<AssetClass> GetModelAssetClasses()
     {
-        var classes = from cls in DataContext.AssetClasses
-                      join grp in DataContext.AssetGroupClasses
-                      on cls.ID equals
-                          grp.AssetClassID
-                      into all
-                      from a in all.DefaultIfEmpty()
-                      where a.AssetClassID == null
-                      select cls;
-
-        return classes.ToList();
+        return DataContext.AssetClasses.ToList();
     }
 
-    public List<AssetClass> GetBreakdownAssetClasses()
+    public List<ModelAssetClass> GetNewModelAssetClasses(string strategyId)
     {
-        var classes = from cls in DataContext.AssetClasses
-                      join grp in DataContext.AssetGroupClasses
-                      on cls.ID equals
-                          grp.AssetClassID
-                      orderby cls.Name
-                      select cls;
+        return StrategicModel.GetNewAssetClasses(strategyId).OrderBy(c => c.Name).ToList();
+    }
 
-        return classes.ToList();
+    public List<AssetGroup> GetModelAssetGroups()
+    {
+        return DataContext.AssetGroups.ToList();
     }
 
     protected RepGenDataContext DataContext

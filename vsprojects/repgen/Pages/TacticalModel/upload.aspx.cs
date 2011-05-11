@@ -7,13 +7,12 @@ using System.Web.UI.WebControls;
 using System.IO;
 using System.Data;
 using System.Globalization;
-
 using RSMTenon.Data;
 
-public partial class Pages_Model_upload : RepGenPage
+public partial class Pages_TacticalModel_upload : RepGenPage
 {
-    private static string tbl = "tblModel";
-    private Dictionary<string, AssetClass> assetClasses;
+    private static string tbl = "tblTacticalModel";
+    private Dictionary<string, AssetGroup> assetGroups;
 
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -25,9 +24,9 @@ public partial class Pages_Model_upload : RepGenPage
 
     protected void btnUpload_Click(object sender, EventArgs e)
     {
-        var dt = new DataUpload.ModelDataTable();
+        var dt = new DataUpload.TacticalModelDataTable();
         string strategyId = this.listModel.SelectedValue;
-        assetClasses = AssetClass.GetAssetClasses().ToDictionary(a => a.Name);
+        assetGroups = AssetGroup.GetAssetGroups().ToDictionary(a => a.Name);
 
         if (uploader.PostedFile.ContentLength != 0) {
             try {
@@ -52,7 +51,7 @@ public partial class Pages_Model_upload : RepGenPage
                     }
 
                     decimal totalHNW = dt.Sum(r => r.Field<decimal>("WeightingHNW"));
-                    
+
                     if (totalHNW != 1)
                         throw new Exception(String.Format("Upload Error: HNW Weighting does not total 100% (currently {0:0.00%})", totalHNW));
 
@@ -71,19 +70,19 @@ public partial class Pages_Model_upload : RepGenPage
         }
     }
 
-    private void addToTypedTable(DataUpload.ModelDataTable dt, string[] fields, string strategyId)
+    private void addToTypedTable(DataUpload.TacticalModelDataTable dt, string[] fields, string strategyId)
     {
-        DataUpload.ModelRow row = dt.NewModelRow();
+        DataUpload.TacticalModelRow row = dt.NewTacticalModelRow();
 
         row.GUID = Guid.NewGuid();
         row.StrategyID = strategyId;
-        AssetClass assetClass = null;
-        assetClasses.TryGetValue(fields[2], out assetClass);
+        AssetGroup assetGroup = null;
+        assetGroups.TryGetValue(fields[2], out assetGroup);
 
-        if (assetClass == null)
-            throw new Exception(String.Format("Upload Error: Asset Class '{0}' not recognized.", fields[2]));
+        if (assetGroup == null)
+            throw new Exception(String.Format("Upload Error: Asset Group '{0}' not recognized.", fields[2]));
 
-        row.AssetClassID = assetClass.ID;
+        row.AssetGroupID = assetGroup.ID;
         row.SEDOL = fields[0];
         row.InvestmentName = fields[1];
         row.WeightingHNW = Convert.ToDecimal(fields[3]);
@@ -98,6 +97,6 @@ public partial class Pages_Model_upload : RepGenPage
             row.PurchaseCharge = Convert.ToDecimal(fields[6]);
         }
 
-        dt.AddModelRow(row);
+        dt.AddTacticalModelRow(row);
     }
 }

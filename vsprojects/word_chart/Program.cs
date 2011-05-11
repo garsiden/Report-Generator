@@ -68,10 +68,10 @@ namespace RSMTenon.ReportGenerator
 
             // data
             var model = new List<AssetWeighting>();
-            model.Add(new AssetWeighting { AssetClass = "1st Qtr", Weighting = 8.2 });
-            model.Add(new AssetWeighting { AssetClass = "2nd Qtr", Weighting = 3.2 });
-            model.Add(new AssetWeighting { AssetClass = "3rd Qtr", Weighting = 1.4 });
-            model.Add(new AssetWeighting { AssetClass = "4th Qtr", Weighting = 1.2 });
+            model.Add(new AssetWeighting { AssetGroup = "1st Qtr", Weighting = 8.2 });
+            model.Add(new AssetWeighting { AssetGroup = "2nd Qtr", Weighting = 3.2 });
+            model.Add(new AssetWeighting { AssetGroup = "3rd Qtr", Weighting = 1.4 });
+            model.Add(new AssetWeighting { AssetGroup = "4th Qtr", Weighting = 1.2 });
 
             //var m = new List<ReturnData>();
             //int startDate = 35944;
@@ -166,16 +166,16 @@ namespace RSMTenon.ReportGenerator
             //decimal amount = 0;
 
             var ctx = new RepGenDataContext();
-            var models = ctx.Models;
+            var models = ctx.TacticalModels;
 
             var model = from m in models
                         where m.StrategyID == "CO"
-                        group m by m.AssetClassID
+                        group m by m.AssetGroupID
                             into g
                             select new //ModelTableData
                             {
                                 AssetClassId = g.Key,
-                                AssetClassName = g.First().AssetClass.Name,
+                                AssetClassName = g.First().AssetGroup.Name,
                                 Investments = g,
                                 WeightingHNW = g.Sum(m => m.WeightingHNW)
                             };
@@ -183,7 +183,7 @@ namespace RSMTenon.ReportGenerator
             foreach (var g in model) {
                 Console.WriteLine("{0}\t{1}", g.AssetClassId, g.WeightingHNW);
                 foreach (var m in g.Investments) {
-                    Console.WriteLine("\t{0}\t{1}\t{2}\t{3}", m.AssetClass.Name, m.InvestmentName, m.WeightingHNW, m.ExpectedYield);
+                    Console.WriteLine("\t{0}\t{1}\t{2}\t{3}", m.AssetGroup.Name, m.InvestmentName, m.WeightingHNW, m.ExpectedYield);
                 }
             }
 
@@ -212,7 +212,7 @@ namespace RSMTenon.ReportGenerator
             double bull = (end.Value - start.Value) / start.Value;
 
             // Model
-            var returns = ctx.ModelReturn("CO", "HNW");
+            var returns = ctx.StrategicModelReturn("CO");
             var calc = new ReturnCalculation();
             int rn = 0;
             var prices = from p in returns
@@ -244,7 +244,7 @@ namespace RSMTenon.ReportGenerator
 
             // calculate prices
             //ctx.ModelReturn("CO");
-            var data = ctx.ModelReturn("CO", "HNW");
+            var data = ctx.StrategicModelReturn("CO");
 
             var prices = from d in data
                          select new ReturnData {
@@ -274,7 +274,7 @@ namespace RSMTenon.ReportGenerator
         private void TenYearTest()
         {
             var ctx = new RepGenDataContext();
-            var data = ctx.ModelReturn("CO", "HNW");
+            var data = ctx.StrategicModelReturn("CO");
             //            var data = ctx.AssetClassReturn(new DateTime(1999, 9, 30), "GLEQ");
 
             ReturnCalculation calc = new ReturnCalculation();
@@ -315,7 +315,7 @@ namespace RSMTenon.ReportGenerator
 
             var ctx = new RepGenDataContext();
             //ctx.ModelReturn("CO");
-            var data = ctx.ModelReturn("CO", "HNW");
+            var data = ctx.StrategicModelReturn("CO");
 
             ReturnCalculation calc = new ReturnCalculation();
             var match = from d in data
@@ -335,7 +335,7 @@ namespace RSMTenon.ReportGenerator
         {
 
             var ctx = new RepGenDataContext();
-            var data = ctx.ModelReturn("CO", "HNW");
+            var data = ctx.StrategicModelReturn("CO");
 
             ReturnCalculation calcPrice = new ReturnCalculation();
             ReturnCalculation calcDrawdown = new ReturnCalculation();

@@ -4,8 +4,8 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
-<br />
-<br />
+    <br />
+    <br />
     <asp:GridView ID="gridClient" runat="server" AllowPaging="True" AllowSorting="True"
         AutoGenerateColumns="False" CaptionAlign="Top" CssClass="listing" DataKeyNames="GUID"
         DataSourceID="sourceClient" OnSelectedIndexChanged="gridClient_SelectedIndexChanged">
@@ -47,8 +47,8 @@
             <asp:CommandField ShowDeleteButton="True" />
             <asp:TemplateField ShowHeader="False">
                 <ItemTemplate>
-                    <asp:LinkButton ID="linkReport" runat="server" CausesValidation="False" 
-                        CommandName="Select" Text="Report"  OnClientClick="hideException('labelException');"></asp:LinkButton>
+                    <asp:LinkButton ID="linkReport" runat="server" CausesValidation="False" CommandName="Select"
+                        Text="Report" OnClientClick="hideException('labelException');"></asp:LinkButton>
                 </ItemTemplate>
                 <ItemStyle CssClass="left" Width="5%" />
             </asp:TemplateField>
@@ -65,7 +65,7 @@
     <br />
     <asp:Label ID="labelException" class="errortext" runat="server" Text=""></asp:Label>
     <asp:LinqDataSource ID="sourceClient" runat="server" ContextTypeName="RSMTenon.Data.RepGenDataContext"
-        EnableDelete="True" EnableInsert="True" EnableUpdate="True" OrderBy="Name" 
-        TableName="Clients" onselecting="sourceClient_Selecting" >
+        EnableDelete="True" EnableInsert="True" EnableUpdate="True" OrderBy="Name" TableName="Clients"
+        OnSelecting="sourceClient_Selecting">
     </asp:LinqDataSource>
 </asp:Content>

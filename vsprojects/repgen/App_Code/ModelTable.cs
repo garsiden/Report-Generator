@@ -330,7 +330,6 @@ namespace RSMTenon.ReportGenerator
             return tableCellBorders1;
         }
 
-
         private TableRow generateHeaderRow(List<string> headers)
         {
             // create a header row

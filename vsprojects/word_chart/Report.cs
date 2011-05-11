@@ -103,7 +103,7 @@ namespace RSMTenon.ReportGenerator
             }
 
             // get model investments, grouped by asset class
-            var model = getModelTableData(Client.StrategyID).ToList();
+            var model = getTacticalModelTableData(Client.StrategyID).ToList();
 
             // build table
             Table table1 = modelTable.GenerateTable(colwidths, colHeaders);
@@ -115,7 +115,7 @@ namespace RSMTenon.ReportGenerator
             foreach (var g in model) {
                 // Asset Class sub-headings
                 var headerCells = new List<CellProps>();
-                headerCells.Add(new CellProps { text = g.AssetClassName, align = JustificationValues.Left });
+                headerCells.Add(new CellProps { text = g.AssetGroupName, align = JustificationValues.Left });
                 headerCells.Add(new CellProps { text = g.Weighting.ToString(formats[1]) });
                 for (int i = 2; i < 6; i++) {
                     headerCells.Add(new CellProps());
@@ -177,7 +177,7 @@ namespace RSMTenon.ReportGenerator
             if (Client.ExistingAssets) {
                 data = ClientAssetClass.GetClientAssetWeighting(Client.GUID);
             } else {
-                data = Model.GetModelAllocation(Client.StrategyID, true).ToList();
+                data = StrategicModel.GetAssetWeighting(Client.StrategyID).ToList();
             }
 
             AllocationPieChart pie = new AllocationPieChart();
@@ -446,7 +446,7 @@ namespace RSMTenon.ReportGenerator
             lc.AddLineChartSeries(chart, data3.ToList(), dataKey3, assetClasses[1].ColourHex);
 
             // add appropriate strategy data
-            var data4 = ctx.ModelReturn(Client.StrategyID, "HNW");
+            var data4 = ctx.StrategicModelReturn(Client.StrategyID);
             string dataKey4 = StrategyName + " Strategy";
             var rr = getRollingReturn(data4, years);
             lc.AddLineChartSeries(chart, rr, dataKey4, strategyColourHex);
@@ -544,7 +544,7 @@ namespace RSMTenon.ReportGenerator
 
         private List<ReturnData> getModelDrawdown(string strategyId)
         {
-            var returns = DataContext.ModelReturn(strategyId, "HNW");
+            var returns = DataContext.StrategicModelReturn(strategyId);
 
             ReturnCalculation cp = new ReturnCalculation();
             ReturnCalculation cd = new ReturnCalculation();
@@ -572,7 +572,7 @@ namespace RSMTenon.ReportGenerator
 
         private List<ReturnData> getTenYearModelReturn(string strategyId, DateTime tenYearStart)
         {
-            var data = DataContext.ModelReturn(strategyId, "HNW");
+            var data = DataContext.StrategicModelReturn(strategyId);
 
             ReturnCalculation calc = new ReturnCalculation();
             var tyr = from d in data
@@ -584,17 +584,17 @@ namespace RSMTenon.ReportGenerator
             return tyr.ToList();
         }
 
-        private IQueryable<ModelTableData> getModelTableData(string strategyId)
+        private IQueryable<TacticalModelTableData> getTacticalModelTableData(string strategyId)
         {
-            var models = DataContext.Models;
+            var models = DataContext.TacticalModels;
 
             var modelData = from m in models
                             where m.StrategyID == strategyId
-                            group m by m.AssetClassID
+                            group m by m.AssetGroupID
                                 into g
-                                select new ModelTableData {
-                                    AssetClassId = g.Key,
-                                    AssetClassName = g.First().AssetClass.Name,
+                                select new TacticalModelTableData {
+                                    AssetGroupId = g.Key,
+                                    AssetGroupName = g.First().AssetGroup.Name,
                                     Investments = g,
                                     Weighting = g.Sum(m => m.WeightingHNW)
                                 };

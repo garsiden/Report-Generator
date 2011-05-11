@@ -258,7 +258,7 @@ namespace RSMTenon.ReportGenerator
 
             // strategy.cost
             xmlnode = root.SelectSingleNode("/wmr:repgen/wmr:strategy/wmr:cost", nsmgr);
-            decimal cost = Model.GetModelCost(strategy.ID, Client.HighNetWorth);
+            decimal cost = TacticalModel.GetCost(strategy.ID, Client.HighNetWorth);
             xmlnode.InnerText = cost.ToString("C0");
 
             // Look up in tblContent
@@ -320,9 +320,9 @@ namespace RSMTenon.ReportGenerator
 
         #endregion Custom XML
 
-        private double calculateModelReturn(Strategy strategy, string status)
+        private double calculateStrategicModelReturn(Strategy strategy)
         {
-            var prices = strategy.GetStrategyPrices(status);
+            var prices = strategy.GetStrategyPrices();
 
             double endPrice = prices.Last().Value.Value;
             double startPrice = prices.ElementAt(prices.Count - 121).Value.Value;

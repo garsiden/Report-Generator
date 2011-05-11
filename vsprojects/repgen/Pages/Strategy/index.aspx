@@ -14,8 +14,9 @@
         <Columns>
             <asp:TemplateField HeaderText="Strategy Name" SortExpression="Name" ItemStyle-Width="25%">
                 <EditItemTemplate>
-                    <asp:TextBox ID="TextBoxStrategyName" runat="server" Text='<%# Bind("Name") %>' Width="100px" Wrap="False"></asp:TextBox><asp:RequiredFieldValidator
-                        ID="validRequiredStrategyName" runat="server" ErrorMessage="Please enter a Strategy Name." Display="None" ControlToValidate="TextBoxStrategyName"></asp:RequiredFieldValidator>
+                    <asp:TextBox ID="TextBoxStrategyName" runat="server" Text='<%# Bind("Name") %>' Width="100px"
+                        Wrap="False"></asp:TextBox><asp:RequiredFieldValidator ID="validRequiredStrategyName"
+                            runat="server" ErrorMessage="Please enter a Strategy Name." Display="None" ControlToValidate="TextBoxStrategyName"></asp:RequiredFieldValidator>
                 </EditItemTemplate>
                 <ItemTemplate>
                     <asp:Label ID="Label6" runat="server" Text='<%# Bind("Name") %>'></asp:Label>
@@ -52,7 +53,8 @@
                 </ItemTemplate>
                 <ItemStyle CssClass="right" />
             </asp:TemplateField>
-            <asp:TemplateField HeaderText="Return Over Base" SortExpression="ReturnOverBase" ItemStyle-Width="10%">
+            <asp:TemplateField HeaderText="Return Over Base" SortExpression="ReturnOverBase"
+                ItemStyle-Width="10%">
                 <EditItemTemplate>
                     <asp:RangeValidator ID="validRangeReturnOverBase" runat="server" ControlToValidate="TextBoxReturnOverBase"
                         Display="None" ErrorMessage="Please enter a valid Return Over Base value" MaximumValue="10"
@@ -67,7 +69,8 @@
             </asp:TemplateField>
             <asp:TemplateField HeaderText="Rolling Return" SortExpression="RollingReturn" ItemStyle-Width="10%">
                 <EditItemTemplate>
-                    <asp:TextBox ID="TextBoxRollingReturn" runat="server" Text='<%# Bind("RollingReturn") %>' Width="5em"></asp:TextBox>
+                    <asp:TextBox ID="TextBoxRollingReturn" runat="server" Text='<%# Bind("RollingReturn") %>'
+                        Width="5em"></asp:TextBox>
                     <asp:RangeValidator ID="validRangeRollingReturn" runat="server" ControlToValidate="TextBoxRollingReturn"
                         Display="None" ErrorMessage="Please enter a valid Rolling Return value" MaximumValue="10"
                         MinimumValue="-10" Type="Double"></asp:RangeValidator>
@@ -77,7 +80,8 @@
                 </ItemTemplate>
                 <ItemStyle CssClass="right" />
             </asp:TemplateField>
-            <asp:TemplateField HeaderText="Aggregate Charge" SortExpression="AggregateCharge" ItemStyle-Width="10%">
+            <asp:TemplateField HeaderText="Aggregate Charge" SortExpression="AggregateCharge"
+                ItemStyle-Width="10%">
                 <EditItemTemplate>
                     <asp:TextBox ID="TextBoxAggregateCharge" runat="server" Text='<%# Bind("AggregateCharge") %>'
                         Width="5em"></asp:TextBox>

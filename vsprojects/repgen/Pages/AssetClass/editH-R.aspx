@@ -1,17 +1,16 @@
 <%@ Page Title="" Language="C#" MasterPageFile="~/MasterPages/SiteMasterPage.master"
-    AutoEventWireup="true" CodeFile="editN-Z.aspx.cs" Inherits="Pages_AssetClass_editN_Z" %>
+    AutoEventWireup="true" CodeFile="editH-R.aspx.cs" Inherits="Pages_AssetClass_editH_R" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
     <h4>
-        Edit Asset Class Historic Data (Q - Z)</h4>
+        Edit Asset Class Historic Data (H - R)</h4>
     <br />
     <asp:GridView ID="gridHistoricData" runat="server" AllowPaging="True" AutoGenerateColumns="False"
         CssClass="listing" DataKeyNames="Date" DataSourceID="sourceHistoricData" ShowFooter="True"
         OnRowCommand="gridHistoricData_RowCommand" UseAccessibleHeader="False" Width="100%"
-        AllowSorting="True" onrowdeleted="gridHistoricData_RowDeleted" 
-        onrowupdated="gridHistoricData_RowUpdated">
+        AllowSorting="True" OnRowDeleted="gridHistoricData_RowDeleted" OnRowUpdated="gridHistoricData_RowUpdated">
         <RowStyle CssClass="odd" />
         <Columns>
             <asp:TemplateField HeaderText="Date" SortExpression="Date">
@@ -27,6 +26,66 @@
                 <HeaderStyle CssClass="center" />
                 <ItemStyle CssClass="center" />
             </asp:TemplateField>
+            <asp:TemplateField HeaderText="Hedge">
+                <EditItemTemplate>
+                    <asp:TextBox ID="textHEDGEdit" runat="server" Text='<%# Bind("HEDG", "{0:0.00}") %>'
+                        Width="5em"></asp:TextBox>
+                </EditItemTemplate>
+                <FooterTemplate>
+                    <asp:TextBox ID="textHEDGAdd" runat="server" Width="5em"></asp:TextBox>
+                </FooterTemplate>
+                <ItemTemplate>
+                    <asp:Label ID="labelHEDG" runat="server" Text='<%# Bind("HEDG", "{0:0.00}") %>'></asp:Label>
+                </ItemTemplate>
+                <FooterStyle CssClass="right" />
+                <HeaderStyle CssClass="center" />
+                <ItemStyle CssClass="right" Width="15%" />
+            </asp:TemplateField>
+            <asp:TemplateField HeaderText="Long Short">
+                <EditItemTemplate>
+                    <asp:TextBox ID="textLOSHEdit" runat="server" Text='<%# Bind("LOSH", "{0:0.00}") %>'
+                        Width="5em"></asp:TextBox>
+                </EditItemTemplate>
+                <FooterTemplate>
+                    <asp:TextBox ID="textLOSHAdd" runat="server" Width="5em"></asp:TextBox>
+                </FooterTemplate>
+                <ItemTemplate>
+                    <asp:Label ID="labelLOSH" runat="server" Text='<%# Bind("LOSH", "{0:0.00}") %>'></asp:Label>
+                </ItemTemplate>
+                <FooterStyle CssClass="right" HorizontalAlign="Right" />
+                <HeaderStyle CssClass="center" />
+                <ItemStyle CssClass="right" Width="15%" />
+            </asp:TemplateField>
+            <asp:TemplateField HeaderText="Managed Futures">
+                <EditItemTemplate>
+                    <asp:TextBox ID="textMAFUEdit" runat="server" Text='<%# Bind("MAFU", "{0:0.00}") %>'
+                        Width="5em"></asp:TextBox>
+                </EditItemTemplate>
+                <FooterTemplate>
+                    <asp:TextBox ID="textMAFUAdd" runat="server" Width="5em"></asp:TextBox>
+                </FooterTemplate>
+                <ItemTemplate>
+                    <asp:Label ID="labelMAFU" runat="server" Text='<%# Bind("MAFU", "{0:0.00}") %>'></asp:Label>
+                </ItemTemplate>
+                <FooterStyle CssClass="right" HorizontalAlign="Right" />
+                <HeaderStyle CssClass="center" />
+                <ItemStyle CssClass="right" Width="15%" />
+            </asp:TemplateField>
+            <asp:TemplateField HeaderText="Private Equity">
+                <EditItemTemplate>
+                    <asp:TextBox ID="textPREQEdit" runat="server" Text='<%# Bind("PREQ", "{0:0.00}") %>'
+                        Width="5em"></asp:TextBox>
+                </EditItemTemplate>
+                <FooterTemplate>
+                    <asp:TextBox ID="textPREQAdd" runat="server" Width="5em"></asp:TextBox>
+                </FooterTemplate>
+                <ItemTemplate>
+                    <asp:Label ID="textPREQ" runat="server" Text='<%# Bind("PREQ", "{0:0.00}") %>'></asp:Label>
+                </ItemTemplate>
+                <FooterStyle CssClass="right" />
+                <HeaderStyle CssClass="center" />
+                <ItemStyle CssClass="right" Width="15%" />
+            </asp:TemplateField>
             <asp:TemplateField HeaderText="Real Estate">
                 <EditItemTemplate>
                     <asp:TextBox ID="textCOPREdit" runat="server" Text='<%# Bind("COPR", "{0:0.00}") %>'
@@ -40,83 +99,7 @@
                 </ItemTemplate>
                 <FooterStyle CssClass="right" />
                 <HeaderStyle CssClass="center" />
-                <ItemStyle CssClass="right" Width="12%" />
-            </asp:TemplateField>
-
-            <asp:TemplateField HeaderText="UK Corp Bonds">
-                <EditItemTemplate>
-                    <asp:TextBox ID="textUKCBEdit" runat="server" Text='<%# Bind("UKCB", "{0:0.00}") %>'
-                        Width="5em"></asp:TextBox>
-                </EditItemTemplate>
-                <FooterTemplate>
-                    <asp:TextBox ID="textUKCBAdd" runat="server" Width="5em"></asp:TextBox>
-                </FooterTemplate>
-                <ItemTemplate>
-                    <asp:Label ID="labelUKCB" runat="server" Text='<%# Bind("UKCB", "{0:0.00}") %>'></asp:Label>
-                </ItemTemplate>
-                <FooterStyle CssClass="right" />
-                <HeaderStyle CssClass="center" />
-                <ItemStyle CssClass="right" Width="12%" />
-            </asp:TemplateField>
-            <asp:TemplateField HeaderText="UK Equities">
-                <EditItemTemplate>
-                    <asp:TextBox ID="textUKEQEdit" runat="server" Text='<%# Bind("UKEQ", "{0:0.00}") %>'
-                        Width="5em"></asp:TextBox>
-                </EditItemTemplate>
-                <FooterTemplate>
-                    <asp:TextBox ID="textUKEQAdd" runat="server" Width="5em"></asp:TextBox>
-                </FooterTemplate>
-                <ItemTemplate>
-                    <asp:Label ID="lableUKEQ" runat="server" Text='<%# Bind("UKEQ", "{0:0.00}") %>'></asp:Label>
-                </ItemTemplate>
-                <FooterStyle CssClass="right" />
-                <HeaderStyle CssClass="center" />
-                <ItemStyle CssClass="right" Width="12%" />
-            </asp:TemplateField>
-            <asp:TemplateField HeaderText="UK Govt Bonds">
-                <EditItemTemplate>
-                    <asp:TextBox ID="textUKGBEdit" runat="server" Text='<%# Bind("UKGB", "{0:0.00}") %>'
-                        Width="5em"></asp:TextBox>
-                </EditItemTemplate>
-                <FooterTemplate>
-                    <asp:TextBox ID="textUKGBAdd" runat="server" Width="5em"></asp:TextBox>
-                </FooterTemplate>
-                <ItemTemplate>
-                    <asp:Label ID="labelUKGB" runat="server" Text='<%# Bind("UKGB", "{0:0.00}") %>'></asp:Label>
-                </ItemTemplate>
-                <FooterStyle CssClass="right" />
-                <HeaderStyle CssClass="center" />
-                <ItemStyle CssClass="right" Width="12%" />
-            </asp:TemplateField>
-            <asp:TemplateField HeaderText="UK High Yield">
-                <EditItemTemplate>
-                    <asp:TextBox ID="textUKHYEdit" runat="server" Text='<%# Bind("UKHY", "{0:0.00}") %>'
-                        Width="5em"></asp:TextBox>
-                </EditItemTemplate>
-                <FooterTemplate>
-                    <asp:TextBox ID="textUKHYAdd" runat="server" Width="5em"></asp:TextBox>
-                </FooterTemplate>
-                <ItemTemplate>
-                    <asp:Label ID="labelUKHY" runat="server" Text='<%# Bind("UKHY", "{0:0.00}") %>'></asp:Label>
-                </ItemTemplate>
-                <FooterStyle CssClass="right" />
-                <HeaderStyle CssClass="center" />
-                <ItemStyle CssClass="right" Width="12%" />
-            </asp:TemplateField>
-            <asp:TemplateField HeaderText="World Bonds">
-                <EditItemTemplate>
-                    <asp:TextBox ID="textWOBOEdit" runat="server" Text='<%# Bind("WOBO", "{0:0.00}") %>'
-                        Width="5em"></asp:TextBox>
-                </EditItemTemplate>
-                <FooterTemplate>
-                    <asp:TextBox ID="textWOBOAdd" runat="server" Width="5em"></asp:TextBox>
-                </FooterTemplate>
-                <ItemTemplate>
-                    <asp:Label ID="lableWOBO" runat="server" Text='<%# Bind("WOBO", "{0:0.00}") %>'></asp:Label>
-                </ItemTemplate>
-                <FooterStyle CssClass="right" HorizontalAlign="Right" />
-                <HeaderStyle CssClass="center" />
-                <ItemStyle CssClass="right" Width="12%" />
+                <ItemStyle CssClass="right" Width="15%" />
             </asp:TemplateField>
             <asp:TemplateField ShowHeader="False" ItemStyle-CssClass="lnowrap">
                 <EditItemTemplate>
@@ -142,14 +125,14 @@
     </asp:GridView>
     <br />
     <p align="right">
-        <asp:HyperLink ID="linkAP" runat="server" NavigateUrl="~/Pages/AssetClass/editA-M.aspx">A - P</asp:HyperLink>
+        <asp:HyperLink ID="linkAG" runat="server" NavigateUrl="~/Pages/AssetClass/editA-G.aspx">A-G</asp:HyperLink>&nbsp;
+        <asp:HyperLink ID="linkSZ" runat="server" NavigateUrl="~/Pages/AssetClass/editS-Z.aspx">S-Z</asp:HyperLink>
     </p>
     <br />
     <br />
     <asp:Label ID="labelException" class="errortext" runat="server" Text=""></asp:Label>
-
     <asp:LinqDataSource ID="sourceHistoricData" runat="server" ContextTypeName="RSMTenon.Data.RepGenDataContext"
         EnableDelete="True" EnableInsert="True" EnableUpdate="True" OrderBy="Date desc"
-        TableName="HistoricDatas" oninserted="sourceHistoricData_Inserted">
+        TableName="HistoricDatas" OnInserted="sourceHistoricData_Inserted">
     </asp:LinqDataSource>
 </asp:Content>

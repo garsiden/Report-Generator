@@ -22,10 +22,10 @@ namespace RSMTenon.Data
         public int RankNumber;
     }
 
-    public class ModelTableData
+    public class TacticalModelTableData
     {
-        public string AssetClassId;
-        public string AssetClassName;
+        public string AssetGroupId;
+        public string AssetGroupName;
         public IGrouping<string, TacticalModel> Investments;
         public decimal Weighting;
     }
@@ -35,4 +35,11 @@ namespace RSMTenon.Data
         public string ID { get; set; }
         public string Name { get; set; }
     }
+
+    public class ModelAssetGroup
+    {
+        public string ID { get; set; }
+        public string Name { get; set; }
+    }
+
 }

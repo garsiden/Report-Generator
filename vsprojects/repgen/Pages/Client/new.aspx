@@ -79,7 +79,8 @@
                             <asp:ListItem>17</asp:ListItem>
                             <asp:ListItem>19</asp:ListItem>
                             <asp:ListItem>20</asp:ListItem>
-                        </asp:DropDownList> year(s)
+                        </asp:DropDownList>
+                        year(s)
                     </td>
                 </tr>
                 <tr class="even">
@@ -112,7 +113,7 @@
                 </tr>
                 <tr>
                     <td class="lnowrap">
-                        Status <span style="color:Red;"><b>*</b></span>
+                        Status <span style="color: Red;"><b>*</b></span>
                     </td>
                     <td class="lnowrap">
                         <asp:RadioButtonList ID="radioListStatus" runat="server" RepeatLayout="Flow" SelectedValue='<%# Bind("Status") %>'>
@@ -140,8 +141,8 @@
                 ValueToCompare="XX"></asp:CompareValidator>
             <asp:RequiredFieldValidator ID="validRequiredInvestmentAmount" runat="server" ErrorMessage="Please enter an Investment Amount."
                 ControlToValidate="InvestmentAmountTextBox" Display="None"></asp:RequiredFieldValidator>
-            <asp:CompareValidator ID="validCompareInvestment" runat="server" ErrorMessage="Please enter a valid Investment Amount."
-                ValueToCompare="1" Type="Currency" Operator="GreaterThanEqual" ControlToValidate="InvestmentAmountTextBox"
+            <asp:CompareValidator ID="validCompareInvestment" runat="server" ErrorMessage="Please enter an integer Investment Amount."
+                ValueToCompare="0" Type="Integer" Operator="GreaterThan" ControlToValidate="InvestmentAmountTextBox"
                 Display="None"></asp:CompareValidator>
             <asp:RequiredFieldValidator ID="validRequiredStatus" runat="server" ErrorMessage="Please select a client Status."
                 Display="None" ControlToValidate="radioListStatus"></asp:RequiredFieldValidator>
@@ -286,7 +287,7 @@
     <asp:Label ID="labelException" class="errortext" runat="server"></asp:Label><br />
     <div id="textnote">
         <ul runat="server" id="noteList" style="width: 60%;">
-            <li style="color:Red;"><b>* Note</b></li>
+            <li style="color: Red;"><b>* Note</b></li>
             <li>Clients with portfolios under £250,000 <u>OR</u> that require ISA-eligible funds
                 only should be categorised as Affluent. </li>
             <li>Clients with no requirement for ISA-eligibility <u>AND</u> have a portfolio of over

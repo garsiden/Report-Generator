@@ -54,12 +54,6 @@ namespace RSMTenon.Data
     partial void InsertAssetGroup(AssetGroup instance);
     partial void UpdateAssetGroup(AssetGroup instance);
     partial void DeleteAssetGroup(AssetGroup instance);
-    partial void InsertAssetGroupClass(AssetGroupClass instance);
-    partial void UpdateAssetGroupClass(AssetGroupClass instance);
-    partial void DeleteAssetGroupClass(AssetGroupClass instance);
-    partial void InsertStrategicModel(StrategicModel instance);
-    partial void UpdateStrategicModel(StrategicModel instance);
-    partial void DeleteStrategicModel(StrategicModel instance);
     partial void InsertClientAsset(ClientAsset instance);
     partial void UpdateClientAsset(ClientAsset instance);
     partial void DeleteClientAsset(ClientAsset instance);
@@ -69,6 +63,9 @@ namespace RSMTenon.Data
     partial void InsertTacticalModel(TacticalModel instance);
     partial void UpdateTacticalModel(TacticalModel instance);
     partial void DeleteTacticalModel(TacticalModel instance);
+    partial void InsertStrategicModel(StrategicModel instance);
+    partial void UpdateStrategicModel(StrategicModel instance);
+    partial void DeleteStrategicModel(StrategicModel instance);
     #endregion
 		
 		public RepGenDataContext() : 
@@ -181,27 +178,11 @@ namespace RSMTenon.Data
 			}
 		}
 		
-		public System.Data.Linq.Table<AssetGroupClass> AssetGroupClasses
-		{
-			get
-			{
-				return this.GetTable<AssetGroupClass>();
-			}
-		}
-		
 		public System.Data.Linq.Table<AssetWeighting> AssetWeightings
 		{
 			get
 			{
 				return this.GetTable<AssetWeighting>();
-			}
-		}
-		
-		public System.Data.Linq.Table<StrategicModel> StrategicModels
-		{
-			get
-			{
-				return this.GetTable<StrategicModel>();
 			}
 		}
 		
@@ -229,6 +210,14 @@ namespace RSMTenon.Data
 			}
 		}
 		
+		public System.Data.Linq.Table<StrategicModel> StrategicModels
+		{
+			get
+			{
+				return this.GetTable<StrategicModel>();
+			}
+		}
+		
 		[Function(Name="dbo.spRollingReturn")]
 		public ISingleResult<ReturnData> RollingReturn([Parameter(DbType="Int")] System.Nullable<int> years, [Parameter(DbType="NChar(4)")] string assetClassID)
 		{
@@ -248,13 +237,6 @@ namespace RSMTenon.Data
 		{
 			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), clientGUID);
 			return ((ISingleResult<AssetWeighting>)(result.ReturnValue));
-		}
-		
-		[Function(Name="dbo.spModelReturn")]
-		public ISingleResult<ReturnData> ModelReturn([Parameter(Name="StrategyID", DbType="NChar(2)")] string strategyID, [Parameter(Name="ModelType", DbType="NChar(3)")] string modelType)
-		{
-			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), strategyID, modelType);
-			return ((ISingleResult<ReturnData>)(result.ReturnValue));
 		}
 		
 		[Function(Name="dbo.spClientWeightingComparison")]
@@ -284,6 +266,13 @@ namespace RSMTenon.Data
 			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), clientGUID);
 			return ((ISingleResult<ReturnData>)(result.ReturnValue));
 		}
+		
+		[Function(Name="dbo.spStrategicModelReturn")]
+		public ISingleResult<ReturnData> StrategicModelReturn([Parameter(Name="StrategyID", DbType="NChar(2)")] string strategyID)
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), strategyID);
+			return ((ISingleResult<ReturnData>)(result.ReturnValue));
+		}
 	}
 	
 	[Table(Name="dbo.tblAssetClass")]
@@ -296,13 +285,11 @@ namespace RSMTenon.Data
 		
 		private string _Name;
 		
-		private EntityRef<AssetGroup> _AssetGroup;
-		
-		private EntityRef<AssetGroupClass> _AssetGroupClass;
+		private string _AssetGroupID;
 		
 		private EntitySet<StrategicModel> _StrategicModels;
 		
-		private EntitySet<TacticalModel> _TacticalModels;
+		private EntityRef<AssetGroup> _AssetGroup;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -312,14 +299,14 @@ namespace RSMTenon.Data
     partial void OnIDChanged();
     partial void OnNameChanging(string value);
     partial void OnNameChanged();
+    partial void OnAssetGroupIDChanging(string value);
+    partial void OnAssetGroupIDChanged();
     #endregion
 		
 		public AssetClass()
 		{
-			this._AssetGroup = default(EntityRef<AssetGroup>);
-			this._AssetGroupClass = default(EntityRef<AssetGroupClass>);
 			this._StrategicModels = new EntitySet<StrategicModel>(new Action<StrategicModel>(this.attach_StrategicModels), new Action<StrategicModel>(this.detach_StrategicModels));
-			this._TacticalModels = new EntitySet<TacticalModel>(new Action<TacticalModel>(this.attach_TacticalModels), new Action<TacticalModel>(this.detach_TacticalModels));
+			this._AssetGroup = default(EntityRef<AssetGroup>);
 			OnCreated();
 		}
 		
@@ -363,7 +350,44 @@ namespace RSMTenon.Data
 			}
 		}
 		
-		[Association(Name="AssetClass_AssetGroup", Storage="_AssetGroup", ThisKey="ID", OtherKey="ID", IsUnique=true, IsForeignKey=false)]
+		[Column(Storage="_AssetGroupID", DbType="NChar(4) NOT NULL", CanBeNull=false, UpdateCheck=UpdateCheck.Never)]
+		public string AssetGroupID
+		{
+			get
+			{
+				return this._AssetGroupID;
+			}
+			set
+			{
+				if ((this._AssetGroupID != value))
+				{
+					if (this._AssetGroup.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnAssetGroupIDChanging(value);
+					this.SendPropertyChanging();
+					this._AssetGroupID = value;
+					this.SendPropertyChanged("AssetGroupID");
+					this.OnAssetGroupIDChanged();
+				}
+			}
+		}
+		
+		[Association(Name="AssetClass_tblStrategicModel", Storage="_StrategicModels", ThisKey="ID", OtherKey="AssetClassID")]
+		public EntitySet<StrategicModel> StrategicModels
+		{
+			get
+			{
+				return this._StrategicModels;
+			}
+			set
+			{
+				this._StrategicModels.Assign(value);
+			}
+		}
+		
+		[Association(Name="AssetGroup_AssetClass", Storage="_AssetGroup", ThisKey="AssetGroupID", OtherKey="ID", IsForeignKey=true)]
 		public AssetGroup AssetGroup
 		{
 			get
@@ -380,70 +404,20 @@ namespace RSMTenon.Data
 					if ((previousValue != null))
 					{
 						this._AssetGroup.Entity = null;
-						previousValue.AssetClass = null;
+						previousValue.AssetClasses.Remove(this);
 					}
 					this._AssetGroup.Entity = value;
 					if ((value != null))
 					{
-						value.AssetClass = this;
+						value.AssetClasses.Add(this);
+						this._AssetGroupID = value.ID;
+					}
+					else
+					{
+						this._AssetGroupID = default(string);
 					}
 					this.SendPropertyChanged("AssetGroup");
 				}
-			}
-		}
-		
-		[Association(Name="AssetClass_AssetGroupClass", Storage="_AssetGroupClass", ThisKey="ID", OtherKey="AssetClassID", IsUnique=true, IsForeignKey=false)]
-		public AssetGroupClass AssetGroupClass
-		{
-			get
-			{
-				return this._AssetGroupClass.Entity;
-			}
-			set
-			{
-				AssetGroupClass previousValue = this._AssetGroupClass.Entity;
-				if (((previousValue != value) 
-							|| (this._AssetGroupClass.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._AssetGroupClass.Entity = null;
-						previousValue.AssetClass = null;
-					}
-					this._AssetGroupClass.Entity = value;
-					if ((value != null))
-					{
-						value.AssetClass = this;
-					}
-					this.SendPropertyChanged("AssetGroupClass");
-				}
-			}
-		}
-		
-		[Association(Name="AssetClass_StrategicModel", Storage="_StrategicModels", ThisKey="ID", OtherKey="AssetClassID")]
-		public EntitySet<StrategicModel> StrategicModels
-		{
-			get
-			{
-				return this._StrategicModels;
-			}
-			set
-			{
-				this._StrategicModels.Assign(value);
-			}
-		}
-		
-		[Association(Name="AssetClass_tblTacticalModel", Storage="_TacticalModels", ThisKey="ID", OtherKey="AssetClassID")]
-		public EntitySet<TacticalModel> TacticalModels
-		{
-			get
-			{
-				return this._TacticalModels;
-			}
-			set
-			{
-				this._TacticalModels.Assign(value);
 			}
 		}
 		
@@ -474,18 +448,6 @@ namespace RSMTenon.Data
 		}
 		
 		private void detach_StrategicModels(StrategicModel entity)
-		{
-			this.SendPropertyChanging();
-			entity.AssetClass = null;
-		}
-		
-		private void attach_TacticalModels(TacticalModel entity)
-		{
-			this.SendPropertyChanging();
-			entity.AssetClass = this;
-		}
-		
-		private void detach_TacticalModels(TacticalModel entity)
 		{
 			this.SendPropertyChanging();
 			entity.AssetClass = null;
@@ -926,14 +888,12 @@ namespace RSMTenon.Data
 		
 		private double _WeightingDifference;
 		
-		private double _WeightingDifferenceAffluent;
-		
 		public ClientWeightingDifference()
 		{
 		}
 		
 		[Column(Storage="_AssetClassID", DbType="NChar(4) NOT NULL", CanBeNull=false)]
-		public string AssetClassID
+		public string AssetGroupID
 		{
 			get
 			{
@@ -949,7 +909,7 @@ namespace RSMTenon.Data
 		}
 		
 		[Column(Storage="_AssetClassName", DbType="NVarChar(50) NOT NULL", CanBeNull=false)]
-		public string AssetClassName
+		public string AssetGroupName
 		{
 			get
 			{
@@ -965,7 +925,7 @@ namespace RSMTenon.Data
 		}
 		
 		[Column(Storage="_WeightingDifference", DbType="Float NOT NULL")]
-		public double WeightingDifferenceHNW
+		public double WeightingDifference
 		{
 			get
 			{
@@ -976,22 +936,6 @@ namespace RSMTenon.Data
 				if ((this._WeightingDifference != value))
 				{
 					this._WeightingDifference = value;
-				}
-			}
-		}
-		
-		[Column(Storage="_WeightingDifferenceAffluent", DbType="Float NOT NULL", IsDbGenerated=true)]
-		public double WeightingDifferenceAffluent
-		{
-			get
-			{
-				return this._WeightingDifferenceAffluent;
-			}
-			set
-			{
-				if ((this._WeightingDifferenceAffluent != value))
-				{
-					this._WeightingDifferenceAffluent = value;
 				}
 			}
 		}
@@ -1358,9 +1302,9 @@ namespace RSMTenon.Data
 		
 		private EntitySet<Content> _Contents;
 		
-		private EntitySet<StrategicModel> _StrategicModels;
-		
 		private EntitySet<TacticalModel> _TacticalModels;
+		
+		private EntitySet<StrategicModel> _StrategicModels;
 		
 		private EntityRef<Benchmark> _Benchmark;
 		
@@ -1388,8 +1332,8 @@ namespace RSMTenon.Data
 		{
 			this._Clients = new EntitySet<Client>(new Action<Client>(this.attach_Clients), new Action<Client>(this.detach_Clients));
 			this._Contents = new EntitySet<Content>(new Action<Content>(this.attach_Contents), new Action<Content>(this.detach_Contents));
-			this._StrategicModels = new EntitySet<StrategicModel>(new Action<StrategicModel>(this.attach_StrategicModels), new Action<StrategicModel>(this.detach_StrategicModels));
 			this._TacticalModels = new EntitySet<TacticalModel>(new Action<TacticalModel>(this.attach_TacticalModels), new Action<TacticalModel>(this.detach_TacticalModels));
+			this._StrategicModels = new EntitySet<StrategicModel>(new Action<StrategicModel>(this.attach_StrategicModels), new Action<StrategicModel>(this.detach_StrategicModels));
 			this._Benchmark = default(EntityRef<Benchmark>);
 			OnCreated();
 		}
@@ -1564,20 +1508,7 @@ namespace RSMTenon.Data
 			}
 		}
 		
-		[Association(Name="Strategy_StrategicModel", Storage="_StrategicModels", ThisKey="ID", OtherKey="StrategyID")]
-		public EntitySet<StrategicModel> StrategicModels
-		{
-			get
-			{
-				return this._StrategicModels;
-			}
-			set
-			{
-				this._StrategicModels.Assign(value);
-			}
-		}
-		
-		[Association(Name="Strategy_tblTacticalModel", Storage="_TacticalModels", ThisKey="ID", OtherKey="StrategyID")]
+		[Association(Name="Strategy_TacticalModel", Storage="_TacticalModels", ThisKey="ID", OtherKey="StrategyID")]
 		public EntitySet<TacticalModel> TacticalModels
 		{
 			get
@@ -1587,6 +1518,19 @@ namespace RSMTenon.Data
 			set
 			{
 				this._TacticalModels.Assign(value);
+			}
+		}
+		
+		[Association(Name="Strategy_tblStrategicModel", Storage="_StrategicModels", ThisKey="ID", OtherKey="StrategyID")]
+		public EntitySet<StrategicModel> StrategicModels
+		{
+			get
+			{
+				return this._StrategicModels;
+			}
+			set
+			{
+				this._StrategicModels.Assign(value);
 			}
 		}
 		
@@ -1668,18 +1612,6 @@ namespace RSMTenon.Data
 			entity.Strategy = null;
 		}
 		
-		private void attach_StrategicModels(StrategicModel entity)
-		{
-			this.SendPropertyChanging();
-			entity.Strategy = this;
-		}
-		
-		private void detach_StrategicModels(StrategicModel entity)
-		{
-			this.SendPropertyChanging();
-			entity.Strategy = null;
-		}
-		
 		private void attach_TacticalModels(TacticalModel entity)
 		{
 			this.SendPropertyChanging();
@@ -1687,6 +1619,18 @@ namespace RSMTenon.Data
 		}
 		
 		private void detach_TacticalModels(TacticalModel entity)
+		{
+			this.SendPropertyChanging();
+			entity.Strategy = null;
+		}
+		
+		private void attach_StrategicModels(StrategicModel entity)
+		{
+			this.SendPropertyChanging();
+			entity.Strategy = this;
+		}
+		
+		private void detach_StrategicModels(StrategicModel entity)
 		{
 			this.SendPropertyChanging();
 			entity.Strategy = null;
@@ -2353,9 +2297,11 @@ namespace RSMTenon.Data
 		
 		private string _ID;
 		
-		private EntitySet<AssetGroupClass> _AssetGroupClasses;
+		private string _Name;
 		
-		private EntityRef<AssetClass> _AssetClass;
+		private EntitySet<AssetClass> _AssetClasses;
+		
+		private EntitySet<TacticalModel> _TacticalModels;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -2363,12 +2309,14 @@ namespace RSMTenon.Data
     partial void OnCreated();
     partial void OnIDChanging(string value);
     partial void OnIDChanged();
+    partial void OnNameChanging(string value);
+    partial void OnNameChanged();
     #endregion
 		
 		public AssetGroup()
 		{
-			this._AssetGroupClasses = new EntitySet<AssetGroupClass>(new Action<AssetGroupClass>(this.attach_AssetGroupClasses), new Action<AssetGroupClass>(this.detach_AssetGroupClasses));
-			this._AssetClass = default(EntityRef<AssetClass>);
+			this._AssetClasses = new EntitySet<AssetClass>(new Action<AssetClass>(this.attach_AssetClasses), new Action<AssetClass>(this.detach_AssetClasses));
+			this._TacticalModels = new EntitySet<TacticalModel>(new Action<TacticalModel>(this.attach_TacticalModels), new Action<TacticalModel>(this.detach_TacticalModels));
 			OnCreated();
 		}
 		
@@ -2383,10 +2331,6 @@ namespace RSMTenon.Data
 			{
 				if ((this._ID != value))
 				{
-					if (this._AssetClass.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
 					this.OnIDChanging(value);
 					this.SendPropertyChanging();
 					this._ID = value;
@@ -2396,50 +2340,49 @@ namespace RSMTenon.Data
 			}
 		}
 		
-		[Association(Name="AssetGroup_AssetGroupClass", Storage="_AssetGroupClasses", ThisKey="ID", OtherKey="AssetGroupID")]
-		public EntitySet<AssetGroupClass> AssetGroupClasses
+		[Column(Storage="_Name", DbType="NVarChar(50) NOT NULL", CanBeNull=false, UpdateCheck=UpdateCheck.Never)]
+		public string Name
 		{
 			get
 			{
-				return this._AssetGroupClasses;
+				return this._Name;
 			}
 			set
 			{
-				this._AssetGroupClasses.Assign(value);
+				if ((this._Name != value))
+				{
+					this.OnNameChanging(value);
+					this.SendPropertyChanging();
+					this._Name = value;
+					this.SendPropertyChanged("Name");
+					this.OnNameChanged();
+				}
 			}
 		}
 		
-		[Association(Name="AssetClass_AssetGroup", Storage="_AssetClass", ThisKey="ID", OtherKey="ID", IsForeignKey=true)]
-		public AssetClass AssetClass
+		[Association(Name="AssetGroup_AssetClass", Storage="_AssetClasses", ThisKey="ID", OtherKey="AssetGroupID")]
+		public EntitySet<AssetClass> AssetClasses
 		{
 			get
 			{
-				return this._AssetClass.Entity;
+				return this._AssetClasses;
 			}
 			set
 			{
-				AssetClass previousValue = this._AssetClass.Entity;
-				if (((previousValue != value) 
-							|| (this._AssetClass.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._AssetClass.Entity = null;
-						previousValue.AssetGroup = null;
-					}
-					this._AssetClass.Entity = value;
-					if ((value != null))
-					{
-						value.AssetGroup = this;
-						this._ID = value.ID;
-					}
-					else
-					{
-						this._ID = default(string);
-					}
-					this.SendPropertyChanged("AssetClass");
-				}
+				this._AssetClasses.Assign(value);
+			}
+		}
+		
+		[Association(Name="AssetGroup_TacticalModel", Storage="_TacticalModels", ThisKey="ID", OtherKey="AssetGroupID")]
+		public EntitySet<TacticalModel> TacticalModels
+		{
+			get
+			{
+				return this._TacticalModels;
+			}
+			set
+			{
+				this._TacticalModels.Assign(value);
 			}
 		}
 		
@@ -2463,184 +2406,28 @@ namespace RSMTenon.Data
 			}
 		}
 		
-		private void attach_AssetGroupClasses(AssetGroupClass entity)
+		private void attach_AssetClasses(AssetClass entity)
 		{
 			this.SendPropertyChanging();
 			entity.AssetGroup = this;
 		}
 		
-		private void detach_AssetGroupClasses(AssetGroupClass entity)
+		private void detach_AssetClasses(AssetClass entity)
 		{
 			this.SendPropertyChanging();
 			entity.AssetGroup = null;
 		}
-	}
-	
-	[Table(Name="dbo.tblAssetGroupClass")]
-	public partial class AssetGroupClass : INotifyPropertyChanging, INotifyPropertyChanged
-	{
 		
-		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-		
-		private string _AssetGroupID;
-		
-		private string _AssetClassID;
-		
-		private EntityRef<AssetClass> _AssetClass;
-		
-		private EntityRef<AssetGroup> _AssetGroup;
-		
-    #region Extensibility Method Definitions
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void OnAssetGroupIDChanging(string value);
-    partial void OnAssetGroupIDChanged();
-    partial void OnAssetClassIDChanging(string value);
-    partial void OnAssetClassIDChanged();
-    #endregion
-		
-		public AssetGroupClass()
+		private void attach_TacticalModels(TacticalModel entity)
 		{
-			this._AssetClass = default(EntityRef<AssetClass>);
-			this._AssetGroup = default(EntityRef<AssetGroup>);
-			OnCreated();
+			this.SendPropertyChanging();
+			entity.AssetGroup = this;
 		}
 		
-		[Column(Storage="_AssetGroupID", DbType="NChar(4) NOT NULL", CanBeNull=false, UpdateCheck=UpdateCheck.Never)]
-		public string AssetGroupID
+		private void detach_TacticalModels(TacticalModel entity)
 		{
-			get
-			{
-				return this._AssetGroupID;
-			}
-			set
-			{
-				if ((this._AssetGroupID != value))
-				{
-					if (this._AssetGroup.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
-					this.OnAssetGroupIDChanging(value);
-					this.SendPropertyChanging();
-					this._AssetGroupID = value;
-					this.SendPropertyChanged("AssetGroupID");
-					this.OnAssetGroupIDChanged();
-				}
-			}
-		}
-		
-		[Column(Storage="_AssetClassID", DbType="NChar(4) NOT NULL", CanBeNull=false, IsPrimaryKey=true)]
-		public string AssetClassID
-		{
-			get
-			{
-				return this._AssetClassID;
-			}
-			set
-			{
-				if ((this._AssetClassID != value))
-				{
-					if (this._AssetClass.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
-					this.OnAssetClassIDChanging(value);
-					this.SendPropertyChanging();
-					this._AssetClassID = value;
-					this.SendPropertyChanged("AssetClassID");
-					this.OnAssetClassIDChanged();
-				}
-			}
-		}
-		
-		[Association(Name="AssetClass_AssetGroupClass", Storage="_AssetClass", ThisKey="AssetClassID", OtherKey="ID", IsForeignKey=true)]
-		public AssetClass AssetClass
-		{
-			get
-			{
-				return this._AssetClass.Entity;
-			}
-			set
-			{
-				AssetClass previousValue = this._AssetClass.Entity;
-				if (((previousValue != value) 
-							|| (this._AssetClass.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._AssetClass.Entity = null;
-						previousValue.AssetGroupClass = null;
-					}
-					this._AssetClass.Entity = value;
-					if ((value != null))
-					{
-						value.AssetGroupClass = this;
-						this._AssetClassID = value.ID;
-					}
-					else
-					{
-						this._AssetClassID = default(string);
-					}
-					this.SendPropertyChanged("AssetClass");
-				}
-			}
-		}
-		
-		[Association(Name="AssetGroup_AssetGroupClass", Storage="_AssetGroup", ThisKey="AssetGroupID", OtherKey="ID", IsForeignKey=true)]
-		public AssetGroup AssetGroup
-		{
-			get
-			{
-				return this._AssetGroup.Entity;
-			}
-			set
-			{
-				AssetGroup previousValue = this._AssetGroup.Entity;
-				if (((previousValue != value) 
-							|| (this._AssetGroup.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._AssetGroup.Entity = null;
-						previousValue.AssetGroupClasses.Remove(this);
-					}
-					this._AssetGroup.Entity = value;
-					if ((value != null))
-					{
-						value.AssetGroupClasses.Add(this);
-						this._AssetGroupID = value.ID;
-					}
-					else
-					{
-						this._AssetGroupID = default(string);
-					}
-					this.SendPropertyChanged("AssetGroup");
-				}
-			}
-		}
-		
-		public event PropertyChangingEventHandler PropertyChanging;
-		
-		public event PropertyChangedEventHandler PropertyChanged;
-		
-		protected virtual void SendPropertyChanging()
-		{
-			if ((this.PropertyChanging != null))
-			{
-				this.PropertyChanging(this, emptyChangingEventArgs);
-			}
-		}
-		
-		protected virtual void SendPropertyChanged(String propertyName)
-		{
-			if ((this.PropertyChanged != null))
-			{
-				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-			}
+			this.SendPropertyChanging();
+			entity.AssetGroup = null;
 		}
 	}
 	
@@ -2657,7 +2444,7 @@ namespace RSMTenon.Data
 		}
 		
 		[Column(Storage="_AssetClass", DbType="NVarChar(50) NOT NULL", CanBeNull=false)]
-		public string AssetClass
+		public string AssetGroup
 		{
 			get
 			{
@@ -2689,198 +2476,6 @@ namespace RSMTenon.Data
 		}
 	}
 	
-	[Table(Name="dbo.tblStrategicModel")]
-	public partial class StrategicModel : INotifyPropertyChanging, INotifyPropertyChanged
-	{
-		
-		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-		
-		private string _StrategyID;
-		
-		private string _AssetClassID;
-		
-		private decimal _Weighting;
-		
-		private EntityRef<AssetClass> _AssetClass;
-		
-		private EntityRef<Strategy> _Strategy;
-		
-    #region Extensibility Method Definitions
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void OnStrategyIDChanging(string value);
-    partial void OnStrategyIDChanged();
-    partial void OnAssetClassIDChanging(string value);
-    partial void OnAssetClassIDChanged();
-    partial void OnWeightingChanging(decimal value);
-    partial void OnWeightingChanged();
-    #endregion
-		
-		public StrategicModel()
-		{
-			this._AssetClass = default(EntityRef<AssetClass>);
-			this._Strategy = default(EntityRef<Strategy>);
-			OnCreated();
-		}
-		
-		[Column(Storage="_StrategyID", DbType="NChar(2) NOT NULL", CanBeNull=false, IsPrimaryKey=true)]
-		public string StrategyID
-		{
-			get
-			{
-				return this._StrategyID;
-			}
-			set
-			{
-				if ((this._StrategyID != value))
-				{
-					if (this._Strategy.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
-					this.OnStrategyIDChanging(value);
-					this.SendPropertyChanging();
-					this._StrategyID = value;
-					this.SendPropertyChanged("StrategyID");
-					this.OnStrategyIDChanged();
-				}
-			}
-		}
-		
-		[Column(Storage="_AssetClassID", DbType="NChar(4) NOT NULL", CanBeNull=false, IsPrimaryKey=true)]
-		public string AssetClassID
-		{
-			get
-			{
-				return this._AssetClassID;
-			}
-			set
-			{
-				if ((this._AssetClassID != value))
-				{
-					if (this._AssetClass.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
-					this.OnAssetClassIDChanging(value);
-					this.SendPropertyChanging();
-					this._AssetClassID = value;
-					this.SendPropertyChanged("AssetClassID");
-					this.OnAssetClassIDChanged();
-				}
-			}
-		}
-		
-		[Column(Storage="_Weighting", DbType="Decimal(5,4) NOT NULL")]
-		public decimal Weighting
-		{
-			get
-			{
-				return this._Weighting;
-			}
-			set
-			{
-				if ((this._Weighting != value))
-				{
-					this.OnWeightingChanging(value);
-					this.SendPropertyChanging();
-					this._Weighting = value;
-					this.SendPropertyChanged("Weighting");
-					this.OnWeightingChanged();
-				}
-			}
-		}
-		
-		[Association(Name="AssetClass_StrategicModel", Storage="_AssetClass", ThisKey="AssetClassID", OtherKey="ID", IsForeignKey=true, DeleteOnNull=true, DeleteRule="CASCADE")]
-		public AssetClass AssetClass
-		{
-			get
-			{
-				return this._AssetClass.Entity;
-			}
-			set
-			{
-				AssetClass previousValue = this._AssetClass.Entity;
-				if (((previousValue != value) 
-							|| (this._AssetClass.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._AssetClass.Entity = null;
-						previousValue.StrategicModels.Remove(this);
-					}
-					this._AssetClass.Entity = value;
-					if ((value != null))
-					{
-						value.StrategicModels.Add(this);
-						this._AssetClassID = value.ID;
-					}
-					else
-					{
-						this._AssetClassID = default(string);
-					}
-					this.SendPropertyChanged("AssetClass");
-				}
-			}
-		}
-		
-		[Association(Name="Strategy_StrategicModel", Storage="_Strategy", ThisKey="StrategyID", OtherKey="ID", IsForeignKey=true, DeleteOnNull=true, DeleteRule="CASCADE")]
-		public Strategy Strategy
-		{
-			get
-			{
-				return this._Strategy.Entity;
-			}
-			set
-			{
-				Strategy previousValue = this._Strategy.Entity;
-				if (((previousValue != value) 
-							|| (this._Strategy.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._Strategy.Entity = null;
-						previousValue.StrategicModels.Remove(this);
-					}
-					this._Strategy.Entity = value;
-					if ((value != null))
-					{
-						value.StrategicModels.Add(this);
-						this._StrategyID = value.ID;
-					}
-					else
-					{
-						this._StrategyID = default(string);
-					}
-					this.SendPropertyChanged("Strategy");
-				}
-			}
-		}
-		
-		public event PropertyChangingEventHandler PropertyChanging;
-		
-		public event PropertyChangedEventHandler PropertyChanged;
-		
-		protected virtual void SendPropertyChanging()
-		{
-			if ((this.PropertyChanging != null))
-			{
-				this.PropertyChanging(this, emptyChangingEventArgs);
-			}
-		}
-		
-		protected virtual void SendPropertyChanged(String propertyName)
-		{
-			if ((this.PropertyChanged != null))
-			{
-				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-			}
-		}
-	}
-	
 	[Table(Name="dbo.tblClientAsset")]
 	public partial class ClientAsset : INotifyPropertyChanging, INotifyPropertyChanged
 	{
@@ -2901,17 +2496,17 @@ namespace RSMTenon.Data
 		
 		private decimal _COPR;
 		
-		private System.Nullable<decimal> _EMMA;
+		private decimal _EMMA;
 		
 		private decimal _GLEQ;
 		
-		private System.Nullable<decimal> _GLMA;
+		private decimal _GLMA;
 		
 		private decimal _HEDG;
 		
 		private decimal _LOSH;
 		
-		private System.Nullable<decimal> _MAFU;
+		private decimal _MAFU;
 		
 		private decimal _PREQ;
 		
@@ -2947,17 +2542,17 @@ namespace RSMTenon.Data
     partial void OnCOMMChanged();
     partial void OnCOPRChanging(decimal value);
     partial void OnCOPRChanged();
-    partial void OnEMMAChanging(System.Nullable<decimal> value);
+    partial void OnEMMAChanging(decimal value);
     partial void OnEMMAChanged();
     partial void OnGLEQChanging(decimal value);
     partial void OnGLEQChanged();
-    partial void OnGLMAChanging(System.Nullable<decimal> value);
+    partial void OnGLMAChanging(decimal value);
     partial void OnGLMAChanged();
     partial void OnHEDGChanging(decimal value);
     partial void OnHEDGChanged();
     partial void OnLOSHChanging(decimal value);
     partial void OnLOSHChanged();
-    partial void OnMAFUChanging(System.Nullable<decimal> value);
+    partial void OnMAFUChanging(decimal value);
     partial void OnMAFUChanged();
     partial void OnPREQChanging(decimal value);
     partial void OnPREQChanged();
@@ -2981,7 +2576,7 @@ namespace RSMTenon.Data
 			OnCreated();
 		}
 		
-		[Column(Storage="_GUID", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true)]
+		[Column(Storage="_GUID", AutoSync=AutoSync.OnInsert, DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true, IsDbGenerated=true)]
 		public System.Guid GUID
 		{
 			get
@@ -3126,7 +2721,7 @@ namespace RSMTenon.Data
 		}
 		
 		[Column(Storage="_EMMA", DbType="Decimal(4,1)", UpdateCheck=UpdateCheck.Never)]
-		public System.Nullable<decimal> EMMA
+		public decimal EMMA
 		{
 			get
 			{
@@ -3166,7 +2761,7 @@ namespace RSMTenon.Data
 		}
 		
 		[Column(Storage="_GLMA", DbType="Decimal(4,1)", UpdateCheck=UpdateCheck.Never)]
-		public System.Nullable<decimal> GLMA
+		public decimal GLMA
 		{
 			get
 			{
@@ -3226,7 +2821,7 @@ namespace RSMTenon.Data
 		}
 		
 		[Column(Storage="_MAFU", DbType="Decimal(4,1)", UpdateCheck=UpdateCheck.Never)]
-		public System.Nullable<decimal> MAFU
+		public decimal MAFU
 		{
 			get
 			{
@@ -3454,17 +3049,17 @@ namespace RSMTenon.Data
 		
 		private decimal _COPR;
 		
-		private System.Nullable<decimal> _EMMA;
+		private decimal _EMMA;
 		
 		private decimal _GLEQ;
 		
-		private System.Nullable<decimal> _GLMA;
+		private decimal _GLMA;
 		
 		private decimal _HEDG;
 		
 		private decimal _LOSH;
 		
-		private System.Nullable<decimal> _MAFU;
+		private decimal _MAFU;
 		
 		private decimal _PREQ;
 		
@@ -3494,17 +3089,17 @@ namespace RSMTenon.Data
     partial void OnCOMMChanged();
     partial void OnCOPRChanging(decimal value);
     partial void OnCOPRChanged();
-    partial void OnEMMAChanging(System.Nullable<decimal> value);
+    partial void OnEMMAChanging(decimal value);
     partial void OnEMMAChanged();
     partial void OnGLEQChanging(decimal value);
     partial void OnGLEQChanged();
-    partial void OnGLMAChanging(System.Nullable<decimal> value);
+    partial void OnGLMAChanging(decimal value);
     partial void OnGLMAChanged();
     partial void OnHEDGChanging(decimal value);
     partial void OnHEDGChanged();
     partial void OnLOSHChanging(decimal value);
     partial void OnLOSHChanged();
-    partial void OnMAFUChanging(System.Nullable<decimal> value);
+    partial void OnMAFUChanging(decimal value);
     partial void OnMAFUChanged();
     partial void OnPREQChanging(decimal value);
     partial void OnPREQChanged();
@@ -3613,7 +3208,7 @@ namespace RSMTenon.Data
 		}
 		
 		[Column(Storage="_EMMA", DbType="Decimal(4,1)", UpdateCheck=UpdateCheck.Never)]
-		public System.Nullable<decimal> EMMA
+		public decimal EMMA
 		{
 			get
 			{
@@ -3653,7 +3248,7 @@ namespace RSMTenon.Data
 		}
 		
 		[Column(Storage="_GLMA", DbType="Decimal(4,1)", UpdateCheck=UpdateCheck.Never)]
-		public System.Nullable<decimal> GLMA
+		public decimal GLMA
 		{
 			get
 			{
@@ -3713,7 +3308,7 @@ namespace RSMTenon.Data
 		}
 		
 		[Column(Storage="_MAFU", DbType="Decimal(4,1)", UpdateCheck=UpdateCheck.Never)]
-		public System.Nullable<decimal> MAFU
+		public decimal MAFU
 		{
 			get
 			{
@@ -3939,7 +3534,7 @@ namespace RSMTenon.Data
 		
 		private string _StrategyID;
 		
-		private string _AssetClassID;
+		private string _AssetGroupID;
 		
 		private string _InvestmentName;
 		
@@ -3953,9 +3548,9 @@ namespace RSMTenon.Data
 		
 		private System.Data.Linq.Binary _SSMA_TimeStamp;
 		
-		private EntityRef<AssetClass> _AssetClass;
-		
 		private EntityRef<Strategy> _Strategy;
+		
+		private EntityRef<AssetGroup> _AssetGroup;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -3967,8 +3562,8 @@ namespace RSMTenon.Data
     partial void OnSEDOLChanged();
     partial void OnStrategyIDChanging(string value);
     partial void OnStrategyIDChanged();
-    partial void OnAssetClassIDChanging(string value);
-    partial void OnAssetClassIDChanged();
+    partial void OnAssetGroupIDChanging(string value);
+    partial void OnAssetGroupIDChanged();
     partial void OnInvestmentNameChanging(string value);
     partial void OnInvestmentNameChanged();
     partial void OnWeightingHNWChanging(decimal value);
@@ -3985,12 +3580,12 @@ namespace RSMTenon.Data
 		
 		public TacticalModel()
 		{
-			this._AssetClass = default(EntityRef<AssetClass>);
 			this._Strategy = default(EntityRef<Strategy>);
+			this._AssetGroup = default(EntityRef<AssetGroup>);
 			OnCreated();
 		}
 		
-		[Column(Storage="_GUID", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true)]
+		[Column(Storage="_GUID", AutoSync=AutoSync.OnInsert, DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true, IsDbGenerated=true)]
 		public System.Guid GUID
 		{
 			get
@@ -4054,26 +3649,26 @@ namespace RSMTenon.Data
 			}
 		}
 		
-		[Column(Storage="_AssetClassID", DbType="NChar(4) NOT NULL", CanBeNull=false, UpdateCheck=UpdateCheck.Never)]
-		public string AssetClassID
+		[Column(Storage="_AssetGroupID", DbType="NChar(4) NOT NULL", CanBeNull=false, UpdateCheck=UpdateCheck.Never)]
+		public string AssetGroupID
 		{
 			get
 			{
-				return this._AssetClassID;
+				return this._AssetGroupID;
 			}
 			set
 			{
-				if ((this._AssetClassID != value))
+				if ((this._AssetGroupID != value))
 				{
-					if (this._AssetClass.HasLoadedOrAssignedValue)
+					if (this._AssetGroup.HasLoadedOrAssignedValue)
 					{
 						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
 					}
-					this.OnAssetClassIDChanging(value);
+					this.OnAssetGroupIDChanging(value);
 					this.SendPropertyChanging();
-					this._AssetClassID = value;
-					this.SendPropertyChanged("AssetClassID");
-					this.OnAssetClassIDChanged();
+					this._AssetGroupID = value;
+					this.SendPropertyChanged("AssetGroupID");
+					this.OnAssetGroupIDChanged();
 				}
 			}
 		}
@@ -4198,41 +3793,7 @@ namespace RSMTenon.Data
 			}
 		}
 		
-		[Association(Name="AssetClass_tblTacticalModel", Storage="_AssetClass", ThisKey="AssetClassID", OtherKey="ID", IsForeignKey=true)]
-		public AssetClass AssetClass
-		{
-			get
-			{
-				return this._AssetClass.Entity;
-			}
-			set
-			{
-				AssetClass previousValue = this._AssetClass.Entity;
-				if (((previousValue != value) 
-							|| (this._AssetClass.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._AssetClass.Entity = null;
-						previousValue.TacticalModels.Remove(this);
-					}
-					this._AssetClass.Entity = value;
-					if ((value != null))
-					{
-						value.TacticalModels.Add(this);
-						this._AssetClassID = value.ID;
-					}
-					else
-					{
-						this._AssetClassID = default(string);
-					}
-					this.SendPropertyChanged("AssetClass");
-				}
-			}
-		}
-		
-		[Association(Name="Strategy_tblTacticalModel", Storage="_Strategy", ThisKey="StrategyID", OtherKey="ID", IsForeignKey=true, DeleteOnNull=true, DeleteRule="CASCADE")]
+		[Association(Name="Strategy_TacticalModel", Storage="_Strategy", ThisKey="StrategyID", OtherKey="ID", IsForeignKey=true, DeleteOnNull=true, DeleteRule="CASCADE")]
 		public Strategy Strategy
 		{
 			get
@@ -4255,6 +3816,256 @@ namespace RSMTenon.Data
 					if ((value != null))
 					{
 						value.TacticalModels.Add(this);
+						this._StrategyID = value.ID;
+					}
+					else
+					{
+						this._StrategyID = default(string);
+					}
+					this.SendPropertyChanged("Strategy");
+				}
+			}
+		}
+		
+		[Association(Name="AssetGroup_TacticalModel", Storage="_AssetGroup", ThisKey="AssetGroupID", OtherKey="ID", IsForeignKey=true)]
+		public AssetGroup AssetGroup
+		{
+			get
+			{
+				return this._AssetGroup.Entity;
+			}
+			set
+			{
+				AssetGroup previousValue = this._AssetGroup.Entity;
+				if (((previousValue != value) 
+							|| (this._AssetGroup.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._AssetGroup.Entity = null;
+						previousValue.TacticalModels.Remove(this);
+					}
+					this._AssetGroup.Entity = value;
+					if ((value != null))
+					{
+						value.TacticalModels.Add(this);
+						this._AssetGroupID = value.ID;
+					}
+					else
+					{
+						this._AssetGroupID = default(string);
+					}
+					this.SendPropertyChanged("AssetGroup");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+	}
+	
+	[Table(Name="dbo.tblStrategicModel")]
+	public partial class StrategicModel : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private System.Guid _GUID;
+		
+		private string _StrategyID;
+		
+		private string _AssetClassID;
+		
+		private decimal _Weighting;
+		
+		private EntityRef<AssetClass> _AssetClass;
+		
+		private EntityRef<Strategy> _Strategy;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnGUIDChanging(System.Guid value);
+    partial void OnGUIDChanged();
+    partial void OnStrategyIDChanging(string value);
+    partial void OnStrategyIDChanged();
+    partial void OnAssetClassIDChanging(string value);
+    partial void OnAssetClassIDChanged();
+    partial void OnWeightingChanging(decimal value);
+    partial void OnWeightingChanged();
+    #endregion
+		
+		public StrategicModel()
+		{
+			this._AssetClass = default(EntityRef<AssetClass>);
+			this._Strategy = default(EntityRef<Strategy>);
+			OnCreated();
+		}
+		
+		[Column(Storage="_GUID", AutoSync=AutoSync.OnInsert, DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true, IsDbGenerated=true)]
+		public System.Guid GUID
+		{
+			get
+			{
+				return this._GUID;
+			}
+			set
+			{
+				if ((this._GUID != value))
+				{
+					this.OnGUIDChanging(value);
+					this.SendPropertyChanging();
+					this._GUID = value;
+					this.SendPropertyChanged("GUID");
+					this.OnGUIDChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_StrategyID", DbType="NChar(2) NOT NULL", CanBeNull=false, UpdateCheck=UpdateCheck.Never)]
+		public string StrategyID
+		{
+			get
+			{
+				return this._StrategyID;
+			}
+			set
+			{
+				if ((this._StrategyID != value))
+				{
+					if (this._Strategy.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnStrategyIDChanging(value);
+					this.SendPropertyChanging();
+					this._StrategyID = value;
+					this.SendPropertyChanged("StrategyID");
+					this.OnStrategyIDChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_AssetClassID", DbType="NChar(4) NOT NULL", CanBeNull=false, UpdateCheck=UpdateCheck.Never)]
+		public string AssetClassID
+		{
+			get
+			{
+				return this._AssetClassID;
+			}
+			set
+			{
+				if ((this._AssetClassID != value))
+				{
+					if (this._AssetClass.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnAssetClassIDChanging(value);
+					this.SendPropertyChanging();
+					this._AssetClassID = value;
+					this.SendPropertyChanged("AssetClassID");
+					this.OnAssetClassIDChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_Weighting", DbType="Decimal(5,4) NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		public decimal Weighting
+		{
+			get
+			{
+				return this._Weighting;
+			}
+			set
+			{
+				if ((this._Weighting != value))
+				{
+					this.OnWeightingChanging(value);
+					this.SendPropertyChanging();
+					this._Weighting = value;
+					this.SendPropertyChanged("Weighting");
+					this.OnWeightingChanged();
+				}
+			}
+		}
+		
+		[Association(Name="AssetClass_tblStrategicModel", Storage="_AssetClass", ThisKey="AssetClassID", OtherKey="ID", IsForeignKey=true, DeleteOnNull=true, DeleteRule="CASCADE")]
+		public AssetClass AssetClass
+		{
+			get
+			{
+				return this._AssetClass.Entity;
+			}
+			set
+			{
+				AssetClass previousValue = this._AssetClass.Entity;
+				if (((previousValue != value) 
+							|| (this._AssetClass.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._AssetClass.Entity = null;
+						previousValue.StrategicModels.Remove(this);
+					}
+					this._AssetClass.Entity = value;
+					if ((value != null))
+					{
+						value.StrategicModels.Add(this);
+						this._AssetClassID = value.ID;
+					}
+					else
+					{
+						this._AssetClassID = default(string);
+					}
+					this.SendPropertyChanged("AssetClass");
+				}
+			}
+		}
+		
+		[Association(Name="Strategy_tblStrategicModel", Storage="_Strategy", ThisKey="StrategyID", OtherKey="ID", IsForeignKey=true, DeleteOnNull=true, DeleteRule="CASCADE")]
+		public Strategy Strategy
+		{
+			get
+			{
+				return this._Strategy.Entity;
+			}
+			set
+			{
+				Strategy previousValue = this._Strategy.Entity;
+				if (((previousValue != value) 
+							|| (this._Strategy.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Strategy.Entity = null;
+						previousValue.StrategicModels.Remove(this);
+					}
+					this._Strategy.Entity = value;
+					if ((value != null))
+					{
+						value.StrategicModels.Add(this);
 						this._StrategyID = value.ID;
 					}
 					else

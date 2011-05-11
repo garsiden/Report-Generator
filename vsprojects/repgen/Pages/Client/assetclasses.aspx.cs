@@ -11,11 +11,9 @@ public partial class Pages_Client_assetclasses : RepGenPage
 {
     protected void Page_Load(object sender, EventArgs e)
     {
-        if (!IsPostBack)
-        {
+        if (!IsPostBack) {
             string guid = Request.QueryString["guid"];
-            if (guid != null)
-            {
+            if (guid != null) {
                 ViewState["ClientAssetClass_ClientGUID"] = guid;
                 Guid clientGuid = new Guid(guid);
                 Client client = Client.GetClientByGUID(clientGuid);
@@ -48,8 +46,7 @@ public partial class Pages_Client_assetclasses : RepGenPage
 
     protected void detailsView_ItemUpdated(object sender, DetailsViewUpdatedEventArgs e)
     {
-        if (e.Exception != null)
-        {
+        if (e.Exception != null) {
             showException(e.Exception, labelException, "updating the client");
             e.ExceptionHandled = true;
             e.KeepInEditMode = true;
@@ -58,8 +55,7 @@ public partial class Pages_Client_assetclasses : RepGenPage
 
     protected void detailsView_ItemInserted(object sender, DetailsViewInsertedEventArgs e)
     {
-        if (e.Exception != null)
-        {
+        if (e.Exception != null) {
             showException(e.Exception, labelException, "adding the client");
             e.ExceptionHandled = true;
             e.KeepInInsertMode = true;
