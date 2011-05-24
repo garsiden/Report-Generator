@@ -234,7 +234,7 @@
                 <HeaderStyle CssClass="lnowrap" />
                 <ItemStyle CssClass="right" />
             </asp:TemplateField>
-            <asp:TemplateField HeaderText="Global Macro" SortExpression="GLMA">
+<%--            <asp:TemplateField HeaderText="Global Macro" SortExpression="GLMA">
                 <EditItemTemplate>
                     <asp:TextBox ID="textGLMAEdit" runat="server" Text='<%# Bind("GLMA") %>' ValidationGroup="Edit"></asp:TextBox>
                     <asp:RegularExpressionValidator ID="validRegexGLMAEdit" runat="server" ErrorMessage="Please enter a percentage Commodities value."
@@ -254,7 +254,7 @@
                 <HeaderStyle CssClass="lnowrap" />
                 <ItemStyle CssClass="right" />
             </asp:TemplateField>
-            <asp:TemplateField HeaderText="Hedge" SortExpression="HEDG">
+--%>            <asp:TemplateField HeaderText="Hedge" SortExpression="HEDG">
                 <EditItemTemplate>
                     <asp:TextBox ID="textHEDGEdit" runat="server" Text='<%# Bind("HEDG") %>' ValidationGroup="Edit"></asp:TextBox>
                     <asp:RegularExpressionValidator ID="validRegexHEDGEdit" runat="server" ErrorMessage="Please enter a percentage Hedge value."
