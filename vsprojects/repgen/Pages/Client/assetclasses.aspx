@@ -44,36 +44,17 @@
                     &nbsp;
                 </td>
             </tr>
-            <tr>
-                <td class="lnowrap">
-                    <%# GetAssetClassName("GLMA") %>
-                    &nbsp;
-                </td>
-                <td>
-                    &nbsp;
-                </td>
+            <td class="lnowrap">
+                <%# GetAssetClassName("HEDG") %>
+                &nbsp;
+            </td>
+            <td>
+                &nbsp;
+            </td>
             </tr>
             <tr class="even">
-                <td class="lnowrap">
-                    <%# GetAssetClassName("HEDG") %>
-                    &nbsp;
-                </td>
-                <td>
-                    &nbsp;
-                </td>
-            </tr>
-            <tr>
                 <td class="lnowrap">
                     <%# GetAssetClassName("LOSH") %>
-                    &nbsp;
-                </td>
-                <td>
-                    &nbsp;
-                </td>
-            </tr>
-            <tr class="even">
-                <td class="lnowrap">
-                    <%# GetAssetClassName("MAFU") %>
                     &nbsp;
                 </td>
                 <td>
@@ -234,27 +215,7 @@
                 <HeaderStyle CssClass="lnowrap" />
                 <ItemStyle CssClass="right" />
             </asp:TemplateField>
-<%--            <asp:TemplateField HeaderText="Global Macro" SortExpression="GLMA">
-                <EditItemTemplate>
-                    <asp:TextBox ID="textGLMAEdit" runat="server" Text='<%# Bind("GLMA") %>' ValidationGroup="Edit"></asp:TextBox>
-                    <asp:RegularExpressionValidator ID="validRegexGLMAEdit" runat="server" ErrorMessage="Please enter a percentage Commodities value."
-                        Display="None" ControlToValidate="textGLMAEdit" ValidationExpression="^100(?:\.0)?$|^\d{1,2}(?:\.\d)?$"
-                        ValidationGroup="Edit"></asp:RegularExpressionValidator>
-                </EditItemTemplate>
-                <InsertItemTemplate>
-                    <asp:TextBox ID="textGLMAInsert" runat="server" Text='<%# Bind("GLMA", "{0:0.0}") %>'
-                        ValidationGroup="Insert"></asp:TextBox>
-                    <asp:RegularExpressionValidator ID="validRegexGLMAInsert" runat="server" ErrorMessage="Please enter a percentage Commodities value."
-                        Display="None" ControlToValidate="textGLMAInsert" ValidationExpression="^100(?:\.0)?$|^\d{1,2}(?:\.\d)?$"
-                        ValidationGroup="Insert"></asp:RegularExpressionValidator>
-                </InsertItemTemplate>
-                <ItemTemplate>
-                    <asp:Label ID="labelGLMA" runat="server" Text='<%# Eval("GLMA", "{0:0.0\\%}") %>'></asp:Label>
-                </ItemTemplate>
-                <HeaderStyle CssClass="lnowrap" />
-                <ItemStyle CssClass="right" />
-            </asp:TemplateField>
---%>            <asp:TemplateField HeaderText="Hedge" SortExpression="HEDG">
+            <asp:TemplateField HeaderText="Hedge" SortExpression="HEDG">
                 <EditItemTemplate>
                     <asp:TextBox ID="textHEDGEdit" runat="server" Text='<%# Bind("HEDG") %>' ValidationGroup="Edit"></asp:TextBox>
                     <asp:RegularExpressionValidator ID="validRegexHEDGEdit" runat="server" ErrorMessage="Please enter a percentage Hedge value."
@@ -290,26 +251,6 @@
                 </InsertItemTemplate>
                 <ItemTemplate>
                     <asp:Label ID="labelLOSH" runat="server" Text='<%# Eval("LOSH", "{0:0.0\\%}") %>'></asp:Label>
-                </ItemTemplate>
-                <HeaderStyle CssClass="lnowrap" />
-                <ItemStyle CssClass="right" />
-            </asp:TemplateField>
-            <asp:TemplateField HeaderText="Managed Futures" SortExpression="MAFU">
-                <EditItemTemplate>
-                    <asp:TextBox ID="textMAFUEdit" runat="server" Text='<%# Bind("MAFU") %>' ValidationGroup="Edit"></asp:TextBox>
-                    <asp:RegularExpressionValidator ID="validRegexMAFUEdit" runat="server" ErrorMessage="Please enter a percentage Commodities value."
-                        Display="None" ControlToValidate="textMAFUEdit" ValidationExpression="^100(?:\.0)?$|^\d{1,2}(?:\.\d)?$"
-                        ValidationGroup="Edit"></asp:RegularExpressionValidator>
-                </EditItemTemplate>
-                <InsertItemTemplate>
-                    <asp:TextBox ID="textMAFUInsert" runat="server" Text='<%# Bind("MAFU", "{0:0.0}") %>'
-                        ValidationGroup="Insert"></asp:TextBox>
-                    <asp:RegularExpressionValidator ID="validRegexMAFUInsert" runat="server" ErrorMessage="Please enter a percentage Commodities value."
-                        Display="None" ControlToValidate="textMAFUInsert" ValidationExpression="^100(?:\.0)?$|^\d{1,2}(?:\.\d)?$"
-                        ValidationGroup="Insert"></asp:RegularExpressionValidator>
-                </InsertItemTemplate>
-                <ItemTemplate>
-                    <asp:Label ID="labelMAFU" runat="server" Text='<%# Eval("MAFU", "{0:0.0\\%}") %>'></asp:Label>
                 </ItemTemplate>
                 <HeaderStyle CssClass="lnowrap" />
                 <ItemStyle CssClass="right" />

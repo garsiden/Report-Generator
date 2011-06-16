@@ -201,22 +201,6 @@
                 <HeaderStyle CssClass="lnowrap" />
                 <ItemStyle CssClass="right" />
             </asp:TemplateField>
-            <asp:TemplateField HeaderText="Global Macro" SortExpression="GLMA">
-                <EditItemTemplate>
-                    <asp:TextBox ID="textGLMA" runat="server" Text='<%# Bind("GLMA") %>'></asp:TextBox>
-                    <asp:RegularExpressionValidator ID="validRegexGLMA" runat="server" ErrorMessage="Please enter a percentage Commodities value."
-                        Display="None" ControlToValidate="textGLMA" ValidationExpression="^100(?:\.0)?$|^\d{1,2}(?:\.\d)?$"
-                        ValidationGroup="AssetClassEdit"></asp:RegularExpressionValidator>
-                </EditItemTemplate>
-                <InsertItemTemplate>
-                    <asp:TextBox ID="textGLMAInsert" runat="server" Text='<%# Bind("GLMA", "{0:0.0}") %>'></asp:TextBox>
-                </InsertItemTemplate>
-                <ItemTemplate>
-                    <asp:Label ID="labelGLMA" runat="server" Text='<%# Eval("GLMA", "{0:0.0\\%}") %>'></asp:Label>
-                </ItemTemplate>
-                <HeaderStyle CssClass="left" />
-                <ItemStyle CssClass="right" Width="5em" />
-            </asp:TemplateField>
             <asp:TemplateField HeaderText="Hedge" SortExpression="HEDG">
                 <EditItemTemplate>
                     <asp:TextBox ID="textHEDG" runat="server" Text='<%# Bind("HEDG") %>'></asp:TextBox>
@@ -248,22 +232,6 @@
                 </ItemTemplate>
                 <HeaderStyle CssClass="lnowrap" />
                 <ItemStyle CssClass="right" />
-            </asp:TemplateField>
-            <asp:TemplateField HeaderText="Managed Futures" SortExpression="MAFU">
-                <EditItemTemplate>
-                    <asp:TextBox ID="textMAFU" runat="server" Text='<%# Bind("MAFU") %>'></asp:TextBox>
-                    <asp:RegularExpressionValidator ID="validRegexMAFU" runat="server" ErrorMessage="Please enter a percentage Commodities value."
-                        Display="None" ControlToValidate="textMAFU" ValidationExpression="^100(?:\.0)?$|^\d{1,2}(?:\.\d)?$"
-                        ValidationGroup="AssetClassEdit"></asp:RegularExpressionValidator>
-                </EditItemTemplate>
-                <InsertItemTemplate>
-                    <asp:TextBox ID="TextBox2" runat="server" Text='<%# Bind("MAFU", "{0:0.0}") %>'></asp:TextBox>
-                </InsertItemTemplate>
-                <ItemTemplate>
-                    <asp:Label ID="Label2" runat="server" Text='<%# Eval("MAFU", "{0:0.0\\%}") %>'></asp:Label>
-                </ItemTemplate>
-                <HeaderStyle CssClass="left" />
-                <ItemStyle CssClass="right" Width="5em" />
             </asp:TemplateField>
             <asp:TemplateField HeaderText="Private Equity" SortExpression="PREQ">
                 <EditItemTemplate>
