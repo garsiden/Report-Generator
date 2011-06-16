@@ -86,7 +86,7 @@
                 <HeaderStyle CssClass="center" />
                 <ItemStyle CssClass="right" Width="15%" />
             </asp:TemplateField>
-            <asp:TemplateField HeaderText="Global Managed">
+            <asp:TemplateField HeaderText="Global Macro">
                 <EditItemTemplate>
                     <asp:TextBox ID="textGLMAEdit" runat="server" Text='<%# Bind("GLMA", "{0:0.00}") %>'
                         Width="5em"></asp:TextBox>
