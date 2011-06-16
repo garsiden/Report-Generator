@@ -27,6 +27,7 @@ public abstract class UploadPage : System.Web.UI.Page
                         var headers = sr.ReadLine().Split(sep).Skip(1);
                         while ((line = sr.ReadLine()) != null) {
                             split = line.Split(sep);
+                            if (split[0] == String.Empty) { continue; }
                             AddToTypedTable(split, headers);
                         }
                     }

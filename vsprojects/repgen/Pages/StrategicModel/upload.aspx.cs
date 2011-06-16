@@ -42,12 +42,10 @@ public partial class Pages_StrategicModel_upload : RepGenPage
                         char[] sep = { ',' };
 
                         while ((line = sr.ReadLine()) != null) {
-                            if (line.ToLower().StartsWith("asset")) {
-                                continue;
-                            } else {
-                                split = line.Split(sep);
-                                addToTypedTable(dt, split, strategyId);
-                            }
+                            if (line.ToLower().StartsWith("asset")) { continue; }
+                            split = line.Split(sep);
+                            if (split[0] == String.Empty) { continue; }
+                            addToTypedTable(dt, split, strategyId);
                         }
                     }
 

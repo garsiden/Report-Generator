@@ -41,12 +41,10 @@ public partial class Pages_TacticalModel_upload : RepGenPage
                         char[] sep = { ',' };
 
                         while ((line = sr.ReadLine()) != null) {
-                            if (line.StartsWith("SEDOL")) {
-                                continue;
-                            } else {
-                                split = line.Split(sep);
-                                addToTypedTable(dt, split, strategyId);
-                            }
+                            if (line.StartsWith("SEDOL")) { continue; }
+                            split = line.Split(sep);
+                            if (split[0] == String.Empty) { continue; }
+                            addToTypedTable(dt, split, strategyId);
                         }
                     }
 
