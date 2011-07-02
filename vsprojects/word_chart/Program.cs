@@ -219,7 +219,7 @@ namespace RSMTenon.ReportGenerator
                          select new RankedReturnData {
                              RankNumber = rn++,
                              Date = p.Date,
-                             Value = calc.Price(p)
+                             Value = calc.ModelPrice(p)
                          };
 
             // Ten Year Return
@@ -248,7 +248,7 @@ namespace RSMTenon.ReportGenerator
 
             var prices = from d in data
                          select new ReturnData {
-                             Value = calc.Price(d),
+                             Value = calc.ModelPrice(d),
                              Date = d.Date
                          };
 
@@ -320,7 +320,7 @@ namespace RSMTenon.ReportGenerator
             ReturnCalculation calc = new ReturnCalculation();
             var match = from d in data
                         select new ReturnData {
-                            Value = calc.Price(d),
+                            Value = calc.ModelPrice(d),
                             Date = d.Date
                         };
 
@@ -341,7 +341,7 @@ namespace RSMTenon.ReportGenerator
             ReturnCalculation calcDrawdown = new ReturnCalculation();
 
             var match = from d in data
-                        let price = calcPrice.Price(d)
+                        let price = calcPrice.ModelPrice(d)
                         select new ReturnData {
                             Value = calcDrawdown.Drawdown(price, d.Value) - 1,
                             Date = d.Date
