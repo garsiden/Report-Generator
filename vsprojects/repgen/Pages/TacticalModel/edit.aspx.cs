@@ -13,9 +13,9 @@ public partial class Pages_TacticalModel_edit : RepGenPage
     {
         if (!IsPostBack) {
             this.listStrategy.DataBind();
-            string id = this.listStrategy.SelectedValue;
-            gridModel.Caption = String.Format("{0} Tactical Model", Strategy.GetStrategyNameFromId(id));
         }
+        string id = this.listStrategy.SelectedValue;
+        gridModel.Caption = String.Format("{0} Tactical Model", Strategy.GetStrategyNameFromId(id));
         labelException.Visible = false;
     }
 
