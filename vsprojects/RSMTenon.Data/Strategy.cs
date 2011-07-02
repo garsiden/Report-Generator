@@ -32,7 +32,7 @@ namespace RSMTenon.Data
                 var prices = from p in returns
                              select new ReturnData {
                                  Date = p.Date,
-                                 Value = calc.Price(p)
+                                 Value = calc.ModelPrice(p)
                              };
 
                 strategyPrices = prices.ToDictionary(p => p.Date);

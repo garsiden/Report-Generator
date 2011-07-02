@@ -10,70 +10,74 @@ namespace RSMTenon.Data
         private double previousPrice = 100D;
         private double previousDD = 1D;
         private double previousPriceRR = 100D;
-        private double previousRebase = 100D;
+        private double previousPriceRebase = 100D;
 
-        public double Price(ReturnData returnData)
+        public double ModelPrice(ReturnData rtrn)
         {
-            double retval = (1 + returnData.Value) * previousPrice;
-            previousPrice = retval;
+            double price = (1 + rtrn.Value) * previousPrice;
+            previousPrice = price;
 
-            return retval;
+            return price;
         }
 
-        public double RollingReturn(ReturnData returnData)
+        public double IndexPrice(ReturnData rtrn)
         {
-            double retval = Math.Log(returnData.Value / previousPriceRR);
-            previousPriceRR = returnData.Value;
+            double price = previousPrice * Math.Exp(rtrn.Value);
+            previousPrice = price;
 
-            return retval;
+            return price;
         }
 
-        public double RollingReturn(ReturnData returnData1, ReturnData returnData2)
+        public double RollingReturn(ReturnData price)
         {
-            return RollingReturn(returnData1, returnData2, 1);
+            double rr = Math.Log(price.Value / previousPriceRR);
+            previousPriceRR = price.Value;
+
+            return rr;
         }
 
-        public double RollingReturn(ReturnData returnData1, ReturnData returnData2, int years)
+        public double RollingReturn(ReturnData price, ReturnData prevPrice)
         {
-            double retval = Math.Log(returnData1.Value / returnData2.Value) / years;
+            return RollingReturn(price, prevPrice, 1);
+        }
 
-            return retval;
+        public double RollingReturn(ReturnData price, ReturnData prevPrice, int years)
+        {
+            double rr = Math.Log(price.Value / prevPrice.Value) / years;
+
+            return rr;
         }
 
         public double Drawdown(double price)
         {
-            double retval = 0D;
+            double dd = 0D;
 
-            if ((price / previousPrice > 1) && previousDD == 1)
-            {
-                retval = 1D;
-            } else
-            {
-                retval = Math.Min(1D, previousDD * (1 + Math.Log(price / previousPrice)));
-                this.previousDD = retval;
+            if ((price / previousPrice > 1) && previousDD == 1) {
+                dd = 1D;
+            } else {
+                dd = Math.Min(1D, previousDD * (1 + Math.Log(price / previousPrice)));
+                this.previousDD = dd;
             }
 
             this.previousPrice = price;
 
-            return retval;
+            return dd;
         }
 
         public double Drawdown(double price, double rtrn)
         {
-            double retval = 0D;
+            double dd = 0D;
 
-            if ((price / previousPrice > 1) && previousDD == 1)
-            {
-                retval = 1D;
-            } else
-            {
-                retval = Math.Min(1D, previousDD * (1 + rtrn));
-                this.previousDD = retval;
+            if ((price / previousPrice > 1) && previousDD == 1) {
+                dd = 1D;
+            } else {
+                dd = Math.Min(1D, previousDD * (1 + rtrn));
+                this.previousDD = dd;
             }
 
             this.previousPrice = price;
 
-            return retval;
+            return dd;
         }
 
         public double Drawdown(ReturnData price)
@@ -88,13 +92,21 @@ namespace RSMTenon.Data
 
         public double RebaseReturn(double rtrn)
         {
-            double rebase = previousRebase * Math.Exp(rtrn);
-            previousRebase = rebase;
+            double rebase = previousPriceRebase * Math.Exp(rtrn);
+            previousPriceRebase = rebase;
 
             return (rebase - 100) / 100;
         }
 
         public double Return(ReturnData price)
+        {
+            double rtrn = Math.Log(price.Value / previousPrice);
+            previousPrice = price.Value;
+
+            return rtrn;
+        }
+
+        public double ReturnPrev(ReturnData price)
         {
             double retval = (price.Value - previousPrice) / previousPrice;
             previousPrice = price.Value;
