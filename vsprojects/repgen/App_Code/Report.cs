@@ -792,19 +792,19 @@ namespace RSMTenon.ReportGenerator
             return rtrn;
         }
 
-        // delegate and closures
+        // lambda closures
         private delegate double PriceCalc(ReturnData r);
 
         private PriceCalc IndexPriceCalculator()
         {
             var calc = new ReturnCalculation();
-            return delegate(ReturnData r) { return calc.IndexPrice(r); };
+            return r => calc.IndexPrice(r);
         }
 
         private PriceCalc ModelPriceCalculator()
         {
             var calc = new ReturnCalculation();
-            return delegate(ReturnData r) { return calc.ModelPrice(r); };
+            return r => calc.ModelPrice(r);
         }
 
         private List<ReturnData> calculateDrawdown(List<ReturnData> returns, PriceCalc pc)
@@ -823,7 +823,8 @@ namespace RSMTenon.ReportGenerator
 
             var list = dd.ToList();
             var prevDate = list[0].DateFromInteger.AddMonths(-1);
-            var first = new ReturnData() {
+            var first = new ReturnData()
+            {
                 Date = ReturnData.IntegerDate(prevDate),
                 Value = 0
             };
