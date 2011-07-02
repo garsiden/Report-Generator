@@ -82,19 +82,21 @@ namespace RSMTenon.ReportGenerator
         // Return variables
         private List<ReturnData> modelReturn = null;
         private List<ReturnData> clientAssetReturn = null;
+        private List<ReturnData> benchmarkReturn = null;
         private Dictionary<string, List<ReturnData>> assetClassPricesDictionary = new Dictionary<string, List<ReturnData>>();
 
         // Price variables
         private Dictionary<int, ReturnData> modelPrices = null;
+        private List<ReturnData> benchmarkPrices = null;
         private Dictionary<string, List<ReturnData>> assetClassReturnDictionary = new Dictionary<string, List<ReturnData>>();
 
         private List<AssetClass> assetClasses = null;
         private string strategyName;
 
         // Colours
-        private string strategyColourHex = "0066CC";
-        private string clientColourHex = "98CC00";
-        private string benchmarkColourHex = "C0C0C0";
+        private const string STRATEGY_COLOUR_HEX = "0066CC";
+        private const string CLIENT_COLOUR_HEX = "98CC00";
+        private const string BENCHMARK_COLOUR_HEX = "C0C0C0";
 
         public Report(string specFile)
         {
@@ -298,21 +300,25 @@ namespace RSMTenon.ReportGenerator
 
             // client assets
             if (Client.ExistingAssets) {
-                var data1 = calculateClientAssetDrawdown();
-                lc.AddLineChartSeries(chart, data1, "Current", clientColourHex);
+                var data1 = getClientAssetReturn();
+                var dd1 = calculateDrawdown(data1, ModelPriceCalculator());
+                lc.AddLineChartSeries(chart, dd1, "Current", CLIENT_COLOUR_HEX);
             }
 
             // first asset class
-            var data2 = calculateAssetClassDrawdown(assets[0].ID);
-            lc.AddLineChartSeries(chart, data2, assets[0].Name, assets[0].ColourHex);
+            var data2 = getAssetClassReturn(assets[0].ID);
+            var dd2 = calculateDrawdown(data2, IndexPriceCalculator());
+            lc.AddLineChartSeries(chart, dd2, assets[0].Name, assets[0].ColourHex);
 
             // second asset class
-            var data3 = calculateAssetClassDrawdown(assets[1].ID);
-            lc.AddLineChartSeries(chart, data3, assets[1].Name, assets[1].ColourHex);
+            var data3 = getAssetClassReturn(assets[1].ID);
+            var dd3 = calculateDrawdown(data3, IndexPriceCalculator());
+            lc.AddLineChartSeries(chart, dd3, assets[1].Name, assets[1].ColourHex);
 
             // model drawdown
-            var data4 = calculateStrategicModelDrawdown(Client.StrategyID, Client.StatusName);
-            lc.AddLineChartSeries(chart, data4, StrategyName + " Strategy", strategyColourHex);
+            var data4 = getStrategicModelReturn();
+            var dd4 = calculateDrawdown(data4, ModelPriceCalculator());
+            lc.AddLineChartSeries(chart, dd4, StrategyName + " Strategy", STRATEGY_COLOUR_HEX);
 
             string ccn = rpt.Element("control-name").Value;
             ChartItem chartItem = new ChartItem
@@ -348,7 +354,7 @@ namespace RSMTenon.ReportGenerator
 
             if (Client.ExistingAssets) {
                 var prices1 = calculateClientAssetPrices();
-                var series1 = stressTestMarketRiseSeries(prices1, "Current", clientColourHex, rpt);
+                var series1 = stressTestMarketRiseSeries(prices1, "Current", CLIENT_COLOUR_HEX, rpt);
                 bc.AddBarChartSeries(chart, series1);
             }
 
@@ -364,7 +370,7 @@ namespace RSMTenon.ReportGenerator
 
             // strategy
             var prices4 = calculateStrategicModelPrices();
-            var series4 = stressTestMarketRiseSeries(prices4, Client.Strategy.Name, strategyColourHex, rpt);
+            var series4 = stressTestMarketRiseSeries(prices4, Client.Strategy.Name, STRATEGY_COLOUR_HEX, rpt);
             bc.AddBarChartSeries(chart, series4);
 
             string ccn = rpt.Element("control-name").Value;
@@ -401,7 +407,7 @@ namespace RSMTenon.ReportGenerator
 
             if (Client.ExistingAssets) {
                 var returns1 = calculateClientAssetPrices();
-                var series1 = stressTestMarketCrashSeries(returns1, "Current", clientColourHex, rpt);
+                var series1 = stressTestMarketCrashSeries(returns1, "Current", CLIENT_COLOUR_HEX, rpt);
                 bc.AddBarChartSeries(chart, series1);
             }
 
@@ -417,7 +423,7 @@ namespace RSMTenon.ReportGenerator
 
             // strategy
             var returns4 = calculateStrategicModelPrices();
-            var series4 = stressTestMarketCrashSeries(returns4, Client.Strategy.Name, strategyColourHex, rpt);
+            var series4 = stressTestMarketCrashSeries(returns4, Client.Strategy.Name, STRATEGY_COLOUR_HEX, rpt);
             bc.AddBarChartSeries(chart, series4);
 
             string ccn = rpt.Element("control-name").Value;
@@ -456,7 +462,7 @@ namespace RSMTenon.ReportGenerator
                 var rtrn1 = getClientAssetReturn();
                 var data1 = calculateTenYearReturn(rtrn1);
                 string dataKey1 = "Current";
-                lc.AddLineChartSeries(chart, data1, dataKey1, clientColourHex);
+                lc.AddLineChartSeries(chart, data1, dataKey1, CLIENT_COLOUR_HEX);
             }
 
             // first asset class
@@ -472,16 +478,17 @@ namespace RSMTenon.ReportGenerator
             lc.AddLineChartSeries(chart, data3, dataKey3, assetClasses[1].ColourHex);
 
             // IMA Benchmark
-            var rtrn5 = DataContext.BenchmarkPrice(Client.Strategy.BenchmarkID).Where(b => b.Value > 0).ToList();
-            var data5 = calculateTenYearBenchmarkReturn(rtrn5);
+            //var rtrn5 = DataContext.BenchmarkPrice(Client.Strategy.BenchmarkID).Where(b => b.Value > 0).ToList();
+            var rtrn5 = getBenchmarkReturn(Client.Strategy.BenchmarkID);
+            var data5 = calculateTenYearReturn(rtrn5);
             string dataKey5 = Client.Strategy.Benchmark.Name;
-            lc.AddLineChartSeries(chart, data5, dataKey5, benchmarkColourHex);
+            lc.AddLineChartSeries(chart, data5, dataKey5, BENCHMARK_COLOUR_HEX);
 
             // strategy
             var rtrn4 = getStrategicModelReturn();
             var data4 = calculateTenYearReturn(rtrn4);
             string dataKey4 = StrategyName;
-            lc.AddLineChartSeries(chart, data4, dataKey4, strategyColourHex);
+            lc.AddLineChartSeries(chart, data4, dataKey4, STRATEGY_COLOUR_HEX);
 
             string ccn = rpt.Element("control-name").Value;
             ChartItem chartItem = new ChartItem
@@ -534,25 +541,29 @@ namespace RSMTenon.ReportGenerator
             if (Client.ExistingAssets) {
                 string dataKey1 = "Current";
                 var data1 = getClientAssetReturn();
-                var rrex = calulateRollingReturn(data1, years);
-                lc.AddLineChartSeries(chart, rrex, dataKey1, clientColourHex);
+                var rrex = calculateRollingReturn(data1, years, ModelPriceCalculator());
+                lc.AddLineChartSeries(chart, rrex, dataKey1, CLIENT_COLOUR_HEX);
             }
 
             // first asset class
-            var data2 = ctx.RollingReturn(years, assetClasses[0].ID);
+            //var data2 = ctx.RollingReturn(years, assetClasses[0].ID);
+            var data2R = getAssetClassReturn(assetClasses[0].ID);
+            var data2 = calculateRollingReturn(data2R, years, IndexPriceCalculator());
             string dataKey2 = assetClasses[0].Name;
             lc.AddLineChartSeries(chart, data2.ToList(), dataKey2, assetClasses[0].ColourHex);
 
             // add second data series
-            var data3 = ctx.RollingReturn(years, assetClasses[1].ID);
+            var data3R = getAssetClassReturn(assetClasses[1].ID);
+            //var data3 = ctx.RollingReturn(years, assetClasses[1].ID);
+            var data3 = calculateRollingReturn(data3R, years, IndexPriceCalculator());
             string dataKey3 = assetClasses[1].Name;
             lc.AddLineChartSeries(chart, data3.ToList(), dataKey3, assetClasses[1].ColourHex);
 
             // add appropriate strategy data
             var data4 = getStrategicModelReturn();
             string dataKey4 = StrategyName + " Strategy";
-            var rr = calulateRollingReturn(data4, years);
-            lc.AddLineChartSeries(chart, rr, dataKey4, strategyColourHex);
+            var rr = calculateRollingReturn(data4, years, ModelPriceCalculator());
+            lc.AddLineChartSeries(chart, rr, dataKey4, STRATEGY_COLOUR_HEX);
 
             string ccn = rpt.Element("control-name").Value;
             ChartItem chartItem = new ChartItem
@@ -620,6 +631,33 @@ namespace RSMTenon.ReportGenerator
             if (modelReturn == null)
                 modelReturn = DataContext.StrategicModelReturn(Client.StrategyID).ToList();
             return modelReturn;
+        }
+
+        private List<ReturnData> getBenchmarkPrices(string benchmarkId)
+        {
+
+            if (benchmarkPrices == null)
+                benchmarkPrices = DataContext.BenchmarkPrice(benchmarkId).Where(b => b.Value > 0).ToList();
+            return benchmarkPrices;
+        }
+
+        private List<ReturnData> getBenchmarkReturn(string benchmarkId)
+        {
+
+            if (benchmarkReturn == null) {
+                var calc = new ReturnCalculation();
+                var prices = getBenchmarkPrices(benchmarkId);
+                var returns = from p in prices
+                              select new ReturnData
+                              {
+                                  Value = calc.Return(p),
+                                  Date = p.Date
+                              };
+                benchmarkReturn = returns.ToList();
+
+            }
+
+            return benchmarkReturn;
         }
 
         private IQueryable<TacticalModelTableData> getTacticalModelTableData(string strategyId, string status)
@@ -698,7 +736,7 @@ namespace RSMTenon.ReportGenerator
                          select new ReturnData
                          {
                              Date = p.Date,
-                             Value = calc.Price(p)
+                             Value = calc.ModelPrice(p)
                          };
 
             return prices.ToDictionary(p => p.Date);
@@ -709,11 +747,11 @@ namespace RSMTenon.ReportGenerator
             if (modelPrices == null) {
                 var returns = getStrategicModelReturn();
                 var calc = new ReturnCalculation();
-                var prices = from p in returns
+                var prices = from r in returns
                              select new ReturnData
                              {
-                                 Date = p.Date,
-                                 Value = calc.Price(p)
+                                 Date = r.Date,
+                                 Value = calc.ModelPrice(r)
                              };
 
                 modelPrices = prices.ToDictionary(p => p.Date);
@@ -722,42 +760,18 @@ namespace RSMTenon.ReportGenerator
             return modelPrices;
         }
 
-        private List<ReturnData> calculateTenYearBenchmarkReturn(List<ReturnData> prices)
+        private List<ReturnData> calculateTenYearReturn(List<ReturnData> returns)
         {
-            int months = prices.Count;
-            //int startIndex = months - Math.Min(121, months);
-            int startDate = prices[months - 121].Date;
-
-            ReturnCalculation cr = new ReturnCalculation();
-            ReturnCalculation cb = new ReturnCalculation();
-
-            var rtrn = from p in prices.Skip(months - 120)
-                       let r = cr.Return(p)
-                       select new ReturnData
-                       {
-                           Value = cb.RebaseReturn(r),
-                           Date = p.Date
-                       };
-
-            var tyr = rtrn.ToList();
-            var newItem = new ReturnData() { Date = startDate, Value = 0 };
-            tyr.Insert(0, newItem);
-
-            return tyr;
-        }
-
-        private List<ReturnData> calculateTenYearReturn(List<ReturnData> data)
-        {
-            int months = data.Count;
-            int startDate = data[months - 121].Date;
+            int months = returns.Count;
+            int startDate = returns[months - 121].Date;
 
             ReturnCalculation rc = new ReturnCalculation();
 
-            var rtrn = from d in data.Skip(months - 120)
+            var rtrn = from r in returns.Skip(months - 120)
                        select new ReturnData
                        {
-                           Value = rc.RebaseReturn(d),
-                           Date = d.Date
+                           Value = rc.RebaseReturn(r),
+                           Date = r.Date
                        };
 
             var tyr = rtrn.ToList();
@@ -778,71 +792,53 @@ namespace RSMTenon.ReportGenerator
             return rtrn;
         }
 
-        private List<ReturnData> calculateStrategicModelDrawdown(string strategyId, string status)
+        // delegate and closures
+        private delegate double PriceCalc(ReturnData r);
+
+        private PriceCalc IndexPriceCalculator()
         {
-            var returns = getStrategicModelReturn();
-
-            ReturnCalculation cp = new ReturnCalculation();
-            ReturnCalculation cd = new ReturnCalculation();
-
-            var dd = from r in returns
-                     let price = cp.Price(r)
-                     select new ReturnData
-                     {
-                         Value = cd.Drawdown(price, r.Value) - 1,
-                         Date = r.Date
-                     };
-
-            return dd.ToList();
+            var calc = new ReturnCalculation();
+            return delegate(ReturnData r) { return calc.IndexPrice(r); };
         }
 
-        private List<ReturnData> calculateClientAssetDrawdown()
+        private PriceCalc ModelPriceCalculator()
         {
-            var returns = getClientAssetReturn();
-
-            ReturnCalculation cp = new ReturnCalculation();
-            ReturnCalculation cd = new ReturnCalculation();
-
-            var dd = from r in returns
-                     let price = cp.Price(r)
-                     select new ReturnData
-                     {
-                         Value = cd.Drawdown(price, r.Value) - 1,
-                         Date = r.Date
-                     };
-
-            return dd.ToList();
+            var calc = new ReturnCalculation();
+            return delegate(ReturnData r) { return calc.ModelPrice(r); };
         }
 
-        private List<ReturnData> calculateAssetClassDrawdown(string assetclassId)
+        private List<ReturnData> calculateDrawdown(List<ReturnData> returns, PriceCalc pc)
         {
-            var returns = getAssetClassReturn(assetclassId);
-
-            ReturnCalculation cp = new ReturnCalculation();
+            int count = returns.Count();
+            int min = Math.Min(count, 120);
             ReturnCalculation cd = new ReturnCalculation();
 
-            var dd = from r in returns
-                     let price = cp.Price(r)
+            var dd = from rtrn in returns.Skip(count - min)
+                     let price = pc(rtrn)
                      select new ReturnData
                      {
-                         Value = cd.Drawdown(price, r.Value) - 1,
-                         Date = r.Date
+                         Value = cd.Drawdown(price, rtrn.Value) - 1,
+                         Date = rtrn.Date
                      };
 
-            return dd.ToList();
+            var list = dd.ToList();
+            var prevDate = list[0].DateFromInteger.AddMonths(-1);
+            var first = new ReturnData() {
+                Date = ReturnData.IntegerDate(prevDate),
+                Value = 0
+            };
+
+            list.Insert(0, first);
+            return list;
         }
-        #endregion
 
-        #region Chart Series Calculations
-        private List<ReturnData> calulateRollingReturn(List<ReturnData> data, int years)
+        private List<ReturnData> calculateRollingReturn(List<ReturnData> returns, int years, PriceCalc pc)
         {
-            ReturnCalculation calc = new ReturnCalculation();
-
-            var prices = from d in data
+            var prices = from r in returns
                          select new ReturnData
                          {
-                             Value = calc.Price(d),
-                             Date = d.Date
+                             Value = pc(r),
+                             Date = r.Date
                          };
 
             // create the 'From' list, starting with index value of 100
@@ -853,8 +849,9 @@ namespace RSMTenon.ReportGenerator
             var to = from.Skip(12 * years);
 
             // new list for return values
-            var rv = new List<ReturnData>();
+            var rr = new List<ReturnData>();
             int i = 0;
+            ReturnCalculation calc = new ReturnCalculation();
 
             foreach (var item in to) {
                 var rd = new ReturnData
@@ -862,11 +859,18 @@ namespace RSMTenon.ReportGenerator
                     Value = calc.RollingReturn(item, from.ElementAt(i++), years),
                     Date = item.Date
                 };
-                rv.Add(rd);
+                rr.Add(rd);
             }
 
-            return rv;
+            int count = rr.Count();
+            int min = Math.Min(count, 120);
+
+            return rr.Skip(count - min).ToList();
         }
+
+        #endregion
+
+        #region Chart Series Calculations
 
         private BarGraphSeries stressTestMarketCrashSeries(Dictionary<int, ReturnData> prices, string seriesName, string colourHex, XElement rpt)
         {
