@@ -75,10 +75,6 @@
     <Compile Include="Content.cs" />
     <Compile Include="AssetGroup.cs" />
     <Compile Include="StrategicModel.cs" />
-    <Compile Include="DataUpload.cs">
-      <DependentUpon>DataUpload.xsd</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="DataUpload.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
