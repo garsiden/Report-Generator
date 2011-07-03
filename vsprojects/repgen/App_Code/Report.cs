@@ -478,7 +478,6 @@ namespace RSMTenon.ReportGenerator
             lc.AddLineChartSeries(chart, data3, dataKey3, assetClasses[1].ColourHex);
 
             // IMA Benchmark
-            //var rtrn5 = DataContext.BenchmarkPrice(Client.Strategy.BenchmarkID).Where(b => b.Value > 0).ToList();
             var rtrn5 = getBenchmarkReturn(Client.Strategy.BenchmarkID);
             var data5 = calculateTenYearReturn(rtrn5);
             string dataKey5 = Client.Strategy.Benchmark.Name;
@@ -546,7 +545,6 @@ namespace RSMTenon.ReportGenerator
             }
 
             // first asset class
-            //var data2 = ctx.RollingReturn(years, assetClasses[0].ID);
             var data2R = getAssetClassReturn(assetClasses[0].ID);
             var data2 = calculateRollingReturn(data2R, years, IndexPriceCalculator());
             string dataKey2 = assetClasses[0].Name;
@@ -554,7 +552,6 @@ namespace RSMTenon.ReportGenerator
 
             // add second data series
             var data3R = getAssetClassReturn(assetClasses[1].ID);
-            //var data3 = ctx.RollingReturn(years, assetClasses[1].ID);
             var data3 = calculateRollingReturn(data3R, years, IndexPriceCalculator());
             string dataKey3 = assetClasses[1].Name;
             lc.AddLineChartSeries(chart, data3.ToList(), dataKey3, assetClasses[1].ColourHex);
@@ -650,7 +647,7 @@ namespace RSMTenon.ReportGenerator
                 var returns = from p in prices
                               select new ReturnData
                               {
-                                  Value = calc.Return(p),
+                                  Value = calc.IndexReturn(p),
                                   Date = p.Date
                               };
                 benchmarkReturn = returns.ToList();
@@ -793,21 +790,19 @@ namespace RSMTenon.ReportGenerator
         }
 
         // lambda closures
-        private delegate double PriceCalc(ReturnData r);
-
-        private PriceCalc IndexPriceCalculator()
+        private Func<ReturnData, double> IndexPriceCalculator()
         {
             var calc = new ReturnCalculation();
             return r => calc.IndexPrice(r);
         }
 
-        private PriceCalc ModelPriceCalculator()
+        private Func<ReturnData, double> ModelPriceCalculator()
         {
             var calc = new ReturnCalculation();
             return r => calc.ModelPrice(r);
         }
 
-        private List<ReturnData> calculateDrawdown(List<ReturnData> returns, PriceCalc pc)
+        private List<ReturnData> calculateDrawdown(List<ReturnData> returns, Func<ReturnData, double> pc)
         {
             int count = returns.Count();
             int min = Math.Min(count, 120);
@@ -817,23 +812,14 @@ namespace RSMTenon.ReportGenerator
                      let price = pc(rtrn)
                      select new ReturnData
                      {
-                         Value = cd.Drawdown(price, rtrn.Value) - 1,
+                         Value = cd.Drawdown(price, rtrn) - 1,
                          Date = rtrn.Date
                      };
 
-            var list = dd.ToList();
-            var prevDate = list[0].DateFromInteger.AddMonths(-1);
-            var first = new ReturnData()
-            {
-                Date = ReturnData.IntegerDate(prevDate),
-                Value = 0
-            };
-
-            list.Insert(0, first);
-            return list;
+            return dd.ToList();
         }
 
-        private List<ReturnData> calculateRollingReturn(List<ReturnData> returns, int years, PriceCalc pc)
+        private List<ReturnData> calculateRollingReturn(List<ReturnData> returns, int years, Func<ReturnData, double> pc)
         {
             var prices = from r in returns
                          select new ReturnData
