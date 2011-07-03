@@ -299,7 +299,7 @@ namespace RSMTenon.ReportGenerator
             ReturnCalculation cp = new ReturnCalculation();
 
             var tyr = from p in prices
-                      let rtrn = cr.Return(p)
+                      let rtrn = cr.RebaseReturn(p)
                       select new ReturnData {
                           Value = cp.RebaseReturn(rtrn),
                           Date = p.Date
@@ -359,10 +359,12 @@ namespace RSMTenon.ReportGenerator
             var data = ctx.HistoricPrice("UKGB");
 
             ReturnCalculation calc = new ReturnCalculation();
+            ReturnCalculation pc = new ReturnCalculation();
 
             var match = from d in data
+                        let price = pc.IndexPrice(d)
                         select new ReturnData {
-                            Value = calc.Drawdown(d) - 1,
+                            Value = calc.Drawdown(price, d) - 1,
                             Date = d.Date
                         };
 

@@ -512,14 +512,16 @@ namespace RSMTenon.ReportGenerator
 
         private List<ReturnData> getAssetClassDrawdown(string assetclassId)
         {
-            var prices = DataContext.HistoricPrice(assetclassId);
-
+            //var prices = DataContext.HistoricPrice(assetclassId);
+            var rtrns = DataContext.AssetClassReturn(assetclassId);
             ReturnCalculation calc = new ReturnCalculation();
+            ReturnCalculation cp = new ReturnCalculation();
 
-            var dd = from p in prices
+            var dd = from r in rtrns
+                     let price = cp.IndexPrice(r)
                      select new ReturnData {
-                         Value = calc.Drawdown(p) - 1,
-                         Date = p.Date
+                         Value = calc.Drawdown(price, r) - 1,
+                         Date = r.Date
                      };
 
             return dd.ToList();
@@ -623,7 +625,7 @@ namespace RSMTenon.ReportGenerator
             ReturnCalculation cb = new ReturnCalculation();
 
             var tyr = from p in prices
-                      let rtrn = cr.Return(p)
+                      let rtrn = cr.RebaseReturn(p)
                       select new ReturnData {
                           Value = cb.RebaseReturn(rtrn),
                           Date = p.Date
