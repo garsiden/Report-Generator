@@ -28,6 +28,22 @@ namespace RSMTenon.Data
             return price;
         }
 
+        public double IndexReturn(ReturnData price)
+        {
+            double rtrn = Math.Log(price.Value / previousPrice);
+            previousPrice = price.Value;
+
+            return rtrn;
+        }
+
+        public double ModelReturn(ReturnData price)
+        {
+            double retval = (price.Value - previousPrice) / previousPrice;
+            previousPrice = price.Value;
+
+            return retval;
+        }
+
         public double RollingReturn(ReturnData price)
         {
             double rr = Math.Log(price.Value / previousPriceRR);
@@ -48,22 +64,6 @@ namespace RSMTenon.Data
             return rr;
         }
 
-        public double Drawdown(double price)
-        {
-            double dd = 0D;
-
-            if ((price / previousPrice > 1) && previousDD == 1) {
-                dd = 1D;
-            } else {
-                dd = Math.Min(1D, previousDD * (1 + Math.Log(price / previousPrice)));
-                this.previousDD = dd;
-            }
-
-            this.previousPrice = price;
-
-            return dd;
-        }
-
         public double Drawdown(double price, double rtrn)
         {
             double dd = 0D;
@@ -80,9 +80,9 @@ namespace RSMTenon.Data
             return dd;
         }
 
-        public double Drawdown(ReturnData price)
+        public double Drawdown(double price, ReturnData rtrn)
         {
-            return Drawdown(price.Value);
+            return Drawdown(price, rtrn.Value);
         }
 
         public double RebaseReturn(ReturnData rtrn)
@@ -96,22 +96,6 @@ namespace RSMTenon.Data
             previousPriceRebase = rebase;
 
             return (rebase - 100) / 100;
-        }
-
-        public double Return(ReturnData price)
-        {
-            double rtrn = Math.Log(price.Value / previousPrice);
-            previousPrice = price.Value;
-
-            return rtrn;
-        }
-
-        public double ReturnPrev(ReturnData price)
-        {
-            double retval = (price.Value - previousPrice) / previousPrice;
-            previousPrice = price.Value;
-
-            return retval;
         }
     }
 }
