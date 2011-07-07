@@ -90,7 +90,8 @@ namespace RSMTenon.ReportGenerator
         private List<ReturnData> benchmarkPrices = null;
         private Dictionary<string, List<ReturnData>> assetClassReturnDictionary = new Dictionary<string, List<ReturnData>>();
 
-        private List<AssetClass> assetClasses = null;
+        private Dictionary<string,AssetClass> assetClasses = null;
+        private List<AssetClass> defaultChartAssetClasses = null;
         private string strategyName;
 
         // Colours
@@ -284,15 +285,15 @@ namespace RSMTenon.ReportGenerator
         public ChartItem Drawdown()
         {
             // get chart specs
-            XElement rpt = chartSpec("drawdown");
-            decimal x = (decimal?)rpt.Attribute("size-x") ?? DefaultSizeX;
-            decimal y = (decimal?)rpt.Attribute("size-y") ?? DefaultSizeY;
+            XElement spec = chartSpec("drawdown");
+            decimal x = (decimal?)spec.Attribute("size-x") ?? DefaultSizeX;
+            decimal y = (decimal?)spec.Attribute("size-y") ?? DefaultSizeY;
 
             // set title
-            string title = rpt.Element("title").Value;
+            string title = spec.Element("title").Value;
 
             // get asset classes to plot (default is UKGB and GLEQ)
-            var assets = getAssetClasses();
+            var assets = getChartAssetClasses(spec);
 
             // create chart
             DrawdownLineChart lc = new DrawdownLineChart();
@@ -320,7 +321,7 @@ namespace RSMTenon.ReportGenerator
             var dd4 = calculateDrawdown(data4, ModelPriceCalculator());
             lc.AddLineChartSeries(chart, dd4, StrategyName + " Strategy", STRATEGY_COLOUR_HEX);
 
-            string ccn = rpt.Element("control-name").Value;
+            string ccn = spec.Element("control-name").Value;
             ChartItem chartItem = new ChartItem
             {
                 Chart = chart,
@@ -337,15 +338,15 @@ namespace RSMTenon.ReportGenerator
         public ChartItem StressTestMarketRise()
         {
             // get chart specs
-            XElement rpt = chartSpec("stress-test-market-rise");
-            decimal x = (decimal?)rpt.Attribute("size-x") ?? DefaultSizeX;
-            decimal y = (decimal?)rpt.Attribute("size-y") ?? DefaultSizeY;
+            XElement spec = chartSpec("stress-test-market-rise");
+            decimal x = (decimal?)spec.Attribute("size-x") ?? DefaultSizeX;
+            decimal y = (decimal?)spec.Attribute("size-y") ?? DefaultSizeY;
 
             // set title
-            string title = rpt.Element("title").Value;
+            string title = spec.Element("title").Value;
 
             // get asset classes to plot (default is UKGB and GLEQ)
-            var assets = getAssetClasses();
+            var assets = getChartAssetClasses(spec);
             var ctx = DataContext;
 
             // create chart
@@ -354,26 +355,26 @@ namespace RSMTenon.ReportGenerator
 
             if (Client.ExistingAssets) {
                 var prices1 = calculateClientAssetPrices();
-                var series1 = stressTestMarketRiseSeries(prices1, "Current", CLIENT_COLOUR_HEX, rpt);
+                var series1 = stressTestMarketRiseSeries(prices1, "Current", CLIENT_COLOUR_HEX, spec);
                 bc.AddBarChartSeries(chart, series1);
             }
 
             // first asset class (Note: GLEQ)
             var prices2 = getAssetClassPrices(assets[1].ID).ToDictionary(d => d.Date);
-            var series2 = stressTestMarketRiseSeries(prices2, assets[1].Name, assets[1].ColourHex, rpt);
+            var series2 = stressTestMarketRiseSeries(prices2, assets[1].Name, assets[1].ColourHex, spec);
             bc.AddBarChartSeries(chart, series2);
 
             // second asset class
             var prices3 = getAssetClassPrices(assets[0].ID).ToDictionary(d => d.Date);
-            var series3 = stressTestMarketRiseSeries(prices3, assets[0].Name, assets[0].ColourHex, rpt);
+            var series3 = stressTestMarketRiseSeries(prices3, assets[0].Name, assets[0].ColourHex, spec);
             bc.AddBarChartSeries(chart, series3);
 
             // strategy
             var prices4 = calculateStrategicModelPrices();
-            var series4 = stressTestMarketRiseSeries(prices4, Client.Strategy.Name, STRATEGY_COLOUR_HEX, rpt);
+            var series4 = stressTestMarketRiseSeries(prices4, Client.Strategy.Name, STRATEGY_COLOUR_HEX, spec);
             bc.AddBarChartSeries(chart, series4);
 
-            string ccn = rpt.Element("control-name").Value;
+            string ccn = spec.Element("control-name").Value;
             ChartItem chartItem = new ChartItem
             {
                 Chart = chart,
@@ -390,15 +391,15 @@ namespace RSMTenon.ReportGenerator
         public ChartItem StressTestMarketCrash()
         {
             // get chart specs
-            XElement rpt = chartSpec("stress-test-market-crash");
-            decimal x = (decimal?)rpt.Attribute("size-x") ?? DefaultSizeX;
-            decimal y = (decimal?)rpt.Attribute("size-y") ?? DefaultSizeY;
+            XElement spec = chartSpec("stress-test-market-crash");
+            decimal x = (decimal?)spec.Attribute("size-x") ?? DefaultSizeX;
+            decimal y = (decimal?)spec.Attribute("size-y") ?? DefaultSizeY;
 
             // set title
-            string title = rpt.Element("title").Value;
+            string title = spec.Element("title").Value;
 
             // get asset classes to plot (default is UKGB and GLEQ)
-            var assets = getAssetClasses();
+            var assets = getChartAssetClasses(spec);
             var ctx = DataContext;
 
             // create chart
@@ -407,26 +408,26 @@ namespace RSMTenon.ReportGenerator
 
             if (Client.ExistingAssets) {
                 var returns1 = calculateClientAssetPrices();
-                var series1 = stressTestMarketCrashSeries(returns1, "Current", CLIENT_COLOUR_HEX, rpt);
+                var series1 = stressTestMarketCrashSeries(returns1, "Current", CLIENT_COLOUR_HEX, spec);
                 bc.AddBarChartSeries(chart, series1);
             }
 
             // first asset class (Note: GLEQ)
             var returns2 = getAssetClassPrices(assets[1].ID).ToDictionary(d => d.Date);
-            var series2 = stressTestMarketCrashSeries(returns2, assets[1].Name, assets[1].ColourHex, rpt);
+            var series2 = stressTestMarketCrashSeries(returns2, assets[1].Name, assets[1].ColourHex, spec);
             bc.AddBarChartSeries(chart, series2);
 
             // second asset class
             var returns3 = getAssetClassPrices(assets[0].ID).ToDictionary(d => d.Date);
-            var series3 = stressTestMarketCrashSeries(returns3, assets[0].Name, assets[0].ColourHex, rpt);
+            var series3 = stressTestMarketCrashSeries(returns3, assets[0].Name, assets[0].ColourHex, spec);
             bc.AddBarChartSeries(chart, series3);
 
             // strategy
             var returns4 = calculateStrategicModelPrices();
-            var series4 = stressTestMarketCrashSeries(returns4, Client.Strategy.Name, STRATEGY_COLOUR_HEX, rpt);
+            var series4 = stressTestMarketCrashSeries(returns4, Client.Strategy.Name, STRATEGY_COLOUR_HEX, spec);
             bc.AddBarChartSeries(chart, series4);
 
-            string ccn = rpt.Element("control-name").Value;
+            string ccn = spec.Element("control-name").Value;
             ChartItem chartItem = new ChartItem
             {
                 Chart = chart,
@@ -443,15 +444,15 @@ namespace RSMTenon.ReportGenerator
         public ChartItem TenYearReturn()
         {
             // get chart specs
-            XElement rpt = chartSpec("ten-year-return");
-            decimal x = (decimal?)rpt.Attribute("size-x") ?? DefaultSizeX;
-            decimal y = (decimal?)rpt.Attribute("size-y") ?? DefaultSizeY;
+            XElement spec = chartSpec("ten-year-return");
+            decimal x = (decimal?)spec.Attribute("size-x") ?? DefaultSizeX;
+            decimal y = (decimal?)spec.Attribute("size-y") ?? DefaultSizeY;
 
             // set title
-            string title = rpt.Element("title").Value;
+            string title = spec.Element("title").Value;
 
             // get asset classes to plot (default is UKGB and GLEQ)
-            var assets = getAssetClasses(rpt);
+            var assets = getChartAssetClasses(spec);
             var ctx = DataContext;
 
             // create chart
@@ -466,16 +467,16 @@ namespace RSMTenon.ReportGenerator
             }
 
             // first asset class
-            var rtrn2 = getAssetClassReturn(assetClasses[0].ID);
+            var rtrn2 = getAssetClassReturn(assets[0].ID);
             var data2 = calculateTenYearReturn(rtrn2);
-            string dataKey2 = assetClasses[0].Name;
-            lc.AddLineChartSeries(chart, data2, dataKey2, assetClasses[0].ColourHex);
+            string dataKey2 = assets[0].Name;
+            lc.AddLineChartSeries(chart, data2, dataKey2, assets[0].ColourHex);
 
             // second asset class
-            var rtrn3 = getAssetClassReturn(assetClasses[1].ID);
+            var rtrn3 = getAssetClassReturn(assets[1].ID);
             var data3 = calculateTenYearReturn(rtrn3);
-            string dataKey3 = assetClasses[1].Name;
-            lc.AddLineChartSeries(chart, data3, dataKey3, assetClasses[1].ColourHex);
+            string dataKey3 = assets[1].Name;
+            lc.AddLineChartSeries(chart, data3, dataKey3, assets[1].ColourHex);
 
             // IMA Benchmark
             var rtrn5 = getBenchmarkReturn(Client.Strategy.BenchmarkID);
@@ -489,7 +490,7 @@ namespace RSMTenon.ReportGenerator
             string dataKey4 = StrategyName;
             lc.AddLineChartSeries(chart, data4, dataKey4, STRATEGY_COLOUR_HEX);
 
-            string ccn = rpt.Element("control-name").Value;
+            string ccn = spec.Element("control-name").Value;
             ChartItem chartItem = new ChartItem
             {
                 Chart = chart,
@@ -522,15 +523,15 @@ namespace RSMTenon.ReportGenerator
             }
 
             // get chart specs
-            XElement rpt = chartSpec(id);
-            decimal x = (decimal?)rpt.Attribute("size-x") ?? DefaultSizeX;
-            decimal y = (decimal?)rpt.Attribute("size-y") ?? DefaultSizeY;
+            XElement spec = chartSpec(id);
+            decimal x = (decimal?)spec.Attribute("size-x") ?? DefaultSizeX;
+            decimal y = (decimal?)spec.Attribute("size-y") ?? DefaultSizeY;
 
             // set title
-            string title = rpt.Element("title").Value;
+            string title = spec.Element("title").Value;
 
             // get asset classes to plot (default is UKGB and GLEQ)
-            var assets = getAssetClasses();
+            var assets = getChartAssetClasses(spec);
             var ctx = DataContext;
 
             // create chart
@@ -545,16 +546,16 @@ namespace RSMTenon.ReportGenerator
             }
 
             // first asset class
-            var data2R = getAssetClassReturn(assetClasses[0].ID);
+            var data2R = getAssetClassReturn(assets[0].ID);
             var data2 = calculateRollingReturn(data2R, years, IndexPriceCalculator());
-            string dataKey2 = assetClasses[0].Name;
-            lc.AddLineChartSeries(chart, data2.ToList(), dataKey2, assetClasses[0].ColourHex);
+            string dataKey2 = assets[0].Name;
+            lc.AddLineChartSeries(chart, data2.ToList(), dataKey2, assets[0].ColourHex);
 
             // add second data series
-            var data3R = getAssetClassReturn(assetClasses[1].ID);
+            var data3R = getAssetClassReturn(assets[1].ID);
             var data3 = calculateRollingReturn(data3R, years, IndexPriceCalculator());
-            string dataKey3 = assetClasses[1].Name;
-            lc.AddLineChartSeries(chart, data3.ToList(), dataKey3, assetClasses[1].ColourHex);
+            string dataKey3 = assets[1].Name;
+            lc.AddLineChartSeries(chart, data3.ToList(), dataKey3, assets[1].ColourHex);
 
             // add appropriate strategy data
             var data4 = getStrategicModelReturn();
@@ -562,7 +563,7 @@ namespace RSMTenon.ReportGenerator
             var rr = calculateRollingReturn(data4, years, ModelPriceCalculator());
             lc.AddLineChartSeries(chart, rr, dataKey4, STRATEGY_COLOUR_HEX);
 
-            string ccn = rpt.Element("control-name").Value;
+            string ccn = spec.Element("control-name").Value;
             ChartItem chartItem = new ChartItem
             {
                 Chart = chart,
@@ -677,47 +678,51 @@ namespace RSMTenon.ReportGenerator
             return modelData;
         }
 
-        private List<AssetClass> getAssetClasses(XElement rpt)
+        private List<AssetClass> getChartAssetClasses(XElement chartSpec)
         {
-            var ctx = DataContext;
-            var allClasses = ctx.AssetClasses.ToDictionary(a => a.ID);
-            var assets = from spec in rpt.Descendants("asset-class")
-                         select spec;
+            var allAssets = getAssetClasses();
+            List<AssetClass> chartAssets;
 
-            var classes = new List<AssetClass>();
-            foreach (var a in assets) {
-                classes.Add(new AssetClass()
-                {
-                    ID = a.Attribute("id").Value,
-                    Name = allClasses[a.Attribute("id").Value].Name,
-                    ColourHex = a.Attribute("colour-hex").Value
-                });
+            if (chartSpec.Descendants("asset-class").Count() > 0) {
+                 var result= from a in chartSpec.Descendants("asset-class")
+                              select new AssetClass
+                              {
+                                  ID = a.Attribute("id").Value,
+                                  Name = allAssets[a.Attribute("id").Value].Name,
+                                  ColourHex = a.Attribute("colour-hex").Value
+                              };
+                 chartAssets = result.ToList();
+            } else {
+                chartAssets = getDefaultChartAssetClasses();
             }
-            assetClasses = classes;
 
-            return assetClasses;
+            return chartAssets;
         }
 
-        private List<AssetClass> getAssetClasses()
+        private List<AssetClass> getDefaultChartAssetClasses()
+        {
+            if (defaultChartAssetClasses == null) {
+                var allAssets = getAssetClasses();
+                var defaultAssets = ReportSpec.Element("chart-spec").Element("asset-classes");
+
+                var result = from a in defaultAssets.Elements("asset-class")
+                             select new AssetClass
+                             {
+                                 ID = a.Attribute("id").Value,
+                                 Name = allAssets[a.Attribute("id").Value].Name,
+                                 ColourHex = a.Attribute("colour-hex").Value
+                             };
+                defaultChartAssetClasses = result.ToList();
+            }
+            return defaultChartAssetClasses;
+        }
+
+        
+        private Dictionary<string,AssetClass> getAssetClasses()
         {
             if (assetClasses == null) {
-                var ctx = DataContext;
-                var allClasses = ctx.AssetClasses.ToDictionary(a => a.ID);
-                var assets = from spec in ReportSpec.Descendants("asset-class")
-                             select spec;
-
-                var classes = new List<AssetClass>();
-                foreach (var a in assets) {
-                    classes.Add(new AssetClass()
-                    {
-                        ID = a.Attribute("id").Value,
-                        Name = allClasses[a.Attribute("id").Value].Name,
-                        ColourHex = a.Attribute("colour-hex").Value
-                    });
-                }
-                assetClasses = classes;
+                assetClasses = DataContext.AssetClasses.ToDictionary(a => a.ID);
             }
-
             return assetClasses;
         }
 
