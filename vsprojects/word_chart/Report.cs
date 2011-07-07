@@ -518,7 +518,7 @@ namespace RSMTenon.ReportGenerator
             ReturnCalculation cp = new ReturnCalculation();
 
             var dd = from r in rtrns
-                     let price = cp.IndexPrice(r)
+                     let price = cp.Price(r)
                      select new ReturnData {
                          Value = calc.Drawdown(price, r) - 1,
                          Date = r.Date
@@ -535,7 +535,7 @@ namespace RSMTenon.ReportGenerator
             ReturnCalculation cd = new ReturnCalculation();
 
             var dd = from r in returns
-                     let price = cp.ModelPrice(r)
+                     let price = cp.Price(r)
                      select new ReturnData {
                          Value = cd.Drawdown(price, r.Value) - 1,
                          Date = r.Date
@@ -552,7 +552,7 @@ namespace RSMTenon.ReportGenerator
             ReturnCalculation cd = new ReturnCalculation();
 
             var dd = from r in returns
-                     let price = cp.ModelPrice(r)
+                     let price = cp.Price(r)
                      select new ReturnData {
                          Value = cd.Drawdown(price, r.Value) - 1,
                          Date = r.Date
@@ -611,7 +611,7 @@ namespace RSMTenon.ReportGenerator
             var prices = from p in returns
                          select new ReturnData {
                              Date = p.Date,
-                             Value = calc.ModelPrice(p)
+                             Value = calc.Price(p)
                          };
 
             return prices.ToDictionary(p => p.Date);
@@ -715,7 +715,7 @@ namespace RSMTenon.ReportGenerator
 
             var prices = from d in data
                          select new ReturnData {
-                             Value = calc.ModelPrice(d),
+                             Value = calc.Price(d),
                              Date = d.Date
                          };
 

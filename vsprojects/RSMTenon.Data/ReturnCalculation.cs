@@ -12,15 +12,7 @@ namespace RSMTenon.Data
         private double previousPriceRR = 100D;
         private double previousPriceRebase = 100D;
 
-        public double ModelPrice(ReturnData rtrn)
-        {
-            double price = (1 + rtrn.Value) * previousPrice;
-            previousPrice = price;
-
-            return price;
-        }
-
-        public double IndexPrice(ReturnData rtrn)
+        public double Price(ReturnData rtrn)
         {
             double price = previousPrice * Math.Exp(rtrn.Value);
             previousPrice = price;
@@ -28,20 +20,12 @@ namespace RSMTenon.Data
             return price;
         }
 
-        public double IndexReturn(ReturnData price)
+        public double Return(ReturnData price)
         {
             double rtrn = Math.Log(price.Value / previousPrice);
             previousPrice = price.Value;
 
             return rtrn;
-        }
-
-        public double ModelReturn(ReturnData price)
-        {
-            double retval = (price.Value - previousPrice) / previousPrice;
-            previousPrice = price.Value;
-
-            return retval;
         }
 
         public double RollingReturn(ReturnData price)
