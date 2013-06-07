@@ -17,20 +17,20 @@ public abstract class UploadPage : System.Web.UI.Page
     {
         if (uploader.PostedFile.ContentLength != 0) {
             try {
-                if (uploader.PostedFile.ContentLength > 100000) {
-                    lblStatus.Text = "File is too large for upload";
-                } else {
-                    using (StreamReader sr = new StreamReader(uploader.PostedFile.InputStream)) {
-                        string line = null;
-                        string[] split = null;
-                        char[] sep = { ',' };
-                        var headers = sr.ReadLine().Split(sep).Skip(1);
-                        while ((line = sr.ReadLine()) != null) {
-                            split = line.Split(sep);
-                            if (split[0] == String.Empty) { continue; }
-                            AddToTypedTable(split, headers);
-                        }
+                //if (uploader.PostedFile.ContentLength > 100000) {
+                //    lblStatus.Text = "File is too large for upload";
+                //} else {
+                using (StreamReader sr = new StreamReader(uploader.PostedFile.InputStream)) {
+                    string line = null;
+                    string[] split = null;
+                    char[] sep = { ',' };
+                    var headers = sr.ReadLine().Split(sep).Skip(1);
+                    while ((line = sr.ReadLine()) != null) {
+                        split = line.Split(sep);
+                        if (split[0] == String.Empty) { continue; }
+                        AddToTypedTable(split, headers);
                     }
+                    //}
                     RSMTenon.Data.DataUtilities.UploadToDatabase(Table, TableName, null);
                     lblStatus.Text = String.Format("{0:#,##0} row(s) added to database", Table.Rows.Count);
                 }

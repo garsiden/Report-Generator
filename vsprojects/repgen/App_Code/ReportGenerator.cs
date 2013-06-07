@@ -141,14 +141,6 @@ namespace RSMTenon.ReportGenerator
             chartItem = report.StressTestMarketCrash();
             AddChartToDoc(mainPart, chartItem);
 
-            // Rolling Return 1 yr
-            chartItem = report.RollingReturnChart(1);
-            AddChartToDoc(mainPart, chartItem);
-
-            // Rolling Return 3 yr
-            chartItem = report.RollingReturnChart(3);
-            AddChartToDoc(mainPart, chartItem);
-
             // Rolling Return 5 yr
             chartItem = report.RollingReturnChart(5);
             AddChartToDoc(mainPart, chartItem);

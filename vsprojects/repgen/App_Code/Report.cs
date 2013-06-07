@@ -908,7 +908,7 @@ namespace RSMTenon.ReportGenerator
             var start2 = prices.ElementAt(prices.Count() - 121);
             var end2 = prices.Last();
 
-            double return2 = Math.Log(end2.Value.Value / start2.Value.Value);
+            double return2 = (end2.Value.Value - start2.Value.Value) / start2.Value.Value;
             test2.FromDate = start2.Value.DateFromInteger;
             test2.ToDate = end2.Value.DateFromInteger;
 
